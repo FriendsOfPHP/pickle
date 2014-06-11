@@ -2,9 +2,31 @@
     "name": "apc",
     "type": "extension",
     "extra": {
-        "configure-option": {
-            "with-zlib": "string",
-            "enable-foo": "yes"
+        "configure-options": {
+            "enable-apc-debug": {
+                "default": "no",
+                "prompt": "Enable internal debugging in APC"
+            },
+            "enable-apc-filehits": {
+                "default": "no",
+                "prompt": "Enable per request file info about files used from the APC cache"
+            },
+            "enable-apc-spinlocks": {
+                "default": "no",
+                "prompt": "Enable spin locks (EXPERIMENTAL)"
+            },
+            "enable-apc-memprotect": {
+                "default": "no",
+                "prompt": "Enable memory protection (EXPERIMENTAL)"
+            },
+            "enable-apc-pthreadmutex": {
+                "default": "no",
+                "prompt": "Enable pthread mutexes (default)"
+            },
+            "enable-apc-pthreadrwlocks": {
+                "default": "yes",
+                "prompt": "Enable pthread read\/write locks (EXPERIMENTAL)"
+            }
         }
     }
 }

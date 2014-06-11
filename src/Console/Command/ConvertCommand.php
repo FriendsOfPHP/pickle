@@ -37,10 +37,11 @@ class ConvertCommand extends Command
         $path = $input->getArgument('path');
 
 		$path = realpath($path);
+
 		$parser = new PackageXmlParser($path);
 		$package = $parser->parse();
 
-		$convert = new ConvertXml($package, dirname($path));
+		$convert = new ConvertXml($package, $path);
 		$convert->maintainers();
 		$convert->summary();
 		$convert->release();
