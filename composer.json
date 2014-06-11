@@ -1,0 +1,24 @@
+{
+	"name": "php/pickle",
+	"type": "application",
+	"description": "Installer for PHP extension, supports pecl package or install from src tree directly",
+	"homepage": "http://github.com/pierrejoye/pickle",
+	"license": "PHP License 3.01",
+	"authors": [
+        {
+            "name": "Pierre Joye",
+            "email": "pierre.php@gmail.com",
+            "homepage": "http://pecl.php.net/user/pajoye",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+		"php": "5.5.*",
+        "symfony/console": "2.5.*"
+    },
+	"autoload": {
+		"psr-4": {
+			"Pickle\\": ["src/"]
+		}
+	}
+}
