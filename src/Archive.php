@@ -37,6 +37,7 @@ class Archive {
 		}
 
 		$this->pkg->getStatus();
+		$this->pkg->getAuthors();
 		$json = $this->pkg->getReleaseJson();
 		$arch->addFromString('pickle.json', $json);
 		$arch->compress(\Phar::GZ);

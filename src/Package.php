@@ -60,6 +60,34 @@ class Package {
 		return $this->pkg->state;
 	}
 
+
+	function getAuthors() {
+		if (!isset($this->pkg->authors)) {
+			$credits = file($this->path . '/CREDITS');
+			$authors = [];
+			foreach ($credits as $l) {
+				$line = explode(' ', $l);
+				array_walk($line, 
+					function(&$value, $key) { 
+						$value = str_replace(['(',')'], ['',''], trim($value)); 
+					});
+					if (empty($line[0]) || empty($line[1]) || empty($line[2])) {
+						throw new \Exception('CREDITS file invalid or imcomplete');
+					}
+					$author['name']     = $line[0];
+					$author['handle']   = $line[1];
+					$author['email']    = $line[2];
+					$author['homepage']  = $line[3];
+					$authors[] = $author;
+			}
+			if (count($authors) < 1) {
+				throw new \Exception('CREDITS file invalid or imcomplete');
+			}
+			$this->pkg->authors = $authors;
+		}
+		return $this->pkg->authors;
+	}
+
 	function getGitIgnoreFiles() {
 		$file = $this->path . "/.gitignore";
 		$dir = $this->path;
