@@ -4,8 +4,12 @@ namespace Pickle;
 class PackageXmlParser {
 	public $path;
 
-	function __construct($path = 'package.xml') {
-		$this->path = $path;
+	function __construct($path = '') {
+		if (empty($path)) {
+			$path = getcwd() . '/package.xml';
+		} else {
+			$this->path = $path . '/package.xml';
+		}
 	}
 
 	function parse() {

@@ -6,6 +6,7 @@ use Pickle\PackageParser;
 class ConvertXml {
 	private $pkg;
 	private $path;
+	private $configure_options = [];
 
 	function __construct(\SimpleXmlElement $package, $path) {
 		$this->pkg = $package;
@@ -82,19 +83,35 @@ class ConvertXml {
 		$out .= $this->pkg->license;
 		file_put_contents($this->path . '/LICENSE', $out);
 	}
+
+	function extsrcrelease() {
+		if (isset($this->pkg->extsrcrelease->configureoption)) {
+			$configureoption = $this->pkg->extsrcrelease->configureoption;
+		} else {
+			return;
+		}
 	
+		foreach ($configureoption as $opt) {
+			$name     = trim($opt['name']);
+			$default  = trim($opt['default']);
+			$prompt   = trim($opt['prompt']);
+
+			$this->configure_options[$name] = [
+					'default'  => $default,
+					'prompt'   => $prompt
+				];
+;
+		}
+	}
+
 	function generateJson() {
 		$out = [
 				'name' => strtolower($this->pkg->name),
 				'type' => 'extension',
-				'extra' => [
-						'configure-option' => [
-							'with-zlib' => 'string',
-							'enable-foo' => 'yes'
-						]
-					]
+				'extra' => []
 			];
-		$json =  json_encode($out, JSON_PRETTY_PRINT);
+		$out['extra']['configure-options'] = $this->configure_options;
+		echo $json =  json_encode($out, JSON_PRETTY_PRINT);
 
 		file_put_contents($this->path . '/pickle.json', $json);
 	}

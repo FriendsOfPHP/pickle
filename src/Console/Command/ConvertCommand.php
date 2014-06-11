@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Pickle\Validate;
 use Pickle\ConvertXml;
-use Pickle\PackageParser;
+use Pickle\PackageXmlParser;
 
 class ConvertCommand extends Command
 {
@@ -37,7 +37,7 @@ class ConvertCommand extends Command
         $path = $input->getArgument('path');
 
 		$path = realpath($path);
-		$parser = new PackageParser($path);
+		$parser = new PackageXmlParser($path);
 		$package = $parser->parse();
 
 		$convert = new ConvertXml($package, dirname($path));
@@ -45,6 +45,8 @@ class ConvertCommand extends Command
 		$convert->summary();
 		$convert->release();
 		$convert->changelog();
+		$convert->extsrcrelease();
+
 		if (!file_exists("LICENSE")) {
 			$convert->license();
 		}
