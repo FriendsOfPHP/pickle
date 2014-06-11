@@ -26,7 +26,7 @@ class Archive {
 		$tempname = getcwd() . '/apc-tmp.tar';
 		$arch = new \PharData($tempname);
 		$pkg_dir = $this->pkg->getRootDir();
-		print_r($this->pkg->getFiles());
+
 		foreach ($this->pkg->getFiles() as $file) {
 			if (is_dir($file)) {
 				//$arch->addDir($file);

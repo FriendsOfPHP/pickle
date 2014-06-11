@@ -8,7 +8,9 @@ class Package {
 
 	function __construct($path) {
 		$path = realpath($path);
+		var_dump($path);
 		$json_path = $path . '/pickle.json';
+		var_dump($json_path);
 		$this->path = $path;
 		$this->pkg = json_decode(file_get_contents($json_path));
 		if (!$this->pkg) {
@@ -95,7 +97,11 @@ class Package {
 
 		return $files;
 	}
-	
+	function getConfigureOptions()
+	{
+		return $this->pkg->extra->{'configure-options'};
+	}
+
 	function getReleaseJson() {
 		$json = json_encode($this->pkg, JSON_PRETTY_PRINT);
 		if (!$json) {
