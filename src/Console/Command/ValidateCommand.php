@@ -35,21 +35,21 @@ class ValidateCommand extends Command
     {
         $path = $input->getArgument('path');
 
-		if (empty($path)) {
-			$path = getcwd();
-		}
+        if (empty($path)) {
+            $path = getcwd();
+        }
 
-		$packagexml_path = realpath($path . '/' . 'package.xml');
+        $packagexml_path = realpath($path . '/' . 'package.xml');
 
-		$parser = new PackageXmlParser($packagexml_path);
-		$package = $parser->parse();
+        $parser = new PackageXmlParser($packagexml_path);
+        $package = $parser->parse();
 
-		$validate = new Validate($package);
+        $validate = new Validate($package);
 
         if ($input->getOption('yell')) {
             $xml = strtoupper($xml);
         }
-		
+
         $output->writeln($packagexml_path);
     }
 }

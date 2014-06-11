@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Pickle\Validate;
 use Pickle\ConvertXml;
 use Pickle\PackageXmlParser;
 
@@ -36,22 +35,22 @@ class ConvertCommand extends Command
     {
         $path = $input->getArgument('path');
 
-		$path = realpath($path);
+        $path = realpath($path);
 
-		$parser = new PackageXmlParser($path);
-		$package = $parser->parse();
+        $parser = new PackageXmlParser($path);
+        $package = $parser->parse();
 
-		$convert = new ConvertXml($package, $path);
-		$convert->maintainers();
-		$convert->summary();
-		$convert->release();
-		$convert->changelog();
-		$convert->extsrcrelease();
+        $convert = new ConvertXml($package, $path);
+        $convert->maintainers();
+        $convert->summary();
+        $convert->release();
+        $convert->changelog();
+        $convert->extsrcrelease();
 
-		if (!file_exists("LICENSE")) {
-			$convert->license();
-		}
-		$convert->generateJson();
+        if (!file_exists("LICENSE")) {
+            $convert->license();
+        }
+        $convert->generateJson();
         $output->writeln("done.");
     }
 }
