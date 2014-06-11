@@ -1,0 +1,10 @@
+Date:             2006-09-05
+Package version:  3.0.12p1
+Package state:    stable
+API Version:      3.0.0
+API state:        stable
+
+Changelog:
+
+* The only change here is a trivial PHP 4 build fix.  
+     

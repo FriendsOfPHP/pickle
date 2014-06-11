@@ -1,0 +1,11 @@
+Date:             2008-03-29
+Package version:  3.0.18
+Package state:    stable
+API Version:      3.0.0
+API state:        stable
+
+Changelog:
+
+- Revert apc_expunge_cb bug-fix
+- Misc memleaks
+	 

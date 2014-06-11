@@ -1,0 +1,16 @@
+Date:             2007-04-02
+Package version:  3.0.14
+Package state:    stable
+API Version:      3.0.0
+API state:        stable
+
+Changelog:
+
+* Build fix (Shire)
+* Don't hook the upload hook if APC is disabled (Rasmus)
+* Local shadow cache support (Gopal)
+* Avoid uneccessary loops over op_arrays for "known" auto-globals (Gopal)
+* Fix apc_add() to overwrite timed out user entries (Rasmus)
+* Fix double inclusion of files with conditional classes in php4 (Gopal)
+* Allocator fixes to reduce fragmentation (Gopal)
+       

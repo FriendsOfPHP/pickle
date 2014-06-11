@@ -1,0 +1,10 @@
+Date:             2009-08-14
+Package version:  3.1.3p1
+Package state:    beta
+API Version:      3.1.0
+API state:        beta
+
+Changelog:
+
+- fix pecl build / package.xml (Gopal)
+     
