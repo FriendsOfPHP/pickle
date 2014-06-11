@@ -1,0 +1,12 @@
+Date:             2012-04-11
+Package version:  3.1.10
+Package state:    beta
+API Version:      3.1.0
+API state:        stable
+
+Changelog:
+
+- Add PHP 5.4 support (Dmitry, Anatoliy, Pierre)
+- Fixed bug #22679: Fix apc_bin_dump for constants. Use IS_CONSTANT_TYPE_MASK to handle all the constants, including the unqalified ones (instead of ~IS_CONSTANT_INDEX check)
+- Fixed bug #23822, php crashes on apache restart
+  

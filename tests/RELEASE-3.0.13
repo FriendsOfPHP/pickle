@@ -1,0 +1,28 @@
+Date:             2007-02-24
+Package version:  3.0.13
+Package state:    stable
+API Version:      3.0.0
+API state:        stable
+
+Changelog:
+
+* PHP 5.2 file upload progress tracking support (Rasmus)
+* Pthread mutex and spin locks (Shire)
+* Recursive zval support for apc_fetch/_store (Shire, Gopal)
+* apc.stat_ctime flag for ctime checks (Rasmus)
+* Multiple key fetches with apc_fetch (Shire)
+* Canary checks for shm memory deallocation (Gopal)
+* Add hooks for external optimizer (Shire)
+* Obsolete and remove apc optimizer (Gopal)
+* APC info changes - cache insert rate, hit and miss rates (Shire)
+* Fix apc_load_constants (Gopal)
+* Rewrite dump opcode code to use vld (Gopal)
+* Use apc_[ewn]print functions for error reporting (Shire) 
+* Auto global fixes and refactoring (Gopal, Shire)
+* Fix memory leaks in object serialization (Ilia)
+* Memory cleanup code for destructor order (Gopal)
+* Win32 build fixes (Ilia, Wez)
+* ZTS and Php 4 build fixes (Bjori)
+* Add apc_add() function (Rasmus)
+* Add optional limited flag to apc_sma_info() (Rasmus)
+      

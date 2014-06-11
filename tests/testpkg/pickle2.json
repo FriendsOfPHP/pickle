@@ -1,0 +1,10 @@
+{
+    "name": "apc",
+    "type": "extension",
+    "extra": {
+        "configure-option": {
+            "with-zlib": "string",
+            "enable-foo": "yes"
+        }
+    }
+}

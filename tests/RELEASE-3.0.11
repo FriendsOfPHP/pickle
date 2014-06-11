@@ -1,0 +1,28 @@
+Date:             2006-08-16
+Package version:  3.0.11
+Package state:    stable
+API Version:      3.0.0
+API state:        stable
+
+Changelog:
+
+* Made --enable-apc-mmap the default compile option (for real this time)
+
+* Add an optional flag to apc_cache_info() and some apc.php tweaks to make it
+  only fetch header information to make it useful when you have tens of
+  thousands of entries.  (Brian Shire)
+
+* 64-bit fixes (George)
+
+* Don't mix Full Path and Inode keys (George)
+
+* Override ZEND_INCLUDE_OR_EVAL opcode (when possible) to speed up use of
+  require_once() and include_once() statements. (Sara)
+
+* Add a non-blocking write_lock for cache inserts.  This is a better approach
+  to prevent cache slams and deprecates the slam_defense setting. (Rasmus)
+
+* A bit of work on the optimizer.  (Sara)
+
+* Various memory issues resolved. (Gopal)
+     

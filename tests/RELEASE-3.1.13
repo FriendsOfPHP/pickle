@@ -1,0 +1,10 @@
+Date:             2012-09-03
+Package version:  3.1.13
+Package state:    beta
+API Version:      3.1.0
+API state:        stable
+
+Changelog:
+
+       - fix num. segfaults by revert rev. 326820 and issue reported in bug #69972
+      

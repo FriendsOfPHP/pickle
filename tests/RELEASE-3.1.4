@@ -1,0 +1,24 @@
+Date:             2010-08-05
+Package version:  3.1.4
+Package state:    beta
+API Version:      3.1.0
+API state:        beta
+
+Changelog:
+
+ - Windows builds may now have filehits and memory protection if enabled (Kalle)
+ - Renamed the memory protection configure option to --enable-apc-memprotect (Kalle, Shire)
+ - ZTS fixes and optimizations (Kalle, Felipe)
+ - Win32 stat support (Pierre, Kalle) 
+ - Added support for interned strings, run-time caches and Zend Engine 2.4 (Dmitry)
+ - Added apc_exists() (Rasmus)
+ - Fixed potential XSS in apc.php, CVE-2010-3294 (Pierre, Matt Chapman)
+ - Fixed pecl bug #17597 (keys with embedded NUL) (Gopal)
+ - Fixed pecl bug #17650 (Fix goto jump offsets) (Gopal)
+ - Fixed pecl bug #17527 (Standardized error reporting) (Gopal, Paul Dragoonis)
+ - Fixed pecl bug #17089 (Scrub the constant table of all inherited members before caching) (Gopal)
+ - Fixed pecl bug #16860 (files can be included more than once even when include/require_once are used) (Pierre)
+ - Fixed pecl bug #16717 (apc_fetch dies after 1 hour, regardless of ttl settings) (Kalle)
+ - Fixed pecl bug #17597 (apc user cache keys with embedded NULs) (Gopal)
+- Fixed pecl bug #13583 (apc upload progress fixes) (Gopal)
+     
