@@ -16,9 +16,7 @@ class PackageJsonParser {
 		$dir = $this->path;
 		$matches = array();
 		$lines = file($file);
-		
-		var_dump($dir);
-		
+
 		foreach ($lines as $line) {
 			$line = trim($line);
 			if ($line === '') continue;                 # empty line

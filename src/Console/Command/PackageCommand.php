@@ -37,7 +37,7 @@ class ArchiveCommand extends Command
 		$last_release = str_replace('RELEASE-', '', basename($last_release));
 
 		$archive_name = strtolower($package->name . "-$last_release");
-		var_dump($archive_name);
+
 		$package = new Archive(getcwd() . '/' . $archive_name, $path);
 		$package->create();
     }
