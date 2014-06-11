@@ -1,0 +1,4 @@
+pickle
+======
+
+PHP Extension installer
