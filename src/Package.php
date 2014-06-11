@@ -81,8 +81,18 @@ class Package {
 
 	function getFiles() {
 		$ignorefiles = $this->getGitIgnoreFiles();
-		$all = glob($this->path . '/*');
-		$files = array_diff($all, $ignorefiles);
+		$all = array();
+		$dir = $this->path;
+		while($dirs = glob($dir . '*')) {
+			$dir .= '/*';
+			$files = array_diff($all, $ignorefiles);
+			if(!$all) {
+				$all = $dirs;
+			} else {
+				$all = array_merge($all, $dirs);
+			}
+		}
+
 		return $files;
 	}
 	
