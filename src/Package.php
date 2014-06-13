@@ -140,6 +140,28 @@ class Package
         return $files;
     }
 
+	/* If someone prefers a nice regex for both AC_ and PHP_... :) */
+    protected function fetch_arg_ac($which, $config)
+    {
+        $next = 0;
+        $options = [];
+        while (($s = strpos($config, $which, $next)) !== FALSE) {
+            $s = strpos($config, '(', $s);
+            $e = strpos($config, ')', $s + 1);
+            $option = substr($config, $s + 1, $e - $s);
+            list($name, $desc) = explode(',', $option);
+
+			$desc = preg_replace('![\s]+!', ' ', trim($desc));
+			$desc = trim(substr($desc, 1, strlen($desc) - 2));
+			$s_a = strpos($desc, ' ');
+			$desc = trim(substr($desc, $s_a));
+
+            $options[$name] = $desc;
+            $next = $e + 1;
+        }
+        return $options;
+    }
+
     protected function fetch_arg($which, $config)
     {
         $next = 0;
@@ -157,22 +179,18 @@ class Package
 
     function getConfigureOptions()
     {
-        if (!$this->pkg->configure_options) {
+        if (!isset($this->pkg->configure_options)) {
 		    $config = file_get_contents($this->path . '/config.m4');
             $options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
-            $options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
-            $this->pkg->configure_options = $options;
-        }
-        return $this->pkg->configure_options;
-    }
+			$t = $this->fetch_arg_ac('AC_ARG_WITH', $config);
+			$options['with'] = array_merge($options['with'], $t);
 
-    function getReleaseJson()
-    {
-        $json = json_encode($this->pkg, JSON_PRETTY_PRINT);
-        if (!$json) {
-            throw new \Exception('Fail to encode pickle.json');
+            $options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
+			$t = $this->fetch_arg_ac('AC_ARG_ENABLE', $config);
+			$options['enable'] = array_merge($options['enable'], $t);
+            $this->pkg->extra->configure_options = $options;
         }
-        return $json;
+        return $this->pkg->extra->configure_options;
     }
 
     public function getReleaseJson()
