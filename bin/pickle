@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// application.php
+function includeIfExists($file)
+{
+    return file_exists($file) ? include $file : false;
+}
+
+if ((!$loader = includeIfExists(__DIR__.'/../vendor/autoload.php')) && (!$loader = includeIfExists(__DIR__.'/../../../autoload.php'))) {
+    echo 'You must set up the project dependencies, run the following commands:'.PHP_EOL.
+        'curl -sS https://getcomposer.org/installer | php'.PHP_EOL.
+        'php composer.phar install'.PHP_EOL;
+    exit(1);
+}
+
+use Pickle\Console\Command\ValidateCommand;
+use Symfony\Component\Console\Application;
+
+use Pickle\Validate;
+
+$application = new Application();
+$application->add(new ValidateCommand);
+$application->run();
