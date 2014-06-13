@@ -4,7 +4,6 @@ namespace Pickle\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Pickle\Archive;
@@ -27,8 +26,8 @@ class ArchiveCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
-		$pkg = new Package($path);
-		$arch = new Archive($pkg);
-		$arch->create();
+        $pkg = new Package($path);
+        $arch = new Archive($pkg);
+        $arch->create();
     }
 }

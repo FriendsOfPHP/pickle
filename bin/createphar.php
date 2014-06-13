@@ -13,13 +13,13 @@ $p->setSignatureAlgorithm (Phar::SHA1);
 
 $files = array();
 $files['stub.php']='pickle.php';
- 
+
 $rd = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($src_root, FilesystemIterator::SKIP_DOTS));
-foreach($rd as $file) {
-	$path = basename($file->getPathInfo());
-	if (!($path == '.git'|| $path == 'tests' || $path == 'Tests')) {
-		$files[substr($file->getPath() .'/' . $file->getFilename(), $base_dir_pos)] = $file->getPath(). '/' . $file->getFilename();
-	}
+foreach ($rd as $file) {
+    $path = basename($file->getPathInfo());
+    if (!($path == '.git'|| $path == 'tests' || $path == 'Tests')) {
+        $files[substr($file->getPath() .'/' . $file->getFilename(), $base_dir_pos)] = $file->getPath(). '/' . $file->getFilename();
+    }
 }
 
 $p->startBuffering();
