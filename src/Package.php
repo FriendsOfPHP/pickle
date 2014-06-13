@@ -157,8 +157,8 @@ class Package
 
     function getConfigureOptions()
     {
-        $config = file_get_contents($this->path . '/config.m4');
         if (!$this->pkg->configure_options) {
+		    $config = file_get_contents($this->path . '/config.m4');
             $options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
             $options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
             $this->pkg->configure_options = $options;
