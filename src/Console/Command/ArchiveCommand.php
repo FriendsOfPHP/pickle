@@ -27,10 +27,7 @@ class ArchiveCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
-
 		$pkg = new Package($path);
-
-
 		$arch = new Archive($pkg);
 		$arch->create();
     }

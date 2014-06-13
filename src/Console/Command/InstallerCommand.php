@@ -12,7 +12,7 @@ use Pickle\Validate;
 use Pickle\ConvertXml;
 use Pickle\PackageXmlParser;
 use Pickle\Package;
-use Pickle\Installer;
+use Pickle\BuildSrcUnix;
 
 class InstallerCommand extends Command
 {
@@ -36,9 +36,10 @@ class InstallerCommand extends Command
 
 		$pkg = new Package($path);
 		$options = $pkg->getConfigureOptions();
+        $options_value = [];
 		if ($options) {
 			$helper = $this->getHelperSet()->get('question');	
-				$options_value = [];
+
 			foreach ($options as $name => $opt) {
 				switch ($opt->default) {
 					case 'yes':
@@ -55,9 +56,8 @@ class InstallerCommand extends Command
 				$options_value[$name] = $helper->ask($input, $output, $prompt);
 			}
 		}
-		print_r($options_value);
 
-		$inst = new Installer($pkg, $options_value);
-
+		$bld = new BuildSrcUnix($pkg, $options_value);
+		$bld->build();
     }
 }

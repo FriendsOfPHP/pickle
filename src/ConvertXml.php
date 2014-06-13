@@ -1,8 +1,6 @@
 <?php
 namespace Pickle;
 
-use Pickle\PackageParser;
-
 class ConvertXml {
 	private $pkg;
 	private $path;

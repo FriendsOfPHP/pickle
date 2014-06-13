@@ -23,7 +23,7 @@ class Archive {
 
 		/* Work around bug  #67417 [NEW]: ::compress modifies archive basename 
 		creates temp file and rename it */
-		$tempname = getcwd() . '/apc-tmp.tar';
+		$tempname = getcwd() . '/pkl-tmp.tar';
 		$arch = new \PharData($tempname);
 		$pkg_dir = $this->pkg->getRootDir();
 
