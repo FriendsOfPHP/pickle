@@ -36,6 +36,8 @@ class InstallerCommand extends Command
 
 		$pkg = new Package($path);
 		$options = $pkg->getConfigureOptions();
+		print_r($options);
+		exit();
         $options_value = [];
 		if ($options) {
 			$helper = $this->getHelperSet()->get('question');	

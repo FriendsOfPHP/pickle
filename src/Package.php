@@ -126,9 +126,32 @@ class Package {
 
 		return $files;
 	}
+
+	protected function fetch_arg($which, $config)
+	{
+		$next=0;
+		$options = [];
+		while (($s = strpos($config, $which, $next)) !==  FALSE) {
+			$s = strpos($config, '(', $s);
+			$e = strpos($config, ')', $s + 1);
+			$option = substr($config, $s+1 , $e - $s);
+			list($name, $desc) = explode(',', $option);
+			$options[$name] = $desc;
+			$next = $e + 1;
+		}
+		return $options;
+	}
+
+
 	function getConfigureOptions()
 	{
-		return $this->pkg->extra->{'configure-options'};
+		$config = file_get_contents($this->path . '/config.m4');
+		if (!$this->pkg->configure_options) {
+			$options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
+			$options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
+			$this->pkg->configure_options = $options;
+		}
+		return $this->pkg->configure_options;
 	}
 
 	function getReleaseJson() {
