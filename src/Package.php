@@ -79,16 +79,16 @@ class Package
                 $line = explode(' ', $l);
                 array_walk($line,
                     function (&$value, $key) {
-                        $value = str_replace(['(',')'], ['',''], trim($value));
+                        $value = str_replace(['(', ')'], ['', ''], trim($value));
                     });
-                    if (empty($line[0]) || empty($line[1]) || empty($line[2])) {
-                        throw new \Exception('CREDITS file invalid or imcomplete');
-                    }
-                    $author['name']     = $line[0];
-                    $author['handle']   = $line[1];
-                    $author['email']    = $line[2];
-                    $author['homepage']  = $line[3];
-                    $authors[] = $author;
+                if (empty($line[0]) || empty($line[1]) || empty($line[2])) {
+                    throw new \Exception('CREDITS file invalid or imcomplete');
+                }
+                $author['name'] = $line[0];
+                $author['handle'] = $line[1];
+                $author['email'] = $line[2];
+                $author['homepage'] = $line[3];
+                $authors[] = $author;
             }
             if (count($authors) < 1) {
                 throw new \Exception('CREDITS file invalid or imcomplete');
@@ -108,12 +108,12 @@ class Package
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if ($line === '') continue;                 # empty line
-            if (substr($line, 0, 1) == '#') continue;   # a comment
-            if (substr($line, 0, 1)== '!') {           # negated glob
+            if ($line === '') continue; # empty line
+            if (substr($line, 0, 1) == '#') continue; # a comment
+            if (substr($line, 0, 1) == '!') { # negated glob
                 $line = substr($line, 1);
                 $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
-            } else {                                    # normal glob
+            } else { # normal glob
                 $files = glob("$dir/$line");
             }
             $matches = array_merge($matches, $files);
@@ -140,40 +140,40 @@ class Package
         return $files;
     }
 
-	protected function fetch_arg($which, $config)
-	{
-		$next=0;
-		$options = [];
-		while (($s = strpos($config, $which, $next)) !==  FALSE) {
-			$s = strpos($config, '(', $s);
-			$e = strpos($config, ')', $s + 1);
-			$option = substr($config, $s+1 , $e - $s);
-			list($name, $desc) = explode(',', $option);
-			$options[$name] = $desc;
-			$next = $e + 1;
-		}
-		return $options;
-	}
+    protected function fetch_arg($which, $config)
+    {
+        $next = 0;
+        $options = [];
+        while (($s = strpos($config, $which, $next)) !== FALSE) {
+            $s = strpos($config, '(', $s);
+            $e = strpos($config, ')', $s + 1);
+            $option = substr($config, $s + 1, $e - $s);
+            list($name, $desc) = explode(',', $option);
+            $options[$name] = $desc;
+            $next = $e + 1;
+        }
+        return $options;
+    }
 
+    function getConfigureOptions()
+    {
+        $config = file_get_contents($this->path . '/config.m4');
+        if (!$this->pkg->configure_options) {
+            $options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
+            $options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
+            $this->pkg->configure_options = $options;
+        }
+        return $this->pkg->configure_options;
+    }
 
-	function getConfigureOptions()
-	{
-		$config = file_get_contents($this->path . '/config.m4');
-		if (!$this->pkg->configure_options) {
-			$options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
-			$options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
-			$this->pkg->configure_options = $options;
-		}
-		return $this->pkg->configure_options;
-	}
-
-	function getReleaseJson() {
-		$json = json_encode($this->pkg, JSON_PRETTY_PRINT);
-		if (!$json) {
-			throw new \Exception('Fail to encode pickle.json');
-		}
-		return $json;
-	}
+    function getReleaseJson()
+    {
+        $json = json_encode($this->pkg, JSON_PRETTY_PRINT);
+        if (!$json) {
+            throw new \Exception('Fail to encode pickle.json');
+        }
+        return $json;
+    }
 
     public function getReleaseJson()
     {
