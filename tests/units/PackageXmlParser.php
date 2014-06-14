@@ -35,16 +35,13 @@ class PackageXmlParser extends atoum
                         'Package name: dummy' . PHP_EOL .
                         'Package version: 3.1.15' . PHP_EOL
                     )
-            ->given($path = FIXTURES_DIR . '/package-pre-2.0')
+            ->given($path = uniqid())
             ->if($this->newTestedInstance($path))
             ->then
-                ->output(function() {
-                    $this->exception(function() {
-                        $this->testedInstance->parse();
-                    })
-                        ->hasMessage('Unsupported package.xml version, 2.0 or later only is supported');
+                ->exception(function() {
+                    $this->testedInstance->parse();
                 })
-                    ->isEmpty()
+                    ->hasMessage('File not found: ' . $path . '/package.xml')
             ->given($path = FIXTURES_DIR . '/package-no-extension')
             ->if($this->newTestedInstance($path))
             ->then
@@ -55,6 +52,34 @@ class PackageXmlParser extends atoum
                         ->hasMessage('Only extension packages are supported');
                 })
                     ->isEmpty()
+            ->given($path = FIXTURES_DIR . '/package-pre-2.0')
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->output(function() {
+                    $this->exception(function() {
+                        $this->testedInstance->parse();
+                    })
+                        ->hasMessage('Unsupported package.xml version, 2.0 or later only is supported');
+                })
+                    ->isEmpty()
+        ;
+    }
+
+    public function testParseXmlError()
+    {
+        $this
+            ->given(
+                $path = FIXTURES_DIR . '/package',
+                $errorMessage = uniqid(),
+                $errorCode = E_USER_NOTICE,
+                $this->function->simplexml_load_file = false
+            )
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->exception(function() {
+                    $this->testedInstance->parse();
+                })
+                    ->hasMessage('Failed to read ' . $path . '/package.xml')
         ;
     }
 }
