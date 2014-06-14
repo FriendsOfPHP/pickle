@@ -33,7 +33,7 @@ class BuildSrcUnix
     {
         if (is_dir($this->build_dir)) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->build_dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
-           //     $path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+                //$path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
                 echo "rmdir :" . $path->getPathname() . "\n";
             }
             //rmdir($this->build_dir);
