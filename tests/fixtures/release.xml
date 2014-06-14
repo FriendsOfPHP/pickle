@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.4.7" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+    <version>
+        <release>3.1.15</release>
+        <api>3.1.0</api>
+    </version>
+    <stability>
+        <release>beta</release>
+        <api>stable</api>
+    </stability>
+    <notes>This is a note</notes>
+    <date>2014-06-14</date>
+</package>

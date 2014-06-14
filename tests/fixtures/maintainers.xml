@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.4.7" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+    <lead>
+        <name>Rasmus Lerdorf</name>
+        <user>rasmus</user>
+        <email>rasmus@php.net</email>
+        <active>yes</active>
+    </lead>
+    <lead>
+        <name>Pierre Joye</name>
+        <user>pierre</user>
+        <email>pierre@php.net</email>
+        <active>yes</active>
+    </lead>
+    <developer>
+        <name>Jordi Boggiano</name>
+        <user>Seldaek</user>
+        <email>j.boggiano@seld.be</email>
+        <active>yes</active>
+    </developer>
+    <contributor>
+        <name>Julien Bianchi</name>
+        <user>jubianchi</user>
+        <email>contact@jubianchi.fr</email>
+        <active>no</active>
+    </contributor>
+</package>
