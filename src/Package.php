@@ -145,6 +145,8 @@ class Package
     {
         $next = 0;
         $options = [];
+		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+		$default = 'y';
         while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
@@ -153,10 +155,15 @@ class Package
 
 			$desc = preg_replace('![\s]+!', ' ', trim($desc));
 			$desc = trim(substr($desc, 1, strlen($desc) - 2));
+
 			$s_a = strpos($desc, ' ');
 			$desc = trim(substr($desc, $s_a));
 
-            $options[$name] = $desc;
+            $options[$name] = (object) [
+				'prompt'  => $desc,
+				'type'    => $type,
+				'default' => $default
+			];
             $next = $e + 1;
         }
         return $options;
@@ -166,14 +173,21 @@ class Package
     {
         $next = 0;
         $options = [];
+		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'widh';
+		$default = 'y';
         while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
             list($name, $desc) = explode(',', $option);
-            $options[$name] = $desc;
+            $options[$name] = (object)[
+				'prompt'  => $desc,
+				'type'    => $type,
+				'default' => $default
+			];
             $next = $e + 1;
         }
+
         return $options;
     }
 
@@ -190,6 +204,7 @@ class Package
 			$options['enable'] = array_merge($options['enable'], $t);
             $this->pkg->extra->configure_options = $options;
         }
+
         return $this->pkg->extra->configure_options;
     }
 
