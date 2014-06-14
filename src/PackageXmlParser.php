@@ -3,8 +3,18 @@ namespace Pickle;
 
 class PackageXmlParser
 {
+    /**
+     * @var string
+     */
     public $path;
 
+    /**
+     *
+     * Constructor
+     *
+     * @param string $path
+     *
+     */
     public function __construct($path = '')
     {
         if (empty($path)) {
@@ -14,6 +24,13 @@ class PackageXmlParser
         }
     }
 
+    /**
+     *
+     * Parse xml
+     *
+     * @return \SimpleXMLElement
+     *
+     */
     public function parse()
     {
         $sx = simplexml_load_file($this->path);

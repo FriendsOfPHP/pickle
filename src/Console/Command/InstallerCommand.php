@@ -12,6 +12,11 @@ use Pickle\BuildSrcUnix;
 
 class InstallerCommand extends Command
 {
+    /**
+     *
+     * Configuration
+     *
+     */
     protected function configure()
     {
         $this
@@ -25,6 +30,15 @@ class InstallerCommand extends Command
         ;
     }
 
+    /**
+     *
+     * Execute archive
+     *
+     * @param Inputinterface $input
+     *
+     * @param Outputinterface $output
+     *
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');

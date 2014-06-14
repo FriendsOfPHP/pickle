@@ -12,6 +12,12 @@ use Pickle\PackageXmlParser;
 
 class ConvertCommand extends Command
 {
+    /**
+     *
+     *
+     * Configure
+     *
+     */
     protected function configure()
     {
         $this
@@ -23,14 +29,23 @@ class ConvertCommand extends Command
                 'Path to the PECL extension root directory (default pwd)'
             )
             ->addOption(
-               'yell',
-               null,
-               InputOption::VALUE_NONE,
-               'If set, the task will yell in uppercase letters'
+                'yell',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the task will yell in uppercase letters'
             )
         ;
     }
 
+    /**
+     *
+     * Execute archive
+     *
+     * @param Inputinterface $input
+     *
+     * @param Outputinterface $output
+     *
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
