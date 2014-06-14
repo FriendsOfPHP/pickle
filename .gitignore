@@ -1,3 +1,6 @@
 composer.lock
 pickle.phar
 vendor/
+bin/
+!bin/pickle
+!bin/createphar.php
