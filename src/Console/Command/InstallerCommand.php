@@ -41,7 +41,7 @@ class InstallerCommand extends Command
 				print_r($opt);
 				/* enable/with-<extname> */
 				if ($name == $pkg->getName()) {
-					$options_value[$name] = '';
+					$options_value[$name] = true;
 					continue;
 				}
                 switch ($opt->default) {
@@ -56,7 +56,7 @@ class InstallerCommand extends Command
                         break;
                 }
                 $prompt = new ConfirmationQuestion($opt->prompt . " (default: " .$opt->default. "): ", $default);
-                $options_value[$name] = $helper->ask($input, $output, $prompt);
+                $options_value['enable'][$name] = (object) ['type' => $opt->type, 'input' => $helper->ask($input, $output, $prompt)];
             }
         }
 

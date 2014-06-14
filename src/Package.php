@@ -146,11 +146,18 @@ class Package
         $next = 0;
         $options = [];
 		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
-		$default = 'y';
+		$default = true;
         while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
+
+			if ($type == 'enable') {
+				$default = (strpos($option, '-disable-') !== false) ? true : false;
+			} else if ($type == 'with') {
+				$default = (strpos($option, '-without-') !== false) ? true : false;
+			}
+
             list($name, $desc) = explode(',', $option);
 
 			$desc = preg_replace('![\s]+!', ' ', trim($desc));
