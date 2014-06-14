@@ -15,8 +15,11 @@ class PackageXmlParser
      */
     public function __construct($path = '')
     {
-        $this->path = $path;
-        $this->pkg = rtrim($path, '/') . '/package.xml';
+        if (empty($path)) {
+            $this->path = getcwd() . '/package.xml';
+        } else {
+            $this->path = rtrim($path, '/') . '/package.xml';
+        }
     }
 
     /**
@@ -26,7 +29,7 @@ class PackageXmlParser
      */
     public function parse()
     {
-        $sx = simplexml_load_file($this->pkg);
+        $sx = simplexml_load_file($this->path);
 
         if (!($sx['version'] == "2.0" || $sx['version'] == "2.1")) {
             throw new \Exception('Unsupported package.xml version, 2.0 or later only is supported');
@@ -35,6 +38,12 @@ class PackageXmlParser
         if (!isset($sx->providesextension)) {
             throw new \Exception('Only extension packages are supported');
         }
+
+        echo "Packager Version: " . $sx['packagerversion'] . "\n";
+        echo "XML Version: " . $sx['version'] . "\n";
+        echo "Extension pkg: " . $sx->providesextension . "\n";
+        echo "Package name: " . $sx->name . "\n";
+        echo "Package version: " . $sx->version->release . "\n";
 
         return $sx;
     }
