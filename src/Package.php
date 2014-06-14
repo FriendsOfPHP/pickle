@@ -22,8 +22,6 @@ class Package
 
     /**
      *
-     * Constructor
-     *
      * @pram string $path Path to pickle.json
      *
      */
@@ -154,7 +152,7 @@ class Package
         }
 
         return $this->pkg->authors;
-    }   
+    }
 
     /**
      *
@@ -190,14 +188,26 @@ class Package
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
+
+			if ($type == 'enable') {
+				$default = (strpos($option, '-disable-') !== false) ? true : false;
+			} else if ($type == 'with') {
+				$default = (strpos($option, '-without-') !== false) ? true : false;
+			}
+
             list($name, $desc) = explode(',', $option);
 
             $desc = preg_replace('![\s]+!', ' ', trim($desc));
             $desc = trim(substr($desc, 1, strlen($desc) - 2));
-            $s_a = strpos($desc, ' ');
-            $desc = trim(substr($desc, $s_a));
 
-            $options[$name] = $desc;
+			$s_a = strpos($desc, ' ');
+			$desc = trim(substr($desc, $s_a));
+
+            $options[$name] = (object) [
+				'prompt'  => $desc,
+				'type'    => $type,
+				'default' => $default
+			];
             $next = $e + 1;
         }
         return $options;
@@ -207,14 +217,21 @@ class Package
     {
         $next = 0;
         $options = [];
-        while (($s = strpos($config, $which, $next)) !== false) {
+		$type = strpos($which, 'ENABLE') !== false ? 'enable' : 'widh';
+		$default = 'y';
+        while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
             list($name, $desc) = explode(',', $option);
-            $options[$name] = $desc;
+            $options[$name] = (object)[
+				'prompt'  => $desc,
+				'type'    => $type,
+				'default' => $default
+			];
             $next = $e + 1;
         }
+
         return $options;
     }
 
@@ -237,12 +254,13 @@ class Package
             $options['enable'] = array_merge($options['enable'], $t);
             $this->pkg->extra->configure_options = $options;
         }
+
         return $this->pkg->extra->configure_options;
     }
 
     /**
      *
-     * return json strin if the package information can be json_encoded
+     * return json string if the package information can be json_encoded
      *
      * @return string json_encoded string
      *
@@ -257,3 +275,4 @@ class Package
         return $json;
     }
 }
+

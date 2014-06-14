@@ -32,16 +32,23 @@ class InstallerCommand extends Command
 
         $pkg = new Package($path);
         $options = $pkg->getConfigureOptions();
-        $options_value = [];
+		print_r($options);
         if ($options) {
+		    $options_value = [];
             $helper = $this->getHelperSet()->get('question');
 
-            foreach ($options as $name => $opt) {
+            foreach ($options['enable'] as $name => $opt) {
+				print_r($opt);
+				/* enable/with-<extname> */
+				if ($name == $pkg->getName()) {
+					$options_value[$name] = true;
+					continue;
+				}
                 switch ($opt->default) {
-                    case 'yes':
+                    case 'y':
                         $default = true;
                         break;
-                    case 'no':
+                    case 'n':
                         $default = false;
                         break;
                     default:
@@ -49,7 +56,7 @@ class InstallerCommand extends Command
                         break;
                 }
                 $prompt = new ConfirmationQuestion($opt->prompt . " (default: " .$opt->default. "): ", $default);
-                $options_value[$name] = $helper->ask($input, $output, $prompt);
+                $options_value['enable'][$name] = (object) ['type' => $opt->type, 'input' => $helper->ask($input, $output, $prompt)];
             }
         }
 
