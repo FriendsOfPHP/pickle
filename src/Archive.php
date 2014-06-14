@@ -3,6 +3,9 @@ namespace Pickle;
 
 class Archive
 {
+    /**
+     * @var string
+     */
     private $pkg;
 
     /**

@@ -12,12 +12,6 @@ use Pickle\PackageXmlParser;
 
 class ConvertCommand extends Command
 {
-    /**
-     *
-     *
-     * Configure
-     *
-     */
     protected function configure()
     {
         $this
@@ -37,15 +31,6 @@ class ConvertCommand extends Command
         ;
     }
 
-    /**
-     *
-     * Execute archive
-     *
-     * @param Inputinterface $input
-     *
-     * @param Outputinterface $output
-     *
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
