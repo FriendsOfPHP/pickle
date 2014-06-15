@@ -3,10 +3,28 @@ namespace Pickle;
 
 class Package
 {
+    use GitIgnore;
+
+    /**
+     * @var string
+     */
     private $path;
+
+    /**
+     * @var string
+     */
     private $archive_name;
+
+    /**
+     * @var string
+     */
     private $pkg;
 
+    /**
+     *
+     * @pram string $path Path to pickle.json
+     *
+     */
     public function __construct($path)
     {
         $path = realpath($path);
@@ -21,16 +39,37 @@ class Package
         }
     }
 
+    /**
+     *
+     * Get the package name
+     *
+     * @return string
+     *
+     */
     public function getName()
     {
         return $this->pkg->name;
     }
 
+    /**
+     *
+     * Get the root directory path
+     *
+     * @return string
+     *
+     */
     public function getRootDir()
     {
         return $this->path;
     }
 
+    /**
+     *
+     * Get the latest package version
+     *
+     * @return string
+     *
+     */
     public function getVersion()
     {
         if (!isset($this->pkg->version)) {
@@ -54,6 +93,13 @@ class Package
         return $this->pkg->version;
     }
 
+    /**
+     *
+     * Get the package status
+     *
+     * @return string
+     *
+     */
     public function getStatus()
     {
         if (!isset($this->pkg->status)) {
@@ -70,6 +116,13 @@ class Package
         return $this->pkg->state;
     }
 
+    /**
+     *
+     * Get the authors
+     *
+     * @return array
+     *
+     */
     public function getAuthors()
     {
         if (!isset($this->pkg->authors)) {
@@ -77,10 +130,12 @@ class Package
             $authors = [];
             foreach ($credits as $l) {
                 $line = explode(' ', $l);
-                array_walk($line,
+                array_walk(
+                    $line,
                     function (&$value, $key) {
                         $value = str_replace(['(', ')'], ['', ''], trim($value));
-                    });
+                    }
+                );
                 if (empty($line[0]) || empty($line[1]) || empty($line[2])) {
                     throw new \Exception('CREDITS file invalid or imcomplete');
                 }
@@ -99,29 +154,13 @@ class Package
         return $this->pkg->authors;
     }
 
-    public function getGitIgnoreFiles()
-    {
-        $file = $this->path . "/.gitignore";
-        $dir = $this->path;
-        $matches = array();
-        $lines = file($file);
-
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if ($line === '') continue; # empty line
-            if (substr($line, 0, 1) == '#') continue; # a comment
-            if (substr($line, 0, 1) == '!') { # negated glob
-                $line = substr($line, 1);
-                $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
-            } else { # normal glob
-                $files = glob("$dir/$line");
-            }
-            $matches = array_merge($matches, $files);
-        }
-
-        return $matches;
-    }
-
+    /**
+     *
+     * Get files, will not return gitignore files
+     *
+     * @return array
+     *
+     */
     public function getFiles()
     {
         $ignorefiles = $this->getGitIgnoreFiles();
@@ -140,14 +179,12 @@ class Package
         return $files;
     }
 
-	/* If someone prefers a nice regex for both AC_ and PHP_... :) */
-    protected function fetch_arg_ac($which, $config)
+    /* If someone prefers a nice regex for both AC_ and PHP_... :) */
+    protected function fetchArgAc($which, $config)
     {
         $next = 0;
         $options = [];
-		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
-		$default = true;
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
@@ -160,8 +197,8 @@ class Package
 
             list($name, $desc) = explode(',', $option);
 
-			$desc = preg_replace('![\s]+!', ' ', trim($desc));
-			$desc = trim(substr($desc, 1, strlen($desc) - 2));
+            $desc = preg_replace('![\s]+!', ' ', trim($desc));
+            $desc = trim(substr($desc, 1, strlen($desc) - 2));
 
 			$s_a = strpos($desc, ' ');
 			$desc = trim(substr($desc, $s_a));
@@ -176,11 +213,11 @@ class Package
         return $options;
     }
 
-    protected function fetch_arg($which, $config)
+    protected function fetchArg($which, $config)
     {
         $next = 0;
         $options = [];
-		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'widh';
+		$type = strpos($which, 'ENABLE') !== false ? 'enable' : 'widh';
 		$default = 'y';
         while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
@@ -198,23 +235,36 @@ class Package
         return $options;
     }
 
-    function getConfigureOptions()
+    /**
+     * get configurable options
+     *
+     * @return array
+     *
+     */
+    public function getConfigureOptions()
     {
         if (!isset($this->pkg->configure_options)) {
-		    $config = file_get_contents($this->path . '/config.m4');
-            $options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
-			$t = $this->fetch_arg_ac('AC_ARG_WITH', $config);
-			$options['with'] = array_merge($options['with'], $t);
+            $config = file_get_contents($this->path . '/config.m4');
+            $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
+            $t = $this->fetchArgAc('AC_ARG_WITH', $config);
+            $options['with'] = array_merge($options['with'], $t);
 
-            $options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
-			$t = $this->fetch_arg_ac('AC_ARG_ENABLE', $config);
-			$options['enable'] = array_merge($options['enable'], $t);
+            $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
+            $t = $this->fetchArgAc('AC_ARG_ENABLE', $config);
+            $options['enable'] = array_merge($options['enable'], $t);
             $this->pkg->extra->configure_options = $options;
         }
 
         return $this->pkg->extra->configure_options;
     }
 
+    /**
+     *
+     * return json string if the package information can be json_encoded
+     *
+     * @return string json_encoded string
+     *
+     */
     public function getReleaseJson()
     {
         $json = json_encode($this->pkg, JSON_PRETTY_PRINT);

@@ -7,12 +7,28 @@ class ConvertXml
     private $path;
     private $configure_options = [];
 
+    /**
+     *
+     * Constructor
+     *
+     * @param \SimpleXmlElement $package
+     *
+     * @param string $path
+     *
+     */
     public function __construct(\SimpleXmlElement $package, $path)
     {
         $this->pkg = $package;
         $this->path = $path;
     }
 
+    /**
+     *
+     * Create credits
+     *
+     * @return void
+     *
+     */
     public function maintainers()
     {
         $lead = $this->pkg->lead;
@@ -38,6 +54,13 @@ class ConvertXml
         file_put_contents($this->path . '/CREDITS', $out);
     }
 
+    /**
+     *
+     * Create Summary
+     *
+     * @return void
+     *
+     */
     public function summary()
     {
         $summary = $this->pkg->summary;
@@ -45,9 +68,16 @@ class ConvertXml
         file_put_contents($this->path . '/README', $summary . "\n\n" . $description);
     }
 
-    public function release(\SimpleXmlElement $release = NULL)
+    /**
+     *
+     * Release the package
+     *
+     * @param \Simplexmlelement $release Default null
+     *
+     */
+    public function release(\SimpleXmlElement $release = null)
     {
-        if ($release == NULL) {
+        if ($release == null) {
             $package_version  = $this->pkg->version->release;
             $package_state    = $this->pkg->stability->release;
             $api_version      = $this->pkg->version->api;
@@ -73,6 +103,15 @@ class ConvertXml
         file_put_contents($this->path . '/RELEASE-' . $package_version, $out);
     }
 
+    /**
+     *
+     * Build the release information from the changelog release
+     *
+     * @see release
+     *
+     * @return void
+     *
+     */
     public function changelog()
     {
         $changelog = $this->pkg->changelog->release;
@@ -81,6 +120,13 @@ class ConvertXml
         }
     }
 
+    /**
+     *
+     * Put the license
+     *
+     * @return void
+     *
+     */
     public function license()
     {
         $out  = "This package is under the following license(s):\n";
@@ -88,6 +134,10 @@ class ConvertXml
         file_put_contents($this->path . '/LICENSE', $out);
     }
 
+    /**
+     *
+     *
+     */
     public function extsrcrelease()
     {
         if (isset($this->pkg->extsrcrelease->configureoption)) {
@@ -102,13 +152,17 @@ class ConvertXml
             $prompt   = trim($opt['prompt']);
 
             $this->configure_options[$name] = [
-                    'default'  => $default,
-                    'prompt'   => $prompt
-                ];
-;
+                'default'  => $default,
+                'prompt'   => $prompt
+            ];
         }
     }
 
+    /**
+     *
+     * Generate the pickle.json
+     *
+     */
     public function generateJson()
     {
         $out = [
