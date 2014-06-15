@@ -18,7 +18,9 @@
         "symfony/console": "~2.5"
     },
     "require-dev": {
-        "atoum/atoum": "dev-master"
+        "atoum/atoum": "dev-master",
+        "behat/behat": "*",
+        "symfony/process": "~2.5"
     },
     "autoload": {
         "psr-4": {

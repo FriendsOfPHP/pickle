@@ -2,6 +2,7 @@
 namespace Pickle\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,13 +21,20 @@ class InstallerCommand extends Command
             ->addArgument(
                 'path',
                 InputArgument::OPTIONAL,
-                'Path to the PECL extension root directory (default pwd), archive or extension name'
+                'Path to the PECL extension root directory (default pwd), archive or extension name',
+                getcwd()
             )
             ->addOption(
                 'no-convert',
                 null,
                 InputOption::VALUE_NONE,
                 'Disable package conversion'
+            )
+            ->addOption(
+                'dry-run',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not install extension'
             );
         ;
     }
@@ -43,9 +51,8 @@ class InstallerCommand extends Command
                 throw new \RuntimeException('XML package are not supported. Please convert it before install');
             }
 
-            $this->getApplication()
-                ->find('convert')
-                ->run($input, $output);
+            $this->getApplication()->find('convert')
+                ->run(new ArrayInput(['path' => $path]), $output);
 
             $pkg = new Package($path);
         }
@@ -71,12 +78,13 @@ class InstallerCommand extends Command
             }
         }
 
-        $build = new BuildSrcUnix($pkg, $options_value);
-        $build->phpize();
-        $build->createTempDir();
-        $build->configure();
-        $build->install();
-        $build->cleanup();
-
+        if ($input->getOption('dry-run') === false) {
+            $build = new BuildSrcUnix($pkg, $options_value);
+            $build->phpize();
+            $build->createTempDir();
+            $build->configure();
+            $build->install();
+            $build->cleanup();
+        }
     }
 }

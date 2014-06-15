@@ -12,5 +12,6 @@ before_script:
 
 script:
   - vendor/bin/atoum -d tests/units
+  - bin/atoum
   - ~/.composer/vendor/bin/box build
-  - php pickle.phar
+  - bin/behat --format=progress
