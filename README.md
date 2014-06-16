@@ -22,10 +22,9 @@ To avoid CS issues, you should use [php-cs-fixer](http://cs.sensiolabs.org/):
 
 ```sh
 $ php-cs-fixer fix src/
+```
 
 Support
 -------
 
 Support is available via the issue tracker in the github project page or via IRC, EFNet, channel #pickle
-
-```
