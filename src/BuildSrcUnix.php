@@ -24,7 +24,7 @@ class BuildSrcUnix
     public function createTempDir()
     {
         $tmp = sys_get_temp_dir();
-        $build_dir = $tmp . '/pickle-' . $this->pkg->getName();
+        $build_dir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $pkg->getVersion();
         mkdir($build_dir);
         $this->build_dir = $build_dir;
     }
@@ -43,12 +43,17 @@ class BuildSrcUnix
     
     function phpize()
     {
+        $back_cwd = getcwd();
         chdir($this->pkg->getRootDir());
         $this->_runCommand('phpize');
+        chdir($back_cwd);
+
+
     }
 
     function configure()
     {
+        $back_cwd = getcwd();
         chdir($this->build_dir);
         $configure_options = '';
         foreach ($this->options['enable'] as $n => $opt) {
@@ -70,6 +75,7 @@ class BuildSrcUnix
         }
         $configure_options = $conf_option . ' ' . $configure_options;
         $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
+        chdir($back_cwd);
     }
 
     function build()
