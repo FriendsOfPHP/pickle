@@ -3,12 +3,36 @@ namespace Pickle;
 
 class Archive
 {
+    /**
+     * @var string
+     */
     private $pkg;
 
+    /**
+     *
+     * Constructor
+     *
+     * @param Package $package
+     *
+     * @param string $path
+     *
+     */
     public function __construct(Package $package, $path = '')
     {
         $this->pkg = $package;
     }
+
+    /**
+     *
+     * Add directory
+     *
+     * @param string $arch
+     *
+     * @param string $path
+     *
+     * @return void
+     *
+     */
     protected function addDir($arch, $path)
     {
         foreach ($this->pkg->getFiles() as $file) {
@@ -21,6 +45,11 @@ class Archive
         }
     }
 
+    /**
+     *
+     * Create package
+     *
+     */
     public function create()
     {
         $arch_basename = $this->pkg->getName() . '-' . $this->pkg->getVersion();

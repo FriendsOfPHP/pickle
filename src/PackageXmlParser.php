@@ -3,20 +3,30 @@ namespace Pickle;
 
 class PackageXmlParser
 {
+    /**
+     * @var string
+     */
     public $path;
 
+    /**
+     * Constructor
+     *
+     * @param string $path
+     */
     public function __construct($path = '')
     {
-        if (empty($path)) {
-            $path = getcwd() . '/package.xml';
-        } else {
-            $this->path = $path . '/package.xml';
-        }
+        $this->path = $path;
+        $this->pkg = rtrim($path, '/') . '/package.xml';       
     }
 
+    /**
+     * Parse xml
+     *
+     * @return \SimpleXMLElement
+     */
     public function parse()
     {
-        $sx = simplexml_load_file($this->path);
+        $sx = simplexml_load_file($this->pkg);
         echo "Packager Version: " . $sx['packagerversion'] . "\n";
         echo "XML Version: " . $sx['version'] . "\n";
         echo "Extension pkg: " . $sx->providesextension . "\n";

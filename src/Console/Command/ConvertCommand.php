@@ -23,10 +23,10 @@ class ConvertCommand extends Command
                 'Path to the PECL extension root directory (default pwd)'
             )
             ->addOption(
-               'yell',
-               null,
-               InputOption::VALUE_NONE,
-               'If set, the task will yell in uppercase letters'
+                'yell',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the task will yell in uppercase letters'
             )
         ;
     }
