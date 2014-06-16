@@ -63,8 +63,9 @@ class InstallerCommand extends Command
         $bld = new BuildSrcUnix($pkg, $options_value);
     $bld->phpize();
     $bld->createTempDir();
-        //$bld->build();
     $bld->configure();
+    $build->install();
+    $bld->cleanup():
 
     }
 }
