@@ -24,7 +24,7 @@ class BuildSrcUnix
     public function createTempDir()
     {
         $tmp = sys_get_temp_dir();
-        $build_dir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $pkg->getVersion();
+        $build_dir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
         mkdir($build_dir);
         $this->build_dir = $build_dir;
     }
@@ -45,10 +45,12 @@ class BuildSrcUnix
     {
         $back_cwd = getcwd();
         chdir($this->pkg->getRootDir());
-        $this->_runCommand('phpize');
+     
+        $res = $this->_runCommand('phpize');
         chdir($back_cwd);
-
-
+        if (!$res) {
+            throw new \Exception('phpize failed');
+        }
     }
 
     function configure()
@@ -74,8 +76,13 @@ class BuildSrcUnix
             $conf_option = '--with-' . $this->pkg->getName() . '=shared';
         }
         $configure_options = $conf_option . ' ' . $configure_options;
-        $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
+
+        $res = $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
         chdir($back_cwd);
+        if (!$res)
+        {
+            throw new \Exception('configure failed, see log at '. $this->build_dir . '\config.log');
+        }
     }
 
     function build()
@@ -84,6 +91,9 @@ class BuildSrcUnix
         chdir($this->build_dir);
         $this->_runCommand('make');
         chdir($back_cwd);
+        if (!$this->_runCommand('make')) {
+            throw new \Exception('make failed');
+        }
         /*
            if (is_object($descfile)) {
            $pkg = $descfile;

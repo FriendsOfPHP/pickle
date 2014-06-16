@@ -266,7 +266,7 @@ class Package
             $options['enable'] = array_merge($options['enable'], $t);
             $this->pkg->extra->configure_options = $options;
         }
-
+        print_r($this->pkg->extra->configure_options);
         return $this->pkg->extra->configure_options;
     }
 
