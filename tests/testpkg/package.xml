@@ -245,7 +245,7 @@
       </stability>
       <license uri="http://www.php.net/license">PHP License</license>
       <notes>
-   - When include_once_override is on, use the cached realpath. See rev. 328172 
+   - When include_once_override is on, use the cached realpath. See rev. 328172
      for a full explanation (Rasmus)
    - Fixed bug #63852 (apc 3.1.13 fails to build if __APC_SMA_DEBUG__ is set) (Laruence)
    - Fixed bug #63434 (Segfault if apc.shm_strings_buffer excceed apc.shm_size) (Laruence)
@@ -315,7 +315,7 @@
       <notes>
 - In cli mode with stat=0 and canonicalize=1 make sure cwd is searched
 - Fixed bug #62302 apc.include_once_override=1 made everything crash
-- Fixed bug #59829 APC should not try to canonicalize file URLs 
+- Fixed bug #59829 APC should not try to canonicalize file URLs
 - Fixed bug #62398 stat=0 replaces an include/require filename with empty string
 - Fixed bug #61799 Typo in 'SEARCH' regex of apc.php
 - Fixed bugs #61824,61912,61956,62190,62230 ext/DOM memory corruption (cschneid)
@@ -393,7 +393,7 @@
      - Fix regression bug #20529: Look up files in CWD
      - Pool allocator fixes for large allocations
      - trunk compat fixes (Kalle)
-     - ZTS fixes (Pierre, Hirokawa) 
+     - ZTS fixes (Pierre, Hirokawa)
      - Readability and warning fixes (Pierre, Kalle)
      </notes>
     </release>
@@ -408,7 +408,7 @@
       </version>
       <date>2003-07-01</date>
       <notes>
-Complete rework.  
+Complete rework.
      </notes>
     </release>
     <release>
@@ -422,7 +422,7 @@ Complete rework.
       </version>
       <date>2003-07-01</date>
       <notes>
-Win32 support added.  
+Win32 support added.
       </notes>
     </release>
     <release>
@@ -685,14 +685,14 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
   array with a single loop for copying, jump fixups and auto
   global pre-fetches. (Gopal)
 
-* Perform fetch_global checks only in php5 and only if 
+* Perform fetch_global checks only in php5 and only if
   auto_globals_jit is enabled. (Gopal)
 
 * Fix bug #8579 - scrub php4 classes' function_table and default
   properties before inserting into cache. (Gopal)
 
-* Fix bug #8606 - ZEND_FETCH_GLOBAL is not an opcode, but is a 
-  op1-&gt;type.  The opcodes applicable are ZEND_FETCH_R and 
+* Fix bug #8606 - ZEND_FETCH_GLOBAL is not an opcode, but is a
+  op1-&gt;type.  The opcodes applicable are ZEND_FETCH_R and
   ZEND_FETCH_W. (Gopal)
 
 * PHP 5.2 Compatibility (Gopal)
@@ -701,9 +701,9 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
 
 * Fixed crash when apc run in CLI, but enable_cli is off. (Ilia)
 
-* Ensure that the apc_globals-&gt;cache_stack is cleared before the 
+* Ensure that the apc_globals-&gt;cache_stack is cleared before the
   shm cache is destroyed. Fixes segfault for corner-case i.e request
-  shutdown (apc_deactivate) is not called before module shutdown 
+  shutdown (apc_deactivate) is not called before module shutdown
   calls (php_apc_shutdown_globals)  (Gopal)
 
 * TSRM fixes (ensure ts_free_id before apc.so is dlclosed) (Gopal)
@@ -722,7 +722,7 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
       </version>
       <date>2006-09-05</date>
       <notes>
-* The only change here is a trivial PHP 4 build fix.  
+* The only change here is a trivial PHP 4 build fix.
      </notes>
     </release>
     <release>
@@ -761,7 +761,7 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
 * APC info changes - cache insert rate, hit and miss rates (Shire)
 * Fix apc_load_constants (Gopal)
 * Rewrite dump opcode code to use vld (Gopal)
-* Use apc_[ewn]print functions for error reporting (Shire) 
+* Use apc_[ewn]print functions for error reporting (Shire)
 * Auto global fixes and refactoring (Gopal, Shire)
 * Fix memory leaks in object serialization (Ilia)
 * Memory cleanup code for destructor order (Gopal)
@@ -897,7 +897,7 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
       <date>2008-12-12</date>
       <notes>
 - PHP4 compatibilty break
-- apc_pool allocator (Gopal) 
+- apc_pool allocator (Gopal)
 - doubly-linked sma allocator (Shire)
 - php 5.3 gc compatibility (Gopal)
 - APCIterator for easy access (Shire)
@@ -983,7 +983,7 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
  - Windows builds may now have filehits and memory protection if enabled (Kalle)
  - Renamed the memory protection configure option to --enable-apc-memprotect (Kalle, Shire)
  - ZTS fixes and optimizations (Kalle, Felipe)
- - Win32 stat support (Pierre, Kalle) 
+ - Win32 stat support (Pierre, Kalle)
  - Added support for interned strings, run-time caches and Zend Engine 2.4 (Dmitry)
  - Added apc_exists() (Rasmus)
  - Fixed potential XSS in apc.php, CVE-2010-3294 (Pierre, Matt Chapman)
@@ -1013,9 +1013,9 @@ Allow keys used in apc_store/apc_fetch/apc_delete to be binary safe and prevent 
  - Add support for php-trunk, new op code, new internals string format, etc. (Dmitry)
  - apc_debug are not compiler-valid NOPs for non-debug builds
 
- - Fixed relative paths resolution when ./foo/a.php or ../foo/a.php (or similar path) 
+ - Fixed relative paths resolution when ./foo/a.php or ../foo/a.php (or similar path)
    are used. 'foo/a.php' path behaviors remain unchanged
- - Fixed a possible memory corruption, when partial path cannot be resolved 
+ - Fixed a possible memory corruption, when partial path cannot be resolved
    by expand_filepath()
  - Fixed notices in apc.php (Tomasz Krawczyk)
 

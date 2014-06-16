@@ -140,39 +140,40 @@ class Package
         return $files;
     }
 
-	/* If someone prefers a nice regex for both AC_ and PHP_... :) */
+    /* If someone prefers a nice regex for both AC_ and PHP_... :) */
     protected function fetch_arg_ac($which, $config)
     {
         $next = 0;
         $options = [];
-		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
-		$default = true;
+        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $default = true;
         while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-			if ($type == 'enable') {
-				$default = (strpos($option, '-disable-') !== false) ? true : false;
-			} else if ($type == 'with') {
-				$default = (strpos($option, '-without-') !== false) ? true : false;
-			}
+            if ($type == 'enable') {
+                $default = (strpos($option, '-disable-') !== false) ? true : false;
+            } elseif ($type == 'with') {
+                $default = (strpos($option, '-without-') !== false) ? true : false;
+            }
 
             list($name, $desc) = explode(',', $option);
 
-			$desc = preg_replace('![\s]+!', ' ', trim($desc));
-			$desc = trim(substr($desc, 1, strlen($desc) - 2));
+            $desc = preg_replace('![\s]+!', ' ', trim($desc));
+            $desc = trim(substr($desc, 1, strlen($desc) - 2));
 
-			$s_a = strpos($desc, ' ');
-			$desc = trim(substr($desc, $s_a));
+            $s_a = strpos($desc, ' ');
+            $desc = trim(substr($desc, $s_a));
 
             $options[$name] = (object) [
-				'prompt'  => $desc,
-				'type'    => $type,
-				'default' => $default
-			];
+                'prompt'  => $desc,
+                'type'    => $type,
+                'default' => $default
+            ];
             $next = $e + 1;
         }
+
         return $options;
     }
 
@@ -180,35 +181,35 @@ class Package
     {
         $next = 0;
         $options = [];
-		$type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'widh';
-		$default = 'y';
+        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'widh';
+        $default = 'y';
         while (($s = strpos($config, $which, $next)) !== FALSE) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
             list($name, $desc) = explode(',', $option);
-            $options[$name] = (object)[
-				'prompt'  => $desc,
-				'type'    => $type,
-				'default' => $default
-			];
+            $options[$name] = (object) [
+                'prompt'  => $desc,
+                'type'    => $type,
+                'default' => $default
+            ];
             $next = $e + 1;
         }
 
         return $options;
     }
 
-    function getConfigureOptions()
+    public function getConfigureOptions()
     {
         if (!isset($this->pkg->configure_options)) {
-		    $config = file_get_contents($this->path . '/config.m4');
+            $config = file_get_contents($this->path . '/config.m4');
             $options['with'] = $this->fetch_arg('PHP_ARG_WITH', $config);
-			$t = $this->fetch_arg_ac('AC_ARG_WITH', $config);
-			$options['with'] = array_merge($options['with'], $t);
+            $t = $this->fetch_arg_ac('AC_ARG_WITH', $config);
+            $options['with'] = array_merge($options['with'], $t);
 
             $options['enable'] = $this->fetch_arg('PHP_ARG_ENABLE', $config);
-			$t = $this->fetch_arg_ac('AC_ARG_ENABLE', $config);
-			$options['enable'] = array_merge($options['enable'], $t);
+            $t = $this->fetch_arg_ac('AC_ARG_ENABLE', $config);
+            $options['enable'] = array_merge($options['enable'], $t);
             $this->pkg->extra->configure_options = $options;
         }
 
@@ -225,4 +226,3 @@ class Package
         return $json;
     }
 }
-

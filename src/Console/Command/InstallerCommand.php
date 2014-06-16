@@ -32,18 +32,18 @@ class InstallerCommand extends Command
 
         $pkg = new Package($path);
         $options = $pkg->getConfigureOptions();
-		print_r($options);
+        print_r($options);
         if ($options) {
-		    $options_value = [];
+            $options_value = [];
             $helper = $this->getHelperSet()->get('question');
 
             foreach ($options['enable'] as $name => $opt) {
-				print_r($opt);
-				/* enable/with-<extname> */
-				if ($name == $pkg->getName()) {
-					$options_value[$name] = true;
-					continue;
-				}
+            print_r($opt);
+            /* enable/with-<extname> */
+            if ($name == $pkg->getName()) {
+                $options_value[$name] = true;
+                continue;
+            }
                 switch ($opt->default) {
                     case 'y':
                         $default = true;
@@ -61,6 +61,10 @@ class InstallerCommand extends Command
         }
 
         $bld = new BuildSrcUnix($pkg, $options_value);
-        $bld->build();
+    $bld->phpize();
+    $bld->createTempDir();
+        //$bld->build();
+    $bld->configure();
+
     }
 }
