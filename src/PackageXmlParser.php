@@ -31,8 +31,7 @@ class PackageXmlParser
         echo "XML Version: " . $sx['version'] . "\n";
         echo "Extension pkg: " . $sx->providesextension . "\n";
         echo "Pkg name: " . $sx->name . "\n";
-        echo "Pkg version: " . $sx->changelog->release->version->release . "\n";
-
+        echo "Pkg version: " . $sx->version->release . "\n";
         if (!($sx['version'] == "2.0" || $sx['version'] == "2.1")) {
             throw new \Exception('Unsupported package.xml version, 2.0 or later only is supported');
         }
