@@ -115,8 +115,10 @@ class ConvertXml
     public function changelog()
     {
         $changelog = $this->pkg->changelog->release;
-        foreach ($changelog as $release) {
-            $this->release($release);
+        if (!empty($changelog)) {
+            foreach ($changelog as $release) {
+                $this->release($release);
+            }
         }
     }
 
