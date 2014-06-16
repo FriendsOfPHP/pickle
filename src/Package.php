@@ -228,6 +228,14 @@ class Package
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
             list($name, $desc) = explode(',', $option);
+            
+            if ($type == 'enable') {
+                $default = (strpos($option, '-disable-') !== false) ? true : false;
+            } elseif ($type == 'with') {
+                $default = (strpos($option, '-without-') !== false) ? true : false;
+            }
+
+
             $options[$name] = (object) [
                 'prompt'  => $desc,
                 'type'    => $type,
