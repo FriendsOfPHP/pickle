@@ -50,9 +50,7 @@ class BuildSrcUnix
     function configure()
     {
         chdir($this->build_dir);
-        var_dump(getcwd());
         $configure_options = '';
-        var_dump($this->options['enable']);
         foreach ($this->options['enable'] as $n => $opt) {
             if ($opt->type == 'enable') {
                 $t = $opt->input == true ? 'enable' : 'disable';
@@ -65,15 +63,12 @@ class BuildSrcUnix
         $enable_ext = '';
         $opt = $this->pkg->getConfigureOptions();
         $ext_enable_option = $opt['enable'][$this->pkg->getName()];
-        var_dump($ext_enable_option);
         if ($ext_enable_option->type == 'enable') {
             $conf_option = '--enable-' . $this->pkg->getName() . '=shared';
         } else {
             $conf_option = '--with-' . $this->pkg->getName() . '=shared';
         }
         $configure_options = $conf_option . ' ' . $configure_options;
-        var_dump($configure_options);
-        var_dump($this->pkg->getRootDir() . '/configure '. $configure_options);
         $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
     }
 
