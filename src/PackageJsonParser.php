@@ -2,7 +2,7 @@
 namespace Pickle;
 
 class PackageJsonParser
-{    
+{
     use GitIgnore;
 
     /**

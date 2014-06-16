@@ -40,12 +40,12 @@ class BuildSrcUnix
             echo "rmdir :" . $this->build_dir . "\n";
         }
     }
-    
-    function phpize()
+
+    public function phpize()
     {
         $back_cwd = getcwd();
         chdir($this->pkg->getRootDir());
-     
+
         $res = $this->_runCommand('phpize');
         chdir($back_cwd);
         if (!$res) {
@@ -53,7 +53,7 @@ class BuildSrcUnix
         }
     }
 
-    function configure()
+    public function configure()
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
@@ -79,13 +79,12 @@ class BuildSrcUnix
 
         $res = $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
         chdir($back_cwd);
-        if (!$res)
-        {
+        if (!$res) {
             throw new \Exception('configure failed, see log at '. $this->build_dir . '\config.log');
         }
     }
 
-    function build()
+    public function build()
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
@@ -241,7 +240,7 @@ class BuildSrcUnix
     */
     }
 
-    function install()
+    public function install()
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
@@ -249,7 +248,7 @@ class BuildSrcUnix
         chdir($back_cwd);
     }
 
-    function _runCommand($command, $callback = null)
+    public function _runCommand($command, $callback = null)
     {
         $this->log(1, "running: $command");
         $pp = popen("$command 2>&1", "r");

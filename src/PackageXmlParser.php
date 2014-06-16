@@ -16,7 +16,7 @@ class PackageXmlParser
     public function __construct($path = '')
     {
         $this->path = $path;
-        $this->pkg = rtrim($path, '/') . '/package.xml';       
+        $this->pkg = rtrim($path, '/') . '/package.xml';
     }
 
     /**
