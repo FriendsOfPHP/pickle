@@ -137,7 +137,7 @@ class Package
                     }
                 );
                 if (empty($line[0]) || empty($line[1]) || empty($line[2])) {
-                    throw new \Exception('CREDITS file invalid or imcomplete');
+                    throw new \Exception('CREDITS file invalid or incomplete');
                 }
                 $author['name'] = $line[0];
                 $author['handle'] = $line[1];
@@ -146,7 +146,7 @@ class Package
                 $authors[] = $author;
             }
             if (count($authors) < 1) {
-                throw new \Exception('CREDITS file invalid or imcomplete');
+                throw new \Exception('CREDITS file invalid or incomplete');
             }
             $this->pkg->authors = $authors;
         }
@@ -184,9 +184,9 @@ class Package
     {
         $next = 0;
         $options = [];
-        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         $default = true;
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
@@ -221,9 +221,9 @@ class Package
         $next = 0;
         $options = [];
 
-        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         $default = 'y';
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);

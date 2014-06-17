@@ -38,13 +38,13 @@ class InstallerCommand extends Command
 
             foreach ($options['enable'] as $name => $opt) {
             /* enable/with-<extname> */
-            if ($name == $pkg->getName()) {
-                $options_value[$name] = true;
-                continue;
-            }
-            $default = $opt->default;
-            $prompt = new ConfirmationQuestion($opt->prompt . " (default: " .$opt->default. "): ", $default);
-            $options_value['enable'][$name] = (object) ['type' => $opt->type, 'input' => $helper->ask($input, $output, $prompt)];
+                if ($name == $pkg->getName()) {
+                    $options_value[$name] = true;
+                    continue;
+                }
+                $default = $opt->default;
+                $prompt = new ConfirmationQuestion($opt->prompt . " (default: " .$opt->default. "): ", $default);
+                $options_value['enable'][$name] = (object) ['type' => $opt->type, 'input' => $helper->ask($input, $output, $prompt)];
             }
         }
 
