@@ -1,14 +1,12 @@
 <?php
 namespace Pickle\Console\Command;
 
+use Pickle\Package\XML\Converter;
+use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use Pickle\ConvertXml;
-use Pickle\PackageXmlParser;
 
 class ConvertCommand extends Command
 {
@@ -20,47 +18,25 @@ class ConvertCommand extends Command
             ->addArgument(
                 'path',
                 InputArgument::OPTIONAL,
-                'Path to the PECL extension root directory (default pwd)'
-            )
-            ->addOption(
-                'yell',
-                null,
-                InputOption::VALUE_NONE,
-                'If set, the task will yell in uppercase letters'
+                'Path to the PECL extension root directory (default pwd)',
+                getcwd()
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument('path');
+        $path = rtrim($input->getArgument('path'), '/\\');
+        $parser = new Package\XML\Parser($path);
+        $convert = new Converter($path, $parser);
 
-        $path = realpath($path);
+        $parser->parse();
+        $package = $convert->convert();
 
-        $parser = new PackageXmlParser($path);
-        $output->writeln('Package.xml meta:');
+        $output->writeln('<info>Successfully converted ' . $package->getName() . '</info>');
 
-        $package = $parser->parse();
-
-
-        $output->writeln('Packager Version: ' . $package['packagerversion']);
-        $output->writeln('XML Version:      ' . $package['version']);
-        $output->writeln('Extension pkg:    ' . $package->providesextension);
-        $output->writeln('Pkg name:         ' . $package->name);
-        $output->writeln('Pkg version:      ' . $package->version->release);
-
-        $convert = new ConvertXml($package, $path);
-        $convert->maintainers();
-        $convert->summary();
-        $convert->release();
-        $convert->changelog();
-        $convert->extsrcrelease();
-
-        if (!file_exists("LICENSE")) {
-            $convert->license();
-        }
-        $convert->generateJson();
-        $output->writeln("done.");
-
+        $this->getApplication()
+            ->find('info')
+            ->run($input, $output);
     }
 }

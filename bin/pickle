@@ -21,6 +21,7 @@ use Pickle\Console\Command\ValidateCommand;
 use Pickle\Console\Command\ConvertCommand;
 use Pickle\Console\Command\ArchiveCommand;
 use Pickle\Console\Command\InstallerCommand;
+use Pickle\Console\Command\InfoCommand;
 
 use Symfony\Component\Console\Application;
 
@@ -29,4 +30,5 @@ $application->add(new ValidateCommand);
 $application->add(new ConvertCommand);
 $application->add(new ArchiveCommand);
 $application->add(new InstallerCommand);
+$application->add(new InfoCommand);
 $application->run();

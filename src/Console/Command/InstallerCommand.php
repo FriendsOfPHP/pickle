@@ -27,24 +27,44 @@ class InstallerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument('path');
-        $path = realpath($path);
+        $helper = $this->getHelperSet()->get('question');
+        $path = rtrim($input->getArgument('path'), '/\\');
 
-        $pkg = new Package($path);
+        try {
+            $pkg = new Package($path);
+        } catch (\InvalidArgumentException $exception) {
+            $prompt = new ConfirmationQuestion('This package use the old XML format. Do you want to convert it (default: yes)? ');
+            $convert = $helper->ask($input, $output, $prompt);
+
+            if (false === $convert) {
+                throw new \RuntimeException('XML package are not supported. Please convert it before install');
+            }
+
+            $this->getApplication()
+                ->find('convert')
+                ->run($input, $output);
+
+            $pkg = new Package($path);
+        }
+
         $options = $pkg->getConfigureOptions();
+        $options_value = null;
         if ($options) {
             $options_value = [];
-            $helper = $this->getHelperSet()->get('question');
 
             foreach ($options['enable'] as $name => $opt) {
-            /* enable/with-<extname> */
+                /* enable/with-<extname> */
                 if ($name == $pkg->getName()) {
                     $options_value[$name] = true;
+
                     continue;
                 }
-                $default = $opt->default;
-                $prompt = new ConfirmationQuestion($opt->prompt . " (default: " .$opt->default. "): ", $default);
-                $options_value['enable'][$name] = (object) ['type' => $opt->type, 'input' => $helper->ask($input, $output, $prompt)];
+
+                $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                $options_value['enable'][$name] = (object) [
+                    'type' => $opt->type,
+                    'input' => $helper->ask($input, $output, $prompt)
+                ];
             }
         }
 

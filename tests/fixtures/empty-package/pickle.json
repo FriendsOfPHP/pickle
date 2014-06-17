@@ -1,0 +1,7 @@
+{
+    "name": "dummy",
+    "type": "extension",
+    "extra": {
+        "configure-options": []
+    }
+}

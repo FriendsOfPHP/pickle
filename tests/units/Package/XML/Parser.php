@@ -1,10 +1,10 @@
 <?php
-namespace Pickle\tests\units;
+namespace Pickle\tests\units\Package\XML;
 
 use atoum;
 use Pickle\tests;
 
-class PackageXmlParser extends atoum
+class Parser extends atoum
 {
     public function testParse()
     {
@@ -12,22 +12,17 @@ class PackageXmlParser extends atoum
             ->given($path = FIXTURES_DIR . '/package')
             ->if($this->newTestedInstance($path))
             ->then
-                ->output(function() {
-                    $this->object($this->testedInstance->parse())->isInstanceOf('SimpleXmlElement');
-                })
-                    ->isEmpty
-            ->given($this->function->getcwd = $path)
-            ->if($this->newTestedInstance)
-            ->then
-                ->output(function() {
-                    $this->object($this->testedInstance->parse())->isInstanceOf('SimpleXmlElement');
-                })
-                    ->isEmpty
+                ->variable($this->testedInstance->parse())
             ->given($path = uniqid())
-            ->if($this->newTestedInstance($path))
             ->then
-                ->exception(function() {
-                    $this->testedInstance->parse();
+                ->exception(function() use ($path) {
+                    $this->newTestedInstance($path);
+                })
+                    ->hasMessage('Directory not found: ' . $path)
+            ->given($path = FIXTURES_DIR)
+            ->then
+                ->exception(function() use ($path) {
+                    $this->newTestedInstance($path);
                 })
                     ->hasMessage('File not found: ' . $path . '/package.xml')
             ->given($path = FIXTURES_DIR . '/package-no-extension')
