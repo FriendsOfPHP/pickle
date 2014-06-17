@@ -39,6 +39,7 @@ class Archive
             if (is_dir($path)) {
                 $arch->addDir($path);
             } else {
+                $pkg_dir = $this->pkg->getRootDir();
                 $name = str_replace($pkg_dir, '', $file);
                 $arch->addFile($path, $name);
             }

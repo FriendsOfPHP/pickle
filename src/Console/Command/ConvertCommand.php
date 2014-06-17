@@ -38,7 +38,7 @@ class ConvertCommand extends Command
         $path = realpath($path);
 
         $parser = new PackageXmlParser($path);
-		$output->writeln('Package.xml meta:');
+        $output->writeln('Package.xml meta:');
 
         $package = $parser->parse();
 
