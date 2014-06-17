@@ -15,26 +15,14 @@ class PackageXmlParser extends atoum
                 ->output(function() {
                     $this->object($this->testedInstance->parse())->isInstanceOf('SimpleXmlElement');
                 })
-                    ->isEqualTo(
-                        'Packager Version: 1.4.7' . PHP_EOL .
-                        'XML Version: 2.0' . PHP_EOL .
-                        'Extension pkg: dummy' . PHP_EOL .
-                        'Package name: dummy' . PHP_EOL .
-                        'Package version: 3.1.15' . PHP_EOL
-                    )
+                    ->isEmpty
             ->given($this->function->getcwd = $path)
             ->if($this->newTestedInstance)
             ->then
                 ->output(function() {
                     $this->object($this->testedInstance->parse())->isInstanceOf('SimpleXmlElement');
                 })
-                    ->isEqualTo(
-                        'Packager Version: 1.4.7' . PHP_EOL .
-                        'XML Version: 2.0' . PHP_EOL .
-                        'Extension pkg: dummy' . PHP_EOL .
-                        'Package name: dummy' . PHP_EOL .
-                        'Package version: 3.1.15' . PHP_EOL
-                    )
+                    ->isEmpty
             ->given($path = uniqid())
             ->if($this->newTestedInstance($path))
             ->then
@@ -51,7 +39,7 @@ class PackageXmlParser extends atoum
                     })
                         ->hasMessage('Only extension packages are supported');
                 })
-                    ->isEmpty()
+                    ->isEmpty
             ->given($path = FIXTURES_DIR . '/package-pre-2.0')
             ->if($this->newTestedInstance($path))
             ->then
@@ -61,7 +49,7 @@ class PackageXmlParser extends atoum
                     })
                         ->hasMessage('Unsupported package.xml version, 2.0 or later only is supported');
                 })
-                    ->isEmpty()
+                    ->isEmpty
         ;
     }
 

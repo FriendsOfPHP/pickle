@@ -54,12 +54,6 @@ class PackageXmlParser
             throw new \Exception('Only extension packages are supported');
         }
 
-        echo "Packager Version: " . $sx['packagerversion'] . "\n";
-        echo "XML Version: " . $sx['version'] . "\n";
-        echo "Extension pkg: " . $sx->providesextension . "\n";
-        echo "Package name: " . $sx->name . "\n";
-        echo "Package version: " . $sx->version->release . "\n";
-
         return $sx;
     }
 }
