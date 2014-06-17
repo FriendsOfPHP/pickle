@@ -38,7 +38,16 @@ class ConvertCommand extends Command
         $path = realpath($path);
 
         $parser = new PackageXmlParser($path);
+		$output->writeln('Package.xml meta:');
+
         $package = $parser->parse();
+
+
+        $output->writeln('Packager Version: ' . $package['packagerversion']);
+        $output->writeln('XML Version:      ' . $package['version']);
+        $output->writeln('Extension pkg:    ' . $package->providesextension);
+        $output->writeln('Pkg name:         ' . $package->name);
+        $output->writeln('Pkg version:      ' . $package->version->release);
 
         $convert = new ConvertXml($package, $path);
         $convert->maintainers();
@@ -52,5 +61,6 @@ class ConvertCommand extends Command
         }
         $convert->generateJson();
         $output->writeln("done.");
+
     }
 }
