@@ -220,7 +220,6 @@ class Package
     {
         $next = 0;
         $options = [];
-
         $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
         $default = 'y';
         while (($s = strpos($config, $which, $next)) !== FALSE) {
@@ -255,6 +254,10 @@ class Package
     public function getConfigureOptions()
     {
         if (!isset($this->pkg->configure_options)) {
+            if (file_exists($this->path . '/config.m4') === false) {
+                throw new \Exception('File not found: ' . $this->path . '/config.m4');
+            }
+
             $config = file_get_contents($this->path . '/config.m4');
             $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
             $t = $this->fetchArgAc('AC_ARG_WITH', $config);
