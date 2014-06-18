@@ -4,6 +4,7 @@ namespace Pickle\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
@@ -21,6 +22,12 @@ class InstallerCommand extends Command
                 'path',
                 InputArgument::OPTIONAL,
                 'Path to the PECL extension root directory (default pwd), archive or extension name'
+            )
+            ->addOption(
+                'no-convert',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable package conversion'
             );
         ;
     }
@@ -33,10 +40,7 @@ class InstallerCommand extends Command
         try {
             $pkg = new Package($path);
         } catch (\InvalidArgumentException $exception) {
-            $prompt = new ConfirmationQuestion('This package use the old XML format. Do you want to convert it (default: yes)? ');
-            $convert = $helper->ask($input, $output, $prompt);
-
-            if (false === $convert) {
+            if ($input->getOption('no-convert')) {
                 throw new \RuntimeException('XML package are not supported. Please convert it before install');
             }
 
