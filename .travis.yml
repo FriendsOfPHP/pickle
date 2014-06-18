@@ -8,6 +8,9 @@ php:
 before_script:
   - rm -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
   - composer install --prefer-source
+  - composer global require 'kherge/box=~2.4' --prefer-source
 
 script:
   - vendor/bin/atoum -d tests/units
+  - ~/.composer/vendor/bin/box build
+  - php pickle.phar
