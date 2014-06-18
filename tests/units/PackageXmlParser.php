@@ -1,0 +1,73 @@
+<?php
+namespace Pickle\tests\units;
+
+use atoum;
+use Pickle\tests;
+
+class PackageXmlParser extends atoum
+{
+    public function testParse()
+    {
+        $this
+            ->given($path = FIXTURES_DIR . '/package')
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->output(function() {
+                    $this->object($this->testedInstance->parse())->isInstanceOf('SimpleXmlElement');
+                })
+                    ->isEmpty
+            ->given($this->function->getcwd = $path)
+            ->if($this->newTestedInstance)
+            ->then
+                ->output(function() {
+                    $this->object($this->testedInstance->parse())->isInstanceOf('SimpleXmlElement');
+                })
+                    ->isEmpty
+            ->given($path = uniqid())
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->exception(function() {
+                    $this->testedInstance->parse();
+                })
+                    ->hasMessage('File not found: ' . $path . '/package.xml')
+            ->given($path = FIXTURES_DIR . '/package-no-extension')
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->output(function() {
+                    $this->exception(function() {
+                        $this->testedInstance->parse();
+                    })
+                        ->hasMessage('Only extension packages are supported');
+                })
+                    ->isEmpty
+            ->given($path = FIXTURES_DIR . '/package-pre-2.0')
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->output(function() {
+                    $this->exception(function() {
+                        $this->testedInstance->parse();
+                    })
+                        ->hasMessage('Unsupported package.xml version, 2.0 or later only is supported');
+                })
+                    ->isEmpty
+        ;
+    }
+
+    public function testParseXmlError()
+    {
+        $this
+            ->given(
+                $path = FIXTURES_DIR . '/package',
+                $errorMessage = uniqid(),
+                $errorCode = E_USER_NOTICE,
+                $this->function->simplexml_load_file = false
+            )
+            ->if($this->newTestedInstance($path))
+            ->then
+                ->exception(function() {
+                    $this->testedInstance->parse();
+                })
+                    ->hasMessage('Failed to read ' . $path . '/package.xml')
+        ;
+    }
+}

@@ -15,8 +15,11 @@ class PackageXmlParser
      */
     public function __construct($path = '')
     {
-        $this->path = $path;
-        $this->pkg = rtrim($path, '/') . '/package.xml';
+        if (empty($path)) {
+            $this->path = getcwd() . '/package.xml';
+        } else {
+            $this->path = rtrim($path, '/') . '/package.xml';
+        }
     }
 
     /**
@@ -26,7 +29,22 @@ class PackageXmlParser
      */
     public function parse()
     {
-        $sx = simplexml_load_file($this->pkg);
+        if (file_exists($this->path) === false) {
+            throw new \Exception('File not found: ' . $this->path);
+        }
+
+        $sx = @simplexml_load_file($this->path);
+
+        if ($sx === false) {
+            $error = error_get_last();
+            $exception = null;
+
+            if (null !== $error) {
+                $exception = new \Exception($error['message'], $error['type']);
+            }
+
+            throw new \Exception('Failed to read ' . $this->path, 0, $exception);
+        }
 
         if (!($sx['version'] == "2.0" || $sx['version'] == "2.1")) {
             throw new \Exception('Unsupported package.xml version, 2.0 or later only is supported');

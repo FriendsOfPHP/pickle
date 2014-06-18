@@ -14,8 +14,11 @@
         }
     ],
     "require": {
-        "php": "~5.5",
+        "php": "~5.4",
         "symfony/console": "~2.5"
+    },
+    "require-dev": {
+        "atoum/atoum": "dev-master"
     },
     "autoload": {
         "psr-4": {

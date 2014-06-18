@@ -173,7 +173,7 @@ class ConvertXml
                 'extra' => []
             ];
         $out['extra']['configure-options'] = $this->configure_options;
-        $json =  json_encode($out, JSON_PRETTY_PRINT);
+        $json = json_encode($out, JSON_PRETTY_PRINT);
 
         file_put_contents($this->path . '/pickle.json', $json);
     }
