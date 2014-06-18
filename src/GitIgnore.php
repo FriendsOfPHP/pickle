@@ -22,10 +22,10 @@ trait GitIgnore
             if ($line === '') {
                 continue;                 # empty line
             }
-            if (substr($line, 0, 1) == '#') {
+            if ($line[0] === '#') {
                 continue;   # a comment
             }
-            if (substr($line, 0, 1)== '!') {           # negated glob
+            if ($line[0] === '!') {           # negated glob
                 $line = substr($line, 1);
                 $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
             } else {                                    # normal glob
