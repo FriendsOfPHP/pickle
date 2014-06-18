@@ -5,6 +5,9 @@ use Pickle\Package;
 
 class Parser extends Package\Parser
 {
+    /**
+     * @var string Path to the package definition file
+     */
     private $path;
 
     /**
@@ -12,13 +15,20 @@ class Parser extends Package\Parser
      */
     private $json;
 
+    /**
+     * @var array
+     */
     private $authors;
+
+    /**
+     * @var array
+     */
     private $releases;
 
     /**
-     * Constructor
+     * @param string $path Path to the package root directory
      *
-     * @param string $path
+     * @throws \InvalidArgumentException If the pickle.json file does not exist
      */
     public function __construct($path)
     {
@@ -50,11 +60,17 @@ class Parser extends Package\Parser
         }
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->json->name;
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         $release = $this->getCurrentRelease();
@@ -62,6 +78,9 @@ class Parser extends Package\Parser
         return $release['version'];
     }
 
+    /**
+     * @return string
+     */
     public function getStatus()
     {
         $release = $this->getCurrentRelease();
@@ -69,6 +88,11 @@ class Parser extends Package\Parser
         return $release['status'];
     }
 
+    /**
+     * @throws \RuntimeException If the CREDITS file could not be read
+     *
+     * @return array
+     */
     public function getAuthors()
     {
         if (null === $this->authors) {
@@ -102,6 +126,9 @@ class Parser extends Package\Parser
         return $this->authors;
     }
 
+    /**
+     * @return string
+     */
     public function getSummary()
     {
         $lines = file($this->root . '/README');
@@ -109,6 +136,9 @@ class Parser extends Package\Parser
         return array_shift($lines);
     }
 
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         $lines = file($this->root . '/README');
@@ -117,6 +147,11 @@ class Parser extends Package\Parser
         return implode('', $lines);
     }
 
+    /**
+     * @see Parser::getCurrentRelease
+     *
+     * @return array
+     */
     public function getCurrentRelease()
     {
         $releases = $this->getReleases();
@@ -124,11 +159,21 @@ class Parser extends Package\Parser
         return $releases[count($releases) - 1];
     }
 
+    /**
+     * @see Parser::getPastReleases
+     *
+     * @return array
+     */
     public function getPastReleases()
     {
         return array_slice($this->getReleases(), 0, -1);
     }
 
+    /**
+     * @throws \RuntimeException If there is no release file
+     *
+     * @return array
+     */
     protected function getReleases()
     {
         if (null === $this->releases) {
@@ -155,6 +200,15 @@ class Parser extends Package\Parser
         return $this->releases;
     }
 
+    /**
+     * @see Parser::getCurrentRelease
+     *
+     * @throws \RuntimeException
+     *
+     * @param string $path Path to a RELEASE file
+     *
+     * @return array
+     */
     protected function formatRelease($path)
     {
         $release = file_get_contents($path);
@@ -177,11 +231,14 @@ Changelog:
             'notes' => $matches['notes'],
             'api' => [
                 'version' => $matches['api_version'],
-                'status' => $matches['api_status'],
+                'status' => $matches['api_status']
             ]
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getExtraOptions()
     {
         return $this->json->extra['configure-options'];

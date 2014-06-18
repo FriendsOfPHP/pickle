@@ -8,6 +8,9 @@ abstract class Parser
      */
     protected $root;
 
+    /**
+     * @var array
+     */
     private $configureOptions;
 
     /**
@@ -26,27 +29,80 @@ abstract class Parser
         }
     }
 
+    /**
+     * @return string
+     */
     abstract public function getName();
 
+    /**
+     * @return string
+     */
     abstract public function getVersion();
 
+    /**
+     * @return string
+     */
     abstract public function getStatus();
 
+    /**
+     * @return array
+     */
     abstract public function getAuthors();
 
+    /**
+     * @return string
+     */
     abstract public function getSummary();
 
+    /**
+     * @return string
+     */
     abstract public function getDescription();
 
+    /**
+     * Get the current release.
+     *
+     * Release format:
+     * [
+     *     'version' => '2.0.0',
+     *     'status' => 'stable',
+     *     'date' => '2014-06-18',
+     *     'notes' => 'Lorem ipsum',
+     *     'api' => [
+     *         'version' => '2.0.0',
+     *         'status' => 'stable'
+     *     ]
+     * ]
+     *
+     * @return array
+     */
     abstract public function getCurrentRelease();
 
+    /**
+     * Get previous releases
+     *
+     * @see Parser::getCurrentRelease
+     *
+     * @return array
+     */
     abstract public function getPastReleases();
-
-    abstract public function getExtraOptions();
 
     /**
      * Get configurable options
      *
+     * Options format:
+     * [
+     *     "option-name": [
+     *         "default": "value",
+     *         "prompt": "Option description"
+     *     ]
+     * ]
+     *
+     * @return array
+     */
+    abstract public function getExtraOptions();
+
+    /**
      * @return array
      */
     public function getConfigureOptions()
@@ -67,7 +123,14 @@ abstract class Parser
         return $this->configureOptions;
     }
 
-    /* If someone prefers a nice regex for both AC_ and PHP_... :) */
+    /**
+     * @todo If someone prefers a nice regex for both AC_ and PHP_... :)
+     *
+     * @param $which
+     * @param $config
+     *
+     * @return array
+     */
     protected function fetchArgAc($which, $config)
     {
         $next = 0;
@@ -104,6 +167,12 @@ abstract class Parser
         return $options;
     }
 
+    /**
+     * @param $which
+     * @param $config
+     *
+     * @return array
+     */
     protected function fetchArg($which, $config)
     {
         $next = 0;

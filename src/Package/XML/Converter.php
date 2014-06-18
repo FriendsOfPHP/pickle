@@ -5,12 +5,19 @@ use Pickle\Package;
 
 class Converter
 {
+    /**
+     * @var string Package's root directory
+     */
     private $path;
+
+    /**
+     * @var Parser Package definition parser
+     */
     private $parser;
 
     /**
      * @param string             $path   Package's root directory
-     * @param Package\XML\Parser $parser Package parser
+     * @param Package\XML\Parser $parser Package definition parser
      */
     public function __construct($path, Package\XML\Parser $parser)
     {
@@ -68,6 +75,7 @@ class Converter
     {
         $summary = $this->parser->getSummary();
         $description = $this->parser->getDescription();
+
         file_put_contents($this->path . '/README', $summary . "\n\n" . $description);
     }
 

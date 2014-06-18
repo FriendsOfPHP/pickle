@@ -11,7 +11,7 @@ class Package
     private $path;
 
     /**
-     * @var Package\JSON\Parser Package's parser
+     * @var Package\Parser Package definition parser
      */
     private $parser;
 
@@ -44,62 +44,96 @@ class Package
         return $this->path;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->parser->getName();
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         return $this->parser->getVersion();
     }
 
+    /**
+     * @return string
+     */
     public function getStatus()
     {
         return $this->parser->getStatus();
     }
 
+    /**
+     * @return array
+     */
     public function getAuthors()
     {
         return $this->parser->getAuthors();
     }
 
+    /**
+     * @return string
+     */
     public function getSummary()
     {
         return $this->parser->getSummary();
     }
 
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         return $this->parser->getDescription();
     }
 
+    /**
+     * @see Parser::getCurrentRelease
+     *
+     * @return array
+     */
     public function getCurrentRelease()
     {
         return $this->parser->getCurrentRelease();
     }
 
+    /**
+     * @see Parser::getPastReleases
+     *
+     * @return array
+     */
     public function getPastReleases()
     {
         return $this->parser->getPastReleases();
     }
 
+    /**
+     * @return array
+     */
     public function getConfigureOptions()
     {
         return $this->parser->getConfigureOptions();
     }
 
+    /**
+     * @see Parser::getExtraOptions
+     *
+     * @return array
+     */
     public function getExtraOptions()
     {
         return $this->parser->getExtraOptions();
     }
 
     /**
-     *
      * Get files, will not return gitignore files
      *
      * @return array
-     *
      */
     public function getFiles()
     {

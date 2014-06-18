@@ -6,10 +6,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Pickle\Archive;
 use Pickle\Package;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class ArchiveCommand extends Command
 {
