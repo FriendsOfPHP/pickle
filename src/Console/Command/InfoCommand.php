@@ -3,6 +3,7 @@ namespace Pickle\Console\Command;
 
 use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,7 +43,7 @@ class InfoCommand extends Command
             ));
         }
 
-        $table = $this->getHelper('table');
+        $table = new Table($output);
         $table
             ->setRows([
                ['<info>Package name</info>', $package->getName()],
@@ -61,7 +62,7 @@ class InfoCommand extends Command
                     )
                ]
             ])
-            ->render($output);
+            ->render();
 
         $output->write([
             PHP_EOL,

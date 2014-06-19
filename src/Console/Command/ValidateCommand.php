@@ -3,6 +3,7 @@ namespace Pickle\Console\Command;
 
 use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +29,7 @@ class ValidateCommand extends Command
         $package = new Package\XML\Parser($path);
         $package->parse();
 
-        $table = $this->getHelper('table');
+        $table = new Table($output);
         $table
             ->setRows([
                ['<info>Packager version</info>', $package->getPackagerVersion()],
@@ -37,6 +38,6 @@ class ValidateCommand extends Command
                ['<info>Package version</info>', $package->getVersion()],
                ['<info>Extension</info>', $package->getProvidedExtension()],
             ])
-            ->render($output);
+            ->render();
     }
 }
