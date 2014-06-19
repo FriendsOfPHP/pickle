@@ -6,5 +6,32 @@
         <release>3.1.15</release>
         <api>3.1.0</api>
     </version>
+    <date>2013-??-??</date>
+    <notes>This is a note</notes>
     <summary>This is a dummy package</summary>
+    <lead>
+        <name>Rasmus Lerdorf</name>
+        <user>rasmus</user>
+        <email>rasmus@php.net</email>
+        <active>yes</active>
+    </lead>
+    <developer>
+        <name>Sara Golemon</name>
+        <user>pollita</user>
+        <email>pollita@php.net</email>
+        <active>no</active>
+    </developer>
+    <release>
+        <date>2013-01-02</date>
+        <version>
+            <release>3.1.14</release>
+            <api>3.1.0</api>
+        </version>
+        <stability>
+            <release>beta</release>
+            <api>stable</api>
+        </stability>
+        <license uri="http://www.php.net/license">PHP License</license>
+        <notes>This is a note</notes>
+    </release>
 </package>

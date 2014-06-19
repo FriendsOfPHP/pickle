@@ -4,8 +4,8 @@ namespace Pickle\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Pickle\Archive;
 use Pickle\Package;
 
@@ -19,14 +19,35 @@ class ArchiveCommand extends Command
             ->addArgument(
                 'path',
                 InputArgument::OPTIONAL,
-                'Path to the PECL extension root directory (default pwd)'
+                'Path to the PECL extension root directory (default pwd)',
+                getcwd()
+            )
+            ->addOption(
+                'no-convert',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable package conversion'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument('path');
-        $pkg = new Package($path);
+        $path = rtrim($input->getArgument('path'), '/\\');
+
+        try {
+            $pkg = new Package($path);
+        } catch (\InvalidArgumentException $exception) {
+            if ($input->getOption('no-convert')) {
+                throw new \RuntimeException('XML package are not supported. Please convert it before install');
+            }
+
+            $this->getApplication()
+                ->find('convert')
+                ->run($input, $output);
+
+            $pkg = new Package($path);
+        }
+
         $arch = new Archive($pkg);
         $arch->create();
     }
