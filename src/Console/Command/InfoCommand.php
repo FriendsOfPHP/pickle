@@ -43,32 +43,8 @@ class InfoCommand extends Command
             ));
         }
 
-        $table = new Table($output);
-        $table
-            ->setRows([
-               ['<info>Package name</info>', $package->getName()],
-               ['<info>Package version (current release)</info>', $package->getVersion()],
-               ['<info>Package status</info>', $package->getStatus()],
-               [
-                   '<info>Previous release(s)</info>',
-                   implode(
-                       ', ',
-                       array_map(
-                           function ($release) {
-                               return $release['version'];
-                           },
-                           $package->getPastReleases()
-                       )
-                    )
-               ]
-            ])
-            ->render();
-
-        $output->write([
-            PHP_EOL,
-            '# ' . $package->getSummary(),
-            PHP_EOL,
-            trim($package->getDescription()) . PHP_EOL
-        ]);
+        $helper = $this->getHelper('package');
+        $helper->showInfo($output, $package);
+        $helper->showSummary($output, $package);
     }
 }

@@ -35,8 +35,7 @@ class ConvertCommand extends Command
 
         $output->writeln('<info>Successfully converted ' . $package->getName() . '</info>');
 
-        $this->getApplication()
-            ->find('info')
-            ->run($input, $output);
+        $helper = $this->getHelper('package');
+        $helper->showInfo($output, $package);
     }
 }

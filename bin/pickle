@@ -17,18 +17,17 @@ if ((!$loader = includeIfExists(__DIR__.'/../vendor/autoload.php')) && (!$loader
     exit(1);
 }
 
-use Pickle\Console\Command\ValidateCommand;
-use Pickle\Console\Command\ConvertCommand;
-use Pickle\Console\Command\ArchiveCommand;
-use Pickle\Console\Command\InstallerCommand;
-use Pickle\Console\Command\InfoCommand;
-
+use Pickle\Console\Command;
+use Pickle\Console\Helper;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$application->add(new ValidateCommand);
-$application->add(new ConvertCommand);
-$application->add(new ArchiveCommand);
-$application->add(new InstallerCommand);
-$application->add(new InfoCommand);
+
+$application->getHelperSet()->set(new \Pickle\Console\Helper\PackageHelper());
+
+$application->add(new Command\ValidateCommand);
+$application->add(new Command\ConvertCommand);
+$application->add(new Command\ArchiveCommand);
+$application->add(new Command\InstallerCommand);
+$application->add(new Command\InfoCommand);
 $application->run();
