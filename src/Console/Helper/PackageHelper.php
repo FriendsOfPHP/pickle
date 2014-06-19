@@ -22,6 +22,24 @@ class PackageHelper extends Helper
 
     public function showInfo(OutputInterface $output, Package $package)
     {
+        $releases = array_map(
+            function ($release) {
+                return $release['version'];
+            },
+            $package->getPastReleases()
+        );
+
+        $list = $sep = '';
+        foreach ($releases as $k => $release) {
+            $list .= $sep . $release;
+
+            if ($k > 0 && $k % 5 === 0) {
+                $sep = PHP_EOL;
+            } else {
+                $sep = ', ';
+            }
+        }
+
         $table = new Table($output);
         $table
             ->setRows([
@@ -30,15 +48,7 @@ class PackageHelper extends Helper
                 ['<info>Package status</info>', $package->getStatus()],
                 [
                     '<info>Previous release(s)</info>',
-                    implode(
-                        ', ',
-                        array_map(
-                            function ($release) {
-                                return $release['version'];
-                            },
-                            $package->getPastReleases()
-                        )
-                    )
+                    $list
                 ]
             ])
             ->render();

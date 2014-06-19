@@ -3,6 +3,12 @@ default:
         pickle:
             paths:    [ %paths.base%/features ]
             contexts: [ FeatureContext ]
+        pecl:
+            paths:    [ %paths.base%/features/pecl ]
+            contexts: [ FeatureContext ]
         pickle_phar:
             paths:    [ %paths.base%/features ]
+            contexts: [ PharFeatureContext ]
+        phar_pecl:
+            paths:    [ %paths.base%/features/pecl ]
             contexts: [ PharFeatureContext ]

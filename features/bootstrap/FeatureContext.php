@@ -69,12 +69,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function iAmInThePath($path)
     {
-        $newWorkingDir = $this->workingDir .'/' . $path;
-        if (!file_exists($newWorkingDir)) {
-            mkdir($newWorkingDir, 0777, true);
-        }
-
-        $this->workingDir = $newWorkingDir;
+        $this->moveToNewPath($path);
     }
 
     /**
@@ -263,5 +258,25 @@ class FeatureContext implements SnippetAcceptingContext
         }
 
         rmdir($path);
+    }
+
+    /**
+     * @Then /^"([^"]*)" ((?:\d+\.?)+(?:RC\d*|beta\d*|alpha\d*)?) extension exists$/
+     */
+    public function extensionExists($name, $version)
+    {
+        $url = 'http://pecl.php.net/get/' . $name . '/' . $version;
+        $file = $name . '-' . $version . '.tgz';
+        $dir = $this->workingDir . '/' . basename($file, '.tgz');
+
+        if (is_dir($dir) === false) {
+            mkdir($dir, 0777, true);
+        }
+
+        file_put_contents($dir . '/' . $file, file_get_contents($url));
+
+        $p = new PharData($dir . '/' . $file);
+        $phar = $p->decompress('.tgz');
+        $phar->extractTo($dir);
     }
 }

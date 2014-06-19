@@ -80,7 +80,7 @@ Feature: convert package.xml to RELEASE files
     When I run "pickle convert"
     Then it should pass with:
       """
-      uccessfully converted dummy
+      Successfully converted dummy
       +-----------------------------------+----------------+
       | Package name                      | dummy          |
       | Package version (current release) | 3.1.15         |

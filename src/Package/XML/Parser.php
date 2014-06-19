@@ -117,8 +117,12 @@ class Parser extends Package\Parser
     {
         $releases = array();
 
-        foreach ($this->xml->changelog->release as $release) {
-            if(empty($release) === false) {
+        if (isset($this->xml->changelog->release)) {
+            foreach ($this->xml->changelog->release as $release) {
+                if(empty($release)) {
+                    continue;
+                }
+
                 $releases[] = $this->formatRelease($release);
             }
         }
