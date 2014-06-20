@@ -212,7 +212,7 @@ class Parser extends Package\Parser
     protected function formatRelease($path)
     {
         $release = file_get_contents($path);
-        $pattern = '/Date:\s*(?P<date>[\d\?]{4}-[\d\?]{2}-[\d\?]{2})
+        $pattern = '/Date:\s*(?P<date>[\d\?x]{4}-[\d\?x]{1,2}-[\d\?x]{1,2})
 Package version:\s*(?P<version>.*)
 Package state:\s*(?P<status>\w+)
 API Version:\s*(?P<api_version>.*)

@@ -42,3 +42,21 @@ $ vendor/bin/atoum
 # To run tests in a loop, ideal to do TDD
 $ vendor/bin/atoum --loop
 ```
+
+There are also some [Behat](https://github.com/behat/behat) tests.
+You will get Behat, among other dependencies, when running `composer install`.
+To run tests, you will need to run the following command:
+
+```sh
+$ vendor/bin/behat
+
+# To choose the test suite you want to run
+$ vendor/bin/behat -s pickle
+```
+
+Pickle is covered using 4 Behat tests suites:
+
+* `pickle` runs tests against pickle's sources
+* `pickle_phar` runs tests against pickle's Phar which you have to manually build
+* `pecl` tests PECL extensions conversion with pickle's sources
+* `phar_pecl` tests PECL extensions conversion with pickle's Phar

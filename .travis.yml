@@ -11,6 +11,6 @@ before_script:
   - composer global require 'kherge/box=~2.4' --prefer-source
 
 script:
-  - vendor/bin/atoum -d tests/units
+  - vendor/bin/atoum
   - ~/.composer/vendor/bin/box build
-  - php pickle.phar
+  - vendor/bin/behat --format=progress
