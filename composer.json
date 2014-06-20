@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "atoum/atoum": "dev-master",
-        "behat/behat": "*",
+        "behat/behat": "~3.0",
         "symfony/process": "~2.5"
     },
     "autoload": {
