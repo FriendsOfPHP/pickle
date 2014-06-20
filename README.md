@@ -50,7 +50,7 @@ To run tests, you will need to run the following command:
 ```sh
 $ vendor/bin/behat
 
-# To chosse the test suite you want to run
+# To choose the test suite you want to run
 $ vendor/bin/behat -s pickle
 ```
 
