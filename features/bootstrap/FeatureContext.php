@@ -203,9 +203,6 @@ class FeatureContext implements SnippetAcceptingContext
             $output = str_replace(PHP_EOL, "\n", $output);
         }
 
-        // Replace wrong warning message of HHVM
-        $output = str_replace('Notice: Undefined index: ', 'Notice: Undefined offset: ', $output);
-
         return trim(preg_replace("/ +$/m", '', $output));
     }
 
@@ -219,25 +216,6 @@ class FeatureContext implements SnippetAcceptingContext
                 '%%TEST_DIR%%' => realpath($this->dir)
             ]
         );
-
-        // windows path fix
-        if ('/' !== DIRECTORY_SEPARATOR) {
-            $text = preg_replace_callback(
-                '/ features\/[^\n ]+/', function ($matches) {
-                    return str_replace('/', DIRECTORY_SEPARATOR, $matches[0]);
-                }, $text
-            );
-            $text = preg_replace_callback(
-                '/\<span class\="path"\>features\/[^\<]+/', function ($matches) {
-                    return str_replace('/', DIRECTORY_SEPARATOR, $matches[0]);
-                }, $text
-            );
-            $text = preg_replace_callback(
-                '/\+[fd] [^ ]+/', function ($matches) {
-                    return str_replace('/', DIRECTORY_SEPARATOR, $matches[0]);
-                }, $text
-            );
-        }
 
         return $text;
     }
