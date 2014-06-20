@@ -1,13 +1,13 @@
 default:
     suites:
         pickle:
-            paths:    [ %paths.base%/features ]
+            paths:    [ %paths.base%/features/pickle ]
             contexts: [ FeatureContext ]
         pecl:
             paths:    [ %paths.base%/features/pecl ]
             contexts: [ FeatureContext ]
         pickle_phar:
-            paths:    [ %paths.base%/features ]
+            paths:    [ %paths.base%/features/pickle ]
             contexts: [ PharFeatureContext ]
         phar_pecl:
             paths:    [ %paths.base%/features/pecl ]
