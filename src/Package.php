@@ -16,9 +16,7 @@ class Package
     private $parser;
 
     /**
-     *
-     * @pram string $path Package's root directory
-     *
+     * @param string $path Package's root directory
      */
     public function __construct($path, Package\Parser $parser = null)
     {
@@ -33,11 +31,9 @@ class Package
     }
 
     /**
-     *
      * Get the package's root directory
      *
      * @return string
-     *
      */
     public function getRootDir()
     {

@@ -16,7 +16,6 @@ class Parser extends Package\Parser
      * Constructor
      *
      * @param string $path Path to the package root directory
-     *
      * @throws \InvalidArgumentException If the directory does not exist
      */
     public function __construct($path)

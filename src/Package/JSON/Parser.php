@@ -27,7 +27,6 @@ class Parser extends Package\Parser
 
     /**
      * @param string $path Path to the package root directory
-     *
      * @throws \InvalidArgumentException If the pickle.json file does not exist
      */
     public function __construct($path)
@@ -89,9 +88,8 @@ class Parser extends Package\Parser
     }
 
     /**
-     * @throws \RuntimeException If the CREDITS file could not be read
-     *
      * @return array
+     * @throws \RuntimeException If the CREDITS file could not be read
      */
     public function getAuthors()
     {
@@ -149,7 +147,6 @@ class Parser extends Package\Parser
 
     /**
      * @see Parser::getCurrentRelease
-     *
      * @return array
      */
     public function getCurrentRelease()
@@ -161,7 +158,6 @@ class Parser extends Package\Parser
 
     /**
      * @see Parser::getPastReleases
-     *
      * @return array
      */
     public function getPastReleases()
@@ -170,9 +166,8 @@ class Parser extends Package\Parser
     }
 
     /**
-     * @throws \RuntimeException If there is no release file
-     *
      * @return array
+     * @throws \RuntimeException If there is no release file
      */
     protected function getReleases()
     {
@@ -202,12 +197,9 @@ class Parser extends Package\Parser
 
     /**
      * @see Parser::getCurrentRelease
-     *
-     * @throws \RuntimeException
-     *
      * @param string $path Path to a RELEASE file
-     *
      * @return array
+     * @throws \RuntimeException
      */
     protected function formatRelease($path)
     {

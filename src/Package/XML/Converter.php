@@ -37,7 +37,7 @@ class Converter
         $this->release();
         $this->changelog();
 
-        if (file_exists($this->path . "/LICENSE") === false) {
+        if (file_exists($this->path . '/LICENSE') === false) {
             $this->license();
         }
 
@@ -65,11 +65,9 @@ class Converter
     }
 
     /**
-     *
      * Create Summary
      *
      * @return void
-     *
      */
     public function summary()
     {
@@ -80,11 +78,9 @@ class Converter
     }
 
     /**
-     *
      * Release the package
      *
      * @param array $release Release to write (defaults to current release)
-     *
      * @return void
      */
     public function release(array $release = null)
@@ -93,7 +89,7 @@ class Converter
             $release = $this->parser->getCurrentRelease();
         }
 
-        $out  = 'Date:             ' . $release['date'] . "\n";
+        $out = 'Date:             ' . $release['date'] . "\n";
         $out .= 'Package version:  ' . $release['version'] . "\n";
         $out .= 'Package state:    ' . $release['status'] . "\n";
         $out .= 'API Version:      ' . $release['api']['version'] . "\n";
@@ -105,13 +101,10 @@ class Converter
     }
 
     /**
-     *
      * Build the release information from the changelog release
      *
      * @see release
-     *
      * @return void
-     *
      */
     public function changelog()
     {
@@ -121,24 +114,20 @@ class Converter
     }
 
     /**
-     *
      * Put the license
      *
      * @return void
-     *
      */
     public function license()
     {
-        $out  = "This package is under the following license(s):\n";
+        $out = 'This package is under the following license(s):' . "\n";
         $out .= $this->parser->getCurrentRelease()['license'];
 
         file_put_contents($this->path . '/LICENSE', $out);
     }
 
     /**
-     *
      * Generate the pickle.json
-     *
      */
     public function generateJson()
     {
