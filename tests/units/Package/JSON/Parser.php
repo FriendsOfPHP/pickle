@@ -32,7 +32,7 @@ class Parser extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package',
+                $path = FIXTURES_DIR . DIRECTORY_SEPARATOR . 'package',
                 $errorMessage = uniqid(),
                 $errorCode = E_USER_NOTICE,
                 $this->function->json_decode = false
@@ -42,7 +42,7 @@ class Parser extends atoum
                 ->exception(function() {
                     $this->testedInstance->parse();
                 })
-                    ->hasMessage('Failed to read ' . $path . '/pickle.json')
+                    ->hasMessage('Failed to read ' . $path . DIRECTORY_SEPARATOR . 'pickle.json')
         ;
     }
 }

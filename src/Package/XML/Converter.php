@@ -93,13 +93,13 @@ class Converter
             $release = $this->parser->getCurrentRelease();
         }
 
-        $out  = 'Date:             ' . $release['date'] . PHP_EOL;
-        $out .= 'Package version:  ' . $release['version'] . PHP_EOL;
-        $out .= 'Package state:    ' . $release['status'] . PHP_EOL;
-        $out .= 'API Version:      ' . $release['api']['version'] . PHP_EOL;
-        $out .= 'API state:        ' . $release['api']['status'] . PHP_EOL . PHP_EOL;
-        $out .= 'Changelog:' . PHP_EOL;
-        $out .= $release['notes'];
+        $out  = 'Date:             ' . $release['date'] . "\n";
+        $out .= 'Package version:  ' . $release['version'] . "\n";
+        $out .= 'Package state:    ' . $release['status'] . "\n";
+        $out .= 'API Version:      ' . $release['api']['version'] . "\n";
+        $out .= 'API state:        ' . $release['api']['status'] . "\n" . "\n";
+        $out .= "Changelog:\n";
+        $out .= rtrim($release['notes'], "\n") . "\n";
 
         file_put_contents($this->path . '/RELEASE-' . $release['version'], $out);
     }

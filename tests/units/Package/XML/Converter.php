@@ -35,9 +35,9 @@ class Converter extends atoum
             })
                 ->function('file_put_contents')
                     ->wasCalledWithArguments(
-                        $path . DIRECTORY_SEPARATOR . 'CREDITS',
-                        'Rasmus Lerdorf (rasmus) (rasmus@php.net) (yes)' . PHP_EOL .
-                        'Pierre Joye (pierre) (pierre@php.net) (yes)' . PHP_EOL
+                        $path . '/CREDITS',
+                        "Rasmus Lerdorf (rasmus) (rasmus@php.net) (yes)\n" .
+                        "Pierre Joye (pierre) (pierre@php.net) (yes)\n"
                     )->once()
         ;
     }
@@ -57,7 +57,7 @@ class Converter extends atoum
                 $this->testedInstance->summary();
             })
                 ->function('file_put_contents')
-                    ->wasCalledWithArguments($path . DIRECTORY_SEPARATOR . 'README', $summary . PHP_EOL . PHP_EOL . $description)->once()
+                    ->wasCalledWithArguments($path . '/README', $summary . "\n\n" . $description)->once()
         ;
     }
 
@@ -85,14 +85,14 @@ class Converter extends atoum
             })
                 ->function('file_put_contents')
                     ->wasCalledWithArguments(
-                        $path . DIRECTORY_SEPARATOR . 'RELEASE-3.1.15',
-                        'Date:             2014-06-14' . PHP_EOL .
-                        'Package version:  3.1.15' . PHP_EOL .
-                        'Package state:    beta' . PHP_EOL .
-                        'API Version:      3.1.0' . PHP_EOL .
-                        'API state:        stable' . PHP_EOL . PHP_EOL .
-                        'Changelog:' . PHP_EOL .
-                        'This is a note'
+                        $path . '/RELEASE-3.1.15',
+                        "Date:             2014-06-14\n" .
+                        "Package version:  3.1.15\n" .
+                        "Package state:    beta\n" .
+                        "API Version:      3.1.0\n" .
+                        "API state:        stable\n\n" .
+                        "Changelog:\n" .
+                        "This is a note\n"
                     )->once()
         ;
     }
@@ -133,24 +133,24 @@ class Converter extends atoum
             })
                 ->function('file_put_contents')
                     ->wasCalledWithArguments(
-                        $path . DIRECTORY_SEPARATOR . 'RELEASE-3.1.14',
-                        'Date:             2013-01-02' . PHP_EOL .
-                        'Package version:  3.1.14' . PHP_EOL .
-                        'Package state:    beta' . PHP_EOL .
-                        'API Version:      3.1.0' . PHP_EOL .
-                        'API state:        stable' . PHP_EOL . PHP_EOL .
-                        'Changelog:' . PHP_EOL .
-                        'This is a note'
+                        $path . '/RELEASE-3.1.14',
+                        "Date:             2013-01-02\n" .
+                        "Package version:  3.1.14\n" .
+                        "Package state:    beta\n" .
+                        "API Version:      3.1.0\n" .
+                        "API state:        stable\n\n" .
+                        "Changelog:\n" .
+                        "This is a note\n"
                     )->once()
                     ->wasCalledWithArguments(
-                        $path . DIRECTORY_SEPARATOR . 'RELEASE-2.0.0',
-                        'Date:             2003-07-01' . PHP_EOL .
-                        'Package version:  2.0.0' . PHP_EOL .
-                        'Package state:    stable' . PHP_EOL .
-                        'API Version:      2.0.0' . PHP_EOL .
-                        'API state:        stable' . PHP_EOL . PHP_EOL .
-                        'Changelog:' . PHP_EOL .
-                        'This is an old note'
+                        $path . '/RELEASE-2.0.0',
+                        "Date:             2003-07-01\n" .
+                        "Package version:  2.0.0\n" .
+                        "Package state:    stable\n" .
+                        "API Version:      2.0.0\n" .
+                        "API state:        stable\n\n" .
+                        "Changelog:\n" .
+                        "This is an old note\n"
                     )->once()
         ;
     }
@@ -171,7 +171,7 @@ class Converter extends atoum
                 $this->testedInstance->license();
             })
                 ->function('file_put_contents')
-                    ->wasCalledWithArguments($path . DIRECTORY_SEPARATOR . 'LICENSE', 'This package is under the following license(s):' . PHP_EOL . 'PHP License')->once()
+                    ->wasCalledWithArguments($path . '/LICENSE', "This package is under the following license(s):\nPHP License")->once()
         ;
     }
 
@@ -190,7 +190,7 @@ class Converter extends atoum
             })
                 ->function('file_put_contents')
                     ->wasCalledWithArguments(
-                        $path . DIRECTORY_SEPARATOR . 'pickle.json',
+                        $path . '/pickle.json',
                         json_encode(
                             [
                                 'name' => $name,
@@ -220,7 +220,7 @@ class Converter extends atoum
             })
                 ->function('file_put_contents')
                     ->wasCalledWithArguments(
-                        $path . DIRECTORY_SEPARATOR . 'pickle.json',
+                        $path . '/pickle.json',
                         json_encode(
                             [
                                 'name' => $name,
