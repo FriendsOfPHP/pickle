@@ -23,7 +23,8 @@ class Dumper extends atoum
                 ->string($this->testedInstance->dump($package))->isEqualTo(json_encode([
                     'name' => $name,
                     'version' => $version,
-                    'type' => $type
+                    'type' => $type,
+                    'stability' => 'stable'
                 ], JSON_PRETTY_PRINT))
             ->given(
                 $license = uniqid(),
@@ -53,6 +54,7 @@ class Dumper extends atoum
                     'name' => $name,
                     'version' => $version,
                     'type' => $type,
+                    'stability' => 'stable',
                     'license' => $license,
                     'authors' => $authors,
                     'description' => $description,
@@ -84,7 +86,8 @@ class Dumper extends atoum
                     ->wasCalledWithArguments($path, json_encode([
                         'name' => $name,
                         'version' => $version,
-                        'type' => $type
+                        'type' => $type,
+                        'stability' => 'stable'
                     ], JSON_PRETTY_PRINT))->once
         ;
     }

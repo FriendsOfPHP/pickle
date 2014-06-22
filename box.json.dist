@@ -19,7 +19,6 @@
                 "symfony/filesystem",
                 "symfony/translation",
                 "symfony/yaml",
-                "symfony/process",
                 "bin",
                 "Tests",
                 "tests",

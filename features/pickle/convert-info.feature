@@ -55,6 +55,7 @@ Feature: convert package.xml to information files
       {
           "name": "dummy",
           "type": "extension",
+          "stability": "beta",
           "version": "3.1.15",
           "description": "This is a dummy package",
           "license": [

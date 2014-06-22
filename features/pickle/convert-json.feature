@@ -41,6 +41,7 @@ Feature: convert package.xml to pickle.json
       {
           "name": "dummy",
           "type": "extension",
+          "stability": "beta",
           "version": "3.1.15",
           "description": "This is a dummy package"
       }
@@ -63,6 +64,7 @@ Feature: convert package.xml to pickle.json
       {
           "name": "dummy",
           "type": "extension",
+          "stability": "beta",
           "version": "3.1.15",
           "description": "This is a dummy package"
       }

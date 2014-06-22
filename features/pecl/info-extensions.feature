@@ -4,7 +4,7 @@ Feature: download and install PECL extensions
   I should be able to download and install PECL extensions
 
   Scenario Outline: Install downloaded extensions
-    Given I run "pickle info http://pecl.php.net/get/<extension>/<version>"
+    Given I run "pickle info <extension>@<version>"
     Then it should pass
     And the output should contain:
       """
