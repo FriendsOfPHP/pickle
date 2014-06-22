@@ -9,7 +9,7 @@ class BuildSrcUnix
     private $log = '';
     private $build_dir;
 
-    public function __construct($pkg, $options = null)
+    public function __construct(Package $pkg, $options = null)
     {
         $this->pkg = $pkg;
         $this->options = $options;

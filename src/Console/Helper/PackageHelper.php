@@ -1,6 +1,7 @@
 <?php
 namespace Pickle\Console\Helper;
 
+use Composer\Package\PackageInterface;
 use Pickle\Package;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\Table;
@@ -19,47 +20,15 @@ class PackageHelper extends Helper
         return 'package';
     }
 
-    public function showInfo(OutputInterface $output, Package $package)
+    public function showInfo(OutputInterface $output, PackageInterface $package)
     {
-        $releases = array_map(
-            function ($release) {
-                return $release['version'];
-            },
-            $package->getPastReleases()
-        );
-
-        $list = $sep = '';
-        foreach ($releases as $k => $release) {
-            $list .= $sep . $release;
-
-            if ($k > 0 && $k % 5 === 0) {
-                $sep = PHP_EOL;
-            } else {
-                $sep = ', ';
-            }
-        }
-
         $table = new Table($output);
         $table
             ->setRows([
-                ['<info>Package name</info>', $package->getName()],
-                ['<info>Package version (current release)</info>', $package->getVersion()],
-                ['<info>Package status</info>', $package->getStatus()],
-                [
-                    '<info>Previous release(s)</info>',
-                    $list
-                ]
+                ['<info>Package name</info>', $package->getPrettyName()],
+                ['<info>Package version (current release)</info>', $package->getPrettyVersion()],
+                ['<info>Package status</info>', $package->getStability()]
             ])
             ->render();
-    }
-
-    public function showSummary(OutputInterface $output, Package $package)
-    {
-        $output->write([
-            PHP_EOL,
-            $package->getSummary(),
-            PHP_EOL,
-            trim($package->getDescription()) . PHP_EOL
-        ]);
     }
 } 

@@ -22,7 +22,7 @@ Feature: convert PECL extensions
     Examples:
       | extension | version  |
       | xdebug    | 2.2.5    |
-      | apc       | 3.1.13   |
+      | APC       | 3.1.13   |
       | apcu      | 4.0.6    |
       | xhprof    | 0.9.4    |
       | mongo     | 1.5.4    |

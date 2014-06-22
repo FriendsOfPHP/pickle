@@ -1,6 +1,7 @@
 <?php
 namespace Pickle\Console\Command;
 
+use Pickle\Package\JSON\Dumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,22 +34,30 @@ class ArchiveCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
+        $jsonLoader = new Package\JSON\Loader(new Package\Loader());
+        $package = null;
 
-        try {
-            $pkg = new Package($path);
-        } catch (\InvalidArgumentException $exception) {
-            if ($input->getOption('no-convert')) {
-                throw new \RuntimeException('XML package are not supported. Please convert it before install');
-            }
-
-            $this->getApplication()
-                ->find('convert')
-                ->run($input, $output);
-
-            $pkg = new Package($path);
+        if (file_exists($path . DIRECTORY_SEPARATOR . 'pickle.json')) {
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
 
-        $arch = new Archive($pkg);
+        if (null === $package && $input->getOption('no-convert')) {
+            throw new \RuntimeException('XML package are not supported. Please convert it before install');
+        }
+
+        if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
+            $loader = new Package\XML\Loader(new Package\Loader());
+            $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
+
+            $dumper = new Dumper();
+            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
+
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
+        }
+
+        $package->setRootDir(realpath($path));
+
+        $arch = new Archive($package);
         $arch->create();
     }
 }

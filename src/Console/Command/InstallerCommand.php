@@ -1,8 +1,11 @@
 <?php
 namespace Pickle\Console\Command;
 
+use Composer\Config;
+use Composer\Downloader\TarDownloader;
+use Composer\IO\ConsoleIO;
+use Pickle\Package\JSON\Dumper;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -41,30 +44,57 @@ class InstallerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelperSet()->get('question');
         $path = rtrim($input->getArgument('path'), '/\\');
 
-        try {
-            $pkg = new Package($path);
-        } catch (\InvalidArgumentException $exception) {
-            if ($input->getOption('no-convert')) {
-                throw new \RuntimeException('XML package are not supported. Please convert it before install');
-            }
+        if (preg_match('#^http://pecl\.php\.net/get/(?P<name>[^/]+)/(?P<version>(?:\d+.?)+)$#', $path, $matches) > 0) {
+            $infos = explode('/', $path);
 
-            $this->getApplication()->find('convert')
-                ->run(new ArrayInput(['path' => $path]), $output);
+            $package = new Package($matches['name'], $matches['version'], $matches['version']);
+            $package->setDistUrl($path);
 
-            $pkg = new Package($path);
+            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $matches['name'];
+            $io = new ConsoleIO($input, $output, $this->getHelperSet());
+            $downloader = new TarDownloader($io, new Config());
+            $downloader->download($package, $path);
         }
 
-        $options = $pkg->getConfigureOptions();
+        $jsonLoader = new Package\JSON\Loader(new Package\Loader());
+        $package = null;
+
+        if (file_exists($path . DIRECTORY_SEPARATOR . 'pickle.json')) {
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
+        }
+
+        if (null === $package && $input->getOption('no-convert')) {
+            throw new \RuntimeException('XML package are not supported. Please convert it before install');
+        }
+
+        if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
+            $loader = new Package\XML\Loader(new Package\Loader());
+            $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
+
+            $dumper = new Dumper();
+            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
+
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
+        }
+
+        if (is_dir($path . DIRECTORY_SEPARATOR . $package->getPrettyName() . '-' . $package->getPrettyVersion())) {
+            $path .= DIRECTORY_SEPARATOR . $package->getPrettyName() . '-' . $package->getPrettyVersion();
+        }
+
+        $package->setRootDir(realpath($path));
+
+        $helper = $this->getHelperSet()->get('question');
+
+        $options = $package->getConfigureOptions();
         $options_value = null;
         if ($options) {
             $options_value = [];
 
             foreach ($options['enable'] as $name => $opt) {
                 /* enable/with-<extname> */
-                if ($name == $pkg->getName()) {
+                if ($name == $package->getName()) {
                     $options_value[$name] = true;
 
                     continue;
@@ -79,7 +109,7 @@ class InstallerCommand extends Command
         }
 
         if ($input->getOption('dry-run') === false) {
-            $build = new BuildSrcUnix($pkg, $options_value);
+            $build = new BuildSrcUnix($package, $options_value);
             $build->phpize();
             $build->createTempDir();
             $build->configure();
