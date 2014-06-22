@@ -27,8 +27,10 @@ class PackageHelper extends Helper
     const RE_GIT_PACKAGE = '#^
         (?:git|https?)://.*?/
         (?P<package>\w+)
-        (?:.git)?
-        (?:\#(?P<reference>.*?))?
+        (?:
+            (?:\.git|)
+            (?:\#(?P<reference>.*?)|)
+        )?
     $#x';
 
     /**
@@ -57,6 +59,7 @@ class PackageHelper extends Helper
     public function download(InputInterface $input, OutputInterface $output, $url, $path)
     {
         $package = null;
+        $downloader = null;
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
 
         if (preg_match(self::RE_PECL_PACKAGE, $url, $matches) > 0) {
@@ -80,7 +83,6 @@ class PackageHelper extends Helper
             $package->setDistUrl($url);
 
             $downloader = new PECLDownloader($io, new Config());
-            $downloader->download($package, $path . DIRECTORY_SEPARATOR . $matches['package']);
         }
 
         if (null === $package && preg_match(self::RE_GIT_PACKAGE, $url, $matches) > 0) {
@@ -92,6 +94,9 @@ class PackageHelper extends Helper
             $package->setSourceReference($version);
 
             $downloader = new GitDownloader($io, new Config());
+        }
+
+        if (null !== $downloader) {
             $downloader->download($package, $path . DIRECTORY_SEPARATOR . $matches['package']);
         }
 

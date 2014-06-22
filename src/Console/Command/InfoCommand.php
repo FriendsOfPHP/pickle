@@ -39,15 +39,21 @@ class InfoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), DIRECTORY_SEPARATOR);
+        $info = parse_url($path);
 
-        if (@is_dir($path) === false) {
+        $download = (
+            (isset($info['scheme']) && in_array($info['scheme'], ['http', 'https', 'git'])) ||
+            (isset($info['scheme']) === false  && is_dir($path) === false)
+        );
+
+        if ($download) {
             $package = $this->getHelper('package')->download($input, $output, $path, sys_get_temp_dir());
 
             if (null === $package) {
                 throw new \InvalidArgumentException('Package not found: ' . $path);
             }
 
-            $path = $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $package->getName();
+            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $package->getName();
         }
 
         $package = null;
