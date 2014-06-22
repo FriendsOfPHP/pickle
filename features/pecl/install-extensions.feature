@@ -3,8 +3,8 @@ Feature: download and install PECL extensions
   As a pickle user
   I should be able to download and install PECL extensions
 
-  Scenario Outline: Install extensions from PECL URLs
-    Given I run "pickle install http://pecl.php.net/get/<extension>/<version> --dry-run"
+  Scenario Outline: Install extensions from PECL
+    Given I run "pickle install <extension>@<version> --dry-run"
     Then it should pass
     And the output should contain:
       """
@@ -14,17 +14,25 @@ Feature: download and install PECL extensions
       """
       Downloading: 100%
       """
+    And the output should contain:
+      """
+      Package name                      | <pretty>
+      """
+    And the output should contain:
+      """
+      Package version (current release) | <version>
+      """
 
     Examples:
-      | extension | version  |
-      | xdebug    | 2.2.5    |
-      | apc       | 3.1.13   |
-      | apcu      | 4.0.6    |
-      | mongo     | 1.5.4    |
-      | memcache  | 3.0.8    |
-      | amqp      | 1.4.0    |
-      | redis     | 2.2.5    |
-      | pthreads  | 2.0.7    |
+      | extension | pretty    | version  |
+      | xdebug    | xdebug    | 2.2.5    |
+      | apc       | APC       | 3.1.13   |
+      | apcu      | apcu      | 4.0.6    |
+      | mongo     | mongo     | 1.5.4    |
+      | memcache  | memcache  | 3.0.8    |
+      | amqp      | amqp      | 1.4.0    |
+      | redis     | redis     | 2.2.5    |
+      | pthreads  | pthreads  | 2.0.7    |
 
   Scenario Outline: Install extensions from PECL names and stability flag
     Given I run "pickle install <extension>-<stability> --dry-run"
