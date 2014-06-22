@@ -20,12 +20,12 @@ class Loader implements LoaderInterface
     {
         $version = $this->versionParser->normalize($config['version']);
 
-        if (isset($config['stability']) && $config['stability'] !== 'stable') {
-            $version .= '-' . $config['stability'];
-        }
-
         $package = new $class($config['name'], $version, $config['version']);
         $package->setType('extension');
+
+        if (isset($config['stability'])) {
+            $package->setStability($config['stability']);
+        }
 
         if (isset($config['extra']) && is_array($config['extra'])) {
             $package->setExtra($config['extra']);

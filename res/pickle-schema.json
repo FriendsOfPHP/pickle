@@ -22,6 +22,10 @@
             "required": true,
             "description": "Extension version."
         },
+        "stability": {
+            "type": "string",
+            "pattern": "^alpha|beta|stable$"
+        },
         "license": {
             "type": ["string", "array"],
             "description": "License name. Or an array of license names."

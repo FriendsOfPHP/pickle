@@ -13,6 +13,7 @@ class Dumper
         $data['name'] = $package->getPrettyName();
         $data['version'] = $package->getPrettyVersion();
         $data['type'] = $package->getType();
+        $data['stability'] = $package->getStability();
 
         if ($license = $package->getLicense()) {
             $data['license'] = $license;

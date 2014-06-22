@@ -16,7 +16,7 @@ Feature: download and install PECL extensions
       """
     And the output should contain:
       """
-      Package name                      | <name>
+      Package name                      | <pretty>
       """
     And the output should contain:
       """
@@ -24,7 +24,7 @@ Feature: download and install PECL extensions
       """
 
     Examples:
-      | extension | name      | version  |
+      | extension | pretty    | version  |
       | xdebug    | xdebug    | 2.2.5    |
       | apc       | APC       | 3.1.13   |
       | apcu      | apcu      | 4.0.6    |

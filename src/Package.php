@@ -32,6 +32,11 @@ class Package extends CompletePackage
         $this->path = $path;
     }
 
+    public function setStability($stability)
+    {
+        $this->stability = $stability;
+    }
+
     /**
      * @return array
      */
