@@ -3,7 +3,34 @@ Feature: download and install PECL extensions
   As a pickle user
   I should be able to download and install PECL extensions
 
-  Scenario Outline: Install extensions from PECL
+  Scenario Outline: Install extensions from PECL repository
+    Given I run "pickle install <extension> --dry-run"
+    Then it should pass
+    And the output should contain:
+      """
+      - Installing <extension> (latest-stable)
+      """
+    And the output should contain:
+      """
+      Downloading: 100%
+      """
+    And the output should contain:
+      """
+      Package name                      | <pretty>
+      """
+
+    Examples:
+      | extension | pretty    |
+      | xdebug    | xdebug    |
+      | apc       | APC       |
+      | apcu      | apcu      |
+      | mongo     | mongo     |
+      | memcache  | memcache  |
+      | amqp      | amqp      |
+      | redis     | redis     |
+      | pthreads  | pthreads  |
+
+  Scenario Outline: Install extensions from PECL repository with version constraint
     Given I run "pickle install <extension>@<version> --dry-run"
     Then it should pass
     And the output should contain:

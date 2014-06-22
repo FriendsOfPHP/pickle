@@ -40,34 +40,14 @@ class InfoCommand extends Command
     {
         $path = rtrim($input->getArgument('path'), DIRECTORY_SEPARATOR);
 
-        if (is_dir($path) === false) {
-            if (preg_match(self::RE_PACKAGE, $path, $matches) === 0) {
-                throw new \InvalidArgumentException('Invalid package name: ' . $path);
+        if (@is_dir($path) === false) {
+            $package = $this->getHelper('package')->download($input, $output, $path, sys_get_temp_dir());
+
+            if (null === $package) {
+                throw new \InvalidArgumentException('Package not found: ' . $path);
             }
 
-            $url = 'http://pecl.php.net/get/' . $matches['package'];
-
-            if (isset($matches['stability']) && $matches['stability'] !== '') {
-                $url .= '-' . $matches['stability'];
-            } else {
-                $matches['stability'] = 'stable';
-            }
-
-            if (isset($matches['version']) && $matches['version'] !== '') {
-                $url .= '/' . $matches['version'];
-                $prettyVersion = $matches['version'];
-            } else {
-                $matches['version'] = 'latest';
-                $prettyVersion = 'latest-' . $matches['stability'];
-            }
-
-            $package = new Package($matches['package'], $matches['version'], $prettyVersion);
-            $package->setDistUrl($url);
-
-            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $matches['package'];
-            $io = new ConsoleIO($input, $output, $this->getHelperSet());
-            $downloader = new PECLDownloader($io, new Config());
-            $downloader->download($package, $path);
+            $path = $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $package->getName();
         }
 
         $package = null;

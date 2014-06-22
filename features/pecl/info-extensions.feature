@@ -3,7 +3,7 @@ Feature: download and install PECL extensions
   As a pickle user
   I should be able to download and install PECL extensions
 
-  Scenario Outline: Install downloaded extensions
+  Scenario Outline: Show info about downloaded extensions
     Given I run "pickle info <extension>@<version>"
     Then it should pass
     And the output should contain:
