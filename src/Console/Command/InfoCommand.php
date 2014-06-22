@@ -4,6 +4,7 @@ namespace Pickle\Console\Command;
 use Composer\Config;
 use Composer\Downloader\TarDownloader;
 use Composer\IO\ConsoleIO;
+use Pickle\Downloader\PECLDownloader;
 use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,6 +13,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InfoCommand extends Command
 {
+    const RE_PACKAGE = '#^
+        (?:pecl/)?
+        (?P<package>\w+)
+        (?:
+            \-(?P<stability>beta|stable|alpha)|
+            @(?P<version>(?:\d+.?)+)|
+            $
+        )
+    $#x';
+
     protected function configure()
     {
         $this
@@ -29,15 +40,33 @@ class InfoCommand extends Command
     {
         $path = rtrim($input->getArgument('path'), DIRECTORY_SEPARATOR);
 
-        if (preg_match('#^http://pecl\.php\.net/get/(?P<name>[^/]+)/(?P<version>(?:\d+.?)+)$#', $path, $matches) > 0) {
-            $infos = explode('/', $path);
+        if (is_dir($path) === false) {
+            if (preg_match(self::RE_PACKAGE, $path, $matches) === 0) {
+                throw new \InvalidArgumentException('Invalid package name: ' . $path);
+            }
 
-            $package = new Package($matches['name'], $matches['version'], $matches['version']);
-            $package->setDistUrl($path);
+            $url = 'http://pecl.php.net/get/' . $matches['package'];
 
-            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $matches['name'];
+            if (isset($matches['stability']) && $matches['stability'] !== '') {
+                $url .= '-' . $matches['stability'];
+            } else {
+                $matches['stability'] = 'stable';
+            }
+
+            if (isset($matches['version']) && $matches['version'] !== '') {
+                $url .= '/' . $matches['version'];
+                $prettyVersion = $matches['version'];
+            } else {
+                $matches['version'] = 'latest';
+                $prettyVersion = 'latest-' . $matches['stability'];
+            }
+
+            $package = new Package($matches['package'], $matches['version'], $prettyVersion);
+            $package->setDistUrl($url);
+
+            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $matches['package'];
             $io = new ConsoleIO($input, $output, $this->getHelperSet());
-            $downloader = new TarDownloader($io, new Config());
+            $downloader = new PECLDownloader($io, new Config());
             $downloader->download($package, $path);
         }
 

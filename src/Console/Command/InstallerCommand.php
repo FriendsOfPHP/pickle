@@ -22,7 +22,8 @@ class InstallerCommand extends Command
         (?P<package>\w+)
         (?:
             \-(?P<stability>beta|stable|alpha)|
-            @(?P<version>(?:\d+.?)+)
+            @(?P<version>(?:\d+.?)+)|
+            $
         )
     $#x';
 
@@ -85,7 +86,6 @@ class InstallerCommand extends Command
             $downloader = new PECLDownloader($io, new Config());
             $downloader->download($package, $path);
         }
-
 
         $jsonLoader = new Package\JSON\Loader(new Package\Loader());
         $package = null;
