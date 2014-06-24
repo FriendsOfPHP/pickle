@@ -4,31 +4,34 @@ namespace Pickle;
 trait GitIgnore
 {
     /**
-     *
      * Get the gitignore files
      *
      * @return array
-     *
      */
     public function getGitIgnoreFiles()
     {
-        $file = $this->path . "/.gitignore";
+        $file = $this->path . '/.gitignore';
         $dir = $this->path;
         $matches = array();
         $lines = file($file);
 
         foreach ($lines as $line) {
             $line = trim($line);
+            // empty line
             if ($line === '') {
-                continue;                 # empty line
+                continue;
             }
+            // comment
             if ($line[0] === '#') {
-                continue;   # a comment
+                continue;
             }
-            if ($line[0] === '!') {           # negated glob
+            // negated glob
+            if ($line[0] === '!') {
                 $line = substr($line, 1);
                 $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
-            } else {                                    # normal glob
+            }
+            // normal glob
+            else {
                 $files = glob("$dir/$line");
             }
             $matches = array_merge($matches, $files);

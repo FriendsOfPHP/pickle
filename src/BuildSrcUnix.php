@@ -34,10 +34,10 @@ class BuildSrcUnix
         if (is_dir($this->build_dir)) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->build_dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
                 //$path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
-                echo "rmdir :" . $path->getPathname() . "\n";
+                echo 'rmdir :' . $path->getPathname() . "\n";
             }
             //rmdir($this->build_dir);
-            echo "rmdir :" . $this->build_dir . "\n";
+            echo 'rmdir :' . $this->build_dir . "\n";
         }
     }
 
@@ -250,8 +250,8 @@ class BuildSrcUnix
 
     public function _runCommand($command, $callback = null)
     {
-        $this->log(1, "running: $command");
-        $pp = popen("$command 2>&1", "r");
+        $this->log(1, 'running: ' . $command);
+        $pp = popen("$command 2>&1", 'r');
         if (!$pp) {
             return $this->raiseError("failed to run `$command'");
         }

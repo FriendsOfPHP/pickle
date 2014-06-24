@@ -9,13 +9,10 @@ class Archive
     private $pkg;
 
     /**
-     *
      * Constructor
      *
      * @param Package $package
-     *
      * @param string $path
-     *
      */
     public function __construct(Package $package, $path = '')
     {
@@ -23,15 +20,11 @@ class Archive
     }
 
     /**
-     *
      * Add directory
      *
      * @param string $arch
-     *
      * @param string $path
-     *
      * @return void
-     *
      */
     protected function addDir($arch, $path)
     {
@@ -46,9 +39,7 @@ class Archive
     }
 
     /**
-     *
      * Create package
-     *
      */
     public function create()
     {
