@@ -1,7 +1,9 @@
 <?php
 namespace Pickle;
 
-class Package
+use Composer\Package\CompletePackage;
+
+class Package extends CompletePackage
 {
     use GitIgnore;
 
@@ -10,25 +12,7 @@ class Package
      */
     private $path;
 
-    /**
-     * @var Package\Parser Package definition parser
-     */
-    private $parser;
-
-    /**
-     * @param string $path Package's root directory
-     */
-    public function __construct($path, Package\Parser $parser = null)
-    {
-        $this->path = realpath($path);
-
-        if ($this->path === false) {
-            throw new \InvalidArgumentException('Directory not found: ' . $path);
-        }
-
-        $this->parser = $parser ?: new Package\JSON\Parser($path);
-        $this->parser->parse();
-    }
+    private $configureOptions = [];
 
     /**
      * Get the package's root directory
@@ -41,71 +25,16 @@ class Package
     }
 
     /**
-     * @return string
+     * Set the package's root directory
      */
-    public function getName()
+    public function setRootDir($path)
     {
-        return $this->parser->getName();
+        $this->path = $path;
     }
 
-    /**
-     * @return string
-     */
-    public function getVersion()
+    public function setStability($stability)
     {
-        return $this->parser->getVersion();
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->parser->getStatus();
-    }
-
-    /**
-     * @return array
-     */
-    public function getAuthors()
-    {
-        return $this->parser->getAuthors();
-    }
-
-    /**
-     * @return string
-     */
-    public function getSummary()
-    {
-        return $this->parser->getSummary();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->parser->getDescription();
-    }
-
-    /**
-     * @see Parser::getCurrentRelease
-     *
-     * @return array
-     */
-    public function getCurrentRelease()
-    {
-        return $this->parser->getCurrentRelease();
-    }
-
-    /**
-     * @see Parser::getPastReleases
-     *
-     * @return array
-     */
-    public function getPastReleases()
-    {
-        return $this->parser->getPastReleases();
+        $this->stability = $stability;
     }
 
     /**
@@ -113,17 +42,101 @@ class Package
      */
     public function getConfigureOptions()
     {
-        return $this->parser->getConfigureOptions();
+        if (!null !== $this->configureOptions) {
+            $config = file_get_contents($this->path . '/config.m4');
+            $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
+            $t = $this->fetchArgAc('AC_ARG_WITH', $config);
+            $options['with'] = array_merge($options['with'], $t);
+
+            $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
+            $t = $this->fetchArgAc('AC_ARG_ENABLE', $config);
+            $options['enable'] = array_merge($options['enable'], $t);
+
+            $this->configureOptions = $options;
+        }
+
+        return $this->configureOptions;
     }
 
     /**
-     * @see Parser::getExtraOptions
+     * @todo If someone prefers a nice regex for both AC_ and PHP_... :)
+     *
+     * @param $which
+     * @param $config
      *
      * @return array
      */
-    public function getExtraOptions()
+    protected function fetchArgAc($which, $config)
     {
-        return $this->parser->getExtraOptions();
+        $next = 0;
+        $options = [];
+        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $default = true;
+        while (($s = strpos($config, $which, $next)) !== FALSE) {
+            $s = strpos($config, '(', $s);
+            $e = strpos($config, ')', $s + 1);
+            $option = substr($config, $s + 1, $e - $s);
+
+            if ($type == 'enable') {
+                $default = (strpos($option, '-disable-') !== false) ? true : false;
+            } elseif ($type == 'with') {
+                $default = (strpos($option, '-without-') !== false) ? true : false;
+            }
+
+            list($name, $desc) = explode(',', $option);
+
+            $desc = preg_replace('![\s]+!', ' ', trim($desc));
+            $desc = trim(substr($desc, 1, strlen($desc) - 2));
+
+            $s_a = strpos($desc, ' ');
+            $desc = trim(substr($desc, $s_a));
+
+            $options[$name] = (object) [
+                'prompt'  => trim($desc),
+                'type'    => $type,
+                'default' => $default
+            ];
+            $next = $e + 1;
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param $which
+     * @param $config
+     *
+     * @return array
+     */
+    protected function fetchArg($which, $config)
+    {
+        $next = 0;
+        $options = [];
+
+        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $default = 'y';
+        while (($s = strpos($config, $which, $next)) !== FALSE) {
+            $s = strpos($config, '(', $s);
+            $e = strpos($config, ')', $s + 1);
+            $option = substr($config, $s + 1, $e - $s);
+            list($name, $desc) = explode(',', $option);
+
+            if ($type == 'enable') {
+                $default = (strpos($option, '-disable-') !== false) ? true : false;
+            } elseif ($type == 'with') {
+                $default = (strpos($option, '-without-') !== false) ? true : false;
+            }
+
+
+            $options[$name] = (object) [
+                'prompt'  => trim($desc),
+                'type'    => $type,
+                'default' => $default
+            ];
+            $next = $e + 1;
+        }
+
+        return $options;
     }
 
     /**

@@ -1,0 +1,114 @@
+{
+    "name": "pickle.json",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "type": {
+            "type": "string",
+            "required": true,
+            "pattern": "^extension$"
+        },
+        "description": {
+            "type": "string",
+            "required": true,
+            "description": "Short extension description."
+        },
+        "version": {
+            "type": "string",
+            "required": true,
+            "description": "Extension version."
+        },
+        "stability": {
+            "type": "string",
+            "pattern": "^alpha|beta|stable$"
+        },
+        "license": {
+            "type": ["string", "array"],
+            "description": "License name. Or an array of license names."
+        },
+        "authors": {
+            "type": "array",
+            "description": "List of authors that contributed to the extension. This is typically the main maintainers, not the full list.",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Full name of the author.",
+                        "required": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email address of the author.",
+                        "format": "email"
+                    },
+                    "homepage": {
+                        "type": "string",
+                        "description": "Homepage URL for the author.",
+                        "format": "uri"
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "Author's role in the project."
+                    }
+                }
+            }
+        },
+        "extra": {
+            "configure-options": {
+                "type": "object",
+                "additionalProperties": false,
+                "patternProperties": {
+                    "^[a-zA-Z]+(-[a-zA-Z]+)*$": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "default": { "type": "string" },
+                            "prompt": { "type": "string" }
+                        }
+                    }
+                }
+            }
+        },
+        "support": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "description": "Email address for support.",
+                    "format": "email"
+                },
+                "issues": {
+                    "type": "string",
+                    "description": "URL to the Issue Tracker.",
+                    "format": "uri"
+                },
+                "forum": {
+                    "type": "string",
+                    "description": "URL to the Forum.",
+                    "format": "uri"
+                },
+                "wiki": {
+                    "type": "string",
+                    "description": "URL to the Wiki.",
+                    "format": "uri"
+                },
+                "irc": {
+                    "type": "string",
+                    "description": "IRC channel for support, as irc://server/channel.",
+                    "format": "uri"
+                },
+                "source": {
+                    "type": "string",
+                    "description": "URL to browse or download the sources.",
+                    "format": "uri"
+                }
+            }
+        }
+    }
+}

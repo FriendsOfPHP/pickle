@@ -1,6 +1,8 @@
 <?php
 namespace Pickle;
 
+use Pickle\Package\JSON\Dumper;
+
 class Archive
 {
     /**
@@ -60,11 +62,12 @@ class Archive
             }
         }
 
-        $this->pkg->getStatus();
+        $dumper = new Dumper();
+
+        $this->pkg->getStability();
         $this->pkg->getAuthors();
         $this->pkg->getConfigureOptions();
-        $json = $this->pkg->getReleaseJson();
-        $arch->addFromString('pickle.json', $json);
+        $arch->addFromString('pickle.json', $dumper->dump($this->pkg));
         $arch->compress(\Phar::GZ);
         unset($arch);
         rename($tempname . '.gz', $arch_basename . '.tgz');

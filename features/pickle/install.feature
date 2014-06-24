@@ -1,4 +1,4 @@
-Feature: convert package.xml to pickle.json
+Feature: Install pickle package
   In order to use pickle on my package
   As an extension developer
   I should be able to install my extension from pickle.json
@@ -8,6 +8,8 @@ Feature: convert package.xml to pickle.json
       """
       {
           "name": "dummy",
+          "description": "This is a dummy package",
+          "version": "1.0.0",
           "type": "extension",
           "extra": {
               "configure-options": {
