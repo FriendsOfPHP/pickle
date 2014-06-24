@@ -8,8 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Helper\Table;
+
 use Pickle\Package;
 use Pickle\BuildSrcUnix;
+use Pickle\PhpDetection;
+use Pickle\InstallerBinaryWindows;
 
 class InstallerCommand extends Command
 {
@@ -38,11 +42,34 @@ class InstallerCommand extends Command
             );
         ;
     }
+	protected function binaryInstallWindows($path, $output)
+	{
+		$php = new PhpDetection();
+        $table = new Table($output);
+        $table
+            ->setRows([
+               ['<info>PHP Path</info>', $php->getPhpCliPath()],
+               ['<info>PHP Version</info>', $php->getVersion()],
+               ['<info>Compiler</info>', $php->getCompiler()],
+               ['<info>Architecture</info>', $php->getArchitecture()],
+               ['<info>Extension dir</info>', $php->getExtensionDir()],
+            ])
+            ->render();
+
+		$inst = new InstallerBinaryWindows($php, $path);
+	}
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+		$path = rtrim($input->getArgument('path'), '/\\');
+
+		/* if windows, try bin install by default */
+		if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+			$this->binaryInstallWindows($path, $output);
+			return;
+		}
+
         $helper = $this->getHelperSet()->get('question');
-        $path = rtrim($input->getArgument('path'), '/\\');
 
         try {
             $pkg = new Package($path);
