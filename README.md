@@ -16,14 +16,14 @@ $ composer install
 And then, run, in your extension directory, the following command:
 
 ```sh
-$ pickle validate
-$ pickle install
+$ bin/pickle validate
+$ bin/pickle install
 ```
 
 For any help, run:
 
 ```sh
-$ pickle -h
+$ bin/pickle -h
 ```
 
 Contributing
