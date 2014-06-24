@@ -1,4 +1,4 @@
-Feature: convert package.xml to pickle.json
+Feature: validate package.xml
   In order to use pickle on my package
   As an extension developer
   I should be able to validate my package.xml
@@ -29,13 +29,12 @@ Feature: convert package.xml to pickle.json
     When I run "pickle validate"
     Then it should pass with:
       """
-      +------------------+--------+
-      | Packager version | 1.4.7  |
-      | XML version      | 2.0    |
-      | Package name     | dummy  |
-      | Package version  | 3.1.15 |
-      | Extension        | dummy  |
-      +------------------+--------+
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      This is a dummy package
       """
 
   Scenario: Search package.xml in the given path
@@ -43,13 +42,12 @@ Feature: convert package.xml to pickle.json
     When I run "pickle validate ../"
     Then it should pass with:
       """
-      +------------------+--------+
-      | Packager version | 1.4.7  |
-      | XML version      | 2.0    |
-      | Package name     | dummy  |
-      | Package version  | 3.1.15 |
-      | Extension        | dummy  |
-      +------------------+--------+
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      This is a dummy package
       """
 
   Scenario: Error if package.xml does not exist

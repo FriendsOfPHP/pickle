@@ -1,4 +1,3 @@
-
 {
     "name": "php/pickle",
     "type": "application",
@@ -15,7 +14,9 @@
     ],
     "require": {
         "php": "~5.4",
-        "symfony/console": "~2.5"
+        "symfony/console": "~2.5",
+        "justinrainbow/json-schema": "~1.1",
+        "composer/composer": "dev-master"
     },
     "require-dev": {
         "atoum/atoum": "dev-master",

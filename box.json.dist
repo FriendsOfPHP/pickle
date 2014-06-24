@@ -5,7 +5,7 @@
         "Herrera\\Box\\Compactor\\Json",
         "Herrera\\Box\\Compactor\\Php"
     ],
-    "directories": ["src"],
+    "directories": ["src", "res"],
     "finder": [
         {
             "name": "*.php",
@@ -19,7 +19,6 @@
                 "symfony/filesystem",
                 "symfony/translation",
                 "symfony/yaml",
-                "symfony/process",
                 "bin",
                 "Tests",
                 "tests",

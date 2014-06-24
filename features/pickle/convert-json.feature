@@ -34,7 +34,6 @@ Feature: convert package.xml to pickle.json
       | Package name                      | dummy  |
       | Package version (current release) | 3.1.15 |
       | Package status                    | beta   |
-      | Previous release(s)               |        |
       +-----------------------------------+--------+
       """
     And "pickle.json" JSON file should contain:
@@ -42,10 +41,9 @@ Feature: convert package.xml to pickle.json
       {
           "name": "dummy",
           "type": "extension",
-          "extra": {
-              "configure-options": [
-              ]
-          }
+          "stability": "beta",
+          "version": "3.1.15",
+          "description": "This is a dummy package"
       }
       """
 
@@ -59,7 +57,6 @@ Feature: convert package.xml to pickle.json
       | Package name                      | dummy  |
       | Package version (current release) | 3.1.15 |
       | Package status                    | beta   |
-      | Previous release(s)               |        |
       +-----------------------------------+--------+
       """
     And "../pickle.json" JSON file should contain:
@@ -67,10 +64,9 @@ Feature: convert package.xml to pickle.json
       {
           "name": "dummy",
           "type": "extension",
-          "extra": {
-              "configure-options": [
-              ]
-          }
+          "stability": "beta",
+          "version": "3.1.15",
+          "description": "This is a dummy package"
       }
       """
 

@@ -48,22 +48,28 @@ Feature: convert package.xml to information files
       | Package name                      | dummy  |
       | Package version (current release) | 3.1.15 |
       | Package status                    | beta   |
-      | Previous release(s)               |        |
       +-----------------------------------+--------+
       """
-    And "CREDITS" file should contain:
+    And "pickle.json" JSON file should contain:
       """
-      Rasmus Lerdorf (rasmus) (rasmus@php.net) (yes)
-      Ilia Alshanetsky (iliaa) (ilia@prohost.org) (no)
-      """
-    And "README" file should contain:
-      """
-      This is a dummy package
-
-      This is a dummy package description
-      """
-    And "LICENSE" file should contain:
-      """
-      This package is under the following license(s):
-      PHP License
+      {
+          "name": "dummy",
+          "type": "extension",
+          "stability": "beta",
+          "version": "3.1.15",
+          "description": "This is a dummy package",
+          "license": [
+              "PHP License"
+          ],
+          "authors": [
+              {
+                  "name": "Rasmus Lerdorf",
+                  "email": "rasmus@php.net"
+              },
+              {
+                  "name": "Ilia Alshanetsky",
+                  "email": "ilia@prohost.org"
+              }
+          ]
+      }
       """

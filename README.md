@@ -3,15 +3,33 @@ pickle - PHP Extension installer
 
 Pickle installs PHP extensions easily on all platforms.
 
-Installation / Usage
---------------------
+Installation and usage
+----------------------
 
-TODO: how to install & use
+Clone this repository and install dependencies with
+[Composer](http://getcomposer.org/):
+
+```sh
+$ composer install
+```
+
+And then, run, in your extension directory, the following command:
+
+```sh
+$ bin/pickle validate
+$ bin/pickle install
+```
+
+For any help, run:
+
+```sh
+$ bin/pickle -h
+```
 
 Contributing
 ------------
 
-Fork the project, create a feature branch, and send us a pull request.
+Fork the project, create a feature branch and send us a pull request.
 
 To ensure a consistent code base, you should make sure the code follows
 the [PSR-1](http://www.php-fig.org/psr/psr-1/) and
@@ -27,7 +45,9 @@ $ php-cs-fixer fix src/
 Support
 -------
 
-Support is available via the issue tracker in the github project page or via IRC, EFNet, channel #pickle
+Support is available via the [issue
+tracker](https://github.com/pierrejoye/pickle/issues) in the Github project page
+or via [IRC, EFNet, channel `#pickle`](http://chat.efnet.org/).
 
 Running tests
 -------------
@@ -57,6 +77,7 @@ $ vendor/bin/behat -s pickle
 Pickle is covered using 4 Behat tests suites:
 
 * `pickle` runs tests against pickle's sources
-* `pickle_phar` runs tests against pickle's Phar which you have to manually build
+* `pickle_phar` runs tests against pickle's Phar which you have to manually
+  build
 * `pecl` tests PECL extensions conversion with pickle's sources
 * `phar_pecl` tests PECL extensions conversion with pickle's Phar

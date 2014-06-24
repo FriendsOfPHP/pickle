@@ -9,6 +9,7 @@
     <date>2013-??-??</date>
     <notes>This is a note</notes>
     <summary>This is a dummy package</summary>
+    <license uri="http://www.php.net/license">PHP License</license>
     <lead>
         <name>Rasmus Lerdorf</name>
         <user>rasmus</user>
@@ -34,4 +35,8 @@
         <license uri="http://www.php.net/license">PHP License</license>
         <notes>This is a note</notes>
     </release>
+    <extsrcrelease>
+        <configureoption name="an-option" default="yes" prompt="an option"/>
+        <configureoption name="another-option" default="no" prompt="another option"/>
+    </extsrcrelease>
 </package>

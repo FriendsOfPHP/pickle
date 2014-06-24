@@ -17,7 +17,6 @@ abstract class Parser
      * Constructor
      *
      * @param string $path Path to the package root directory
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct($path)
@@ -128,23 +127,22 @@ abstract class Parser
      *
      * @param $which
      * @param $config
-     *
      * @return array
      */
     protected function fetchArgAc($which, $config)
     {
         $next = 0;
         $options = [];
-        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         $default = true;
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-            if ($type == 'enable') {
+            if ($type === 'enable') {
                 $default = (strpos($option, '-disable-') !== false) ? true : false;
-            } elseif ($type == 'with') {
+            } elseif ($type === 'with') {
                 $default = (strpos($option, '-without-') !== false) ? true : false;
             }
 
@@ -157,8 +155,8 @@ abstract class Parser
             $desc = trim(substr($desc, $s_a));
 
             $options[$name] = (object) [
-                'prompt'  => trim($desc),
-                'type'    => $type,
+                'prompt' => trim($desc),
+                'type' => $type,
                 'default' => $default
             ];
             $next = $e + 1;
@@ -170,7 +168,6 @@ abstract class Parser
     /**
      * @param $which
      * @param $config
-     *
      * @return array
      */
     protected function fetchArg($which, $config)
@@ -178,9 +175,9 @@ abstract class Parser
         $next = 0;
         $options = [];
 
-        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         $default = 'y';
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
@@ -192,10 +189,9 @@ abstract class Parser
                 $default = (strpos($option, '-without-') !== false) ? true : false;
             }
 
-
             $options[$name] = (object) [
-                'prompt'  => trim($desc),
-                'type'    => $type,
+                'prompt' => trim($desc),
+                'type' => $type,
                 'default' => $default
             ];
             $next = $e + 1;

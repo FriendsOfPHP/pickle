@@ -26,18 +26,15 @@ class ValidateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
-        $package = new Package\XML\Parser($path);
-        $package->parse();
 
-        $table = new Table($output);
-        $table
-            ->setRows([
-               ['<info>Packager version</info>', $package->getPackagerVersion()],
-               ['<info>XML version</info>', $package->getXMLVersion()],
-               ['<info>Package name</info>', $package->getName()],
-               ['<info>Package version</info>', $package->getVersion()],
-               ['<info>Extension</info>', $package->getProvidedExtension()],
-            ])
-            ->render();
+        if (is_file($path . DIRECTORY_SEPARATOR . 'package.xml') === false) {
+            throw new \InvalidArgumentException('File not found: ' . $path . DIRECTORY_SEPARATOR . 'package.xml');
+        }
+
+        $loader = new Package\XML\Loader(new Package\Loader());
+        $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
+
+        $this->getHelper('package')->showInfo($output, $package);
+        $output->writeln(trim($package->getDescription()));
     }
 }

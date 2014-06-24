@@ -1,7 +1,7 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package\XML\Converter;
+use Pickle\Package\JSON\Dumper;
 use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,15 +27,19 @@ class ConvertCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
-        $parser = new Package\XML\Parser($path);
-        $convert = new Converter($path, $parser);
 
-        $parser->parse();
-        $package = $convert->convert();
+        if (is_file($path . DIRECTORY_SEPARATOR . 'package.xml') === false) {
+            throw new \InvalidArgumentException('File not found: ' . $path . DIRECTORY_SEPARATOR . 'package.xml');
+        }
 
-        $output->writeln('<info>Successfully converted ' . $package->getName() . '</info>');
+        $loader = new Package\XML\Loader(new Package\Loader());
+        $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
 
-        $helper = $this->getHelper('package');
-        $helper->showInfo($output, $package);
+        $dumper = new Dumper();
+        $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
+
+        $output->writeln('<info>Successfully converted ' . $package->getPrettyName() . '</info>');
+
+        $this->getHelper('package')->showInfo($output, $package);
     }
 }
