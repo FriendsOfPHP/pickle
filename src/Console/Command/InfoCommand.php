@@ -15,12 +15,11 @@ class InfoCommand extends Command
 {
     const RE_PACKAGE = '#^
         (?:pecl/)?
-        (?P<package>\w+)
+        (?<package>\w+)
         (?:
-            \-(?P<stability>beta|stable|alpha)|
-            @(?P<version>(?:\d+.?)+)|
-            $
-        )
+             \-(?<stability>beta|stable|alpha)
+           | @(?<version>(?:\d+(?:\.\d+)*))
+        )?
     $#x';
 
     protected function configure()
