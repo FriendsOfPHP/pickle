@@ -1,8 +1,8 @@
 {
-    "name": "php/pickle",
+    "name": "friendsofphp/pickle",
     "type": "application",
     "description": "Installer for PHP extension, supports pecl package or install from src tree directly",
-    "homepage": "https://github.com/pierrejoye/pickle",
+    "homepage": "https://github.com/FriendsOfPHP/pickle",
     "license": "PHP License 3.01",
     "authors": [
         {
