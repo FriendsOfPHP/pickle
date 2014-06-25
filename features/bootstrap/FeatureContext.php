@@ -184,6 +184,10 @@ class FeatureContext implements SnippetAcceptingContext
         return $this->process->getExitCode();
     }
 
+    /**
+     * @param string $filename
+     * @param string $content
+     */
     private function createFile($filename, $content)
     {
         $path = dirname($filename);
