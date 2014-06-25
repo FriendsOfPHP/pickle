@@ -1,7 +1,6 @@
 <?php
 namespace Pickle\Package;
 
-use Composer\Package\Loader\LoaderInterface;
 use Pickle\Package;
 
 class Dumper
