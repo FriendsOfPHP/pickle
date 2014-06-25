@@ -18,7 +18,7 @@ class InfoCommand extends Command
         (?<package>\w+)
         (?:
              \-(?<stability>beta|stable|alpha)
-           | @(?<version>(?:\d+(?:\.\d+)*))
+           | @(?<version>(?:\d+(?:\.\d+){1,2})|(?:[1-2]\d{3}[0-1]\d[0-3]\d{1}))
         )?
     $#x';
 
