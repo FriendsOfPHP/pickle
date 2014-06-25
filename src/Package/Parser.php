@@ -17,6 +17,7 @@ abstract class Parser
      * Constructor
      *
      * @param string $path Path to the package root directory
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct($path)

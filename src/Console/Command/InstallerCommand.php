@@ -1,11 +1,6 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Composer\Config;
-use Composer\Downloader\GitDownloader;
-use Composer\Downloader\TarDownloader;
-use Composer\IO\ConsoleIO;
-use Pickle\Downloader\PECLDownloader;
 use Pickle\Package\JSON\Dumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

@@ -3,7 +3,6 @@ namespace Pickle\Downloader;
 
 use Composer\Downloader\ArchiveDownloader;
 
-
 class TGZDownloader extends ArchiveDownloader
 {
     protected function extract($file, $path)
