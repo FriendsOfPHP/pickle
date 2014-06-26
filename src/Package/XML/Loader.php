@@ -13,6 +13,9 @@ class Loader
         $this->loader = $loader;
     }
 
+    /**
+     * @param string $path
+     */
     public function load($path)
     {
         if (is_file($path) === false) {

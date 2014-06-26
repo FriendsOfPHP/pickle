@@ -5,8 +5,8 @@ class BuildSrcUnix
 {
     private $pkg;
     private $options;
-    private $cwd_bak;
     private $log = '';
+    private $cwd_back;
     private $build_dir;
 
     public function __construct(Package $pkg, $options = null)
@@ -16,6 +16,10 @@ class BuildSrcUnix
         $this->cwd_back = getcwd();
     }
 
+    /**
+     * @param integer $level
+     * @param string $msg
+     */
     public function log($level, $msg)
     {
         $this->log .= $level . ': ' . $msg . "\n";
@@ -67,7 +71,6 @@ class BuildSrcUnix
 
             $configure_options .= ' --' . $t . '-' . $n;
         }
-        $enable_ext = '';
         $opt = $this->pkg->getConfigureOptions();
         $ext_enable_option = $opt['enable'][$this->pkg->getName()];
         if ($ext_enable_option->type == 'enable') {
@@ -248,6 +251,9 @@ class BuildSrcUnix
         chdir($back_cwd);
     }
 
+    /**
+     * @param string $command
+     */
     public function _runCommand($command, $callback = null)
     {
         $this->log(1, 'running: ' . $command);

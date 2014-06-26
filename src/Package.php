@@ -61,8 +61,8 @@ class Package extends CompletePackage
     /**
      * @todo If someone prefers a nice regex for both AC_ and PHP_... :)
      *
-     * @param $which
-     * @param $config
+     * @param string $which
+     * @param string $config
      *
      * @return array
      */
@@ -103,8 +103,8 @@ class Package extends CompletePackage
     }
 
     /**
-     * @param $which
-     * @param $config
+     * @param string $which
+     * @param string $config
      *
      * @return array
      */
