@@ -6,7 +6,7 @@ use Pickle\Package\JSON\Dumper;
 class Archive
 {
     /**
-     * @var string
+     * @var Package
      */
     private $pkg;
 
