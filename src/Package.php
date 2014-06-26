@@ -113,9 +113,9 @@ class Package extends CompletePackage
         $next = 0;
         $options = [];
 
-        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         $default = 'y';
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
@@ -146,12 +146,12 @@ class Package extends CompletePackage
      */
     public function getFiles()
     {
-        $ignorefiles = $this->getGitIgnoreFiles();
+        $ignoreFiles = $this->getGitIgnoreFiles();
         $all = $files = array();
         $dir = $this->path;
         while ($dirs = glob($dir . '*')) {
             $dir .= '/*';
-            $files = array_diff($all, $ignorefiles);
+            $files = array_diff($all, $ignoreFiles);
             if (!$all) {
                 $all = $dirs;
             } else {
