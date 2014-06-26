@@ -3,7 +3,7 @@
     "type": "application",
     "description": "Installer for PHP extension, supports pecl package or install from src tree directly",
     "homepage": "https://github.com/FriendsOfPHP/pickle",
-    "license": "PHP License v3.01",
+    "license": "PHP-3.01",
     "authors": [
         {
             "name": "Pierre Joye",
