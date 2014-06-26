@@ -4,6 +4,7 @@ pickle - PHP Extension installer
 Pickle installs PHP extensions easily on all platforms.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/?branch=master)
+[![Build Status](https://travis-ci.org/FriendsOfPHP/pickle.svg?branch=master)](https://travis-ci.org/FriendsOfPHP/pickle)
 
 Installation and usage
 ----------------------
