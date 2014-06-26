@@ -102,4 +102,4 @@ class PackageHelper extends Helper
 
         return $package;
     }
-} 
+}

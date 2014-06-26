@@ -14,7 +14,7 @@ class Archive
      * Constructor
      *
      * @param Package $package
-     * @param string $path
+     * @param string  $path
      */
     public function __construct(Package $package, $path = '')
     {
@@ -26,7 +26,6 @@ class Archive
      *
      * @param string $arch
      * @param string $path
-     * @return void
      */
     protected function addDir($arch, $path)
     {
