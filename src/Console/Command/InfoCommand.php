@@ -9,15 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InfoCommand extends Command
 {
-    const RE_PACKAGE = '#^
-        (?:pecl/)?
-        (?<package>\w+)
-        (?:
-             \-(?<stability>beta|stable|alpha)
-           | @(?<version>(?:\d+(?:\.\d+)*))
-        )?
-    $#x';
-
     protected function configure()
     {
         $this
