@@ -15,6 +15,8 @@ class Loader
 
     /**
      * @param string $path
+     *
+     * @return \Composer\Package\PackageInterface
      */
     public function load($path)
     {

@@ -29,9 +29,8 @@ trait GitIgnore
             if ($line[0] === '!') {
                 $line = substr($line, 1);
                 $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
-            }
-            // normal glob
-            else {
+            } else {
+                // normal glob
                 $files = glob("$dir/$line");
             }
             $matches = array_merge($matches, $files);

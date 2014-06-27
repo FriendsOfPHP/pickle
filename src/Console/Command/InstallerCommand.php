@@ -118,20 +118,18 @@ class InstallerCommand extends Command
         $helper = $this->getHelperSet()->get('question');
 
         $options = $package->getConfigureOptions();
-        $options_value = null;
+        $optionsValue = [];
         if ($options) {
-            $options_value = [];
-
             foreach ($options['enable'] as $name => $opt) {
                 /* enable/with-<extname> */
                 if ($name == $package->getName()) {
-                    $options_value[$name] = true;
+                    $optionsValue[$name] = true;
 
                     continue;
                 }
 
                 $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
-                $options_value['enable'][$name] = (object) [
+                $optionsValue['enable'][$name] = (object) [
                     'type' => $opt->type,
                     'input' => $helper->ask($input, $output, $prompt)
                 ];
@@ -139,7 +137,7 @@ class InstallerCommand extends Command
         }
 
         if ($input->getOption('dry-run') === false) {
-            $build = new BuildSrcUnix($package, $options_value);
+            $build = new BuildSrcUnix($package, $optionsValue);
             $build->phpize();
             $build->createTempDir();
             $build->configure();

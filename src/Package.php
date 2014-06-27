@@ -26,6 +26,8 @@ class Package extends CompletePackage
 
     /**
      * Set the package's root directory
+     *
+     * @param string $path
      */
     public function setRootDir($path)
     {
@@ -70,9 +72,9 @@ class Package extends CompletePackage
     {
         $next = 0;
         $options = [];
-        $type = strpos($which, 'ENABLE') !== FALSE ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         $default = true;
-        while (($s = strpos($config, $which, $next)) !== FALSE) {
+        while (($s = strpos($config, $which, $next)) !== false) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);

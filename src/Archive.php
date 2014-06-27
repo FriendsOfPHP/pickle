@@ -44,7 +44,7 @@ class Archive
      */
     public function create()
     {
-        $arch_basename = $this->pkg->getName() . '-' . $this->pkg->getVersion();
+        $archBasename = $this->pkg->getName() . '-' . $this->pkg->getVersion();
 
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
@@ -69,7 +69,7 @@ class Archive
         $arch->addFromString('pickle.json', $dumper->dump($this->pkg));
         $arch->compress(\Phar::GZ);
         unset($arch);
-        rename($tempname . '.gz', $arch_basename . '.tgz');
+        rename($tempname . '.gz', $archBasename . '.tgz');
         unlink($tempname);
 
     }
