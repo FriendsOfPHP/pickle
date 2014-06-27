@@ -62,14 +62,20 @@ class BuildSrcUnix
         $back_cwd = getcwd();
         chdir($this->build_dir);
         $configure_options = '';
-        foreach ($this->options['enable'] as $n => $opt) {
-            if ($opt->type == 'enable') {
-                $t = $opt->input == true ? 'enable' : 'disable';
-            } elseif ($opt->type == 'disable') {
-                $t = $opt->input == false ? 'enable' : 'disable';
+        foreach ($this->options['enable'] as $name => $option) {
+            if ($option->type == 'enable') {
+                $decision = $option->input == true ? 'enable' : 'disable';
+            } elseif ($option->type == 'disable') {
+                $decision = $option->input == false ? 'enable' : 'disable';
+            } else {
+                throw new \Exception(
+                    'Option ' . $name . ' is not well-formed; ' .
+                    'its type must be “enable” or “disable”, got ' .
+                    $option->type
+                );
             }
 
-            $configure_options .= ' --' . $t . '-' . $n;
+            $configure_options .= ' --' . $decision . '-' . $name;
         }
         $opt = $this->pkg->getConfigureOptions();
         $ext_enable_option = $opt['enable'][$this->pkg->getName()];
