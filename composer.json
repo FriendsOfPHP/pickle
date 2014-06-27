@@ -19,12 +19,25 @@
         "composer/composer": "~1.0-alpha8@dev"
     },
     "require-dev": {
-        "atoum/atoum": "dev-extension",
-        "atoum/praspel-extension": "dev-master",
+        "atoum/atoum": "dev-extension@dev",
+        "atoum/praspel-extension": "dev-master@dev",
+            "hoa/core": "dev-master@dev",
+            "hoa/visitor": "dev-master@dev",
+            "hoa/router": "dev-master@dev",
+            "hoa/iterator": "dev-master@dev",
+            "hoa/string": "dev-master@dev",
+            "hoa/realdom": "dev-master@dev",
+            "hoa/stream": "dev-master@dev",
+            "hoa/file": "dev-master@dev",
+            "hoa/compiler": "dev-master@dev",
+            "hoa/math": "dev-master@dev",
+            "hoa/praspel": "dev-master@dev",
+            "hoa/regex": "dev-master@dev",
+            "hoa/dispatcher": "dev-master@dev",
+            "hoa/console": "dev-master@dev",
         "behat/behat": "~3.0",
         "symfony/process": "~2.5"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Pickle\\": ["src/"]
