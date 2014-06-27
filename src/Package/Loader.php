@@ -3,7 +3,6 @@ namespace Pickle\Package;
 
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
-use Pickle\Package;
 
 class Loader implements LoaderInterface
 {
