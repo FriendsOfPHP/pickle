@@ -1,4 +1,4 @@
-pickle - PHP Extension installer
+pickle - PHP Extension installer [![SensioLabsInsight](https://insight.sensiolabs.com/projects/20408423-f871-4d67-a87c-8967bedd6ef7/small.png)](https://insight.sensiolabs.com/projects/20408423-f871-4d67-a87c-8967bedd6ef7)
 ================================
 
 Pickle installs PHP extensions easily on all platforms.
