@@ -19,10 +19,12 @@
         "composer/composer": "~1.0-alpha8@dev"
     },
     "require-dev": {
-        "atoum/atoum": "dev-master",
+        "atoum/atoum": "dev-extension",
+        "atoum/praspel-extension": "dev-master",
         "behat/behat": "~3.0",
         "symfony/process": "~2.5"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Pickle\\": ["src/"]
