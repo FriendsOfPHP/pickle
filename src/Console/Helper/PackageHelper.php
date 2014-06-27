@@ -16,12 +16,11 @@ class PackageHelper extends Helper
 {
     const RE_PECL_PACKAGE = '#^
         (?:pecl/)?
-        (?P<package>\w+)
+        (?<package>\w+)
         (?:
-            \-(?P<stability>beta|stable|alpha)|
-            @(?P<version>(?:\d+.?)+)|
-            $
-        )
+            \-(?<stability>beta|stable|alpha)
+            |@(?<version>(?:\d+(?:\.\d+){1,2})|(?:[1-2]\d{3}[0-1]\d[0-3]\d{1}))
+        )?
     $#x';
 
     const RE_GIT_PACKAGE = '#^
