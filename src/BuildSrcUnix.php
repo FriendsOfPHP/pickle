@@ -6,14 +6,14 @@ class BuildSrcUnix
     private $pkg;
     private $options;
     private $log = '';
-    private $cwd_back;
-    private $build_dir;
+    private $cwdBack;
+    private $buildDir;
 
     public function __construct(Package $pkg, $options = null)
     {
         $this->pkg = $pkg;
         $this->options = $options;
-        $this->cwd_back = getcwd();
+        $this->cwdBack = getcwd();
     }
 
     /**
@@ -28,22 +28,22 @@ class BuildSrcUnix
     public function createTempDir()
     {
         $tmp = sys_get_temp_dir();
-        $build_dir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
+        $buildDir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
 
-        if (is_dir($build_dir)) {
+        if (is_dir($buildDir)) {
             $this->cleanup();
         }
 
-        mkdir($build_dir);
-        $this->build_dir = $build_dir;
+        mkdir($buildDir);
+        $this->buildDir = $buildDir;
     }
 
     public function cleanup()
     {
-        if (is_dir($this->build_dir)) {
+        if (is_dir($this->buildDir)) {
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator(
-                    $this->build_dir,
+                    $this->buildDir,
                     \FilesystemIterator::SKIP_DOTS
                 ),
                 \RecursiveIteratorIterator::CHILD_FIRST
@@ -51,23 +51,22 @@ class BuildSrcUnix
             foreach ($iterator as $path) {
                 if ($path->isDir()) {
                     rmdir($path->getPathname());
-                }
-                else {
+                } else {
                     unlink($path->getPathname());
                 }
                 echo 'rmdir :' . $path->getPathname() . "\n";
             }
-            rmdir($this->build_dir);
+            rmdir($this->buildDir);
         }
     }
 
     public function phpize()
     {
-        $back_cwd = getcwd();
+        $backCwd = getcwd();
         chdir($this->pkg->getRootDir());
 
         $res = $this->runCommand('phpize');
-        chdir($back_cwd);
+        chdir($backCwd);
         if (!$res) {
             throw new \Exception('phpize failed');
         }
@@ -75,9 +74,9 @@ class BuildSrcUnix
 
     public function configure()
     {
-        $back_cwd = getcwd();
-        chdir($this->build_dir);
-        $configure_options = '';
+        $backCwd = getcwd();
+        chdir($this->buildDir);
+        $configureOptions = '';
         foreach ($this->options['enable'] as $name => $option) {
             if ($option->type == 'enable') {
                 $decision = $option->input == true ? 'enable' : 'disable';
@@ -91,190 +90,49 @@ class BuildSrcUnix
                 );
             }
 
-            $configure_options .= ' --' . $decision . '-' . $name;
+            $configureOptions .= ' --' . $decision . '-' . $name;
         }
         $opt = $this->pkg->getConfigureOptions();
-        $ext_enable_option = $opt['enable'][$this->pkg->getName()];
-        if ($ext_enable_option->type == 'enable') {
-            $conf_option = '--enable-' . $this->pkg->getName() . '=shared';
+        $extEnableOption = $opt['enable'][$this->pkg->getName()];
+        if ($extEnableOption->type == 'enable') {
+            $confOption = '--enable-' . $this->pkg->getName() . '=shared';
         } else {
-            $conf_option = '--with-' . $this->pkg->getName() . '=shared';
+            $confOption = '--with-' . $this->pkg->getName() . '=shared';
         }
-        $configure_options = $conf_option . ' ' . $configure_options;
+        $configureOptions = $confOption . ' ' . $configureOptions;
 
-        $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
-        chdir($back_cwd);
+        $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configureOptions);
+        chdir($backCwd);
         if (!$res) {
-            throw new \Exception('configure failed, see log at '. $this->build_dir . '\config.log');
+            throw new \Exception('configure failed, see log at '. $this->buildDir . '\config.log');
         }
     }
 
     public function build()
     {
-        $back_cwd = getcwd();
-        chdir($this->build_dir);
+        $backCwd = getcwd();
+        chdir($this->buildDir);
         $this->runCommand('make');
-        chdir($back_cwd);
+        chdir($backCwd);
         if (!$this->runCommand('make')) {
             throw new \Exception('make failed');
         }
-        /*
-           if (is_object($descfile)) {
-           $pkg = $descfile;
-           $descfile = $pkg->getPackageFile();
-           if (is_a($pkg, 'PEAR_PackageFile_v1')) {
-           $dir = dirname($descfile);
-           } else {
-           $dir = $pkg->_config->get('temp_dir') . '/' . $pkg->getName();
-        // automatically delete at session end
-        $this->addTempFile($dir);
-        }
-        } else {
-        $pf = &new PEAR_PackageFile($this->config);
-        $pkg = &$pf->fromPackageFile($descfile, PEAR_VALIDATE_NORMAL);
-        if (PEAR::isError($pkg)) {
-        return $pkg;
-        }
-        $dir = dirname($descfile);
-        }
-
-        // Find config. outside of normal path - e.g. config.m4
-        foreach (array_keys($pkg->getInstallationFileList()) as $item) {
-        if (stristr(basename($item), 'config.m4') && dirname($item) != '.') {
-        $dir .= DIRECTORY_SEPARATOR . dirname($item);
-        break;
-        }
-        }
-
-        $old_cwd = getcwd();
-        if (!file_exists($dir) || !is_dir($dir) || !chdir($dir)) {
-        return $this->raiseError("could not chdir to $dir");
-        }
-
-        $vdir = $pkg->getPackage() . '-' . $pkg->getVersion();
-        if (is_dir($vdir)) {
-        chdir($vdir);
-        }
-
-        $dir = getcwd();
-        $this->log(2, "building in $dir");
-        putenv('PATH=' . $this->config->get('bin_dir') . ':' . getenv('PATH'));
-        $err = $this->runCommand($this->config->get('php_prefix')
-        . "phpize" .
-        $this->config->get('php_suffix'),
-        array(&$this, 'phpizeCallback'));
-        if (PEAR::isError($err)) {
-        return $err;
-        }
-
-        if (!$err) {
-        return $this->raiseError("`phpize' failed");
-        }
-
-        // Figure out what params have been passed in to us already - formatting fixing
-        $opts = array();
-        if (!empty($options)) {
-        foreach ($options as $op) {
-        $op = str_replace('--', '', $op);
-        list($name, $value) = explode('=', $op);
-        $opts[] = $name;
-        }
-        }
-
-        // {{{ start of interactive part
-        $configure_command = "$dir/configure";
-        $configure_options = $pkg->getConfigureOptions();
-        if ($configure_options) {
-        foreach ($configure_options as $o) {
-        // skip params that have been passed already
-        if (in_array($o['name'], $opts)) {
-        continue;
-    }
-
-    // FIXME make configurable
-    if (!$user = getenv('USER')) {
-        $user = 'defaultuser';
-    }
-
-    $tmpdir = $this->config->get('temp_dir');
-    $build_basedir = System::mktemp(' -t "' . $tmpdir . '" -d "pear-build-' . $user . '"');
-    $build_dir = "$build_basedir/$vdir";
-    $inst_dir = "$build_basedir/install-$vdir";
-    $this->log(1, "building in $build_dir");
-    if (is_dir($build_dir)) {
-        System::rm(array('-rf', $build_dir));
-    }
-
-    if (!System::mkDir(array('-p', $build_dir))) {
-        return $this->raiseError("could not create build dir: $build_dir");
-    }
-
-    $this->addTempFile($build_dir);
-    if (!System::mkDir(array('-p', $inst_dir))) {
-        return $this->raiseError("could not create temporary install dir: $inst_dir");
-    }
-    $this->addTempFile($inst_dir);
-
-    $make_command = getenv('MAKE') ? getenv('MAKE') : 'make';
-
-    $to_run = array(
-            $configure_command,
-            $make_command,
-            "$make_command INSTALL_ROOT=\"$inst_dir\" install",
-            "find \"$inst_dir\" | xargs ls -dils"
-            );
-    if (!file_exists($build_dir) || !is_dir($build_dir) || !chdir($build_dir)) {
-        return $this->raiseError("could not chdir to $build_dir");
-    }
-
-    putenv('PHP_PEAR_VERSION=@PEAR-VER@');
-    foreach ($to_run as $cmd) {
-        $err = $this->runCommand($cmd, $callback);
-        if (PEAR::isError($err)) {
-            chdir($old_cwd);
-
-            return $err;
-        }
-
-        if (!$err) {
-            chdir($old_cwd);
-
-            return $this->raiseError("`$cmd' failed");
-        }
-    }
-
-    if (!($dp = opendir("modules"))) {
-        chdir($old_cwd);
-
-        return $this->raiseError("no `modules' directory found");
-    }
-
-    $built_files = array();
-    $prefix = exec($this->config->get('php_prefix')
-            . "php-config" .
-            $this->config->get('php_suffix') . " --prefix");
-    $ext_dir = $this->config->get('ext_dir');
-    if (!$ext_dir) {
-        $ext_dir = $prefix;
-    }
-    $this->_harvestInstDir($ext_dir, $inst_dir . DIRECTORY_SEPARATOR . $prefix, $built_files);
-
-    chdir($old_cwd);
-
-    return $built_files;
-    */
     }
 
     public function install()
     {
-        $back_cwd = getcwd();
-        chdir($this->build_dir);
+        $backCwd = getcwd();
+        chdir($this->buildDir);
         $this->runCommand('make install');
-        chdir($back_cwd);
+        chdir($backCwd);
     }
 
     /**
      * @param string $command
+     *
+     * @return integer
+     *
+     * @throws \Exception
      */
     private function runCommand($command, $callback = null)
     {
@@ -287,7 +145,7 @@ class BuildSrcUnix
         }
 
         if ($callback && $callback[0]->debug == 1) {
-            $olddbg = $callback[0]->debug;
+            $oldDbg = $callback[0]->debug;
             $callback[0]->debug = 2;
         }
 
@@ -299,12 +157,12 @@ class BuildSrcUnix
             }
         }
 
-        if ($callback && isset($olddbg)) {
-            $callback[0]->debug = $olddbg;
+        if ($callback && isset($oldDbg)) {
+            $callback[0]->debug = $oldDbg;
         }
 
-        $exitcode = is_resource($pp) ? pclose($pp) : -1;
+        $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
-        return ($exitcode == 0);
+        return ($exitCode == 0);
     }
 }

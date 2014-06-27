@@ -20,7 +20,7 @@ class FeatureContext implements SnippetAcceptingContext
     private $workingDir;
     private $process;
 
-    function __construct()
+    public function __construct()
     {
         $this->assert = new \mageekguy\atoum\asserter\generator();
     }
