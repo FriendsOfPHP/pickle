@@ -254,7 +254,7 @@ class BuildSrcUnix
     /**
      * @param string $command
      */
-    public function _runCommand($command, $callback = null)
+    private function _runCommand($command, $callback = null)
     {
         $this->log(1, 'running: ' . $command);
         $pp = popen("$command 2>&1", 'r');
