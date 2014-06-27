@@ -29,6 +29,11 @@ class BuildSrcUnix
     {
         $tmp = sys_get_temp_dir();
         $build_dir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
+
+        if (is_dir($build_dir)) {
+            $this->cleanup();
+        }
+
         mkdir($build_dir);
         $this->build_dir = $build_dir;
     }
@@ -36,12 +41,23 @@ class BuildSrcUnix
     public function cleanup()
     {
         if (is_dir($this->build_dir)) {
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->build_dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
-                //$path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(
+                    $this->build_dir,
+                    \FilesystemIterator::SKIP_DOTS
+                ),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($iterator as $path) {
+                if ($path->isDir()) {
+                    rmdir($path->getPathname());
+                }
+                else {
+                    unlink($path->getPathname());
+                }
                 echo 'rmdir :' . $path->getPathname() . "\n";
             }
-            //rmdir($this->build_dir);
-            echo 'rmdir :' . $this->build_dir . "\n";
+            rmdir($this->build_dir);
         }
     }
 
