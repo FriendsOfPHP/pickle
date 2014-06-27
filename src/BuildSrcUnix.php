@@ -66,7 +66,7 @@ class BuildSrcUnix
         $back_cwd = getcwd();
         chdir($this->pkg->getRootDir());
 
-        $res = $this->_runCommand('phpize');
+        $res = $this->runCommand('phpize');
         chdir($back_cwd);
         if (!$res) {
             throw new \Exception('phpize failed');
@@ -102,7 +102,7 @@ class BuildSrcUnix
         }
         $configure_options = $conf_option . ' ' . $configure_options;
 
-        $res = $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
+        $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
         chdir($back_cwd);
         if (!$res) {
             throw new \Exception('configure failed, see log at '. $this->build_dir . '\config.log');
@@ -113,9 +113,9 @@ class BuildSrcUnix
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
-        $this->_runCommand('make');
+        $this->runCommand('make');
         chdir($back_cwd);
-        if (!$this->_runCommand('make')) {
+        if (!$this->runCommand('make')) {
             throw new \Exception('make failed');
         }
         /*
@@ -159,7 +159,7 @@ class BuildSrcUnix
         $dir = getcwd();
         $this->log(2, "building in $dir");
         putenv('PATH=' . $this->config->get('bin_dir') . ':' . getenv('PATH'));
-        $err = $this->_runCommand($this->config->get('php_prefix')
+        $err = $this->runCommand($this->config->get('php_prefix')
         . "phpize" .
         $this->config->get('php_suffix'),
         array(&$this, 'phpizeCallback'));
@@ -229,7 +229,7 @@ class BuildSrcUnix
 
     putenv('PHP_PEAR_VERSION=@PEAR-VER@');
     foreach ($to_run as $cmd) {
-        $err = $this->_runCommand($cmd, $callback);
+        $err = $this->runCommand($cmd, $callback);
         if (PEAR::isError($err)) {
             chdir($old_cwd);
 
@@ -269,14 +269,14 @@ class BuildSrcUnix
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
-        $this->_runCommand('make install');
+        $this->runCommand('make install');
         chdir($back_cwd);
     }
 
     /**
      * @param string $command
      */
-    private function _runCommand($command, $callback = null)
+    private function runCommand($command, $callback = null)
     {
         $this->log(1, 'running: ' . $command);
         $pp = popen("$command 2>&1", 'r');
