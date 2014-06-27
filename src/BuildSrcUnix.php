@@ -29,6 +29,11 @@ class BuildSrcUnix
     {
         $tmp = sys_get_temp_dir();
         $build_dir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
+
+        if (is_dir($build_dir)) {
+            $this->cleanup();
+        }
+
         mkdir($build_dir);
         $this->build_dir = $build_dir;
     }
@@ -36,12 +41,23 @@ class BuildSrcUnix
     public function cleanup()
     {
         if (is_dir($this->build_dir)) {
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->build_dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
-                //$path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(
+                    $this->build_dir,
+                    \FilesystemIterator::SKIP_DOTS
+                ),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($iterator as $path) {
+                if ($path->isDir()) {
+                    rmdir($path->getPathname());
+                }
+                else {
+                    unlink($path->getPathname());
+                }
                 echo 'rmdir :' . $path->getPathname() . "\n";
             }
-            //rmdir($this->build_dir);
-            echo 'rmdir :' . $this->build_dir . "\n";
+            rmdir($this->build_dir);
         }
     }
 
@@ -50,7 +66,7 @@ class BuildSrcUnix
         $back_cwd = getcwd();
         chdir($this->pkg->getRootDir());
 
-        $res = $this->_runCommand('phpize');
+        $res = $this->runCommand('phpize');
         chdir($back_cwd);
         if (!$res) {
             throw new \Exception('phpize failed');
@@ -62,14 +78,20 @@ class BuildSrcUnix
         $back_cwd = getcwd();
         chdir($this->build_dir);
         $configure_options = '';
-        foreach ($this->options['enable'] as $n => $opt) {
-            if ($opt->type == 'enable') {
-                $t = $opt->input == true ? 'enable' : 'disable';
-            } elseif ($opt->type == 'disable') {
-                $t = $opt->input == false ? 'enable' : 'disable';
+        foreach ($this->options['enable'] as $name => $option) {
+            if ($option->type == 'enable') {
+                $decision = $option->input == true ? 'enable' : 'disable';
+            } elseif ($option->type == 'disable') {
+                $decision = $option->input == false ? 'enable' : 'disable';
+            } else {
+                throw new \Exception(
+                    'Option ' . $name . ' is not well-formed; ' .
+                    'its type must be “enable” or “disable”, got ' .
+                    $option->type
+                );
             }
 
-            $configure_options .= ' --' . $t . '-' . $n;
+            $configure_options .= ' --' . $decision . '-' . $name;
         }
         $opt = $this->pkg->getConfigureOptions();
         $ext_enable_option = $opt['enable'][$this->pkg->getName()];
@@ -80,7 +102,7 @@ class BuildSrcUnix
         }
         $configure_options = $conf_option . ' ' . $configure_options;
 
-        $res = $this->_runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
+        $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configure_options);
         chdir($back_cwd);
         if (!$res) {
             throw new \Exception('configure failed, see log at '. $this->build_dir . '\config.log');
@@ -91,9 +113,9 @@ class BuildSrcUnix
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
-        $this->_runCommand('make');
+        $this->runCommand('make');
         chdir($back_cwd);
-        if (!$this->_runCommand('make')) {
+        if (!$this->runCommand('make')) {
             throw new \Exception('make failed');
         }
         /*
@@ -137,7 +159,7 @@ class BuildSrcUnix
         $dir = getcwd();
         $this->log(2, "building in $dir");
         putenv('PATH=' . $this->config->get('bin_dir') . ':' . getenv('PATH'));
-        $err = $this->_runCommand($this->config->get('php_prefix')
+        $err = $this->runCommand($this->config->get('php_prefix')
         . "phpize" .
         $this->config->get('php_suffix'),
         array(&$this, 'phpizeCallback'));
@@ -207,7 +229,7 @@ class BuildSrcUnix
 
     putenv('PHP_PEAR_VERSION=@PEAR-VER@');
     foreach ($to_run as $cmd) {
-        $err = $this->_runCommand($cmd, $callback);
+        $err = $this->runCommand($cmd, $callback);
         if (PEAR::isError($err)) {
             chdir($old_cwd);
 
@@ -247,19 +269,21 @@ class BuildSrcUnix
     {
         $back_cwd = getcwd();
         chdir($this->build_dir);
-        $this->_runCommand('make install');
+        $this->runCommand('make install');
         chdir($back_cwd);
     }
 
     /**
      * @param string $command
      */
-    public function _runCommand($command, $callback = null)
+    private function runCommand($command, $callback = null)
     {
         $this->log(1, 'running: ' . $command);
         $pp = popen("$command 2>&1", 'r');
         if (!$pp) {
-            return $this->raiseError("failed to run `$command'");
+            throw new \Exception(
+                'Failed to run the following command: ' . $command
+            );
         }
 
         if ($callback && $callback[0]->debug == 1) {
