@@ -27,7 +27,7 @@ $application->getHelperSet()->set(new \Pickle\Console\Helper\PackageHelper());
 
 $application->add(new Command\ValidateCommand);
 $application->add(new Command\ConvertCommand);
-$application->add(new Command\ArchiveCommand);
+$application->add(new Command\ReleaseCommand);
 $application->add(new Command\InstallerCommand);
 $application->add(new Command\InfoCommand);
 $application->run();

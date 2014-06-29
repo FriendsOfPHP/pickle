@@ -10,13 +10,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Pickle\Archive;
 use Pickle\Package;
 
-class ArchiveCommand extends Command
+class ReleaseCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('archive')
-            ->setDescription('Package a PECL extension')
+            ->setName('release')
+            ->setDescription('Package a PECL extension for release')
             ->addArgument(
                 'path',
                 InputArgument::OPTIONAL,
@@ -48,10 +48,8 @@ class ArchiveCommand extends Command
         if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
             $loader = new Package\XML\Loader(new Package\Loader());
             $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
-
             $dumper = new Dumper();
             $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
-
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
 
