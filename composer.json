@@ -21,7 +21,9 @@
     "require-dev": {
         "atoum/atoum": "dev-master",
         "behat/behat": "~3.0",
-        "symfony/process": "~2.5"
+        "symfony/process": "~2.5",
+        "codeclimate/php-test-reporter": "dev-master",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "psr-4": {
