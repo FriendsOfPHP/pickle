@@ -9,11 +9,18 @@ before_script:
   - composer install --prefer-source
   - composer global require 'kherge/box=~2.4' --prefer-source
   - wget https://scrutinizer-ci.com/ocular.phar
+  - mkdir -p build/logs/
 
 script:
-  - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
+  - php vendor/atoum/atoum/scripts/coverage.php --format xml --output build/logs/clover.xml
   - ~/.composer/vendor/bin/box build
   - vendor/bin/behat --format=progress
 
 after_script:
-  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
+  - ./vendor/bin/test-reporter
+
+addons:
+  code_climate:
+    repo_token:
+      secure: "XFsahmKABUq4Mv48V0mRbExOOg13ukVcWOTdBhkPGrl6f+iTEKK/MuhryhX6zYo2bjnyv00N9O88kc45HACV0i613VYj/c+rukUgTUdDkH2eHIoaYDrmiAkMRIwLvnldMopEIw/2gXicomnco/SeEc1cy6BDMa6LebKqBzNw7oM="
