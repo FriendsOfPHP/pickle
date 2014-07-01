@@ -18,7 +18,7 @@ class BuildSrcUnix
 
     /**
      * @param integer $level
-     * @param string $msg
+     * @param string  $msg
      */
     public function log($level, $msg)
     {
@@ -78,10 +78,10 @@ class BuildSrcUnix
         chdir($this->buildDir);
         $configureOptions = '';
         foreach ($this->options['enable'] as $name => $option) {
-            if ($option->type == 'enable') {
-                $decision = $option->input == true ? 'enable' : 'disable';
-            } elseif ($option->type == 'disable') {
-                $decision = $option->input == false ? 'enable' : 'disable';
+            if ('enable' === $option->type) {
+                $decision = true == $option->input ? 'enable' : 'disable';
+            } elseif ('disable' == $option->type) {
+                $decision = false == $option->input ? 'enable' : 'disable';
             } else {
                 throw new \Exception(
                     'Option ' . $name . ' is not well-formed; ' .
@@ -94,7 +94,7 @@ class BuildSrcUnix
         }
         $opt = $this->pkg->getConfigureOptions();
         $extEnableOption = $opt['enable'][$this->pkg->getName()];
-        if ($extEnableOption->type == 'enable') {
+        if ('enable' == $extEnableOption->type) {
             $confOption = '--enable-' . $this->pkg->getName() . '=shared';
         } else {
             $confOption = '--with-' . $this->pkg->getName() . '=shared';
@@ -130,7 +130,7 @@ class BuildSrcUnix
     /**
      * @param string $command
      *
-     * @return integer
+     * @return boolean
      *
      * @throws \Exception
      */
@@ -144,7 +144,7 @@ class BuildSrcUnix
             );
         }
 
-        if ($callback && $callback[0]->debug == 1) {
+        if (1 == $callback && $callback[0]->debug) {
             $oldDbg = $callback[0]->debug;
             $callback[0]->debug = 2;
         }
@@ -163,6 +163,6 @@ class BuildSrcUnix
 
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
-        return ($exitCode == 0);
+        return (0 === $exitCode);
     }
 }

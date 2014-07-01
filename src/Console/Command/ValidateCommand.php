@@ -26,7 +26,7 @@ class ValidateCommand extends Command
     {
         $path = rtrim($input->getArgument('path'), '/\\');
 
-        if (is_file($path . DIRECTORY_SEPARATOR . 'package.xml') === false) {
+        if (false === is_file($path . DIRECTORY_SEPARATOR . 'package.xml')) {
             throw new \InvalidArgumentException('File not found: ' . $path . DIRECTORY_SEPARATOR . 'package.xml');
         }
 

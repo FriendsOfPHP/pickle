@@ -20,13 +20,13 @@ class Loader
      */
     public function load($path)
     {
-        if (is_file($path) === false) {
+        if (false === is_file($path)) {
             throw new \InvalidArgumentException('File not found: ' . $path);
         }
 
         $xml = @simplexml_load_file($path);
 
-        if ($xml === false) {
+        if (false === $xml) {
             $error = error_get_last();
             $exception = null;
 
@@ -53,7 +53,7 @@ class Loader
             iterator_to_array($xml->helper)
         );
 
-        if (empty($authors) === false) {
+        if (false === empty($authors)) {
             $package['authors'] = [];
 
             foreach ($authors as $author) {
@@ -81,7 +81,7 @@ class Loader
             ];
         }
 
-        if (empty($configureOptions) === false) {
+        if (false === empty($configureOptions)) {
             $package['extra'] = ['configure-options' => $configureOptions];
         }
 
@@ -94,7 +94,7 @@ class Loader
 
     protected function validate(\SimpleXMLElement $xml)
     {
-        if (version_compare($xml['version'], '2.0') === -1) {
+        if (-1 === version_compare($xml['version'], '2.0')) {
             throw new \RuntimeException('Unsupported package.xml version, 2.0 or later only is supported');
         }
 
