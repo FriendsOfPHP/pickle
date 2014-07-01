@@ -18,15 +18,15 @@ trait GitIgnore
         foreach ($lines as $line) {
             $line = trim($line);
             // empty line
-            if ($line === '') {
+            if ('' === $line) {
                 continue;
             }
             // comment
-            if ($line[0] === '#') {
+            if ('#' === $line[0]) {
                 continue;
             }
             // negated glob
-            if ($line[0] === '!') {
+            if ('!' === $line[0]) {
                 $line = substr($line, 1);
                 $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
             } else {

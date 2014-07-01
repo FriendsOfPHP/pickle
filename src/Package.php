@@ -44,15 +44,16 @@ class Package extends CompletePackage
      */
     public function getConfigureOptions()
     {
-        if (!null !== $this->configureOptions) {
+        if (null === $this->configureOptions) {
+            $options = [];
             $config = file_get_contents($this->path . '/config.m4');
             $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
-            $t = $this->fetchArgAc('AC_ARG_WITH', $config);
-            $options['with'] = array_merge($options['with'], $t);
+            $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
+            $options['with'] = array_merge($options['with'], $acArgumentWith);
 
             $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
-            $t = $this->fetchArgAc('AC_ARG_ENABLE', $config);
-            $options['enable'] = array_merge($options['enable'], $t);
+            $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
+            $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
 
             $this->configureOptions = $options;
         }
@@ -72,17 +73,17 @@ class Package extends CompletePackage
     {
         $next = 0;
         $options = [];
-        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
-        $default = true;
-        while (($s = strpos($config, $which, $next)) !== false) {
+        $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
+        while (false !== ($s = strpos($config, $which, $next))) {
+            $default = true;
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-            if ($type == 'enable') {
-                $default = (strpos($option, '-disable-') !== false) ? true : false;
-            } elseif ($type == 'with') {
-                $default = (strpos($option, '-without-') !== false) ? true : false;
+            if ('enable' == $type) {
+                $default = (false !== strpos($option, '-disable-')) ? true : false;
+            } elseif ('with' == $type) {
+                $default = (false !== strpos($option, '-without-')) ? true : false;
             }
 
             list($name, $desc) = explode(',', $option);
@@ -115,20 +116,19 @@ class Package extends CompletePackage
         $next = 0;
         $options = [];
 
-        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
-        $default = 'y';
-        while (($s = strpos($config, $which, $next)) !== false) {
+        $type = false !== strpos($which, 'ENABLE') ? 'enable' : 'with';
+        while (false !== ($s = strpos($config, $which, $next))) {
+            $default = 'y';
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
             list($name, $desc) = explode(',', $option);
 
-            if ($type == 'enable') {
-                $default = (strpos($option, '-disable-') !== false) ? true : false;
-            } elseif ($type == 'with') {
-                $default = (strpos($option, '-without-') !== false) ? true : false;
+            if ('enable' == $type) {
+                $default = (false !== strpos($option, '-disable-')) ? true : false;
+            } elseif ('with' == $type) {
+                $default = (false !== strpos($option, '-without-')) ? true : false;
             }
-
 
             $options[$name] = (object) [
                 'prompt'  => trim($desc),

@@ -72,6 +72,7 @@ class Loader implements LoaderInterface
                 $date = new \DateTime($time, new \DateTimeZone('UTC'));
                 $package->setReleaseDate($date);
             } catch (\Exception $e) {
+                // don't crash if time is incorrect
             }
         }
 

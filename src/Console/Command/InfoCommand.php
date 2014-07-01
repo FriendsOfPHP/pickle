@@ -29,7 +29,7 @@ class InfoCommand extends Command
 
         $download = (
             (isset($info['scheme']) && in_array($info['scheme'], ['http', 'https', 'git'])) ||
-            (isset($info['scheme']) === false  && is_dir($path) === false)
+            (false === isset($info['scheme']) && false === is_dir($path))
         );
 
         if ($download) {

@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Helper\Table;
-
 use Pickle\Package;
 use Pickle\BuildSrcUnix;
 use Pickle\PhpDetection;
@@ -42,9 +41,14 @@ class InstallerCommand extends Command
             );
         ;
     }
-	protected function binaryInstallWindows($path, $output)
-	{
-		$php = new PhpDetection();
+
+    /**
+     * @param string          $path
+     * @param OutputInterface $output
+     */
+    protected function binaryInstallWindows($path, $output)
+    {
+        $php = new PhpDetection();
         $table = new Table($output);
         $table
             ->setRows([
@@ -56,8 +60,8 @@ class InstallerCommand extends Command
             ])
             ->render();
 
-		$inst = new InstallerBinaryWindows($php, $path);
-	}
+        $inst = new InstallerBinaryWindows($php, $path);
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -66,15 +70,15 @@ class InstallerCommand extends Command
 
         $download = (
             (isset($info['scheme']) && in_array($info['scheme'], ['http', 'https', 'git'])) ||
-            (isset($info['scheme']) === false  && is_dir($path) === false)
+            (false === isset($info['scheme']) && false === is_dir($path))
         );
 
+        /* if windows, try bin install by default */
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $this->binaryInstallWindows($path, $output);
 
-		/* if windows, try bin install by default */
-		if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-			$this->binaryInstallWindows($path, $output);
-			return;
-		}
+            return;
+        }
 
         if ($download) {
             $package = $this->getHelper('package')->download($input, $output, $path, sys_get_temp_dir());
@@ -136,7 +140,7 @@ class InstallerCommand extends Command
             }
         }
 
-        if ($input->getOption('dry-run') === false) {
+        if (false === $input->getOption('dry-run')) {
             $build = new BuildSrcUnix($package, $optionsValue);
             $build->phpize();
             $build->createTempDir();

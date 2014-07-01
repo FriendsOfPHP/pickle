@@ -64,13 +64,13 @@ class PackageHelper extends Helper
         if (preg_match(self::RE_PECL_PACKAGE, $url, $matches) > 0) {
             $url = 'http://pecl.php.net/get/' . $matches['package'];
 
-            if (isset($matches['stability']) && $matches['stability'] !== '') {
+            if (isset($matches['stability']) && '' !== $matches['stability']) {
                 $url .= '-' . $matches['stability'];
             } else {
                 $matches['stability'] = 'stable';
             }
 
-            if (isset($matches['version']) && $matches['version'] !== '') {
+            if (isset($matches['version']) && '' !== $matches['version']) {
                 $url .= '/' . $matches['version'];
                 $prettyVersion = $matches['version'];
             } else {

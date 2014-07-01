@@ -20,13 +20,13 @@ class Loader
      */
     public function load($path)
     {
-        if (is_file($path) === false) {
+        if (false === is_file($path)) {
             throw new \InvalidArgumentException('File not found: ' . $path);
         }
 
         $json = @json_decode(file_get_contents($path));
 
-        if ($json === false) {
+        if (false === $json) {
             $error = error_get_last();
             $exception = null;
 
@@ -48,7 +48,7 @@ class Loader
         $validator = new \JsonSchema\Validator();
         $validator->check($json, $schema);
 
-        if ($validator->isValid() === false) {
+        if (false === $validator->isValid()) {
             $message = '';
 
             foreach ($validator->getErrors() as $error) {
