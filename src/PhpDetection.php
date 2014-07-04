@@ -13,6 +13,7 @@ class PhpDetection
     private $architecture;
     private $zts;
     private $debug;
+	private $ini_path;
     private $extension_dir;
 
     public function __construct($php_cli = PHP_BINARY)
@@ -38,22 +39,22 @@ class PhpDetection
 
         $cmd = $this->php_cli . ' -r ' . '"' . str_replace("\n",'', $script) . '"';
 
-        $ret = exec($cmd, $info);
+        exec($cmd, $info);
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug, $this->extension_dir) = $info;
-        list($this->compiler, $this->architecture, $this->ini_dir) = $this->_getFromPhpInfo();
+        list($this->compiler, $this->architecture, $this->ini_path) = $this->_getFromPhpInfo();
     }
 
     private function _getFromPhpInfo()
     {
         $cmd = $this->php_cli . ' -i';
-        $ret = exec($cmd, $info);
-        $cnt = count($info);
+        exec($cmd, $info);
         $arch = false;
+		$compiler = $arch = $ini_path = '';
         foreach ($info as $s) {
             if (strpos($s, "Loaded Configuration File") !== FALSE) {
-                list(, $ini_dir) = explode('=>', $s);
-                if ($ini_dir == "(None)") {
-                    $ini_dir = '';
+                list(, $ini_path) = explode('=>', $s);
+                if ($ini_path == "(None)") {
+                    $ini_path = '';
                 }
                 continue;
             }
@@ -68,10 +69,10 @@ class PhpDetection
 
         }
         $arch = trim($arch);
-        $ini_dir = trim($ini_dir);
+        $ini_path = trim($ini_path);
         $compiler = trim($compiler);
         $compiler = strtolower(str_replace('MS', '', substr($compiler, 0, 6)));
-        if (!$ini_dir) {
+        if (!$ini_path) {
             Throw new \Exception('Cannot detect php.ini directory');
         }
         if (!$arch) {
@@ -81,7 +82,7 @@ class PhpDetection
             Throw new \Exception('Cannot detect PHP build compiler version');
         }
 
-        return [$compiler, $arch, $ini_dir];
+        return [$compiler, $arch, $ini_path];
     }
 
     public function getArchitecture()
@@ -131,6 +132,6 @@ class PhpDetection
 
     public function getPhpIniDir()
     {
-        return $this->ini_dir;
+        return $this->ini_path;
     }
 }
