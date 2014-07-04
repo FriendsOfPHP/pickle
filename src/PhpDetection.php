@@ -48,7 +48,6 @@ class PhpDetection
     {
         $cmd = $this->php_cli . ' -i';
         exec($cmd, $info);
-        $arch = false;
 		$compiler = $arch = $ini_path = '';
         foreach ($info as $s) {
             if (strpos($s, "Loaded Configuration File") !== FALSE) {
