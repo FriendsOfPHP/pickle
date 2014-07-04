@@ -13,7 +13,7 @@ class PhpDetection
     private $architecture;
     private $zts;
     private $debug;
-	private $ini_path;
+    private $ini_path;
     private $extension_dir;
 
     public function __construct($php_cli = PHP_BINARY)
@@ -48,7 +48,7 @@ class PhpDetection
     {
         $cmd = $this->php_cli . ' -i';
         exec($cmd, $info);
-		$compiler = $arch = $ini_path = '';
+        $compiler = $arch = $ini_path = '';
         foreach ($info as $s) {
             if (strpos($s, "Loaded Configuration File") !== FALSE) {
                 list(, $ini_path) = explode('=>', $s);
