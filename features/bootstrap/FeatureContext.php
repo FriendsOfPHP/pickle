@@ -51,6 +51,11 @@ class FeatureContext implements SnippetAcceptingContext
         $this->moveToNewPath($this->dir);
         $this->php = $php;
         $this->process = new Process(null);
+
+        $timeout = getenv('PICKLE_BEHAT_TPROCESS_IMEOUT');
+        if (false !== $timeout) {
+            $this->process->setTimeout($timeout);
+        }
     }
 
     private function moveToNewPath($path)
