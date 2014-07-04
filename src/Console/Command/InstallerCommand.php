@@ -57,6 +57,7 @@ class InstallerCommand extends Command
                ['<info>Compiler</info>', $php->getCompiler()],
                ['<info>Architecture</info>', $php->getArchitecture()],
                ['<info>Extension dir</info>', $php->getExtensionDir()],
+               ['<info>php.ini</info>', $php->getPhpIniDir()],
             ])
             ->render();
 
