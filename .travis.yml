@@ -13,7 +13,7 @@ before_script:
 script:
   - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
   - ~/.composer/vendor/bin/box build
-  - PICKLE_BEHAT_TPROCESS_IMEOUT=0 vendor/bin/behat --format=progress
+  - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
 
 after_script:
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml

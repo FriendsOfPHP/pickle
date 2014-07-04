@@ -52,7 +52,7 @@ class FeatureContext implements SnippetAcceptingContext
         $this->php = $php;
         $this->process = new Process(null);
 
-        $timeout = getenv('PICKLE_BEHAT_TPROCESS_IMEOUT');
+        $timeout = getenv('PICKLE_BEHAT_PROCESS_TIMEOUT');
         if (false !== $timeout) {
             $this->process->setTimeout($timeout);
         }
