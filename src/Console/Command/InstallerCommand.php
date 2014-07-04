@@ -56,12 +56,14 @@ class InstallerCommand extends Command
                ['<info>PHP Version</info>', $php->getVersion()],
                ['<info>Compiler</info>', $php->getCompiler()],
                ['<info>Architecture</info>', $php->getArchitecture()],
+               ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
                ['<info>Extension dir</info>', $php->getExtensionDir()],
                ['<info>php.ini</info>', $php->getPhpIniDir()],
             ])
             ->render();
 
         $inst = new InstallerBinaryWindows($php, $path);
+        $inst->install();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

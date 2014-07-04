@@ -99,9 +99,29 @@ class PhpDetection
         return $this->php_cli;
     }
 
+    public function getMajorVersion()
+    {
+        return $this->major;
+    }
+
+    public function getMinorVersion()
+    {
+        return $this->minor;
+    }
+
+    public function getReleaseVersion()
+    {
+        return $this->release;
+    }
+
     public function getVersion()
     {
         return $this->version;
+    }
+
+    public function getZts()
+    {
+        return $this->zts;
     }
 
     public function getExtensionDir()
