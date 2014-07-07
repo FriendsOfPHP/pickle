@@ -62,7 +62,7 @@ class InstallerBinaryWindows
             return false;
         }
         $found = false;
-		$v = false;
+        $v = false;
         foreach ($files_a as $a) {
             if ($a->nodeValue[0] == '[') {
                 continue;
