@@ -14,7 +14,7 @@ class InstallerBinaryWindows
     private $progress = NULL;
     private $input = NULL;
     private $output = NULL;
-    private $buildDir = NULL;
+    private $tempDir = NULL;
 
     public function __construct(PhpDetection $php, $ext)
     {
@@ -107,11 +107,11 @@ class InstallerBinaryWindows
         $this->createTempDir($this->ext_name);
         $this->cleanup();
         $za = new \ZipArchive();
-        if ($za->open($zipfile) !== true || !$za->extractTo($this->buildDir)) {
+        if ($za->open($zipfile) !== true || !$za->extractTo($this->tempDir)) {
             Throw new \Exception('Cannot extract Zip archive <' . $zipfile . '>');
         }
         $this->output->writeln("Extracting archives...");
-        $za->extractTo($this->buildDir);
+        $za->extractTo($this->tempDir);
     }
 
     private function _download($url)
@@ -146,7 +146,7 @@ class InstallerBinaryWindows
 
     private function _copyFiles()
     {
-        $DLLs = glob($this->buildDir . '/*.dll');
+        $DLLs = glob($this->tempDir . '/*.dll');
         foreach ($DLLs as $dll) {
             $basename = basename($dll);
             if (substr($basename, 0, 4) == 'php_') {
@@ -200,5 +200,6 @@ class InstallerBinaryWindows
         $path_archive = $this->_download($url);
         $this->_uncompress($path_archive);
         $this->_copyFiles();
+		$this->cleanup();
     }
 }
