@@ -93,7 +93,6 @@ class InstallerCommand extends Command
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->binaryInstallWindows($path, $input, $output);
-
             return;
         }
 
