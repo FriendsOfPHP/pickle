@@ -48,9 +48,9 @@ class PhpDetection
         $cmd = $this->php_cli . ' -i';
         exec($cmd, $info);
         $extension_dir = $compiler = $arch = $ini_path = '';
-		if (!is_array($info)) {
-			Throw new \Exception('Cannot parse phpinfo output');
-		}
+        if (!is_array($info)) {
+            Throw new \Exception('Cannot parse phpinfo output');
+        }
         foreach ($info as $s) {
             if (strpos($s, 'extension_dir') !== FALSE) {
                 list(, $extension_dir,) = explode('=>', $s);

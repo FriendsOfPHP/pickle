@@ -200,6 +200,6 @@ class InstallerBinaryWindows
         $path_archive = $this->_download($url);
         $this->_uncompress($path_archive);
         $this->_copyFiles();
-		$this->cleanup();
+        $this->cleanup();
     }
 }
