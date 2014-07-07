@@ -49,10 +49,10 @@ class PhpDetection
         exec($cmd, $info);
         $compiler = $arch = $ini_path = '';
         foreach ($info as $s) {
-			if (strpos($s, 'extension_dir') !== FALSE) {
-				list(, $extension_dir,) = explode('=>', $s);
-				continue;
-			}
+            if (strpos($s, 'extension_dir') !== FALSE) {
+                list(, $extension_dir,) = explode('=>', $s);
+                continue;
+            }
             if (strpos($s, "Loaded Configuration File") !== FALSE) {
                 list(, $ini_path) = explode('=>', $s);
                 if ($ini_path == "(None)") {
@@ -73,7 +73,7 @@ class PhpDetection
         $arch = trim($arch);
         $ini_path = trim($ini_path);
         $compiler = trim($compiler);
-		$extension_dir = trim($extension_dir);
+        $extension_dir = trim($extension_dir);
         $compiler = strtolower(str_replace('MS', '', substr($compiler, 0, 6)));
         if (!$ini_path) {
             Throw new \Exception('Cannot detect php.ini directory');
@@ -87,6 +87,7 @@ class PhpDetection
         if (!$extension_dir) {
             Throw new \Exception('Cannot detect PHP extension directory');
         }
+
         return [$compiler, $arch, $ini_path, $extension_dir];
     }
 

@@ -3,13 +3,13 @@ namespace Pickle;
 
 class BuildSrcUnix
 {
-	use FileOps;
+    use FileOps;
 
     private $pkg;
     private $options;
     private $log = '';
     private $cwdBack;
-    private $buildDir;
+    private $tempDir;
 
     public function __construct(Package $pkg, $options = null)
     {
@@ -42,7 +42,7 @@ class BuildSrcUnix
     public function configure()
     {
         $backCwd = getcwd();
-        chdir($this->buildDir);
+        chdir($this->tempDir);
         $configureOptions = '';
         foreach ($this->options['enable'] as $name => $option) {
             if ('enable' === $option->type) {
@@ -71,14 +71,14 @@ class BuildSrcUnix
         $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configureOptions);
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('configure failed, see log at '. $this->buildDir . '\config.log');
+            throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');
         }
     }
 
     public function build()
     {
         $backCwd = getcwd();
-        chdir($this->buildDir);
+        chdir($this->tempDir);
         $this->runCommand('make');
         chdir($backCwd);
         if (!$this->runCommand('make')) {
@@ -89,7 +89,7 @@ class BuildSrcUnix
     public function install()
     {
         $backCwd = getcwd();
-        chdir($this->buildDir);
+        chdir($this->tempDir);
         $this->runCommand('make install');
         chdir($backCwd);
     }

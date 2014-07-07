@@ -73,10 +73,10 @@ class InstallerCommand extends Command
             ->render();
 
         $inst = new InstallerBinaryWindows($php, $path);
-		$progress = $this->getHelperSet()->get('progress');
-		$inst->setProgress($progress);
-		$inst->setInput($input);
-		$inst->setOutput($output);
+        $progress = $this->getHelperSet()->get('progress');
+        $inst->setProgress($progress);
+        $inst->setInput($input);
+        $inst->setOutput($output);
         $inst->install();
     }
 
@@ -93,6 +93,7 @@ class InstallerCommand extends Command
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->binaryInstallWindows($path, $input, $output);
+
             return;
         }
 
