@@ -38,6 +38,16 @@ class InstallerCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Do not install extension'
+            )->addOption(
+                'php',
+                null,
+                InputArgument::OPTIONAL,
+                'path to an alternative php (exec)'
+            )->addOption(
+                'ini',
+                null,
+                InputArgument::OPTIONAL,
+                'path to an alternative php.ini'
             );
         ;
     }
@@ -46,7 +56,7 @@ class InstallerCommand extends Command
      * @param string          $path
      * @param OutputInterface $output
      */
-    protected function binaryInstallWindows($path, $output)
+    protected function binaryInstallWindows($path, $input, $output)
     {
         $php = new PhpDetection();
         $table = new Table($output);
@@ -63,6 +73,10 @@ class InstallerCommand extends Command
             ->render();
 
         $inst = new InstallerBinaryWindows($php, $path);
+		$progress = $this->getHelperSet()->get('progress');
+		$inst->setProgress($progress);
+		$inst->setInput($input);
+		$inst->setOutput($output);
         $inst->install();
     }
 
@@ -78,7 +92,7 @@ class InstallerCommand extends Command
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $this->binaryInstallWindows($path, $output);
+            $this->binaryInstallWindows($path, $input, $output);
 
             return;
         }

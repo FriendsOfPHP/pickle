@@ -3,6 +3,8 @@ namespace Pickle;
 
 class BuildSrcUnix
 {
+	use FileOps;
+
     private $pkg;
     private $options;
     private $log = '';
@@ -23,41 +25,6 @@ class BuildSrcUnix
     public function log($level, $msg)
     {
         $this->log .= $level . ': ' . $msg . "\n";
-    }
-
-    public function createTempDir()
-    {
-        $tmp = sys_get_temp_dir();
-        $buildDir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
-
-        if (is_dir($buildDir)) {
-            $this->cleanup();
-        }
-
-        mkdir($buildDir);
-        $this->buildDir = $buildDir;
-    }
-
-    public function cleanup()
-    {
-        if (is_dir($this->buildDir)) {
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $this->buildDir,
-                    \FilesystemIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-            foreach ($iterator as $path) {
-                if ($path->isDir()) {
-                    rmdir($path->getPathname());
-                } else {
-                    unlink($path->getPathname());
-                }
-                echo 'rmdir :' . $path->getPathname() . "\n";
-            }
-            rmdir($this->buildDir);
-        }
     }
 
     public function phpize()

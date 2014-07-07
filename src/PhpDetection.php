@@ -34,14 +34,13 @@ class PhpDetection
         echo PHP_EXTRA_VERSION . \"\n\";
         echo PHP_ZTS . \"\n\";
         echo PHP_DEBUG . \"\n\";
-        echo PHP_EXTENSION_DIR . \"\n\";
         ';
 
         $cmd = $this->php_cli . ' -r ' . '"' . str_replace("\n",'', $script) . '"';
 
         exec($cmd, $info);
-        list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug, $this->extension_dir) = $info;
-        list($this->compiler, $this->architecture, $this->ini_path) = $this->_getFromPhpInfo();
+        list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
+        list($this->compiler, $this->architecture, $this->ini_path, $this->extension_dir) = $this->_getFromPhpInfo();
     }
 
     private function _getFromPhpInfo()
@@ -50,6 +49,10 @@ class PhpDetection
         exec($cmd, $info);
         $compiler = $arch = $ini_path = '';
         foreach ($info as $s) {
+			if (strpos($s, 'extension_dir') !== FALSE) {
+				list(, $extension_dir,) = explode('=>', $s);
+				continue;
+			}
             if (strpos($s, "Loaded Configuration File") !== FALSE) {
                 list(, $ini_path) = explode('=>', $s);
                 if ($ini_path == "(None)") {
@@ -70,6 +73,7 @@ class PhpDetection
         $arch = trim($arch);
         $ini_path = trim($ini_path);
         $compiler = trim($compiler);
+		$extension_dir = trim($extension_dir);
         $compiler = strtolower(str_replace('MS', '', substr($compiler, 0, 6)));
         if (!$ini_path) {
             Throw new \Exception('Cannot detect php.ini directory');
@@ -80,8 +84,10 @@ class PhpDetection
         if (!$compiler) {
             Throw new \Exception('Cannot detect PHP build compiler version');
         }
-
-        return [$compiler, $arch, $ini_path];
+        if (!$extension_dir) {
+            Throw new \Exception('Cannot detect PHP extension directory');
+        }
+        return [$compiler, $arch, $ini_path, $extension_dir];
     }
 
     public function getArchitecture()
