@@ -116,7 +116,6 @@ class InstallerBinaryWindows
 
     private function _download($url)
     {
-        $input = $this->input;
         $output = $this->output;
         $progress = $this->progress;
 
