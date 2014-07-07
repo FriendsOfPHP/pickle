@@ -56,7 +56,6 @@ class InstallerBinaryWindows
     {
         $page = file_get_contents($url);
         $dom = new \DOMDocument();
-        $dom->preserveWhitespace = false;
         $dom->loadHTML($page);
         $files_a = $dom->getElementsByTagName('a');
         if (!$files_a) {
