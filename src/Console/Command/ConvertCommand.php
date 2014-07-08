@@ -34,7 +34,8 @@ class ConvertCommand extends Command
 
         $loader = new Package\XML\Loader(new Package\Loader());
         $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
-
+        $package->setRootDir($path);
+        $package->getConfigureOptions();
         $dumper = new Dumper();
         $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
 

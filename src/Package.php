@@ -44,19 +44,18 @@ class Package extends CompletePackage
      */
     public function getConfigureOptions()
     {
-        if (null === $this->configureOptions) {
-            $options = [];
-            $config = file_get_contents($this->path . '/config.m4');
-            $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
-            $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
-            $options['with'] = array_merge($options['with'], $acArgumentWith);
+        $options = [];
+        $config = file_get_contents($this->path . '/config.m4');
+        $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
+        $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
+        $options['with'] = array_merge($options['with'], $acArgumentWith);
 
-            $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
-            $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
-            $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
+        $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
+        $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
+        $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
 
-            $this->configureOptions = $options;
-        }
+        $this->configureOptions = array_merge($options['with'], $options['enable'], $this->configureOptions);
+        $this->extra["configure-options"] = $this->configureOptions;
 
         return $this->configureOptions;
     }
