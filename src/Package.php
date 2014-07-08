@@ -54,10 +54,10 @@ class Package extends CompletePackage
         $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
         $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
 
-        $this->configureOptions = array_merge($options['with'], $options['enable'], $this->configureOptions);
-        $this->extra["configure-options"] = $this->configureOptions;
 
-        return $this->configureOptions;
+        $this->extra["configure-options"] = array_merge($options['with'], $options['enable'], $this->configureOptions);
+
+        return $this->extra["configure-options"];
     }
 
     /**
@@ -161,5 +161,10 @@ class Package extends CompletePackage
         }
 
         return $files;
+    }
+
+    public function getChangelog()
+    {
+
     }
 }
