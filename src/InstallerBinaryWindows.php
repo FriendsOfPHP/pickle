@@ -148,12 +148,14 @@ class InstallerBinaryWindows
     {
         $DLLs = glob($this->tempDir . '/*.dll');
         foreach ($DLLs as $dll) {
+            $dll = realpath($dll);
             $basename = basename($dll);
             if (substr($basename, 0, 4) == 'php_') {
-                $this->output->writeln("copying $dll to " . $this->php->getExtensionDir() . '/' . $basename . "\n");
+                $dest = $this->php->getExtensionDir() . DIRECTORY_SEPARATOR . $basename;
+                $this->output->writeln("copying $dll to " . $dest . "\n");
                 $success = @copy($dll, $this->php->getExtensionDir() . '/' . $basename);
                 if (!$success) {
-                    Throw new \Exception('Cannot copy DLL <' . $path . '> to <' . $this->php->getExtensionDir() . '/' . $basename  . '>');
+                    Throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
                 }
             }
         }
