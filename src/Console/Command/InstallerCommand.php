@@ -35,6 +35,12 @@ class InstallerCommand extends Command
                 'Disable package conversion'
             )
             ->addOption(
+                'defaults',
+                null,
+                InputOption::VALUE_NONE,
+                'Use defaults configure options values'
+            )
+            ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
@@ -148,15 +154,22 @@ class InstallerCommand extends Command
                     continue;
                 }
 
-                if ($opt->type == 'enable') {
-                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                if ($input->getOption('defaults')) {
+                    $value = $opt->default;
                 } else {
-                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                    if ($opt->type == 'enable') {
+                        $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                    } else {
+                        $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                    }
+
+                    $value = $helper->ask($input, $output, $prompt);
                 }
+
 
                 $optionsValue[$name] = (object) [
                     'type' => $opt->type,
-                    'input' => $helper->ask($input, $output, $prompt)
+                    'input' => $value
                 ];
             }
         }
