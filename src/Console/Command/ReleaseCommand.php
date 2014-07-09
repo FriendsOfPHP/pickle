@@ -48,12 +48,16 @@ class ReleaseCommand extends Command
         if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
             $loader = new Package\XML\Loader(new Package\Loader());
             $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
+
             $dumper = new Dumper();
             $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
+
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
 
         $package->setRootDir(realpath($path));
+
+        $this->getHelper('package')->showInfo($output, $package);
 
         $arch = new Archive($package);
         $arch->create();

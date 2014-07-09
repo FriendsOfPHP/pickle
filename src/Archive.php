@@ -1,8 +1,6 @@
 <?php
 namespace Pickle;
 
-use Pickle\Package\JSON\Dumper;
-
 class Archive
 {
     /**
@@ -14,29 +12,10 @@ class Archive
      * Constructor
      *
      * @param Package $package
-     * @param string  $path
      */
-    public function __construct(Package $package, $path = '')
+    public function __construct(Package $package)
     {
         $this->pkg = $package;
-    }
-
-    /**
-     * Add directory
-     *
-     * @param string $arch
-     * @param string $path
-     */
-    protected function addDir($arch, $path)
-    {
-        foreach ($this->pkg->getFiles() as $file) {
-            if (is_dir($path)) {
-                $arch->addDir($path);
-            } else {
-                $name = str_replace($this->pkg->getRootDir(), '', $file);
-                $arch->addFile($path, $name);
-            }
-        }
     }
 
     /**
@@ -53,24 +32,15 @@ class Archive
         $pkg_dir = $this->pkg->getRootDir();
 
         foreach ($this->pkg->getFiles() as $file) {
-            if (is_dir($file)) {
-                //$arch->addDir($file);
-            } else {
+            if (is_file($file)) {
                 $name = str_replace($pkg_dir, '', $file);
                 $arch->addFile($file, $name);
             }
         }
 
-        $dumper = new Dumper();
-
-        $this->pkg->getStability();
-        $this->pkg->getAuthors();
-        $this->pkg->getConfigureOptions();
-        $arch->addFromString('pickle.json', $dumper->dump($this->pkg));
         $arch->compress(\Phar::GZ);
         unset($arch);
         rename($tempname . '.gz', $archBasename . '.tgz');
         unlink($tempname);
-
     }
 }
