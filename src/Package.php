@@ -5,8 +5,6 @@ use Composer\Package\CompletePackage;
 
 class Package extends CompletePackage
 {
-    use GitIgnore;
-
     /**
      * @var string Package's root directory
      */
@@ -204,20 +202,12 @@ class Package extends CompletePackage
      */
     public function getFiles()
     {
-        $ignoreFiles = $this->getGitIgnoreFiles();
-        $all = $files = array();
-        $dir = $this->path;
-        while ($dirs = glob($dir . '*')) {
-            $dir .= '/*';
-            $files = array_diff($all, $ignoreFiles);
-            if (!$all) {
-                $all = $dirs;
-            } else {
-                $all = array_merge($all, $dirs);
-            }
-        }
-
-        return $files;
+        return new \CallbackFilterIterator(
+            new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($this->getSourceDir())
+            ),
+            new GitIgnore($this)
+        );
     }
 
     public function getChangelog()
