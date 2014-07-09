@@ -87,7 +87,7 @@ class FeatureContext implements SnippetAcceptingContext
         $this->process->setWorkingDirectory($this->workingDir);
         $this->process->setCommandLine(
             sprintf(
-                '%s %s --no-ansi -v %s',
+                '%s %s --no-ansi %s',
                 $this->php,
                 escapeshellarg(__DIR__ . '/../../' . static::PICKLE_BIN),
                 $argumentsString
