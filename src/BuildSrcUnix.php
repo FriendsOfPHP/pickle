@@ -60,7 +60,7 @@ class BuildSrcUnix
             $configureOptions .= ' --' . $decision . '-' . $name;
         }
         $opt = $this->pkg->getConfigureOptions();
-        $extEnableOption = $opt['enable'][$this->pkg->getName()];
+        $extEnableOption = $opt[$this->pkg->getName()];
         if ('enable' == $extEnableOption->type) {
             $confOption = '--enable-' . $this->pkg->getName() . '=shared';
         } else {

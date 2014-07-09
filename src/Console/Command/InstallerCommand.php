@@ -141,15 +141,18 @@ class InstallerCommand extends Command
         $options = $package->getConfigureOptions();
         $optionsValue = [];
         if ($options) {
-            foreach ($options['enable'] as $name => $opt) {
+            foreach ($options as $name => $opt) {
                 /* enable/with-<extname> */
                 if ($name == $package->getName()) {
                     $optionsValue[$name] = true;
 
                     continue;
                 }
-
-                $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                if ($opt->type == 'enable') {
+                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                } else {
+                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                }
                 $optionsValue['enable'][$name] = (object) [
                     'type' => $opt->type,
                     'input' => $helper->ask($input, $output, $prompt)
@@ -163,6 +166,7 @@ class InstallerCommand extends Command
             $build->createTempDir();
             $build->configure();
             $build->install();
+            var_dump($build);
             $build->cleanup();
         }
     }
