@@ -162,7 +162,7 @@ class InstallerCommand extends Command
 
         if (false === $input->getOption('dry-run')) {
             $build = new BuildSrcUnix($package, $optionsValue);
-            try { 
+            try {
                 $build->phpize();
                 $build->createTempDir();
                 $build->configure();
