@@ -45,6 +45,7 @@ class Package extends CompletePackage
     public function getConfigureOptions()
     {
         $options = [];
+
         $config = file_get_contents($this->path . '/config.m4');
         $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
         $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
@@ -54,10 +55,55 @@ class Package extends CompletePackage
         $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
         $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
 
-
         $this->extra["configure-options"] = array_merge($options['with'], $options['enable'], $this->configureOptions);
 
+        /* Windows parts */
+        $config = file_get_contents($this->path . '/config.w32');
+        $options['with'] = $this->fetchArgWindows('ARG_WITH', $config);
+        $options['enable'] = $this->fetchArgWindows('ARG_ENABLE', $config);
+
+        $this->extra["configure-options-windows"] = array_merge($options['with'], $options['enable']);
+
         return $this->extra["configure-options"];
+    }
+
+    /**
+     * @todo If someone prefers a nice regex for both AC_ and PHP_... :)
+     *
+     * @param string $which
+     * @param string $config
+     *
+     * @return array
+     */
+    protected function fetchArgWindows($which, $config)
+    {
+        $next = 0;
+        $options = [];
+        //ARG_ENABLE('apcu', 'Whether to enable APCu support', 'no');
+        $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
+        while (false !== ($s = strpos($config, $which, $next))) {
+            $default = true;
+            $s = strpos($config, '(', $s);
+            $e = strpos($config, ')', $s + 1);
+            $option = substr($config, $s + 1, $e - $s);
+
+            $elems = explode(',', $option);
+            array_walk($elems, function (&$a) {
+                $a = str_replace([')', "'"], ['',''], $a);
+                $a = trim($a);
+            });
+
+            list($name, $prompt, $default) = $elems;
+
+            $options[$name] = (object) [
+                'prompt'  => $prompt,
+                'type'    => $type,
+                'default' => $default
+            ];
+            $next = $e + 1;
+        }
+
+        return $options;
     }
 
     /**

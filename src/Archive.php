@@ -45,7 +45,7 @@ class Archive
     public function create()
     {
         $archBasename = $this->pkg->getName() . '-' . $this->pkg->getPrettyVersion();
-        var_dump($archBasename);
+
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
         $tempname = getcwd() . '/pkl-tmp.tar';
