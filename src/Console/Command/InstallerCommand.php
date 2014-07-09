@@ -166,7 +166,6 @@ class InstallerCommand extends Command
                     $value = $helper->ask($input, $output, $prompt);
                 }
 
-
                 $optionsValue[$name] = (object) [
                     'type' => $opt->type,
                     'input' => $value

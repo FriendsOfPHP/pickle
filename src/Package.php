@@ -40,7 +40,7 @@ class Package extends CompletePackage
     }
 
     /**
-     * Set the package's root directory
+     * Set the package's source directory, containing config.m4/config.w32
      *
      * @param string $path
      */
