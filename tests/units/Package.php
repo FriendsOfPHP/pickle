@@ -3,6 +3,7 @@ namespace Pickle\tests\units;
 
 use atoum;
 use mageekguy\atoum\mock\streams\fs;
+use mageekguy\atoum\test\adapter\call;
 use Pickle\tests;
 
 class Package extends atoum
@@ -78,7 +79,7 @@ class Package extends atoum
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
-                $this->testedInstance->setRootDir($packageRoot)
+                $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
                 ->array($this->testedInstance->getConfigureOptions())
@@ -177,7 +178,7 @@ class Package extends atoum
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
-                $this->testedInstance->setRootDir($packageRoot)
+                $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
                 ->array($this->testedInstance->getConfigureOptions())
@@ -225,5 +226,55 @@ class Package extends atoum
                 ]
             ]
         ];
+    }
+
+    public function testGetRootDir()
+    {
+        $this
+            ->given(
+                $name = $this->sample($this->packageName),
+                $version = $this->sample($this->packageVersion),
+                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $packageRoot = fs\directory::get()
+            )
+            ->if(
+                $this->newTestedInstance($name, $version, $prettyVersion),
+                $this->testedInstance->setRootDir((string) $packageRoot)
+            )
+            ->then
+                ->string($this->testedInstance->getRootDir())->isEqualTo((string) $packageRoot)
+            ->if(
+                clearstatcache(),
+                $packageSourceRoot = fs\directory::getSubStream($packageRoot, $this->testedInstance->getPrettyName() . '-' . $this->testedInstance->getPrettyVersion()),
+                $packageSourceRoot->url_stat = ['mode' => 17000] // Be a directory
+            )
+            ->then
+                ->string($this->testedInstance->getRootDir())->isEqualTo((string) $packageRoot)
+        ;
+    }
+
+    public function testGetSourceDir()
+    {
+        $this
+            ->given(
+                $name = $this->sample($this->packageName),
+                $version = $this->sample($this->packageVersion),
+                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $packageRoot = fs\directory::get()
+            )
+            ->if(
+                $this->newTestedInstance($name, $version, $prettyVersion),
+                $this->testedInstance->setRootDir((string) $packageRoot)
+            )
+            ->then
+                ->string($this->testedInstance->getSourceDir())->isEqualTo((string) $packageRoot)
+            ->if(
+                clearstatcache(),
+                $packageSourceRoot = fs\directory::getSubStream($packageRoot, $this->testedInstance->getPrettyName() . '-' . $this->testedInstance->getPrettyVersion()),
+                $packageSourceRoot->url_stat = ['mode' => 17000] // Be a directory
+            )
+            ->then
+                ->string($this->testedInstance->getSourceDir())->isEqualTo((string) $packageSourceRoot)
+        ;
     }
 }
