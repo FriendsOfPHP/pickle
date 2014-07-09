@@ -12,7 +12,9 @@ before_script:
 
 script:
   - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
+  - composer install --no-dev --optimize-autoloader
   - ~/.composer/vendor/bin/box build
+  - composer install
   - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
 
 after_script:
