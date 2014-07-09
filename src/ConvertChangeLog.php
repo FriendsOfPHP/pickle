@@ -23,8 +23,10 @@ class ConvertChangeLog
         $current = new \StdClass;
         $current->date = $xml->date;
         $current->time = $xml->time;
+        $current->version = new \StdClass;
+        $current->version->release = $xml->version->release;
         $current->stability = new \StdClass;
-        $current->stability->release = $xml->version->release;
+        $current->stability->release = $xml->stability->release;
         $current->notes = $xml->notes;
 
         $changelog[] = $current;
