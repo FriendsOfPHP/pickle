@@ -171,7 +171,7 @@ class InstallerCommand extends Command
                 $build->install();
                 $build->cleanup();
             } catch (\Exception $e) {
-                $output->writeln('The following error(s) happen' . $e->getMessage());
+                $output->writeln('The following error(s) happened: ' . $e->getMessage());
                 $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
                 if ($helper->ask($input, $output, $prompt)) {
                     $output->write($build->getLog());

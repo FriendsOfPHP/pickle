@@ -30,7 +30,7 @@ class BuildSrcUnix
     public function phpize()
     {
         $backCwd = getcwd();
-        chdir($this->pkg->getRootDir());
+        chdir($this->pkg->getSourceDir());
 
         $res = $this->runCommand('phpize');
         chdir($backCwd);
@@ -68,7 +68,7 @@ class BuildSrcUnix
         }
         $configureOptions = $confOption . ' ' . $configureOptions;
 
-        $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configureOptions);
+        $res = $this->runCommand($this->pkg->getSourceDir() . '/configure '. $configureOptions);
         chdir($backCwd);
         if (!$res) {
             throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');

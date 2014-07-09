@@ -23,6 +23,23 @@ class Package extends CompletePackage
     }
 
     /**
+     * Get the package's root directory
+     *
+     * @return string
+     */
+    public function getSourceDir()
+    {
+        $path = $this->getRootDir();
+        $release = $path . DIRECTORY_SEPARATOR . $this->getPrettyName() . '-' . $this->getPrettyVersion();
+
+        if (is_dir($release)) {
+            $path = $release;
+        }
+
+        return $path;
+    }
+
+    /**
      * Set the package's root directory
      *
      * @param string $path
@@ -42,21 +59,14 @@ class Package extends CompletePackage
      */
     public function getConfigureOptions()
     {
-        $path = $this->getRootDir();
-        $release = $path . DIRECTORY_SEPARATOR . $this->getPrettyName() . '-' . $this->getPrettyVersion();
-
-        if (is_dir($release)) {
-            $path = $release;
-        }
-
         $options = [];
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $config = file_get_contents($path . '/config.w32');
+            $config = file_get_contents($this->getSourceDir() . '/config.w32');
             $options['with'] = $this->fetchArgWindows('ARG_WITH', $config);
             $options['enable'] = $this->fetchArgWindows('ARG_ENABLE', $config);
         } else {
-            $config = file_get_contents($path . '/config.m4');
+            $config = file_get_contents($this->getSourceDir() . '/config.m4');
             $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
             $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
             $options['with'] = array_merge($options['with'], $acArgumentWith);
