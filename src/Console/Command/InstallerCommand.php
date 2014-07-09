@@ -13,6 +13,7 @@ use Pickle\Package;
 use Pickle\BuildSrcUnix;
 use Pickle\PhpDetection;
 use Pickle\InstallerBinaryWindows;
+use Symfony\Component\Console\Question\Question;
 
 class InstallerCommand extends Command
 {
