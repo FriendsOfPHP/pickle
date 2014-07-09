@@ -10,22 +10,23 @@
         {
             "name": "*.php",
             "exclude": [
+                "CHANGELOG",
+                "CONTRIBUTING",
+                "README",
+                "Tests",
                 "atoum",
                 "behat",
-                "symfony/config",
+                "bin",
+                "hoa",
+                "phpunit",
                 "symfony/class-loader",
+                "symfony/config",
                 "symfony/dependency-injection",
                 "symfony/event-dispatcher",
                 "symfony/filesystem",
                 "symfony/translation",
                 "symfony/yaml",
-                "bin",
-                "Tests",
-                "tests",
-                "phpunit",
-                "README",
-                "CHANGELOG",
-                "CONTRIBUTING"
+                "tests"
             ],
             "in": "vendor"
         }

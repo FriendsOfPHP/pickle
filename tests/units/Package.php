@@ -8,11 +8,15 @@ class Package extends atoum
 {
     public function test__construct()
     {
+        $nameRegex = $this->realdom->regex('/\w+/');
+        $versionRegex = $this->realdom->regex('/\d+(\.\d+){3}/');
+        $prettyVersionRegex = $this->realdom->regex('/\d+(\.\d+){2}/');
+
         $this
             ->given(
-                $name = uniqid(),
-                $version = '1.0.0.0',
-                $prettyVersion = '1.0.0'
+                $name = $this->sample($nameRegex),
+                $version = $this->sample($versionRegex),
+                $prettyVersion = $this->sample($prettyVersionRegex)
             )
             ->if($this->newTestedInstance($name, $version, $prettyVersion))
             ->then
