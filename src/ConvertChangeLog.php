@@ -4,6 +4,7 @@ namespace Pickle;
 class ConvertChangeLog
 {
     private $path;
+    private $changelog;
 
     public function __construct($path)
     {
@@ -37,6 +38,10 @@ class ConvertChangeLog
 
     public function generateReleaseFile()
     {
+        if (empty($this->changelog)) {
+            return;
+        }
+
         $contents = '';
         foreach ($this->changelog as $cl) {
             $contents .= 'Version: ' . $cl->version->release . "\n" .
@@ -48,11 +53,9 @@ class ConvertChangeLog
                      "\n" .
                      "\n";
         }
-        if ($contents != '') {
-            if (!file_put_contents(dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES', $contents)) {
-                throw new \RuntimeException('cannot save RELEASE file in <' . dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES>');
-            }
-        } else {
+
+        if (file_put_contents(dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES', $contents) === false) {
+            throw new \RuntimeException('cannot save RELEASE file in <' . dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES>');
         }
     }
 }

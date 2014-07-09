@@ -36,8 +36,6 @@ class ConvertCommand extends Command
         $loader = new Package\XML\Loader(new Package\Loader());
         $package = $loader->load($xml);
         $package->setRootDir($path);
-        $package->getConfigureOptions();
-        $package->getChangelog();
         $convertCl = new ConvertChangeLog($xml);
         $convertCl->parse();
         $convertCl->generateReleaseFile();

@@ -62,9 +62,7 @@ class Package extends CompletePackage
         $options['with'] = $this->fetchArgWindows('ARG_WITH', $config);
         $options['enable'] = $this->fetchArgWindows('ARG_ENABLE', $config);
 
-        $this->extra["configure-options-windows"] = array_merge($options['with'], $options['enable']);
-
-        return $this->extra["configure-options"];
+        return array_merge($options['with'], $options['enable']);
     }
 
     /**
