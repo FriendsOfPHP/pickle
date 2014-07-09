@@ -44,7 +44,7 @@ class BuildSrcUnix
         $backCwd = getcwd();
         chdir($this->tempDir);
         $configureOptions = '';
-        foreach ($this->options['enable'] as $name => $option) {
+        foreach ($this->options as $name => $option) {
             if ('enable' === $option->type) {
                 $decision = true == $option->input ? 'enable' : 'disable';
             } elseif ('disable' == $option->type) {

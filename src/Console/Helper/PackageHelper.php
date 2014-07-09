@@ -55,6 +55,29 @@ class PackageHelper extends Helper
             ->render();
     }
 
+    public function showOptions(OutputInterface $output, Package $package)
+    {
+        $table = new Table($output);
+        $table->setHeaders(['Type', 'Description', 'Default']);
+
+        foreach ($package->getConfigureOptions() as $option) {
+            $default = $option->default;
+
+            if ($option->type === 'enable') {
+                $option->type = '<fg=yellow>' . $option->type . '</fg=yellow>';
+                $default = $default ? '<fg=green>yes</fg=green>' : '<fg=red>no</fg=red>';
+            }
+
+            $table->addRow([
+                $option->type,
+                wordwrap($option->prompt, 40, PHP_EOL),
+                $default
+            ]);
+        }
+
+        $table->render();
+    }
+
     public function download(InputInterface $input, OutputInterface $output, $url, $path)
     {
         $package = null;

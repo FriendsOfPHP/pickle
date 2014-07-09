@@ -131,10 +131,6 @@ class InstallerCommand extends Command
 
         $this->getHelper('package')->showInfo($output, $package);
 
-        if (is_dir($path . DIRECTORY_SEPARATOR . $package->getPrettyName() . '-' . $package->getPrettyVersion())) {
-            $path .= DIRECTORY_SEPARATOR . $package->getPrettyName() . '-' . $package->getPrettyVersion();
-        }
-
         $package->setRootDir(realpath($path));
 
         $helper = $this->getHelperSet()->get('question');
@@ -145,16 +141,21 @@ class InstallerCommand extends Command
             foreach ($options as $name => $opt) {
                 /* enable/with-<extname> */
                 if ($name == $package->getName()) {
-                    $optionsValue[$name] = true;
+                    $optionsValue[$name] = (object) [
+                        'type' => $opt->type,
+                        'input' => true
+                    ];
 
                     continue;
                 }
+
                 if ($opt->type == 'enable') {
                     $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
                 } else {
                     $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
                 }
-                $optionsValue['enable'][$name] = (object) [
+
+                $optionsValue[$name] = (object) [
                     'type' => $opt->type,
                     'input' => $helper->ask($input, $output, $prompt)
                 ];

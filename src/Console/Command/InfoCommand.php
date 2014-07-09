@@ -58,7 +58,13 @@ class InfoCommand extends Command
             throw new \RuntimeException('No package definition found in ' . $path);
         }
 
+        $package->setRootDir($path);
+
         $this->getHelper('package')->showInfo($output, $package);
-        $output->writeln(trim($package->getDescription()));
+
+        $output->writeln(['', trim($package->getDescription()), '']);
+
+        $output->writeln('<info>Configure options</info>');
+        $this->getHelper('package')->showOptions($output, $package);
     }
 }
