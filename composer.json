@@ -10,6 +10,10 @@
             "email": "pierre.php@gmail.com",
             "homepage": "http://pecl.php.net/user/pajoye",
             "role": "Developer"
+        },
+        {
+            "name": "Community",
+            "homepage": "https://github.com/FriendsOfPHP/pickle/graphs/contributors"
         }
     ],
     "require": {

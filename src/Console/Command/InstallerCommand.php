@@ -35,6 +35,12 @@ class InstallerCommand extends Command
                 'Disable package conversion'
             )
             ->addOption(
+                'defaults',
+                null,
+                InputOption::VALUE_NONE,
+                'Use defaults configure options values'
+            )
+            ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
@@ -129,14 +135,9 @@ class InstallerCommand extends Command
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
 
-        $this->getHelper('package')->showInfo($output, $package);
-
-        if (is_dir($path . DIRECTORY_SEPARATOR . $package->getPrettyName() . '-' . $package->getPrettyVersion())) {
-            $path .= DIRECTORY_SEPARATOR . $package->getPrettyName() . '-' . $package->getPrettyVersion();
-        }
-
         $package->setRootDir(realpath($path));
 
+        $this->getHelper('package')->showInfo($output, $package);
         $helper = $this->getHelperSet()->get('question');
 
         $options = $package->getConfigureOptions();
@@ -145,18 +146,29 @@ class InstallerCommand extends Command
             foreach ($options as $name => $opt) {
                 /* enable/with-<extname> */
                 if ($name == $package->getName()) {
-                    $optionsValue[$name] = true;
+                    $optionsValue[$name] = (object) [
+                        'type' => $opt->type,
+                        'input' => true
+                    ];
 
                     continue;
                 }
-                if ($opt->type == 'enable') {
-                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+
+                if ($input->getOption('defaults')) {
+                    $value = $opt->default;
                 } else {
-                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                    if ($opt->type == 'enable') {
+                        $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                    } else {
+                        $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                    }
+
+                    $value = $helper->ask($input, $output, $prompt);
                 }
-                $optionsValue['enable'][$name] = (object) [
+
+                $optionsValue[$name] = (object) [
                     'type' => $opt->type,
-                    'input' => $helper->ask($input, $output, $prompt)
+                    'input' => $value
                 ];
             }
         }
@@ -171,7 +183,7 @@ class InstallerCommand extends Command
                 $build->install();
                 $build->cleanup();
             } catch (\Exception $e) {
-                $output->writeln('The following error(s) happen' . $e->getMessage());
+                $output->writeln('The following error(s) happened: ' . $e->getMessage());
                 $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
                 if ($helper->ask($input, $output, $prompt)) {
                     $output->write($build->getLog());

@@ -33,3 +33,22 @@ Feature: download and install PECL extensions
       | amqp      | amqp      | 1.4.0    |
       | redis     | redis     | 2.2.5    |
       | pthreads  | pthreads  | 2.0.7    |
+
+  Scenario: Show informations about a PECL extension's options
+    When I run "pickle info apc@3.1.13"
+    Then it should pass
+    And the output should contain:
+      """
+      | enable | whether to enable APC support            | no      |
+      """
+    And the output should contain:
+      """
+      | enable | Disable pthread mutex locking            | yes     |
+      """
+
+    When I run "pickle info oci8@2.0.8"
+    Then it should pass
+    And the output should contain:
+      """
+      | with | for Oracle Database OCI8 support |         |
+      """

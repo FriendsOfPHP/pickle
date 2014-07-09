@@ -12,8 +12,6 @@ class Package extends CompletePackage
      */
     private $path;
 
-    private $configureOptions = [];
-
     /**
      * Get the package's root directory
      *
@@ -25,7 +23,24 @@ class Package extends CompletePackage
     }
 
     /**
-     * Set the package's root directory
+     * Get the package's root directory
+     *
+     * @return string
+     */
+    public function getSourceDir()
+    {
+        $path = $this->getRootDir();
+        $release = $path . DIRECTORY_SEPARATOR . $this->getPrettyName() . '-' . $this->getPrettyVersion();
+
+        if (is_dir($release)) {
+            $path = $release;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Set the package's source directory, containing config.m4/config.w32
      *
      * @param string $path
      */
@@ -46,25 +61,22 @@ class Package extends CompletePackage
     {
         $options = [];
 
-        $config = file_get_contents($this->path . '/config.m4');
-        $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
-        $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
-        $options['with'] = array_merge($options['with'], $acArgumentWith);
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $config = file_get_contents($this->getSourceDir() . '/config.w32');
+            $options['with'] = $this->fetchArgWindows('ARG_WITH', $config);
+            $options['enable'] = $this->fetchArgWindows('ARG_ENABLE', $config);
+        } else {
+            $config = file_get_contents($this->getSourceDir() . '/config.m4');
+            $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
+            $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
+            $options['with'] = array_merge($options['with'], $acArgumentWith);
 
-        $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
-        $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
-        $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
+            $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
+            $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
+            $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
+        }
 
-        $this->extra["configure-options"] = array_merge($options['with'], $options['enable'], $this->configureOptions);
-
-        /* Windows parts */
-        $config = file_get_contents($this->path . '/config.w32');
-        $options['with'] = $this->fetchArgWindows('ARG_WITH', $config);
-        $options['enable'] = $this->fetchArgWindows('ARG_ENABLE', $config);
-
-        $this->extra["configure-options-windows"] = array_merge($options['with'], $options['enable']);
-
-        return $this->extra["configure-options"];
+        return array_merge($options['with'], $options['enable']);
     }
 
     /**
