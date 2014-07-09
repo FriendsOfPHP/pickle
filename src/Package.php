@@ -94,7 +94,6 @@ class Package extends CompletePackage
         //ARG_ENABLE('apcu', 'Whether to enable APCu support', 'no');
         $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
-            $default = true;
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
