@@ -1,8 +1,6 @@
 <?php
 namespace Pickle;
 
-use Pickle\Package\JSON\Dumper;
-
 class Archive
 {
     /**
