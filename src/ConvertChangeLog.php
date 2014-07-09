@@ -19,6 +19,14 @@ class ConvertChangeLog
         $xml = @simplexml_load_file($this->path);
 
         $changelog = [];
+        $current = new \StdClass;
+        $current->date = $xml->date;
+        $current->time = $xml->time;
+        $current->stability = new \StdClass;
+        $current->stability->release = $xml->version->release;
+        $current->notes = $xml->notes;
+
+        $changelog[] = $current;
         if (isset($xml->changelog->release)) {
             foreach ($xml->changelog->release as $release) {
                 $changelog[] = $release;
@@ -40,8 +48,11 @@ class ConvertChangeLog
                      "\n" .
                      "\n";
         }
-        if (!file_put_contents(dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES', $contents)) {
-            throw new \RuntimeException('cannot save RELEASE file in <' . dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES>');
+        if ($contents != '') {
+            if (!file_put_contents(dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES', $contents)) {
+                throw new \RuntimeException('cannot save RELEASE file in <' . dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES>');
+            }
+        } else {
         }
     }
 }
