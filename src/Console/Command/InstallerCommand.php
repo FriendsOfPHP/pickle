@@ -129,10 +129,9 @@ class InstallerCommand extends Command
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
 
-        $this->getHelper('package')->showInfo($output, $package);
-
         $package->setRootDir(realpath($path));
 
+        $this->getHelper('package')->showInfo($output, $package);
         $helper = $this->getHelperSet()->get('question');
 
         $options = $package->getConfigureOptions();
