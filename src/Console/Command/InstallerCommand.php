@@ -162,12 +162,20 @@ class InstallerCommand extends Command
 
         if (false === $input->getOption('dry-run')) {
             $build = new BuildSrcUnix($package, $optionsValue);
-            $build->phpize();
-            $build->createTempDir();
-            $build->configure();
-            $build->install();
-            var_dump($build);
-            $build->cleanup();
+            try { 
+                $build->phpize();
+                $build->createTempDir();
+                $build->configure();
+                $build->build();
+                $build->install();
+                $build->cleanup();
+            } catch (\Exception $e) {
+                $output->writeln('The following error(s) happen' . $e->getMessage());
+                $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
+                if ($helper->ask($input, $output, $prompt)) {
+                    $output->write($build->getLog());
+                }
+            }
         }
     }
 }

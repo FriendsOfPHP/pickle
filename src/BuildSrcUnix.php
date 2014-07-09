@@ -79,9 +79,10 @@ class BuildSrcUnix
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
-        $this->runCommand('make');
+        $res = $this->runCommand('make');
         chdir($backCwd);
-        if (!$this->runCommand('make')) {
+
+        if (!$res) {
             throw new \Exception('make failed');
         }
     }
@@ -90,8 +91,11 @@ class BuildSrcUnix
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
-        $this->runCommand('make install');
+        $res = $this->runCommand('make install');
         chdir($backCwd);
+        if (!$res) {
+            throw new \Exception('make install failed');
+        }
     }
 
     /**
@@ -131,5 +135,10 @@ class BuildSrcUnix
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
         return (0 === $exitCode);
+    }
+
+    public function getLog()
+    {
+        return $this->log;
     }
 }
