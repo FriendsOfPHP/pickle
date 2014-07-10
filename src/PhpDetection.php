@@ -79,7 +79,8 @@ class PhpDetection
         $ini_path = trim($ini_path);
         $compiler = trim($compiler);
         $extension_dir = trim($extension_dir);
-        $compiler = strtolower(str_replace('MS', '', substr($compiler, 0, 6)));
+
+        $compiler = trim(strtolower(str_replace('MS', '', substr($compiler, 0, 6))));
         if (!$ini_path) {
             Throw new \Exception('Cannot detect php.ini directory');
         }

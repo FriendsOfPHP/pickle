@@ -85,20 +85,22 @@ class InstallerBinaryWindows
         $php_zts = $this->php->getZts() ? '-ts' : '-nts';
         $php_version = $this->php->getMajorVersion() . '.' .  $this->php->getMinorVersion();
         $pkg_version = $this->ext_version;
-
+        $ext_name =  strtolower($this->ext_name);
         $base_url = "http://windows.php.net/downloads/pecl/releases/";
 
-        if (!$this->findInLinks($base_url . $this->ext_name, $pkg_version)) {
-            Throw new \Exception('Binary for <' . $this->ext_name . '-' . $pkg_version . '> cannot be found');
+        if (!$this->findInLinks($base_url . $ext_name, $pkg_version)) {
+            Throw new \Exception('Binary for <' . $ext_name . '-' . $pkg_version . '> cannot be found');
         }
 
-        $file_to_find = 'php_' . $this->ext_name . '-' . $pkg_version . '-' . $php_version . $php_zts . '-' . $php_vc . '-' . $php_arch . '.zip';
-        $file_url = $this->findInLinks($base_url . $this->ext_name . '/' . $pkg_version, $file_to_find);
+        $file_to_find = 'php_' . $ext_name . '-' . $pkg_version . '-' . $php_version . $php_zts . '-' . $php_vc . '-' . $php_arch . '.zip';
+        var_dump($file_to_find);
+        var_dump("php_apc-3.1.13-5.4-nts-vc9-x86.zip");
+        $file_url = $this->findInLinks($base_url . $ext_name . '/' . $pkg_version, $file_to_find);
 
         if (!$file_url) {
             Throw new \Exception('Binary for <' . $file_to_find . '> cannot be found');
         }
-        $url = $base_url . $this->ext_name . '/' . $pkg_version . '/' . $file_to_find;
+        $url = $base_url . $ext_name . '/' . $pkg_version . '/' . $file_to_find;
 
         return $url;
     }
