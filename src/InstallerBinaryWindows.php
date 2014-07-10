@@ -52,7 +52,7 @@ class InstallerBinaryWindows
         }
     }
 
-    private function _findInLinks($url, $tofind)
+    private function findInLinks($url, $tofind)
     {
         $page = file_get_contents($url);
         $dom = new \DOMDocument();
@@ -87,12 +87,12 @@ class InstallerBinaryWindows
 
         $base_url = "http://windows.php.net/downloads/pecl/releases/";
 
-        if (!$this->_findInLinks($base_url . $this->ext_name, $pkg_version)) {
+        if (!$this->findInLinks($base_url . $this->ext_name, $pkg_version)) {
             Throw new \Exception('Binary for <' . $this->ext_name . '-' . $pkg_version . '> cannot be found');
         }
 
         $file_to_find = 'php_' . $this->ext_name . '-' . $pkg_version . '-' . $php_version . $php_zts . '-' . $php_vc . '-' . $php_arch . '.zip';
-        $file_url = $this->_findInLinks($base_url . $this->ext_name . '/' . $pkg_version, $file_to_find);
+        $file_url = $this->findInLinks($base_url . $this->ext_name . '/' . $pkg_version, $file_to_find);
 
         if (!$file_url) {
             Throw new \Exception('Binary for <' . $file_to_find . '> cannot be found');
@@ -102,7 +102,7 @@ class InstallerBinaryWindows
         return $url;
     }
 
-    private function _uncompress($zipfile)
+    private function uncompress($zipfile)
     {
         $this->createTempDir($this->ext_name);
         $this->cleanup();
@@ -114,7 +114,7 @@ class InstallerBinaryWindows
         $za->extractTo($this->tempDir);
     }
 
-    private function _download($url)
+    private function download($url)
     {
         $output = $this->output;
         $progress = $this->progress;
@@ -144,7 +144,7 @@ class InstallerBinaryWindows
         return $path;
     }
 
-    private function _copyFiles()
+    private function copyFiles()
     {
         $DLLs = glob($this->tempDir . '/*.dll');
         foreach ($DLLs as $dll) {
@@ -199,9 +199,9 @@ class InstallerBinaryWindows
         */
         list($this->ext_name, $this->ext_version) = $this->getInfoFromPecl();
         $url = $this->fetchZipName();
-        $path_archive = $this->_download($url);
-        $this->_uncompress($path_archive);
-        $this->_copyFiles();
+        $path_archive = $this->download($url);
+        $this->uncompress($path_archive);
+        $this->copyFiles();
         $this->cleanup();
     }
 }
