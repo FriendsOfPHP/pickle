@@ -4,6 +4,7 @@ namespace pickle;
 class PhpDetection
 {
     private $php_cli;
+    private $phpize;
     private $version;
     private $major;
     private $minor;
@@ -15,6 +16,7 @@ class PhpDetection
     private $debug;
     private $ini_path;
     private $extension_dir;
+    private $hasSdk;
 
     public function __construct($php_cli = PHP_BINARY)
     {
@@ -92,6 +94,21 @@ class PhpDetection
         }
 
         return [$compiler, $arch, $ini_path, $extension_dir];
+    }
+
+    public function hasSdk()
+    {
+        if (isset($this->hasSdk)) {
+            return $this->hasSdk;
+        }
+        $cli_dir = dirname($this->php_cli);
+        $res = glob($cli_dir . DIRECTORY_SEPARATOR . 'phpize*');
+        if (!$res) {
+            $this->hasSdk = false;
+        }
+        $this->phpize = $res[0];
+
+        return ($this->hasSdk = false);
     }
 
     public function getArchitecture()

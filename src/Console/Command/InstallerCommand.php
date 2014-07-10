@@ -13,6 +13,7 @@ use Pickle\Package;
 use Pickle\BuildSrcUnix;
 use Pickle\PhpDetection;
 use Pickle\InstallerBinaryWindows;
+use Pickle\BuildSrcWindows;
 use Symfony\Component\Console\Question\Question;
 
 class InstallerCommand extends Command
@@ -55,8 +56,21 @@ class InstallerCommand extends Command
                 null,
                 InputArgument::OPTIONAL,
                 'path to an alternative php.ini'
+            )->addOption(
+                'source',
+                null,
+                InputOption::VALUE_NONE,
+                'use source package'
             );
-        ;
+
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $this->addOption(
+                'binary',
+                null,
+                InputOption::VALUE_NONE,
+                'use binary package'
+            );
+        }
     }
 
     /**
@@ -87,6 +101,39 @@ class InstallerCommand extends Command
         $inst->install();
     }
 
+    /**
+     * @param string          $path
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    protected function sourceInstallWindows($path, $input, $output)
+    {
+        $php = new PhpDetection();
+        $php->hasSdk();
+        $table = new Table($output);
+        $table
+            ->setRows([
+               ['<info>PHP Path</info>', $php->getPhpCliPath()],
+               ['<info>PHP Version</info>', $php->getVersion()],
+               ['<info>Compiler</info>', $php->getCompiler()],
+               ['<info>Architecture</info>', $php->getArchitecture()],
+               ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
+               ['<info>Extension dir</info>', $php->getExtensionDir()],
+               ['<info>php.ini</info>', $php->getPhpIniDir()],
+            ])
+            ->render();
+
+        $bld = new BuildSrcWindows($php, $path);
+        $progress = $this->getHelperSet()->get('progress');
+        $bld->setProgress($progress);
+        $bld->setInput($input);
+        $bld->setOutput($output);
+        $bld->phpize();
+        $bld->configure();
+
+//        $bld->install();
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
@@ -99,9 +146,12 @@ class InstallerCommand extends Command
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $this->binaryInstallWindows($path, $input, $output);
+            $source_requested = $input->getOption('source');
+            if (!$source_requested) {
+                $this->binaryInstallWindows($path, $input, $output);
 
-            return;
+                return;
+            }
         }
 
         if ($download) {
@@ -134,8 +184,9 @@ class InstallerCommand extends Command
 
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
-
-        $package->setRootDir(realpath($path));
+        $path = realpath($path);
+        var_dump($path);
+        $package->setRootDir($path);
 
         $this->getHelper('package')->showInfo($output, $package);
         $helper = $this->getHelperSet()->get('question');
@@ -174,7 +225,11 @@ class InstallerCommand extends Command
         }
 
         if (false === $input->getOption('dry-run')) {
-            $build = new BuildSrcUnix($package, $optionsValue);
+            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+                $build = new BuildSrcWindows($package, $optionsValue);
+            } else {
+                $build = new BuildSrcUnix($package, $optionsValue);
+            }
             try {
                 $build->phpize();
                 $build->createTempDir();
@@ -188,6 +243,7 @@ class InstallerCommand extends Command
                 if ($helper->ask($input, $output, $prompt)) {
                     $output->write($build->getLog());
                 }
+                $build->cleanup();
             }
         }
     }
