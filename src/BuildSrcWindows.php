@@ -50,7 +50,6 @@ class BuildSrcWindows
 
     public function phpize()
     {
-        echo "running phpize...\n";
         $backCwd = getcwd();
         chdir($this->pkg->getRootDir());
 
@@ -63,7 +62,6 @@ class BuildSrcWindows
 
     public function configure()
     {
-        echo "running configure...";
         /* duplicate src tree to do not pollute repo or src dir */
         $this->CopySrcDir($this->pkg->getRootDir(), $this->tempDir);
         $backCwd = getcwd();
