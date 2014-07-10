@@ -21,7 +21,7 @@ use Pickle\Console\Command;
 use Pickle\Console\Helper;
 use Symfony\Component\Console\Application;
 
-$application = new Application();
+$application = new Application("Pickle", "0.1.0");
 
 $application->getHelperSet()->set(new \Pickle\Console\Helper\PackageHelper());
 
