@@ -55,7 +55,10 @@ class InstallerBinaryWindows
 
     private function findInLinks($url, $tofind)
     {
-        $page = file_get_contents($url);
+        $page = @file_get_contents($url);
+        if (!$page) {
+            return false;
+        }
         $dom = new \DOMDocument();
         $dom->loadHTML($page);
         $files_a = $dom->getElementsByTagName('a');
