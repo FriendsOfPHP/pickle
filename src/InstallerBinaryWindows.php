@@ -207,7 +207,7 @@ class InstallerBinaryWindows
 
         $new = '';
         foreach ($this->extDll as $dll) {
-            $new .= 'extension=' . $dll . "\n";
+            $new .=  "\n" . 'extension=' . $dll . "\n";
         }
 
         if ($pos_header !== false) {
