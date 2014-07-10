@@ -235,15 +235,14 @@ class InstallerCommand extends Command
                 $build->configure();
                 $build->build();
                 $build->install();
-                $build->cleanup();
             } catch (\Exception $e) {
                 $output->writeln('The following error(s) happened: ' . $e->getMessage());
                 $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
                 if ($helper->ask($input, $output, $prompt)) {
                     $output->write($build->getLog());
                 }
-                $build->cleanup();
             }
+            $build->cleanup();
         }
     }
 }
