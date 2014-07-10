@@ -15,6 +15,7 @@ class InstallerBinaryWindows
     private $input = NULL;
     private $output = NULL;
     private $tempDir = NULL;
+    private $extDll = NULL;
 
     public function __construct(PhpDetection $php, $ext)
     {
@@ -147,10 +148,12 @@ class InstallerBinaryWindows
     private function copyFiles()
     {
         $DLLs = glob($this->tempDir . '/*.dll');
+        $this->extDll = [];
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
             if (substr($basename, 0, 4) == 'php_') {
+                $this->extDll[] = $basename;
                 $dest = $this->php->getExtensionDir() . DIRECTORY_SEPARATOR . $basename;
                 $this->output->writeln("copying $dll to " . $dest . "\n");
                 $success = @copy($dll, $this->php->getExtensionDir() . '/' . $basename);
@@ -163,6 +166,57 @@ class InstallerBinaryWindows
                     Throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
                 }
             }
+        }
+    }
+
+    private function UpdatePickleSection($pickle_section)
+    {
+        $lines = explode("\n", $pickle_section);
+        $pos = 0;
+        $new = [];
+        array_shift($lines);
+        foreach ($lines as $l) {
+            $l = trim($l);
+            if ($l == '') {
+                continue;
+            }
+            list(, $dllname) = explode('=', $l);
+            if (!in_array(trim($dllname), $this->extDll)) {
+                $new[] = $l;
+            } else {
+                continue;
+            }
+        }
+        $pickle_section = implode($new, "\n");
+
+        return $pickle_section;
+    }
+
+    private function UpdateIni()
+    {
+        $ini_path = $this->php->getPhpIniDir();
+        $ini_pickle_header = ';Pickle installed extension, do not edit this line and below';
+        $ini = @file_get_contents($ini_path);
+        if (!$ini) {
+            Throw new \Exception('Cannot read php.ini');
+        }
+        $pos_header = strpos($ini, $ini_pickle_header);
+
+        $new = '';
+        foreach ($this->extDll as $dll) {
+            $new .= 'extension=' . $dll . "\n";
+        }
+
+        if ($pos_header !== false) {
+            $pickle_section = substr($ini, $pos_header);
+            $pickle_section = $this->UpdatePickleSection($pickle_section);
+        } else {
+            $pickle_section = '';
+        }
+
+        $ini = substr($ini, 0, $pos_header - 1) . "\n" . $ini_pickle_header . "\n" . $pickle_section .  $new;
+        if (!@file_put_contents($ini_path, $ini)) {
+            Throw new \Exception('Cannot update php.ini');
         }
     }
 
@@ -208,5 +262,6 @@ class InstallerBinaryWindows
         $this->uncompress($path_archive);
         $this->copyFiles();
         $this->cleanup();
+        $this->UpdateIni();
     }
 }
