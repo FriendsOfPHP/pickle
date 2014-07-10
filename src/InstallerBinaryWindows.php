@@ -157,6 +157,11 @@ class InstallerBinaryWindows
                 if (!$success) {
                     Throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
                 }
+            } else {
+                $success = @copy($dll, dirname($this->php->getPhpCliPath()) . '/' . $basename);
+                if (!$success) {
+                    Throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
+                }
             }
         }
     }
