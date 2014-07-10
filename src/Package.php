@@ -103,7 +103,7 @@ class Package extends CompletePackage
             });
 
             list($name, $prompt, $default) = $elems;
-
+			$name = str_replace('"', '', $name);
             $options[$name] = (object) [
                 'prompt'  => $prompt,
                 'type'    => $type,
