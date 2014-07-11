@@ -8,8 +8,8 @@ Pickle installs PHP extensions easily on all platforms.
 [![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/?branch=master)
 [![Build Status](https://travis-ci.org/FriendsOfPHP/pickle.svg?branch=master)](https://travis-ci.org/FriendsOfPHP/pickle)
 
-Installation and usage
-----------------------
+Installation
+------------
 
 Clone this repository and install dependencies with
 [Composer](http://getcomposer.org/):
@@ -17,6 +17,15 @@ Clone this repository and install dependencies with
 ```sh
 $ composer install
 ```
+
+Or clone this repository, run:
+
+```sh
+$ cd pickle
+$ composer install
+```
+
+A phar is also available at http://www.pierrejoye.com/pickle/pickle.phar
 
 Usage
 -----
@@ -27,14 +36,20 @@ Usage is prety straighforward. For example, to install the memcache extension ru
 $ bin/pickle install memcache
 ```
 
-And then, run, in your extension directory, the following command:
+You can also use pickle fromyour extension directory, the following command:
 
-The list of commands is available via
 
+```sh
+$ cd myext
+$ bin/pickle install
+```
+
+A list of the commands is available using:
 
 ```sh
 $ bin/pickle list
 ```
+
 
 To get extended help for a given command, use:
 
