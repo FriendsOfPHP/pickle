@@ -17,6 +17,11 @@ if ((!$loader = includeIfExists(__DIR__.'/../vendor/autoload.php')) && (!$loader
     exit(1);
 }
 
+if (!extension_loaded('mbstring')) {
+    echo 'You must install extension mbstring to use Pickle'.PHP_EOL;
+    exit(1);
+}
+
 use Pickle\Console\Command;
 use Pickle\Console\Helper;
 use Symfony\Component\Console\Application;
