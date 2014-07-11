@@ -3,7 +3,7 @@ namespace pickle;
 
 class PhpDetection
 {
-    private $php_cli;
+    private $phpCli;
     private $phpize;
     private $version;
     private $major;
@@ -14,20 +14,20 @@ class PhpDetection
     private $architecture;
     private $zts;
     private $debug;
-    private $ini_path;
-    private $extension_dir;
+    private $iniPath;
+    private $extensionDir;
     private $hasSdk;
 
-    public function __construct($php_cli = PHP_BINARY)
+    public function __construct($phpCli = PHP_BINARY)
     {
-        if (!(is_file($php_cli) && is_executable($php_cli))) {
-            Throw new \Exception("Invalid php executable: $php_cli");
+        if (!(is_file($phpCli) && is_executable($phpCli))) {
+            throw new \Exception("Invalid php executable: $phpCli");
         }
-        $this->php_cli = $php_cli;
-        $this->_getFromConstants();
+        $this->phpCli = $phpCli;
+        $this->getFromConstants();
     }
 
-    private function _getFromConstants()
+    private function getFromConstants()
     {
         $script = 'echo PHP_VERSION . \"\n\";
         echo PHP_MAJOR_VERSION . \"\n\";
@@ -38,35 +38,35 @@ class PhpDetection
         echo PHP_DEBUG . \"\n\";
         ';
 
-        $cmd = $this->php_cli . ' -r ' . '"' . str_replace("\n",'', $script) . '"';
+        $cmd = $this->phpCli . ' -r ' . '"' . str_replace("\n", '', $script) . '"';
 
         exec($cmd, $info);
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
-        list($this->compiler, $this->architecture, $this->ini_path, $this->extension_dir) = $this->_getFromPhpInfo();
+        list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
     }
 
-    private function _getFromPhpInfo()
+    private function getFromPhpInfo()
     {
-        $cmd = $this->php_cli . ' -i';
+        $cmd = $this->phpCli . ' -i';
         exec($cmd, $info);
-        $extension_dir = $compiler = $arch = $ini_path = '';
+        $extensionDir = $compiler = $arch = $iniPath = '';
         if (!is_array($info)) {
-            Throw new \Exception('Cannot parse phpinfo output');
+            throw new \Exception('Cannot parse phpinfo output');
         }
         foreach ($info as $s) {
-            if (strpos($s, 'extension_dir') !== FALSE) {
-                list(, $extension_dir,) = explode('=>', $s);
+            if (false !== strpos($s, 'extensionDir')) {
+                list(, $extensionDir,) = explode('=>', $s);
                 continue;
             }
-            if (strpos($s, "Loaded Configuration File") !== FALSE) {
-                list(, $ini_path) = explode('=>', $s);
-                if ($ini_path == "(None)") {
-                    $ini_path = '';
+            if (false !== strpos($s, "Loaded Configuration File")) {
+                list(, $iniPath) = explode('=>', $s);
+                if ('(None)' === $iniPath) {
+                    $iniPath = '';
                 }
                 continue;
             }
-            if (strpos($s, 'Architecture') === FALSE) {
-                if (strpos($s, 'Compiler') === FALSE) {
+            if (false === strpos($s, 'Architecture')) {
+                if (false === strpos($s, 'Compiler')) {
                     continue;
                 }
                 list(, $compiler) = explode('=>', $s);
@@ -76,25 +76,25 @@ class PhpDetection
 
         }
         $arch = trim($arch);
-        $ini_path = trim($ini_path);
+        $iniPath = trim($iniPath);
         $compiler = trim($compiler);
-        $extension_dir = trim($extension_dir);
+        $extensionDir = trim($extensionDir);
 
         $compiler = trim(strtolower(str_replace('MS', '', substr($compiler, 0, 6))));
-        if (!$ini_path) {
-            Throw new \Exception('Cannot detect php.ini directory');
+        if (!$iniPath) {
+            throw new \Exception('Cannot detect php.ini directory');
         }
         if (!$arch) {
-            Throw new \Exception('Cannot detect PHP build architecture');
+            throw new \Exception('Cannot detect PHP build architecture');
         }
         if (!$compiler) {
-            Throw new \Exception('Cannot detect PHP build compiler version');
+            throw new \Exception('Cannot detect PHP build compiler version');
         }
-        if (!$extension_dir) {
-            Throw new \Exception('Cannot detect PHP extension directory');
+        if (!$extensionDir) {
+            throw new \Exception('Cannot detect PHP extension directory');
         }
 
-        return [$compiler, $arch, $ini_path, $extension_dir];
+        return [$compiler, $arch, $iniPath, $extensionDir];
     }
 
     public function hasSdk()
@@ -102,8 +102,8 @@ class PhpDetection
         if (isset($this->hasSdk)) {
             return $this->hasSdk;
         }
-        $cli_dir = dirname($this->php_cli);
-        $res = glob($cli_dir . DIRECTORY_SEPARATOR . 'phpize*');
+        $cliDir = dirname($this->phpCli);
+        $res = glob($cliDir . DIRECTORY_SEPARATOR . 'phpize*');
         if (!$res) {
             $this->hasSdk = false;
         }
@@ -124,7 +124,7 @@ class PhpDetection
 
     public function getPhpCliPath()
     {
-        return $this->php_cli;
+        return $this->phpCli;
     }
 
     public function getMajorVersion()
@@ -154,11 +154,11 @@ class PhpDetection
 
     public function getExtensionDir()
     {
-        return $this->extension_dir;
+        return $this->extensionDir;
     }
 
     public function getPhpIniDir()
     {
-        return $this->ini_path;
+        return $this->iniPath;
     }
 }

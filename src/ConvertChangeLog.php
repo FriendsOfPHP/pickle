@@ -6,6 +6,9 @@ class ConvertChangeLog
     private $path;
     private $changelog;
 
+    /**
+     * @param string $path
+     */
     public function __construct($path)
     {
         if (false === is_file($path)) {

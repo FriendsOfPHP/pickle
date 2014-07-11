@@ -27,20 +27,20 @@ class Archive
 
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
-        $tempname = getcwd() . '/pkl-tmp.tar';
-        $arch = new \PharData($tempname);
-        $pkg_dir = $this->pkg->getRootDir();
+        $tempName = getcwd() . '/pkl-tmp.tar';
+        $arch = new \PharData($tempName);
+        $pkgDir = $this->pkg->getRootDir();
 
         foreach ($this->pkg->getFiles() as $file) {
             if (is_file($file)) {
-                $name = str_replace($pkg_dir, '', $file);
+                $name = str_replace($pkgDir, '', $file);
                 $arch->addFile($file, $name);
             }
         }
 
         $arch->compress(\Phar::GZ);
         unset($arch);
-        rename($tempname . '.gz', $archBasename . '.tgz');
-        unlink($tempname);
+        rename($tempName . '.gz', $archBasename . '.tgz');
+        unlink($tempName);
     }
 }

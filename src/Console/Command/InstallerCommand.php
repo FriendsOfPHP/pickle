@@ -75,6 +75,7 @@ class InstallerCommand extends Command
 
     /**
      * @param string          $path
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function binaryInstallWindows($path, $input, $output)
@@ -146,8 +147,8 @@ class InstallerCommand extends Command
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $source_requested = $input->getOption('source');
-            if (!$source_requested) {
+            $sourceRequested = $input->getOption('source');
+            if (!$sourceRequested) {
                 $this->binaryInstallWindows($path, $input, $output);
 
                 return;

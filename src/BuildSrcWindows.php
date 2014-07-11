@@ -27,7 +27,10 @@ class BuildSrcWindows
         $this->log .= $level . ': ' . $msg . "\n";
     }
 
-    private function CopySrcDir($src, $dest)
+    /**
+     * @param string $src
+     */
+    private function copySrcDir($src, $dest)
     {
         foreach (scandir($src) as $file) {
             $srcfile = rtrim($src, '/') .'/'. $file;
@@ -40,7 +43,7 @@ class BuildSrcWindows
                     if (!is_dir($destfile)) {
                         mkdir($destfile);
                     }
-                    $this->CopySrcDir($srcfile, $destfile);
+                    $this->copySrcDir($srcfile, $destfile);
                 } else {
                     copy($srcfile, $destfile);
                 }
@@ -63,7 +66,7 @@ class BuildSrcWindows
     public function configure()
     {
         /* duplicate src tree to do not pollute repo or src dir */
-        $this->CopySrcDir($this->pkg->getRootDir(), $this->tempDir);
+        $this->copySrcDir($this->pkg->getRootDir(), $this->tempDir);
         $backCwd = getcwd();
         chdir($this->tempDir);
         $configureOptions = '';
@@ -117,6 +120,7 @@ class BuildSrcWindows
 
     /**
      * @param string $command
+     * @param string $callback
      *
      * @return boolean
      *
