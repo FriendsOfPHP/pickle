@@ -54,7 +54,7 @@ class PhpDetection
             throw new \Exception('Cannot parse phpinfo output');
         }
         foreach ($info as $s) {
-            if (false !== strpos($s, 'extensionDir')) {
+            if (false !== strpos($s, 'extension_dir')) {
                 list(, $extensionDir,) = explode('=>', $s);
                 continue;
             }
