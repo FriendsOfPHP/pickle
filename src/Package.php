@@ -78,7 +78,6 @@ class Package extends CompletePackage
     }
 
     /**
-     * @todo If someone prefers a nice regex for both AC_ and PHP_... :)
      *
      * @param string $which
      * @param string $config
@@ -89,7 +88,6 @@ class Package extends CompletePackage
     {
         $next = 0;
         $options = [];
-        //ARG_ENABLE('apcu', 'Whether to enable APCu support', 'no');
         $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
             $s = strpos($config, '(', $s);
@@ -116,7 +114,6 @@ class Package extends CompletePackage
     }
 
     /**
-     * @todo If someone prefers a nice regex for both AC_ and PHP_... :)
      *
      * @param string $which
      * @param string $config
