@@ -78,6 +78,13 @@ class PackageHelper extends Helper
         $table->render();
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param $url
+     * @param $path
+     * @return Package
+     */
     public function download(InputInterface $input, OutputInterface $output, $url, $path)
     {
         $package = null;
