@@ -120,13 +120,10 @@ class BuildSrcWindows
 
     /**
      * @param string $command
-     * @param string $callback
-     *
      * @return boolean
-     *
      * @throws \Exception
      */
-    private function runCommand($command, $callback = null)
+    private function runCommand($command)
     {
         $this->log(1, 'running: ' . $command);
         $pp = popen("$command 2>&1", 'r');
@@ -136,21 +133,8 @@ class BuildSrcWindows
             );
         }
 
-        if (1 == $callback && $callback[0]->debug) {
-            $oldDbg = $callback[0]->debug;
-            $callback[0]->debug = 2;
-        }
-
         while ($line = fgets($pp, 1024)) {
-            if ($callback) {
-                call_user_func($callback, 'cmdoutput', $line);
-            } else {
-                $this->log(2, rtrim($line));
-            }
-        }
-
-        if ($callback && isset($oldDbg)) {
-            $callback[0]->debug = $oldDbg;
+            $this->log(2, rtrim($line));
         }
 
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
