@@ -131,8 +131,7 @@ class InstallerCommand extends Command
         $bld->setOutput($output);
         $bld->phpize();
         $bld->configure();
-
-//        $bld->install();
+        $bld->install();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
