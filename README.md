@@ -18,7 +18,7 @@ Clone this repository and install dependencies with
 $ composer install
 ```
 
-Or clone this repository, run:
+Or clone this repository, then run:
 
 ```sh
 $ cd pickle
