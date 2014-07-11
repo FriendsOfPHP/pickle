@@ -198,7 +198,7 @@ class Package extends CompletePackage
     /**
      * Get files, will not return gitignore files
      *
-     * @return array
+     * @return \CallbackFilterIterator
      */
     public function getFiles()
     {

@@ -100,6 +100,7 @@ class BuildSrcUnix
 
     /**
      * @param string $command
+     * @param string $callback
      *
      * @return boolean
      *
