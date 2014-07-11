@@ -119,7 +119,7 @@ class BuildSrcWindows
     }
 
     /**
-     * @param string $command
+     * @param  string     $command
      * @return boolean
      * @throws \Exception
      */

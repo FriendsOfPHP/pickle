@@ -99,7 +99,7 @@ class BuildSrcUnix
     }
 
     /**
-     * @param string $command
+     * @param  string     $command
      * @return boolean
      * @throws \Exception
      */

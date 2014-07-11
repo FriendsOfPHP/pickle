@@ -79,8 +79,8 @@ class PackageHelper extends Helper
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
      * @param $url
      * @param $path
      * @return Package
