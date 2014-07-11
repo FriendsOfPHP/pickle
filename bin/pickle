@@ -21,7 +21,14 @@ use Pickle\Console\Command;
 use Pickle\Console\Helper;
 use Symfony\Component\Console\Application;
 
-$application = new Application("Pickle", "0.1.0");
+
+$name = '
+  ____  _      _    _
+ |  _ \(_) ___| | _| | ___
+ | |_) | |/ __| |/ / |/ _ \
+ |  __/| | (__|   <| |  __/
+ |_|   |_|\___|_|\_\_|\___| ';
+$application = new Application($name, "0.1.0");
 
 $application->getHelperSet()->set(new \Pickle\Console\Helper\PackageHelper());
 
