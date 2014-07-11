@@ -151,7 +151,7 @@ class InstallerCommand extends Command
             if (!$sourceRequested) {
                 $this->binaryInstallWindows($path, $input, $output);
 
-                return;
+                return 0;
             }
         }
 
@@ -193,57 +193,60 @@ class InstallerCommand extends Command
 
         $options = $package->getConfigureOptions();
         $optionsValue = [];
-        if ($options) {
-            foreach ($options as $name => $opt) {
-                /* enable/with-<extname> */
-                if ($name == $package->getName()) {
-                    $optionsValue[$name] = (object) [
-                        'type' => $opt->type,
-                        'input' => true
-                    ];
 
-                    continue;
-                }
-
-                if ($input->getOption('defaults')) {
-                    $value = $opt->default;
-                } else {
-                    if ($opt->type == 'enable') {
-                        $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
-                    } else {
-                        $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
-                    }
-
-                    $value = $helper->ask($input, $output, $prompt);
-                }
-
+        foreach ($options as $name => $opt) {
+            /* enable/with-<extname> */
+            if ($name == $package->getName()) {
                 $optionsValue[$name] = (object) [
                     'type' => $opt->type,
-                    'input' => $value
+                    'input' => true
                 ];
+
+                continue;
             }
+
+            if ($input->getOption('defaults')) {
+                $value = $opt->default;
+            } else {
+                if ($opt->type == 'enable') {
+                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                } else {
+                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                }
+
+                $value = $helper->ask($input, $output, $prompt);
+            }
+
+            $optionsValue[$name] = (object) [
+                'type' => $opt->type,
+                'input' => $value
+            ];
         }
 
-        if (false === $input->getOption('dry-run')) {
-            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-                $build = new BuildSrcWindows($package, $optionsValue);
-            } else {
-                $build = new BuildSrcUnix($package, $optionsValue);
-            }
-            try {
-                $build->phpize();
-                $build->createTempDir();
-                $build->configure();
-                $build->build();
-                $build->install();
-            } catch (\Exception $e) {
-                $output->writeln('The following error(s) happened: ' . $e->getMessage());
-                $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
-                if ($helper->ask($input, $output, $prompt)) {
-                    $output->write($build->getLog());
-                }
-            }
-            $build->cleanup();
+        if ($input->getOption('dry-run')) {
+            return 0;
         }
+
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $build = new BuildSrcWindows($package, $optionsValue);
+        } else {
+            $build = new BuildSrcUnix($package, $optionsValue);
+        }
+        try {
+            $build->phpize();
+            $build->createTempDir();
+            $build->configure();
+            $build->build();
+            $build->install();
+        } catch (\Exception $e) {
+            $output->writeln('The following error(s) happened: ' . $e->getMessage());
+            $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
+            if ($helper->ask($input, $output, $prompt)) {
+                $output->write($build->getLog());
+            }
+        }
+        $build->cleanup();
+
+        return 0;
     }
 }
