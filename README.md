@@ -18,18 +18,30 @@ Clone this repository and install dependencies with
 $ composer install
 ```
 
+Usage
+-----
+
+Usage is prety straighforward. For example, to install the memcache extension run the following command:
+
+```sh
+$ bin/pickle install memcache
+```
+
 And then, run, in your extension directory, the following command:
 
-```sh
-$ bin/pickle validate
-$ bin/pickle install
-```
+The list of commands is available via
 
-For any help, run:
 
 ```sh
-$ bin/pickle -h
+$ bin/pickle list
 ```
+
+To get extended help for a given command, use:
+
+```sh
+$ bin/pickle help install
+```
+
 
 Contributing
 ------------
@@ -51,7 +63,7 @@ Support
 -------
 
 Support is available via the [issue
-tracker](https://github.com/pierrejoye/pickle/issues) in the Github project page
+tracker](https://github.com/FriendsOfPHP/pickle/issues) in the Github project page
 or via [IRC, EFNet, channel `#pickle`](http://chat.efnet.org/).
 
 Running tests
