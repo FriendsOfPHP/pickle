@@ -60,13 +60,13 @@ $ php -d phar.readonly=0 ..\box.phar build
 Usage
 -----
 
-Usage is prety straighforward. For example, to install the memcache extension run the following command:
+Usage is pretty straightforward. For example, to install the memcache extension run the following command:
 
 ```sh
 $ bin/pickle install memcache
 ```
 
-You can also use pickle fromyour extension directory, the following command:
+You can also use pickle from your extension directory, the following command:
 
 
 ```sh
