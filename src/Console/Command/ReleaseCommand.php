@@ -58,7 +58,6 @@ class ReleaseCommand extends Command
         $package->setRootDir(realpath($path));
 
         $this->getHelper('package')->showInfo($output, $package);
-
         $arch = new Archive($package);
         $arch->create();
     }

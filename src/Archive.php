@@ -18,6 +18,10 @@ class Archive
         $this->pkg = $package;
     }
 
+    private function checkVersion()
+    {
+    }
+
     /**
      * Create package
      */
@@ -28,6 +32,7 @@ class Archive
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
         $tempName = getcwd() . '/pkl-tmp.tar';
+
         $arch = new \PharData($tempName);
         $pkgDir = $this->pkg->getRootDir();
 
@@ -37,9 +42,12 @@ class Archive
                 $arch->addFile($file, $name);
             }
         }
-
+        if (file_exists($tempName)) {
+            @unlink($tempName . '.gz');
+        }
         $arch->compress(\Phar::GZ);
         unset($arch);
+
         rename($tempName . '.gz', $archBasename . '.tgz');
         unlink($tempName);
     }
