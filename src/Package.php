@@ -210,10 +210,8 @@ class Package extends CompletePackage
     public function getVersionFromHeader()
     {
         $headers = glob($this->path . DIRECTORY_SEPARATOR . '*.h');
-    print_r($headers);
         $ext_name = $this->getName();
         $version_define = 'PHP_' . strtoupper($ext_name) . '_VERSION';
-        echo "looking for: $version_define...\n";
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);
             if (!$contents) {
@@ -225,7 +223,6 @@ class Package extends CompletePackage
                 $version_line = trim(substr($contents, $pos_version, $nl - $pos_version ));
                 list($version_define, $version) = explode(' ', $version_line);
                 $version = trim(str_replace('"', '', $version));
-                var_dump($version_line, $version);
                 break;
             }
         }
