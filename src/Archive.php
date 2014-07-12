@@ -18,10 +18,6 @@ class Archive
         $this->pkg = $package;
     }
 
-    private function checkVersion()
-    {
-    }
-
     /**
      * Create package
      */
