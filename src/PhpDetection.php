@@ -49,12 +49,14 @@ class PhpDetection
     {
         $cmd = $this->phpCli . ' -i';
         exec($cmd, $info);
+
         $extensionDir = $compiler = $arch = $iniPath = '';
         if (!is_array($info)) {
             throw new \Exception('Cannot parse phpinfo output');
         }
         foreach ($info as $s) {
-            if (false !== strpos($s, 'extension_dir')) {
+            $pos_ext_dir = strpos($s, 'extension_dir');
+            if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
                 list(, $extensionDir,) = explode('=>', $s);
                 continue;
             }
@@ -63,6 +65,7 @@ class PhpDetection
                 if ('(None)' === $iniPath) {
                     $iniPath = '';
                 }
+
                 continue;
             }
             if (false === strpos($s, 'Architecture')) {
