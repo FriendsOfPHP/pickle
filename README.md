@@ -12,28 +12,26 @@ Pickle installs PHP extensions easily on all platforms.
 Introduction
 ------------
 
-Pickle is a new PHP extension installer. It is based on Composer and the plan is to get Composer fully support it. See https://github.com/composer/composer/pull/2898#issuecomment-48439196 for the Composer part of the discussions.
+Pickle is a new PHP extension installer. It is based on Composer and the plan is to get Composer to fully support it. See https://github.com/composer/composer/pull/2898#issuecomment-48439196 for the Composer part of the discussions.
 
-Pickle fully supports existing extension in http://pecl.php.net, running:
+Pickle fully supports existing extensions in http://pecl.php.net, running the following will install the latest available version of the memcache extension:
 
 ```sh
 $ bin/pickle install memcache
 ```
 
-will install the latest version available of the memcache extension.
-
 Windows is fully supported, to install binaries or from the sources (work in progress and given that you have a working build environment in place).
 
 The concept behind Pickle is to ease the life of both developers and end users.
 
-For end users, nothing changes much except that Pickle is based on modern concepts, works with multiple protocols (git or http(s) URLs).
+For end users, nothing changes much except that Pickle is based on modern concepts and works with multiple protocols (git or http(s) URLs).
 
-For developers it drastically reduce the release work. Extension meta information are not duplicated anymore. Configure options, files to package etc. are automatically fetched from the sources and the respective files updated during the release process. There is no risk anymore to forget to update the version here or there, or to forget to include a file.
+For developers, it drastically reduces the release work. Extension meta information is not duplicated anymore. Configuration options, files to package etc. are automatically fetched from the sources and the respective files are updated during the release process. There is no risk anymore of forgetting to update the version here or there, or to neglect to include a file.
 
 Installation
 ------------
 
-Clone this repository and install dependencies with
+Clone this repository and install the dependencies with
 [Composer](http://getcomposer.org/):
 
 ```sh
@@ -68,7 +66,6 @@ $ bin/pickle install memcache
 
 You can also use pickle from your extension directory, the following command:
 
-
 ```sh
 $ cd myext
 $ bin/pickle install
@@ -79,7 +76,6 @@ A list of the commands is available using:
 ```sh
 $ bin/pickle list
 ```
-
 
 To get extended help for a given command, use:
 
@@ -105,7 +101,6 @@ the [PSR-1](http://www.php-fig.org/psr/psr-1/) and
 [PSR-2](http://www.php-fig.org/psr/psr-2/) coding standards.
 
 To avoid CS issues, you should use [php-cs-fixer](http://cs.sensiolabs.org/):
-
 
 ```sh
 $ php-cs-fixer fix src/
