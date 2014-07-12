@@ -8,6 +8,28 @@ Pickle installs PHP extensions easily on all platforms.
 [![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/?branch=master)
 [![Build Status](https://travis-ci.org/FriendsOfPHP/pickle.svg?branch=master)](https://travis-ci.org/FriendsOfPHP/pickle)
 
+
+Introduction
+------------
+
+Pickle is a new PHP extension installer. It is based on Composer and the plan is to get Composer fully support it. See https://github.com/composer/composer/pull/2898#issuecomment-48439196 for the Composer part of the discussions.
+
+Pickle fully supports existing extension in http://pecl.php.net, running:
+
+```sh
+$ bin/pickle install memcache
+```
+
+will install the latest version available of the memcache extension.
+
+Windows is fully supported, to install binaries or from the sources (work in progress and given that you have a working build environment in place).
+
+The concept behind Pickle is to ease the life of both developers and end users.
+
+For end users, nothing changes much except that Pickle is based on modern concepts, works with multiple protocols (git or http(s) URLs).
+
+For developers it drastically reduce the release work. Extension meta information are not duplicated anymore. Configure options, files to package etc. are automatically fetched from the sources and the respective files updated during the release process. There is no risk anymore to forget to update the version here or there, or to forget to include a file.
+
 Installation
 ------------
 
@@ -27,16 +49,24 @@ $ composer install
 
 A phar is also available at http://www.pierrejoye.com/pickle/pickle.phar
 
+If you like to create your own phar from the pickle sources, you will need to install Box (http://box-project.org/). Then clone the repository and run the following commands:
+
+```sh
+$ cd pickle
+$ composer install --no-dev --optimize-autoloader
+$ php -d phar.readonly=0 ..\box.phar build
+```
+
 Usage
 -----
 
-Usage is prety straighforward. For example, to install the memcache extension run the following command:
+Usage is pretty straightforward. For example, to install the memcache extension run the following command:
 
 ```sh
 $ bin/pickle install memcache
 ```
 
-You can also use pickle fromyour extension directory, the following command:
+You can also use pickle from your extension directory, the following command:
 
 
 ```sh
@@ -57,6 +87,13 @@ To get extended help for a given command, use:
 $ bin/pickle help install
 ```
 
+To convert a package (based on package.xml current PECL installer), use:
+
+```sh
+$ bin/pickle convert /home/pierre/myext/
+```
+
+Or run it from the extension source directory.
 
 Contributing
 ------------
