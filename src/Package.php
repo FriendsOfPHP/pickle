@@ -78,9 +78,7 @@ class Package extends CompletePackage
                 }
             }
         }
-        $options = array_merge($options['with'], $options['enable']);
-
-        return $options;
+        return array_merge($options['with'], $options['enable']);
     }
 
     /**
