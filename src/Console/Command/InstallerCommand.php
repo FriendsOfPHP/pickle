@@ -195,7 +195,7 @@ class InstallerCommand extends Command
 
         foreach ($options as $name => $opt) {
             /* enable/with-<extname> */
-            if ($name == $package->getName()) {
+            if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
                 $optionsValue[$name] = (object) [
                     'type' => $opt->type,
                     'input' => true
