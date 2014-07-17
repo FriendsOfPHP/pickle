@@ -78,6 +78,7 @@ class Package extends CompletePackage
                 }
             }
         }
+
         return array_merge($options['with'], $options['enable']);
     }
 
@@ -177,6 +178,12 @@ class Package extends CompletePackage
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
             list($name, $desc) = explode(',', $option);
+
+            /* Description can be part of the 3rd argument */
+            if (empty($desc) || $desc = '[]') {
+                list($name, , $desc) = explode(',', $option);
+                $desc = trim(str_replace(['[',']'], ['',''], $desc));
+            }
             if ('enable' == $type) {
                 $default = (false !== strpos($option, '-disable-')) ? true : false;
             } elseif ('with' == $type) {
