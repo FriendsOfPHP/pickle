@@ -58,7 +58,6 @@ class BuildSrcWindows extends BuildSrc
         $backCwd = getcwd();
         chdir($this->tempDir);
         $configureOptions = '';
-	var_dump($this->options);
         foreach ($this->options as $name => $option) {
             $decision = NULL;
             if ('enable' === $option->type) {
