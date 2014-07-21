@@ -1,30 +1,18 @@
 <?php
 namespace Pickle;
 
-class BuildSrcWindows
+class BuildSrcWindows extends BuildSrc
 {
-    use FileOps;
-
-    private $pkg;
-    private $options;
-    private $log = '';
-    private $cwdBack;
-    private $tempDir;
-
-    public function __construct(Package $pkg, $options = null)
+    public function prepare()
     {
-        $this->pkg = $pkg;
-        $this->options = $options;
-        $this->cwdBack = getcwd();
-    }
+    	if (!file_exists("c:\\php-sdk\\bin")) {
+		throw new \Exception("PHP SDK not found");
+	}
+        putenv("path=c:\\php-sdk\\bin;" . getenv("path"));
 
-    /**
-     * @param integer $level
-     * @param string  $msg
-     */
-    public function log($level, $msg)
-    {
-        $this->log .= $level . ': ' . $msg . "\n";
+	if (!$this->runCommand("phpsdk_setvars")) {
+		throw new \Exception("phpsdk_setvars failed");
+	}
     }
 
     /**
@@ -54,7 +42,7 @@ class BuildSrcWindows
     public function phpize()
     {
         $backCwd = getcwd();
-        chdir($this->pkg->getRootDir());
+        chdir($this->pkg->getSourceDir());
 
         $res = $this->runCommand('phpize');
         chdir($backCwd);
@@ -66,7 +54,7 @@ class BuildSrcWindows
     public function configure()
     {
         /* duplicate src tree to do not pollute repo or src dir */
-        $this->copySrcDir($this->pkg->getRootDir(), $this->tempDir);
+        $this->copySrcDir($this->pkg->getSourceDir(), $this->tempDir);
         $backCwd = getcwd();
         chdir($this->tempDir);
         $configureOptions = '';
@@ -88,7 +76,7 @@ class BuildSrcWindows
         }
         $configureOptions = $confOption . ' ' . $configureOptions;
 
-        $res = $this->runCommand($this->pkg->getRootDir() . '/configure '. $configureOptions);
+        $res = $this->runCommand($this->pkg->getSourceDir() . '/configure '. $configureOptions);
         chdir($backCwd);
         if (!$res) {
             throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');
@@ -117,33 +105,5 @@ class BuildSrcWindows
             throw new \Exception('nmake install failed');
         }
     }
-
-    /**
-     * @param  string     $command
-     * @return boolean
-     * @throws \Exception
-     */
-    private function runCommand($command)
-    {
-        $this->log(1, 'running: ' . $command);
-        $pp = popen("$command 2>&1", 'r');
-        if (!$pp) {
-            throw new \Exception(
-                'Failed to run the following command: ' . $command
-            );
-        }
-
-        while ($line = fgets($pp, 1024)) {
-            $this->log(2, rtrim($line));
-        }
-
-        $exitCode = is_resource($pp) ? pclose($pp) : -1;
-
-        return (0 === $exitCode);
-    }
-
-    public function getLog()
-    {
-        return $this->log;
-    }
 }
+

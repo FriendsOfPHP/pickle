@@ -129,6 +129,7 @@ class InstallerCommand extends Command
         $bld->setProgress($progress);
         $bld->setInput($input);
         $bld->setOutput($output);
+        $bld->prepare();
         $bld->phpize();
         $bld->configure();
         $bld->install();
@@ -232,6 +233,7 @@ class InstallerCommand extends Command
             $build = new BuildSrcUnix($package, $optionsValue);
         }
         try {
+            $build->prepare();
             $build->phpize();
             $build->createTempDir();
             $build->configure();
