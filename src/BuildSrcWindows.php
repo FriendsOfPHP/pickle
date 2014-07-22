@@ -51,33 +51,37 @@ class BuildSrcWindows extends BuildSrc
         }
     }
 
-    public function configure($force_opts = NULL)
+    public function configure($opts = NULL)
     {
         /* duplicate src tree to do not pollute repo or src dir */
         $this->copySrcDir($this->pkg->getSourceDir(), $this->tempDir);
         $backCwd = getcwd();
         chdir($this->tempDir);
-        $configureOptions = '';
-        foreach ($this->options as $name => $option) {
-            $decision = NULL;
-            if ('enable' === $option->type) {
-                $decision = true == $option->input ? 'enable' : 'disable';
-            } elseif ('disable' == $option->type) {
-                $decision = false == $option->input ? 'enable' : 'disable';
-	    }
-
-            if (!is_null($decision)) {
-                $configureOptions .= ' --' . $decision . '-' . $name;
-	    }
-        }
-
-        $extEnableOption = $this->options[$this->pkg->getName()];
-        if ('enable' == $extEnableOption->type) {
-            $confOption = '--enable-' . $this->pkg->getName() . '=shared';
+        if ($opts) {
+            $configureOptions = $opts;
         } else {
-            $confOption = '--with-' . $this->pkg->getName() . '=shared';
-        }
-        $configureOptions = $confOption . ' ' . $configureOptions;
+            $configureOptions = '';
+            foreach ($this->options as $name => $option) {
+                $decision = NULL;
+                if ('enable' === $option->type) {
+                    $decision = true == $option->input ? 'enable' : 'disable';
+                } elseif ('disable' == $option->type) {
+                    $decision = false == $option->input ? 'enable' : 'disable';
+                }
+
+                if (!is_null($decision)) {
+                    $configureOptions .= ' --' . $decision . '-' . $name;
+                }
+            }
+
+            $extEnableOption = $this->options[$this->pkg->getName()];
+            if ('enable' == $extEnableOption->type) {
+                $confOption = '--enable-' . $this->pkg->getName() . '=shared';
+            } else {
+                $confOption = '--with-' . $this->pkg->getName() . '=shared';
+            }
+            $configureOptions = $confOption . ' ' . $configureOptions;
+	}
 
         $res = $this->runCommand($this->pkg->getSourceDir() . '/configure '. $configureOptions);
         chdir($backCwd);

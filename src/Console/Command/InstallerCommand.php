@@ -61,7 +61,13 @@ class InstallerCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'use source package'
+            )->addOption(
+                'with-configure-options',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to the additional configure options'
             );
+
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->addOption(
@@ -191,41 +197,55 @@ class InstallerCommand extends Command
         $this->getHelper('package')->showInfo($output, $package);
         $helper = $this->getHelperSet()->get('question');
 
-        $options = $package->getConfigureOptions();
-        $optionsValue = [];
+	/* XXX implement env vars handling to override configure opts */
+        $force_opts = $input->getOption('with-configure-options');
 
-        foreach ($options as $name => $opt) {
-            /* enable/with-<extname> */
-            if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
-                $optionsValue[$name] = (object) [
+        if (!$force_opts) {
+            $options = $package->getConfigureOptions();
+            $optionsValue = [];
+
+
+            foreach ($options as $name => $opt) {
+                /* enable/with-<extname> */
+                if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
+                    $optionsValue[$name] = (object) [
                     'type' => $opt->type,
                     'input' => true
-                ];
+                    ];
 
-                continue;
-            }
-
-            if ($input->getOption('defaults')) {
-                $value = $opt->default;
-            } else {
-                if ($opt->type == 'enable') {
-                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
-                } else {
-                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                    continue;
                 }
 
-                $value = $helper->ask($input, $output, $prompt);
+                if ($input->getOption('defaults')) {
+                    $value = $opt->default;
+                } else {
+                    if ($opt->type == 'enable') {
+                        $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                     } else {
+                        $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                     }
+
+                     $value = $helper->ask($input, $output, $prompt);
+                }
+
+                $optionsValue[$name] = (object) [
+                    'type' => $opt->type,
+                    'input' => $value
+                ];
             }
 
-            $optionsValue[$name] = (object) [
-                'type' => $opt->type,
-                'input' => $value
-            ];
+            if ($input->getOption('dry-run')) {
+                return 0;
+            }
+        } else {
+            $optionsValue = NULL;
+            if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
+                throw new \Exception("File '$force_opts' is unusable");
+	    }
+
+	    $force_opts = file_get_contents($force_opts);
         }
 
-        if ($input->getOption('dry-run')) {
-            return 0;
-        }
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $build = new BuildSrcWindows($package, $optionsValue);
@@ -236,7 +256,7 @@ class InstallerCommand extends Command
             $build->prepare();
             $build->phpize();
             $build->createTempDir();
-            $build->configure();
+            $build->configure($force_opts);
             $build->build();
             $build->install();
         } catch (\Exception $e) {

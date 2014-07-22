@@ -22,7 +22,7 @@ abstract class BuildSrc
     public abstract function prepare();
     public abstract function install();
     public abstract function build();
-    public abstract function configure($force_opts = NULL);
+    public abstract function configure($opts = NULL);
     public abstract function phpize();
 
     /**
