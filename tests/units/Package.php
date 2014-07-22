@@ -82,7 +82,7 @@ class Package extends atoum
                 $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
-                ->array($this->testedInstance->getConfigureOptions())
+                ->array($this->testedInstance->getConfigureOptionsFromFile((string) $configM4))
                     ->object[$optName]->isEqualTo((object) $option)
         ;
     }
@@ -110,6 +110,15 @@ class Package extends atoum
             ],
             [
                 'PHP_ARG_ENABLE(foo-bar,Enable foo-bar,[--enable-foo-bar ])',
+                'foo-bar',
+                [
+                    'type' => 'enable',
+                    'prompt' => 'Enable foo-bar',
+                    'default' => false
+                ]
+            ],
+            [
+                'PHP_ARG_ENABLE(foo-bar,,[--enable-foo-bar Enable foo-bar])',
                 'foo-bar',
                 [
                     'type' => 'enable',

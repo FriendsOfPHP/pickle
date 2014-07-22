@@ -61,25 +61,34 @@ class Package extends CompletePackage
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $config = file_get_contents($this->getSourceDir() . '/config.w32');
-            $options['with'] = $this->fetchArgWindows('ARG_WITH', $config);
-            $options['enable'] = $this->fetchArgWindows('ARG_ENABLE', $config);
+
+            $options = array_merge(
+                $this->fetchArgWindows('ARG_WITH', $config),
+                $this->fetchArgWindows('ARG_ENABLE', $config)
+            );
         } else {
             $configs = glob($this->getSourceDir() . '/' . 'config*.m4');
+
             if (!empty($configs)) {
                 foreach ($configs as $config) {
-                    $config = file_get_contents($config);
-                    $options['with'] = $this->fetchArg('PHP_ARG_WITH', $config);
-                    $acArgumentWith = $this->fetchArgAc('AC_ARG_WITH', $config);
-                    $options['with'] = array_merge($options['with'], $acArgumentWith);
-
-                    $options['enable'] = $this->fetchArg('PHP_ARG_ENABLE', $config);
-                    $acArgumentEnable = $this->fetchArgAc('AC_ARG_ENABLE', $config);
-                    $options['enable'] = array_merge($options['enable'], $acArgumentEnable);
+                    $options = array_merge($options, $this->getConfigureOptionsFromFile($config));
                 }
             }
         }
 
-        return array_merge($options['with'], $options['enable']);
+        return $options;
+    }
+
+    public function getConfigureOptionsFromFile($file)
+    {
+        $config = file_get_contents($file);
+
+        return array_merge(
+            $this->fetchArg('PHP_ARG_WITH', $config),
+            $this->fetchArgAc('AC_ARG_WITH', $config),
+            $this->fetchArg('PHP_ARG_ENABLE', $config),
+            $this->fetchArgAc('AC_ARG_ENABLE', $config)
+        );
     }
 
     /**
@@ -141,19 +150,20 @@ class Package extends CompletePackage
             } elseif ('with' == $type) {
                 $default = (false !== strpos($option, '-without-')) ? true : false;
             }
-                list($name, $desc) = explode(',', $option);
 
-            $desc = preg_replace('![\s]+!', ' ', trim($desc));
+            list($name, $desc) = explode(',', $option);
+
+            $desc = preg_replace('/\s+/', ' ', trim($desc));
             $desc = trim(substr($desc, 1, strlen($desc) - 2));
-
             $s_a = strpos($desc, ' ');
             $desc = trim(substr($desc, $s_a));
 
             $options[$name] = (object) [
-                'prompt'  => trim($desc),
+                'prompt'  => $desc,
                 'type'    => $type,
                 'default' => $default
             ];
+
             $next = $e + 1;
         }
 
@@ -177,13 +187,19 @@ class Package extends CompletePackage
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
+
             list($name, $desc) = explode(',', $option);
 
             /* Description can be part of the 3rd argument */
-            if (empty($desc) || $desc = '[]') {
+            if (empty($desc) || $desc === '[]') {
                 list($name, , $desc) = explode(',', $option);
+                $desc = preg_replace('/\s+/', ' ', trim($desc));
+                $desc = trim(substr($desc, 1, strlen($desc) - 2));
                 $desc = trim(str_replace(['[',']'], ['',''], $desc));
+                $s_a = strpos($desc, ' ');
+                $desc = trim(substr($desc, $s_a));
             }
+
             if ('enable' == $type) {
                 $default = (false !== strpos($option, '-disable-')) ? true : false;
             } elseif ('with' == $type) {
