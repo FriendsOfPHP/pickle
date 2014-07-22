@@ -51,7 +51,7 @@ class BuildSrcWindows extends BuildSrc
         }
     }
 
-    public function configure()
+    public function configure($force_opts = NULL)
     {
         /* duplicate src tree to do not pollute repo or src dir */
         $this->copySrcDir($this->pkg->getSourceDir(), $this->tempDir);

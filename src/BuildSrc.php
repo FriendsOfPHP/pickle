@@ -19,6 +19,12 @@ abstract class BuildSrc
         $this->cwdBack = getcwd();
     }
 
+    public abstract function prepare();
+    public abstract function install();
+    public abstract function build();
+    public abstract function configure($force_opts = NULL);
+    public abstract function phpize();
+
     /**
      * @param integer $level
      * @param string  $msg
@@ -27,8 +33,6 @@ abstract class BuildSrc
     {
         $this->log .= $level . ': ' . $msg . "\n";
     }
-
-    public abstract function prepare();
 
     public function getLog()
     {

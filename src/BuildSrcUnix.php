@@ -20,7 +20,7 @@ class BuildSrcUnix extends BuildSrc
         }
     }
 
-    public function configure()
+    public function configure($force_opts = NULL)
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
