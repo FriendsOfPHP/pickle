@@ -1,0 +1,8 @@
+; some comment
+some.key = off
+
+;Pickle installed extension, do not edit this line and below
+extension=php_apcu.dll
+; some stuff
+;
+error_reporting = -1
