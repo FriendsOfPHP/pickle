@@ -1,7 +1,6 @@
 <?php
 
 namespace Pickle\tests\units;
-//namespace Pickle\tests\mocks;
 
 use atoum;
 use Pickle\tests;
