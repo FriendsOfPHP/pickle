@@ -1,5 +1,5 @@
 <?php
-namespace pickle;
+namespace Pickle;
 
 class PhpDetection
 {
