@@ -197,58 +197,12 @@ class InstallerBinaryWindows
     }
 
     /**
-     * @param string $pickleSection
-     *
-     * @return string
-     */
-    private function updatePickleSection($pickleSection)
-    {
-        $lines = explode("\n", $pickleSection);
-        $new = [];
-        array_shift($lines);
-        foreach ($lines as $l) {
-            $l = trim($l);
-            if ($l == '') {
-                continue;
-            }
-            list(, $dllname) = explode('=', $l);
-            if (in_array(trim($dllname), $this->extDll)) {
-                continue;
-            }
-            $new[] = $l;
-        }
-
-        return implode($new, "\n");
-    }
-
-    /**
      * @throws \Exception
      */
     private function updateIni()
     {
-        $iniPath = $this->php->getPhpIniDir();
-        $iniPickleHeader = ';Pickle installed extension, do not edit this line and below';
-        $ini = @file_get_contents($iniPath);
-        if (!$ini) {
-            throw new \Exception('Cannot read php.ini');
-        }
-        $posHeader = strpos($ini, $iniPickleHeader);
-
-        $new = '';
-        foreach ($this->extDll as $dll) {
-            $new .=  "\n" . 'extension=' . $dll . "\n";
-        }
-
-        $pickleSection = '';
-        if ($posHeader !== false) {
-            $pickleSection = substr($ini, $posHeader);
-            $pickleSection = $this->updatePickleSection($pickleSection);
-        }
-
-        $ini = substr($ini, 0, $posHeader - 1) . "\n" . $iniPickleHeader . "\n" . $pickleSection . $new;
-        if (!@file_put_contents($iniPath, $ini)) {
-            throw new \Exception('Cannot update php.ini');
-        }
+        $ini = new PhpIni($this->php);
+        $ini->updatePickleSection($this->extDll);
     }
 
     /**
