@@ -243,7 +243,7 @@ class InstallerCommand extends Command
                 throw new \Exception("File '$force_opts' is unusable");
 	    }
 
-	    $force_opts = file_get_contents($force_opts);
+	    $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
         }
 
 
