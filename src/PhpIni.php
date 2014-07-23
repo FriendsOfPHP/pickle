@@ -11,9 +11,9 @@ class PhpIni
     public function __construct(PhpDetection $php)
     {
         $this->path = $php->getPhpIniDir();
-        
+
         $this->raw = @file_get_contents($this->path);
-        if (!$this->raw) {
+        if (false === $this->raw) {
             throw new \Exception('Cannot read php.ini');
         }
         
