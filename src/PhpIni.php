@@ -7,6 +7,7 @@ class PhpIni
     protected $raw;
     protected $path;
     protected $pickleHeader = ';Pickle installed extension, do not edit this line and below';
+    protected $pickleFooter = ';Pickle installed extension, do not edit this line and above';
 
     public function __construct(PhpDetection $php)
     {
