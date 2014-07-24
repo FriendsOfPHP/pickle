@@ -7,6 +7,13 @@ use Pickle\tests;
 
 class PhpIni extends atoum
 {
+    public function beforeTestMethod($method)
+    {
+        if (defined('PHP_WINDOWS_VERSION_MAJOR') === false) {
+            $this->skip('Cannot only run on Windows');
+        }
+    }
+
     protected function getPhpDetectionMock($path)
     {
         $php =  new \mock\Pickle\PhpDetection;
