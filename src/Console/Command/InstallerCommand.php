@@ -182,9 +182,17 @@ class InstallerCommand extends Command
             throw new \RuntimeException('XML package are not supported. Please convert it before install');
         }
 
-        if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
+        if (null === $package) {
+            if (file_exists($path . DIRECTORY_SEPARATOR . 'package2.xml')) {
+                $pkg_xml = $path . DIRECTORY_SEPARATOR . 'package2.xml';
+            } else if (file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
+                $pkg_xml = $path . DIRECTORY_SEPARATOR . 'package.xml';
+            } else {
+                throw new \Exception("package.xml not found");
+            }
+
             $loader = new Package\XML\Loader(new Package\Loader());
-            $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
+            $package = $loader->load($pkg_xml);
 
             $dumper = new Dumper();
             $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
