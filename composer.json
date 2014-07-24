@@ -25,6 +25,7 @@
     "require-dev": {
         "atoum/atoum": "dev-edge",
         "atoum/praspel-extension": "dev-master",
+        "atoum/visibility-extension": "dev-master",
             "hoa/core": "dev-master",
             "hoa/visitor": "dev-master",
             "hoa/router": "dev-master",
