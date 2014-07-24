@@ -32,10 +32,23 @@ class PhpIni extends atoum
                 ->isInstanceOf("\Pickle\PhpIni");
     }
 
-    public function testupdatePickleSection_empty()
+    public function testupdatePickleSection()
     {
-        $orig = FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty";
+        $files = array(
+            FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty",
+            FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.only.sect.begin",
+            FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.simple",
+        );
+
+        foreach ($files as $f) {
+            $this->do_testupdatePickleSection($f);
+        }
+    }
+
+    protected function do_testupdatePickleSection($orig)
+    {
         $fl = "$orig.test";
+        $fl_exp = "$orig.exp";
         copy($orig, $fl);
         $this
             ->string(file_get_contents($fl))
@@ -45,13 +58,10 @@ class PhpIni extends atoum
         $php = $this->getPhpDetectionMock($fl);
 
         $ini = new \Pickle\PhpIni($php);
-        $ini->updatePickleSection(array("a.dll", "b.dll"));
+        $ini->updatePickleSection(array("php_pumpkin.dll", "php_hello.dll"));
 
-        $result = trim(preg_replace(",\n+,", "\n", file_get_contents($fl)));
-        $expect = ";Pickle installed extension, do not edit this line and below\n" . 
-                  "extension=a.dll\n" .
-                  "extension=b.dll\n" .
-                  ";Pickle installed extension, do not edit this line and above";
+        $result = file_get_contents($fl);
+        $expect = file_get_contents($fl_exp);
         unlink($fl);
 
         $this
