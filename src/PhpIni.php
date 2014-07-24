@@ -9,6 +9,11 @@ class PhpIni
     protected $pickleHeader = ';Pickle installed extension, do not edit this line and below';
     protected $pickleFooter = ';Pickle installed extension, do not edit this line and above';
 
+    protected $pickleHeaderStartPos = -1;
+    protected $pickleHeaderEndPos = -1;
+    protected $pickleFooterStartPos = -1;
+    protected $pickleFooterEndPos = -1;
+
     public function __construct(PhpDetection $php)
     {
         $this->path = $php->getPhpIniDir();
@@ -18,6 +23,7 @@ class PhpIni
             throw new \Exception('Cannot read php.ini');
         }
         
+        $this->setupPickleSectionPositions();
     }
 
     /**
@@ -30,10 +36,9 @@ class PhpIni
     {
         $lines = explode("\n", $pickleSection);
         $new = [];
-        array_shift($lines);
         foreach ($lines as $l) {
             $l = trim($l);
-            if ($l == '') {
+            if (0 !== strpos($l, "extension")) {
                 continue;
             }
             list(, $dllname) = explode('=', $l);
@@ -46,22 +51,76 @@ class PhpIni
         return implode($new, "\n");
     }
 
-    public function updatePickleSection(array $dlls)
+
+    protected function setupPickleSectionPositions()
     {
         $posHeader = strpos($this->raw, $this->pickleHeader);
-
-        $new = '';
-        foreach ($dlls as $dll) {
-            $new .=  "\n" . 'extension=' . $dll . "\n";
+        if (false === $posHeader) {
+            /* no pickle section here yet */
+            return;
         }
+
+        $this->pickleHeaderStartPos = $posHeader;
+        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + strlen($this->pickleHeader);
+
+        $posFooter = strpos($this->raw, $this->pickleFooter);
+        if (false === $posFooter) {
+            /* This is bad, no end of section marker, will have to lookup. The strategy is
+                - look for the last extension directve after the header
+                - extension directives are expected to come one after another one per line
+                - comments are not expected inbetveen
+                - mark the next pos after the last extension directive as the footer pos
+            */
+            $pos = $this->pickleHeaderEndPos;
+            do {
+                $pos = strpos($this->raw, "extension", $pos);
+                if (false !== $pos) {
+                    $this->pickleFooterStartPos = $pos;
+                    $pos++;
+                }
+            } while (false !== $pos);
+
+
+            $this->pickleFooterStartPos = strpos($this->raw, "\n", $this->pickleFooterStartPos);
+        } else {
+            $this->pickleFooterStartPos = $posFooter;
+            $this->pickleFooterEndPos = $this->pickleFooterStartPos + strlen($this->pickleFooter);
+        }
+    }
+
+    protected function getPickleSection()
+    {
+        return substr($this->raw, $this->pickleHeaderEndPos, $this->pickleFooterStartPos - $this->pickleHeaderEndPos);
+    }
+
+    public function updatePickleSection(array $dlls)
+    {
+        $before = "";
+        $after = "";
 
         $pickleSection = '';
-        if ($posHeader !== false) {
-            $pickleSection = substr($this->raw, $posHeader);
-            $pickleSection = $this->rebuildPickleParts($pickleSection, $dlls);
+        foreach ($dlls as $dll) {
+            $pickleSection .=  'extension=' . $dll . "\n";
         }
 
-        $this->raw = substr($this->raw, 0, $posHeader - 1) . "\n" . $this->pickleHeader . "\n" . $pickleSection . $new;
+        if ($this->pickleHeaderStartPos > 0) {
+            $pickleSection = $this->rebuildPickleParts($this->getPickleSection(), $dlls) . "\n" . $pickleSection;
+
+            $before = substr($this->raw, 0, $this->pickleHeaderStartPos);
+            
+            /* If the footer end pos is < 0, there was no footer in php.ini. In this case the footer start pos
+               means the end of the last extension directive after the header start, where the footer should  be */
+            if ($this->pickleFooterEndPos > 0) {
+                $after = substr($this->raw, $this->pickleFooterEndPos);
+            } else {
+                $after = substr($this->raw, $this->pickleFooterStartPos);
+            }
+
+            $before = trim($before);
+            $after = trim($after);
+        }
+
+        $this->raw = $before . "\n\n" . $this->pickleHeader . "\n" . trim($pickleSection) . "\n" . $this->pickleFooter . "\n\n" . $after;
         if (!@file_put_contents($this->path, $this->raw)) {
             throw new \Exception('Cannot update php.ini');
         }
