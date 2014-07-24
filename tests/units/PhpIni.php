@@ -74,5 +74,20 @@ class PhpIni extends atoum
 
         unlink($fl);
     }
+
+    public function testrebuildPickleParts()
+    {
+        $php = $this->getPhpDetectionMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
+
+        $in  = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
+        $exp = "extension=php_a.dll\nextension=php_b.dll";
+
+        $this
+            ->if($ini = new \Pickle\PhpIni($php))
+            ->then
+                ->string(
+                    $this->invoke($ini)->rebuildPickleParts($in, array("php_c.dll"))
+                )->isEqualTo($exp);
+    }
     
 }
