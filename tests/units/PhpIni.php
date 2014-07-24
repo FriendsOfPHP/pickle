@@ -32,17 +32,29 @@ class PhpIni extends atoum
                 ->isInstanceOf("\Pickle\PhpIni");
     }
 
-    public function testupdatePickleSection()
+    public function testupdatePickleSection_empty()
     {
-        $files = array(
-            FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty",
-            FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.only.sect.begin",
-            FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.simple",
-        );
 
-        foreach ($files as $f) {
-            $this->do_testupdatePickleSection($f);
-        }
+        /* empty file */
+        $f = FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty";
+        $this
+            ->string(file_get_contents($f))
+                ->isEmpty();
+        $this->do_testupdatePickleSection($f);
+    }
+
+    public function testupdatePickleSection_nofooter()
+    {
+        /* missing pickle section footer*/
+        $f = FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.only.sect.begin";
+        $this->do_testupdatePickleSection($f);
+    }
+
+    public function testupdatePickleSection_simple()
+    {
+        /* simple file with correct pickle section */
+        $f =FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.simple";
+        $this->do_testupdatePickleSection($f);
     }
 
     protected function do_testupdatePickleSection($orig)
@@ -50,24 +62,17 @@ class PhpIni extends atoum
         $fl = "$orig.test";
         $fl_exp = "$orig.exp";
         copy($orig, $fl);
-        $this
-            ->string(file_get_contents($fl))
-                ->isEmpty();
-
 
         $php = $this->getPhpDetectionMock($fl);
 
         $ini = new \Pickle\PhpIni($php);
         $ini->updatePickleSection(array("php_pumpkin.dll", "php_hello.dll"));
 
-        $result = file_get_contents($fl);
-        $expect = file_get_contents($fl_exp);
-        unlink($fl);
-
         $this
-            ->string($result)
-                ->isEqualTo($expect);
+            ->string(file_get_contents($fl))
+                ->isEqualToContentsOfFile($fl_exp);
 
+        unlink($fl);
     }
     
 }
