@@ -116,8 +116,8 @@ class PhpIni
                 $after = substr($this->raw, $this->pickleFooterStartPos);
             }
 
-            $before = trim($before);
-            $after = trim($after);
+            $before = rtrim($before);
+            $after = ltrim($after);
         }
 
         $this->raw = $before . "\n\n" . $this->pickleHeader . "\n" . trim($pickleSection) . "\n" . $this->pickleFooter . "\n\n" . $after;
