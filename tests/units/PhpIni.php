@@ -7,20 +7,18 @@ use Pickle\tests;
 
 class PhpIni extends atoum
 {
-    public function beforeTestMethod($method)
-    {
-        if (defined('PHP_WINDOWS_VERSION_MAJOR') === false) {
-            $this->skip('Cannot only run on Windows');
-        }
-    }
-
     protected function getPhpDetectionMock($path)
     {
+        $this->mockGenerator->shuntParentClassCalls();
+
         $php =  new \mock\Pickle\PhpDetection;
 
+        $this->calling($php)->__construct = function($dummy) {};
         $this->calling($php)->getPhpIniDir = function() use ($path) {
             return $path;
         };
+
+        $this->mockGenerator->unshuntParentClassCalls();
 
         return $php;
     }
