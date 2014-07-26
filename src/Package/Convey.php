@@ -133,7 +133,9 @@ class Convey
 
             case self::PKG_TYPE_ANY:
                 /* this might be wrong, assumed that the target is a dir and already contains source */
-                $target = realpath($this->path);
+                if (file_exists(realpath($this->path) . DIRECTORY_SEPARATOR . "config.w32")) {
+                    $target = realpath($this->path);
+                }
 
             default:
                     
