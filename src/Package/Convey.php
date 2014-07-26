@@ -5,6 +5,7 @@ namespace Pickle\Package;
 use Pickle\Package;
 use Pickle\Package\JSON\Dumper;
 use Pickle\Downloader\PECLDownloader;
+use Pickle\Downloader\TGZDownloader;
 use Composer\Config;
 use Composer\IO\ConsoleIO;
 use Composer\Downloader\GitDownloader;
@@ -14,7 +15,8 @@ class Convey
 {
     const PKG_TYPE_PECL = 0;
     const PKG_TYPE_GIT = 1;
-    const PKG_TYPE_ANY = 2;
+    const PKG_TYPE_TGZ = 2;
+    const PKG_TYPE_ANY = 42;
 
     const RE_PECL_PACKAGE = '#^
         (?:pecl/)?
@@ -45,6 +47,10 @@ class Convey
 
     public function __construct($path, ConsoleIO $io)
     {
+        if (!$path) {
+            throw new \Exception("Path cannot be empty");
+        }
+
         $this->path = $path;
         $this->io = $io;
         $this->type = self::PKG_TYPE_ANY;
@@ -52,9 +58,14 @@ class Convey
         $this->prepare();
     }
 
+    protected function haveRemoteOrigin()
+    {
+        return (false === realpath($this->path));
+    }
+
     protected function prepare()
     {
-        if (preg_match(self::RE_PECL_PACKAGE, $this->path, $matches) > 0) {
+        if ($this->haveRemoteOrigin() && preg_match(self::RE_PECL_PACKAGE, $this->path, $matches) > 0) {
             $this->type = self::PKG_TYPE_PECL;
             $this->name = $matches['package'];
             $this->url = 'http://pecl.php.net/get/' . $matches['package'];
@@ -74,12 +85,20 @@ class Convey
                 $this->version = 'latest';
                 $this->prettyVersion = 'latest-' . $this->stability;
             }
-        } else if (preg_match(self::RE_GIT_PACKAGE, $this->path, $matches) > 0) {
+        } else if ($this->haveRemoteOrigin() && preg_match(self::RE_GIT_PACKAGE, $this->path, $matches) > 0) {
             $this->type = self::PKG_TYPE_GIT;
             $this->name = $matches['package'];
             $this->version = isset($matches['reference']) ? $matches['reference'] : 'master';
             $this->prettyVersion = $this->version;
             $this->url = preg_replace('/#.*$/', '', $this->path);
+        } else if ('.tgz' == substr($this->path, -4) || '.tar.gz' == substr($this->path, -7)) {
+            $this->type = self::PKG_TYPE_TGZ;
+            $this->name = basename($this->path);
+            $this->version = "unknown";
+            $this->prettyVersion = "unknown";
+            $this->url = $this->path;
+        } else {
+            throw new \Exception("Unable to handle this kind of origin");
         }
     }
 
@@ -93,6 +112,10 @@ class Convey
 
             case self::PKG_TYPE_GIT:
                 return new GitDownloader($this->io, new Config());
+                break;
+
+            case self::PKG_TYPE_TGZ:
+                return new TGZDownloader($this->io, new Config());
                 break;
 
             case self::PKG_TYPE_ANY:
@@ -113,13 +136,14 @@ class Convey
         switch ($this->type) {
             case self::PKG_TYPE_PECL:
             case self::PKG_TYPE_GIT:
+            case self::PKG_TYPE_TGZ:
                 $package = new Package($this->name, $this->version, $this->prettyVersion);
 
                 if (self::PKG_TYPE_GIT == $this->type) {
                     $package->setSourceType('git');
                     $package->setSourceUrl($this->url);
                     $package->setSourceReference($this->version);
-                } else if (self::PKG_TYPE_PECL == $this->type) {
+                } else if (self::PKG_TYPE_PECL == $this->type || self::PKG_TYPE_TGZ == $this->type) {
                     $package->setDistUrl($this->url);
                 }
                 $package->setRootDir($target);
