@@ -144,12 +144,6 @@ class InstallerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
-        $info = parse_url($path);
-
-        $download = (
-            (isset($info['scheme']) && in_array($info['scheme'], ['http', 'https', 'git'])) ||
-            (false === isset($info['scheme']) && false === is_dir($path))
-        );
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -161,51 +155,11 @@ class InstallerCommand extends Command
             }
         }
 
-        if ($download) {
-            $package = $this->getHelper('package')->download($input, $output, $path, sys_get_temp_dir());
-
-            if (null === $package) {
-                throw new \InvalidArgumentException('Package not found: ' . $path);
-            }
-
-            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $package->getName();
-        }
-
-        $jsonLoader = new Package\JSON\Loader(new Package\Loader());
-        $package = null;
-
-        if (file_exists($path . DIRECTORY_SEPARATOR . 'pickle.json')) {
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
-        }
-
-        if (null === $package && $input->getOption('no-convert')) {
-            throw new \RuntimeException('XML package are not supported. Please convert it before install');
-        }
-
-        if (null === $package) {
-            if (file_exists($path . DIRECTORY_SEPARATOR . 'package2.xml')) {
-                $pkg_xml = $path . DIRECTORY_SEPARATOR . 'package2.xml';
-            } else if (file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
-                $pkg_xml = $path . DIRECTORY_SEPARATOR . 'package.xml';
-            } else {
-                throw new \Exception("package.xml not found");
-            }
-
-            $loader = new Package\XML\Loader(new Package\Loader());
-            $package = $loader->load($pkg_xml);
-
-            $dumper = new Dumper();
-            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
-
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
-        }
-        $path = realpath($path);
-        $package->setRootDir($path);
+        $package = $this->getHelper("package")->convey($input, $output, $path);
 
         $this->getHelper('package')->showInfo($output, $package);
         $helper = $this->getHelperSet()->get('question');
 
-	/* XXX implement env vars handling to override configure opts */
         $force_opts = $input->getOption('with-configure-options');
 
         if (!$force_opts) {
