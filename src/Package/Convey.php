@@ -16,6 +16,7 @@ class Convey
     const PKG_TYPE_PECL = 0;
     const PKG_TYPE_GIT = 1;
     const PKG_TYPE_TGZ = 2;
+    const PKG_TYPE_SRC_DIR = 3;
     const PKG_TYPE_ANY = 42;
 
     const RE_PECL_PACKAGE = '#^
@@ -97,6 +98,10 @@ class Convey
             $this->version = "unknown";
             $this->prettyVersion = "unknown";
             $this->url = $this->path;
+        } else if (!$this->haveRemoteOrigin() && is_dir($this->path)) {
+            $this->type = self::PKG_TYPE_SRC_DIR;
+            $this->url = $this->path;
+            /* pass */
         } else {
             throw new \Exception("Unable to handle this kind of origin");
         }
@@ -124,6 +129,19 @@ class Convey
                 return NULL;
                 break;
                 
+        }
+    }
+
+    protected function extConfigIsInPath()
+    {
+        /* XXX implement config*.(m4|w32) search for the case it's somewhere in the subdir,
+            in that case we can take that subdir as the extension root. */
+        if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
+                return file_exists(realpath($this->path) . DIRECTORY_SEPARATOR . "config.w32");
+        } else {
+            $r = glob("{$this->path}/config*.m4");
+
+            return (is_array($r) && !empty($r));
         }
     }
 
@@ -155,12 +173,12 @@ class Convey
 
                 break;
 
-            case self::PKG_TYPE_ANY:
-                /* this might be wrong, assumed that the target is a dir and already contains source */
-                if (file_exists(realpath($this->path) . DIRECTORY_SEPARATOR . "config.w32")) {
+            case self::PKG_TYPE_SRC_DIR:
+                if ($this->extConfigIsInPath()) {
                     $target = realpath($this->path);
                 }
 
+            case self::PKG_TYPE_ANY:
             default:
                     
                 /* XXX */
