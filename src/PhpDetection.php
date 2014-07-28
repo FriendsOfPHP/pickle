@@ -29,19 +29,24 @@ class PhpDetection
 
     private function getFromConstants()
     {
-        $script = 'echo PHP_VERSION . \"\n\";
-        echo PHP_MAJOR_VERSION . \"\n\";
-        echo PHP_MINOR_VERSION . \"\n\";
-        echo PHP_RELEASE_VERSION . \"\n\";
-        echo PHP_EXTRA_VERSION . \"\n\";
-        echo PHP_ZTS . \"\n\";
-        echo PHP_DEBUG . \"\n\";
-        ';
+        $script = 'echo PHP_VERSION . \"\n\"; ' .
+                'echo PHP_MAJOR_VERSION . \"\n\"; ' .
+                'echo PHP_MINOR_VERSION . \"\n\"; ' .
+                'echo PHP_RELEASE_VERSION . \"\n\"; ' .
+                'echo PHP_EXTRA_VERSION . \"\n\"; '.
+                'echo PHP_ZTS . \"\n\"; ' .
+                'echo PHP_DEBUG . \"\n\"; ';
 
         $cmd = $this->phpCli . ' -r ' . '"' . str_replace("\n", '', $script) . '"';
 
         exec($cmd, $info);
+        if (7 !== count($info)) {
+            throw new \Exception("Could not determine info from the PHP binary");
+        }
+
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
+        $this->zts = (boolean)$this->zts;
+
         list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
     }
 
