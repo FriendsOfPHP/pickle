@@ -3,16 +3,17 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-use Composer\Downloader\GitDownloader;
 
 use Pickle\Package;
-use Pickle\Package\Convey\Command;
+use Composer\Downloader\GitDownloader;
+use Pickle\Package\Convey\Command\Command;
+use Pickle\Package\Convey\Command\Type;
 
-class Git extends AbstractCommand implements Command\Command
+class Git extends AbstractCommand implements Command
 {
     protected function prepare()
     {
-        if (preg_match(Command\Type::RE_GIT_PACKAGE, $this->path, $matches) < 1) {
+        if (preg_match(Type::RE_GIT_PACKAGE, $this->path, $matches) < 1) {
             throw new \Exception("Not valid git URI");
         }
 
@@ -46,6 +47,6 @@ class Git extends AbstractCommand implements Command\Command
 
     public function getType()
     {
-        return Command\Type::GIT;
+        return Type::GIT;
     }
 }

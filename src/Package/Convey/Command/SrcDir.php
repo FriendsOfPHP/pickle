@@ -5,10 +5,11 @@ namespace Pickle\Package\Convey\Command;
 use Composer\Config;
 
 use Pickle\Package;
-use Pickle\Package\Convey\Command;
+use Pickle\Package\Convey\Command\Command;
+use Pickle\Package\Convey\Command\Type;
 
 
-class SrcDir extends AbstractCommand implements Command\Command
+class SrcDir extends AbstractCommand implements Command
 {
     protected function prepare()
     {
@@ -26,6 +27,6 @@ class SrcDir extends AbstractCommand implements Command\Command
 
     public function getType()
     {
-        return Command\Type::SRC_DIR;
+        return Type::SRC_DIR;
     }
 }

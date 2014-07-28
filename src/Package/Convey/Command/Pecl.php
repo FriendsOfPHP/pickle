@@ -3,16 +3,17 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-use Pickle\Package\Convey\Command;
 
 use Pickle\Package;
 use Pickle\Downloader\PECLDownloader;
+use Pickle\Package\Convey\Command\Command;
+use Pickle\Package\Convey\Command\Type;
 
-class Pecl extends AbstractCommand implements Command\Command
+class Pecl extends AbstractCommand implements Command
 {
     protected function prepare()
     {
-        if (preg_match(Command\Type::RE_PECL_PACKAGE, $this->path, $matches) < 1) {
+        if (preg_match(Type::RE_PECL_PACKAGE, $this->path, $matches) < 1) {
             throw new \Exception("Not valid pecl URI");
         }
 
@@ -59,6 +60,6 @@ class Pecl extends AbstractCommand implements Command\Command
 
     public function getType()
     {
-        return Command\Type::PECL;
+        return Type::PECL;
     }
 }

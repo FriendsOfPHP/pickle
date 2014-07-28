@@ -3,12 +3,13 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-use Pickle\Package\Convey\Command;
 
 use Pickle\Package;
 use Pickle\Downloader\TGZDownloader;
+use Pickle\Package\Convey\Command\Command;
+use Pickle\Package\Convey\Command\Type;
 
-class Tgz extends AbstractCommand implements Command\Command
+class Tgz extends AbstractCommand implements Command
 {
     protected function prepare()
     {
@@ -40,6 +41,6 @@ class Tgz extends AbstractCommand implements Command\Command
 
     public function getType()
     {
-        return Command\Type::TGZ;
+        return Type::TGZ;
     }
 }

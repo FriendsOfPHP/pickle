@@ -5,7 +5,8 @@ namespace Pickle\Package;
 use Pickle\Package;
 use Composer\IO\ConsoleIO;
 
-use Pickle\Package\Convey\Command;
+use Pickle\Package\Convey\Command\Factory;
+use Pickle\Package\Convey\Command\Type;
 
 class Convey
 {
@@ -17,8 +18,8 @@ class Convey
             throw new \Exception("Path cannot be empty");
         }
 
-        $type = Command\Type::determine($path, (false === realpath($path)));
-        $this->command = Command\Factory::getCommand($type, $path, $io);
+        $type = Type::determine($path, (false === realpath($path)));
+        $this->command = Factory::getCommand($type, $path, $io);
     }
 
     public function deliver($target = "", $no_convert = false)
