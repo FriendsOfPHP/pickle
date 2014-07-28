@@ -25,6 +25,6 @@ class Factory
         }
 
 
-        return Command\Any($path, $io);
+        return new Command\Any($path, $io);
     }
 }
