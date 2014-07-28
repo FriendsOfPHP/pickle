@@ -15,6 +15,7 @@ abstract class AbstractCommand
     protected $name;
     protected $stability;
     protected $url;
+    protected $io;
 
     public function __construct($path, ConsoleIO $io)
     {
