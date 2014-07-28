@@ -80,7 +80,7 @@ class PhpIni extends atoum
         unlink($fl);
     }
 
-    public function testrebuildPickleParts()
+    public function testrebuildPickleParts_0()
     {
         $php = $this->getPhpDetectionMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
@@ -95,4 +95,18 @@ class PhpIni extends atoum
                 )->isEqualTo($exp);
     }
     
+    public function testrebuildPickleParts_1()
+    {
+        $php = $this->getPhpDetectionMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
+
+        $in  = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
+        $exp = "extension=php_a.dll\nextension=php_c.dll";
+
+        $this
+            ->if($ini = new \Pickle\PhpIni($php))
+            ->then
+                ->string(
+                    $this->invoke($ini)->rebuildPickleParts($in, array("php_b.dll"))
+                )->isEqualTo($exp);
+    }
 }
