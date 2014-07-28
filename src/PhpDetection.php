@@ -45,6 +45,67 @@ class PhpDetection
         list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
     }
 
+    protected function getExtensionDirFromPhpInfo($info)
+    {
+        $extensionDir = '';
+
+        foreach ($info as $s) {
+            $pos_ext_dir = strpos($s, 'extension_dir');
+            if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
+                list(, $extensionDir,) = explode('=>', $s);
+                break;
+            }
+        }
+
+        return trim($extensionDir);
+    }
+
+    protected function getArchFromPhpInfo($info)
+    {
+        $arch = '';
+
+        foreach ($info as $s) {
+            if (false !== strpos($s, 'Architecture')) {
+                list(, $arch) = explode('=>', $s);
+                break;
+            }
+        }
+
+        return trim($arch);
+    }
+
+    protected function getIniPathFromPhpInfo($info)
+    {
+        $iniPath = '';
+
+        foreach ($info as $s) {
+            if (false !== strpos($s, "Loaded Configuration File")) {
+                list(, $iniPath) = explode('=>', $s);
+                if ('(None)' === $iniPath) {
+                    $iniPath = '';
+                }
+
+                break;
+            }
+        }
+
+        return trim($iniPath);
+    }
+
+    protected function getCompilerFromPhpInfo($info)
+    {
+        $compiler = '';
+
+        foreach ($info as $s) {
+            if (false !== strpos($s, 'Compiler')) {
+                list(, $compiler) = explode('=>', $s);
+                break;
+            }
+        }
+
+        return trim($compiler);
+    }
+
     private function getFromPhpInfo()
     {
         $cmd = $this->phpCli . ' -i';
@@ -54,34 +115,11 @@ class PhpDetection
         if (!is_array($info)) {
             throw new \Exception('Cannot parse phpinfo output');
         }
-        foreach ($info as $s) {
-            $pos_ext_dir = strpos($s, 'extension_dir');
-            if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
-                list(, $extensionDir,) = explode('=>', $s);
-                continue;
-            }
-            if (false !== strpos($s, "Loaded Configuration File")) {
-                list(, $iniPath) = explode('=>', $s);
-                if ('(None)' === $iniPath) {
-                    $iniPath = '';
-                }
 
-                continue;
-            }
-            if (false === strpos($s, 'Architecture')) {
-                if (false === strpos($s, 'Compiler')) {
-                    continue;
-                }
-                list(, $compiler) = explode('=>', $s);
-            } else {
-                list(, $arch) = explode('=>', $s);
-            }
-
-        }
-        $arch = trim($arch);
-        $iniPath = trim($iniPath);
-        $compiler = trim($compiler);
-        $extensionDir = trim($extensionDir);
+        $arch = $this->getArchFromPhpInfo($info);
+        $iniPath = $this->getIniPathFromPhpInfo($info);
+        $compiler = $this->getCompilerFromPhpInfo($info);
+        $extensionDir = $this->getExtensionDirFromPhpInfo($info);
 
         $compiler = trim(strtolower(str_replace('MS', '', substr($compiler, 0, 6))));
         if (!$iniPath) {
