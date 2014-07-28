@@ -17,6 +17,10 @@ class SrcDir extends AbstractCommand implements Command\Command
 
     public function execute($target, $no_convert)
     {
+        if (!$this->extConfigIsIn($target) && $this->extConfigIsIn($this->path)) {
+            $target = realpath($this->path);
+        }
+
         return parent::execute($target, $no_convert);
     }
 
