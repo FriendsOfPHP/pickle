@@ -2,8 +2,9 @@
 namespace Pickle;
 
 use Composer\Package\CompletePackage;
+use Composer\Package\PackageInterface;
 
-class Package extends CompletePackage
+class Package extends CompletePackage implements PackageInterface
 {
     /**
      * @var string Package's root directory
