@@ -37,7 +37,7 @@ class Pecl extends AbstractCommand implements Command\Command
 
     }
 
-    protected function fetch($target, $no_convert)
+    protected function fetch($target)
     {
         $package = new Package($this->name, $this->version, $this->prettyVersion);
         $package->setDistUrl($this->url);
@@ -52,7 +52,7 @@ class Pecl extends AbstractCommand implements Command\Command
 
     public function execute($target, $no_convert)
     {
-        $this->fetch($target, $no_convert);
+        $this->fetch($target);
 
         return parent::execute($target, $no_convert);
     }

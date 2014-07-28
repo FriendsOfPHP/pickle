@@ -27,11 +27,6 @@ abstract class AbstractCommand
 
     protected abstract function prepare();
 
-    protected function fetch($target, $no_convert)
-    {
-
-    }
-
     protected function extConfigIsIn($path)
     {
         /* XXX implement config*.(m4|w32) search for the case it's somewhere in the subdir,

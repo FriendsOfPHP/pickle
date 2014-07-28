@@ -22,7 +22,7 @@ class Git extends AbstractCommand implements Command\Command
         $this->url = preg_replace('/#.*$/', '', $this->path);
     }
 
-    protected function fetch($target, $no_convert)
+    protected function fetch($target)
     {
         $package = new Package($this->name, $this->version, $this->prettyVersion);
 
@@ -39,7 +39,7 @@ class Git extends AbstractCommand implements Command\Command
 
     public function execute($target, $no_convert)
     {
-        $this->fetch($target, $no_convert);
+        $this->fetch($target);
 
         return parent::execute($target, $no_convert);
     }
