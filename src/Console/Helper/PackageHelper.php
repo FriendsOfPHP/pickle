@@ -70,7 +70,9 @@ class PackageHelper extends Helper
     {
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
 
-        return (new Convey($path, $io))->deliver($target, $input->getOption('no-convert'));
+        $no_convert = $input->hasOption("no-convert") ? $input->getOption("no-convert") : false;
+
+        return (new Convey($path, $io))->deliver($target, $no_convert);
     }
 }
 
