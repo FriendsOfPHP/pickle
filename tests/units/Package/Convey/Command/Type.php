@@ -26,6 +26,10 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::PECL)
             ->string(Command\Type::determine("hello-alpha", true))
                 ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("hello-1.2.3", true))
+                ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("hello-1.2", true))
+                ->isIdenticalTo(Command\Type::PECL)
 
             ->string(Command\Type::determine("pecl/hello", true))
                 ->isIdenticalTo(Command\Type::PECL)
@@ -34,6 +38,10 @@ class Type extends atoum
             ->string(Command\Type::determine("pecl/hello-beta", true))
                 ->isIdenticalTo(Command\Type::PECL)
             ->string(Command\Type::determine("pecl/hello-alpha", true))
+                ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("pecl/hello-1.2.3", true))
+                ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("pecl/hello-1.2", true))
                 ->isIdenticalTo(Command\Type::PECL)
                 ;
 
@@ -45,8 +53,8 @@ class Type extends atoum
         $this
             ->string(Command\Type::determine("https://github.com/weltling/phurple.git", true))
                 ->isIdenticalTo(Command\Type::GIT)
-            /*->string(Command\Type::determine("git@github.com:weltling/phurple.git", true))
-                ->isIdenticalTo(Command\Type::GIT)*/
+            ->string(Command\Type::determine("git@github.com:weltling/phurple.git", true))
+                ->isIdenticalTo(Command\Type::GIT)
             ->string(Command\Type::determine("https://github.com/mgdm/Mosquitto-PHP.git", true))
                 ->isIdenticalTo(Command\Type::GIT)
                 ;
