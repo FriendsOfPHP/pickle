@@ -48,7 +48,7 @@ class Type
     public static function determineGit($arg, &$matches)
     {
         $reg0 = '#^
-            (?:git|https|http|ssh?)(://|@).*?(/|\:)
+            (?:git|https|http|ssh|rsync|file?)(://|@).*?(/|\:)
             (?P<package>[a-zA-Z0-9\-_]+)
             (?:
                 (?:\.git|)

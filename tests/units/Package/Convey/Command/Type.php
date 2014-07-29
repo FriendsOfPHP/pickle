@@ -59,6 +59,10 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::GIT)
             ->string(Command\Type::determine("ssh://user@host.xz:port/path/to/repo.git", true))
                 ->isIdenticalTo(Command\Type::GIT)
+            ->string(Command\Type::determine("rsync://host.xz/path/to/repo.git", true))
+                ->isIdenticalTo(Command\Type::GIT)
+            ->string(Command\Type::determine("file:///path/to/repo.git", true))
+                ->isIdenticalTo(Command\Type::GIT)
                 ;
 
     }
