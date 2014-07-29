@@ -154,7 +154,7 @@ class InstallerCommand extends Command
         try {
             $build->prepare();
             $build->phpize();
-            $build->createTempDir();
+            $build->createTempDir($package->getName());
             $build->configure($force_opts);
             $build->build();
             $build->install();

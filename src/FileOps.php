@@ -3,14 +3,14 @@ namespace Pickle;
 
 trait FileOps
 {
-    public function createTempDir($name = '')
+    public function createTempDir($name)
     {
         $tmp = sys_get_temp_dir();
-        if ($name != '') {
-            $tempDir = $tmp . '/pickle-' . $name;
-        } else {
-            $tempDir = $tmp . '/pickle-' . $this->pkg->getName() . '' . $this->pkg->getVersion();
+        if (!$name) {
+            /* should not ever happen, but just in case ... */
+            $name = md5(uniqid());
         }
+        $tempDir = $tmp . '/pickle-' . $name;
 
         if (is_dir($tempDir)) {
             $this->cleanup();
