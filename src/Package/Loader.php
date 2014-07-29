@@ -4,6 +4,8 @@ namespace Pickle\Package;
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
 
+use Pickle\Package;
+
 class Loader implements LoaderInterface
 {
     protected $versionParser;
@@ -22,69 +24,29 @@ class Loader implements LoaderInterface
         $package = new $class($config['name'], $version, $config['version']);
         $package->setType('extension');
 
-        if (isset($config['stability'])) {
+        if ($this->isValid($config, "stability", "string")) {
             $package->setStability($config['stability']);
         }
 
-        if (isset($config['extra']) && is_array($config['extra'])) {
+        if ($this->isValid($config, "extra", "array")) {
             $package->setExtra($config['extra']);
         }
 
-        if (isset($config['source'])) {
-            if (!isset($config['source']['type']) || !isset($config['source']['url']) || !isset($config['source']['reference'])) {
-                throw new \UnexpectedValueException(sprintf(
-                    "Package %s's source key should be specified as {\"type\": ..., \"url\": ..., \"reference\": ...},\n%s given.",
-                    $config['name'],
-                    json_encode($config['source'])
-                ));
-            }
-            $package->setSourceType($config['source']['type']);
-            $package->setSourceUrl($config['source']['url']);
-            $package->setSourceReference($config['source']['reference']);
-            if (isset($config['source']['mirrors'])) {
-                $package->setSourceMirrors($config['source']['mirrors']);
-            }
-        }
+        $this->setPackageSource($package, $config);
 
-        if (isset($config['dist'])) {
-            if (!isset($config['dist']['type'])
-                || !isset($config['dist']['url'])) {
-                throw new \UnexpectedValueException(sprintf(
-                    "Package %s's dist key should be specified as ".
-                    "{\"type\": ..., \"url\": ..., \"reference\": ..., \"shasum\": ...},\n%s given.",
-                    $config['name'],
-                    json_encode($config['dist'])
-                ));
-            }
-            $package->setDistType($config['dist']['type']);
-            $package->setDistUrl($config['dist']['url']);
-            $package->setDistReference(isset($config['dist']['reference']) ? $config['dist']['reference'] : null);
-            $package->setDistSha1Checksum(isset($config['dist']['shasum']) ? $config['dist']['shasum'] : null);
-            if (isset($config['dist']['mirrors'])) {
-                $package->setDistMirrors($config['dist']['mirrors']);
-            }
-        }
+        $this->setPackageDist($package, $config);
 
-        if (!empty($config['time'])) {
-            $time = ctype_digit($config['time']) ? '@'.$config['time'] : $config['time'];
+        $this->setPackageReleaseDate($package, $config);
 
-            try {
-                $date = new \DateTime($time, new \DateTimeZone('UTC'));
-                $package->setReleaseDate($date);
-            } catch (\Exception $e) {
-                // don't crash if time is incorrect
-            }
-        }
-
-        if (!empty($config['description']) && is_string($config['description'])) {
+        if ($this->isValid($config, "description", "string")) {
             $package->setDescription($config['description']);
         }
 
-        if (!empty($config['homepage']) && is_string($config['homepage'])) {
+        if ($this->isValid($config, "homepage", "string")) {
             $package->setHomepage($config['homepage']);
         }
 
-        if (!empty($config['keywords']) && is_array($config['keywords'])) {
+        if ($this->isValid($config, "keywords", "array")) {
             $package->setKeywords($config['keywords']);
         }
 
@@ -92,7 +54,7 @@ class Loader implements LoaderInterface
             $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
         }
 
-        if (!empty($config['authors']) && is_array($config['authors'])) {
+        if ($this->isValid($config, "authors", "array")) {
             $package->setAuthors($config['authors']);
         }
 
@@ -101,5 +63,81 @@ class Loader implements LoaderInterface
         }
 
         return $package;
+    }
+
+    protected function isValid($config, $key, $type = "any")
+    {
+        switch ($type)
+        {
+            case "string":
+                return (isset($config[$key]) && !empty($config[$key]) && is_string($config[$key]));
+
+            case "array":
+                return (isset($config[$key]) && !empty($config[$key]) && is_array($config[$key]));
+        }
+
+        return false;
+    }
+
+    protected function setPackageSource(Package $package, array $config)
+    {
+        if (!isset($config['source'])) {
+            return;
+        }
+
+        if (!isset($config['source']['type']) || !isset($config['source']['url']) || !isset($config['source']['reference'])) {
+            throw new \UnexpectedValueException(sprintf(
+                "Package %s's source key should be specified as {\"type\": ..., \"url\": ..., \"reference\": ...},\n%s given.",
+                $config['name'],
+                json_encode($config['source'])
+            ));
+        }
+        $package->setSourceType($config['source']['type']);
+        $package->setSourceUrl($config['source']['url']);
+        $package->setSourceReference($config['source']['reference']);
+        if (isset($config['source']['mirrors'])) {
+            $package->setSourceMirrors($config['source']['mirrors']);
+        }
+    }
+
+    protected function setPackageDist(Package $package, array $config)
+    {
+        if (!isset($config['dist'])) {
+            return;
+        }
+
+        if (!isset($config['dist']['type'])
+            || !isset($config['dist']['url'])) {
+            throw new \UnexpectedValueException(sprintf(
+                "Package %s's dist key should be specified as ".
+                "{\"type\": ..., \"url\": ..., \"reference\": ..., \"shasum\": ...},\n%s given.",
+                $config['name'],
+                json_encode($config['dist'])
+            ));
+        }
+
+        $package->setDistType($config['dist']['type']);
+        $package->setDistUrl($config['dist']['url']);
+        $package->setDistReference(isset($config['dist']['reference']) ? $config['dist']['reference'] : null);
+        $package->setDistSha1Checksum(isset($config['dist']['shasum']) ? $config['dist']['shasum'] : null);
+        if (isset($config['dist']['mirrors'])) {
+            $package->setDistMirrors($config['dist']['mirrors']);
+        }
+    }
+
+    protected function setPackageReleaseDate(Package $package, array $config)
+    {
+        if (empty($config['time'])) {
+            return;
+        }
+
+        $time = ctype_digit($config['time']) ? '@'.$config['time'] : $config['time'];
+
+        try {
+            $date = new \DateTime($time, new \DateTimeZone('UTC'));
+            $package->setReleaseDate($date);
+        } catch (\Exception $e) {
+            // don't crash if time is incorrect
+        }
     }
 }
