@@ -21,7 +21,7 @@ class Type
 
     const RE_GIT_PACKAGE = '#^
         (?:git|https?)://.*?/
-        (?P<package>\w+)
+        (?P<package>[a-zA-Z0-9\-_]+)
         (?:
             (?:\.git|)
             (?:\#(?P<reference>.*?)|)
