@@ -30,6 +30,10 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::PECL)
             ->string(Command\Type::determine("hello-1.2", true))
                 ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("hello@1.2.3", true))
+                ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("hello@1.2", true))
+                ->isIdenticalTo(Command\Type::PECL)
 
             ->string(Command\Type::determine("pecl/hello", true))
                 ->isIdenticalTo(Command\Type::PECL)
@@ -42,6 +46,10 @@ class Type extends atoum
             ->string(Command\Type::determine("pecl/hello-1.2.3", true))
                 ->isIdenticalTo(Command\Type::PECL)
             ->string(Command\Type::determine("pecl/hello-1.2", true))
+                ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("pecl/hello@1.2.3", true))
+                ->isIdenticalTo(Command\Type::PECL)
+            ->string(Command\Type::determine("pecl/hello@1.2", true))
                 ->isIdenticalTo(Command\Type::PECL)
                 ;
 
