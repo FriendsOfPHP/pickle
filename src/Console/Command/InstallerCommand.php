@@ -113,6 +113,7 @@ class InstallerCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
+     /* XXX this method seems to be dead code */
     protected function sourceInstallWindows($path, $input, $output)
     {
         $php = new PhpDetection();
@@ -141,73 +142,9 @@ class InstallerCommand extends Command
         $bld->install();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = "")
     {
-        $path = rtrim($input->getArgument('path'), '/\\');
-
-        /* if windows, try bin install by default */
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $sourceRequested = $input->getOption('source');
-            if (!$sourceRequested) {
-                $this->binaryInstallWindows($path, $input, $output);
-
-                return 0;
-            }
-        }
-
-        $package = $this->getHelper("package")->convey($input, $output, $path);
-
-        $this->getHelper('package')->showInfo($output, $package);
         $helper = $this->getHelperSet()->get('question');
-
-        $force_opts = $input->getOption('with-configure-options');
-
-        if (!$force_opts) {
-            $options = $package->getConfigureOptions();
-            $optionsValue = [];
-
-
-            foreach ($options as $name => $opt) {
-                /* enable/with-<extname> */
-                if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
-                    $optionsValue[$name] = (object) [
-                    'type' => $opt->type,
-                    'input' => true
-                    ];
-
-                    continue;
-                }
-
-                if ($input->getOption('defaults')) {
-                    $value = $opt->default;
-                } else {
-                    if ($opt->type == 'enable') {
-                        $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
-                     } else {
-                        $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
-                     }
-
-                     $value = $helper->ask($input, $output, $prompt);
-                }
-
-                $optionsValue[$name] = (object) [
-                    'type' => $opt->type,
-                    'input' => $value
-                ];
-            }
-
-            if ($input->getOption('dry-run')) {
-                return 0;
-            }
-        } else {
-            $optionsValue = NULL;
-            if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
-                throw new \Exception("File '$force_opts' is unusable");
-	    }
-
-	    $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
-        }
-
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $build = new BuildSrcWindows($package, $optionsValue);
@@ -229,6 +166,84 @@ class InstallerCommand extends Command
             }
         }
         $build->cleanup();
+    }
+
+    protected function buildOptions(Package $package, InputInterface $input, OutputInterface $output)
+    {
+        $helper = $this->getHelperSet()->get('question');
+
+        $force_opts = $input->getOption('with-configure-options');
+
+        if ($force_opts) {
+            if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
+                throw new \Exception("File '$force_opts' is unusable");
+	    }
+
+	    $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
+
+            return [NULL, $force_opts];
+        }
+
+        $options = $package->getConfigureOptions();
+        $optionsValue = [];
+
+        foreach ($options as $name => $opt) {
+            /* enable/with-<extname> */
+            if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
+                $optionsValue[$name] = (object) [
+                'type' => $opt->type,
+                'input' => true
+                ];
+
+                continue;
+            }
+
+            if ($input->getOption('defaults')) {
+                $value = $opt->default;
+            } else {
+                if ($opt->type == 'enable') {
+                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                 } else {
+                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                 }
+
+                 $value = $helper->ask($input, $output, $prompt);
+            }
+
+            $optionsValue[$name] = (object) [
+                'type' => $opt->type,
+                'input' => $value
+            ];
+        }
+
+        return [$optionsValue, NULL];
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $path = rtrim($input->getArgument('path'), '/\\');
+
+        /* if windows, try bin install by default */
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $sourceRequested = $input->getOption('source');
+            if (!$sourceRequested) {
+                $this->binaryInstallWindows($path, $input, $output);
+
+                return 0;
+            }
+        }
+
+        $package = $this->getHelper("package")->convey($input, $output, $path);
+
+        $this->getHelper('package')->showInfo($output, $package);
+
+        list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
+
+        if ($input->getOption('dry-run')) {
+            return 0;
+        }
+
+        $this->sourceInstall($package, $input, $output, $optionsValue, $force_opts);
 
         return 0;
     }
