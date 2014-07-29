@@ -7,6 +7,7 @@ use Composer\Package\PackageInterface;
 use Pickle\Package;
 use Pickle\Package\Convey;
 use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -68,7 +69,8 @@ class PackageHelper extends Helper
      */
     public function convey(InputInterface $input, OutputInterface $output, $path, $target = NULL)
     {
-        $io = new ConsoleIO($input, $output, $this->getHelperSet());
+        $helperSet = $this->getHelperSet();
+        $io = new ConsoleIO($input, $output, ($helperSet ? $helperSet : new HelperSet));
 
         $no_convert = $input->hasOption("no-convert") ? $input->getOption("no-convert") : false;
 
