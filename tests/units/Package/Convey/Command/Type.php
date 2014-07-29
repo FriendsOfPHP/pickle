@@ -57,6 +57,8 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::GIT)
             ->string(Command\Type::determine("https://github.com/mgdm/Mosquitto-PHP.git", true))
                 ->isIdenticalTo(Command\Type::GIT)
+            ->string(Command\Type::determine("ssh://user@host.xz:port/path/to/repo.git", true))
+                ->isIdenticalTo(Command\Type::GIT)
                 ;
 
     }
