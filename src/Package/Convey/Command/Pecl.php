@@ -13,7 +13,7 @@ class Pecl extends AbstractCommand implements Command
 {
     protected function prepare()
     {
-        if (preg_match(Type::RE_PECL_PACKAGE, $this->path, $matches) < 1) {
+        if (Type::determinePecl($this->path, $matches) < 1) {
             throw new \Exception("Not valid pecl URI");
         }
 

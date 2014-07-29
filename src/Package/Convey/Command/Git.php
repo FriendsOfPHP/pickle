@@ -13,7 +13,7 @@ class Git extends AbstractCommand implements Command
 {
     protected function prepare()
     {
-        if (preg_match(Type::RE_GIT_PACKAGE, $this->path, $matches) < 1) {
+        if (Type::determineGit($this->path, $matches) < 1) {
             throw new \Exception("Not valid git URI");
         }
 
