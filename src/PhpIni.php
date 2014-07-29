@@ -48,7 +48,7 @@ class PhpIni
             $new[] = $l;
         }
 
-        return implode($new, "\n");
+        return implode("\n", $new);
     }
 
 
