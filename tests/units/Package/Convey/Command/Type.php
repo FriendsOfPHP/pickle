@@ -71,6 +71,12 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::GIT)
             ->string(Command\Type::determine("file:///path/to/repo.git", true))
                 ->isIdenticalTo(Command\Type::GIT)
+            ->string(Command\Type::determine("file:///path/to/repo.git#somebranch", true))
+                ->isIdenticalTo(Command\Type::GIT)
+            ->string(Command\Type::determine("file:///path/to/repo.git#some-branch", true))
+                ->isIdenticalTo(Command\Type::GIT)
+            ->string(Command\Type::determine("file:///path/to/repo.git#some_branch123", true))
+                ->isIdenticalTo(Command\Type::GIT)
                 ;
 
     }
