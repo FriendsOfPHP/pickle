@@ -154,7 +154,7 @@ class InstallerCommand extends Command
             $build->phpize();
             $build->createTempDir($package->getName() . $package->getVersion());
             $build->configure($force_opts);
-            $build->build();
+            $build->make();
             $build->install();
         } catch (\Exception $e) {
             $output->writeln('The following error(s) happened: ' . $e->getMessage());

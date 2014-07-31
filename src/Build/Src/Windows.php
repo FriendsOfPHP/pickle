@@ -98,7 +98,7 @@ class Windows extends AbstractBuild implements Build
         }
     }
 
-    public function build()
+    public function make()
     {
         $backCwd = getcwd();
         chdir($this->tempDir);

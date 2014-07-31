@@ -10,7 +10,7 @@ interface Build
     public function prepare();
     public function phpize();
     public function configure($opts = NULL);
-    public function build();
+    public function make();
     public function install();
 }
 
