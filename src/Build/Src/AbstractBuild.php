@@ -13,7 +13,6 @@ abstract class AbstractBuild
     protected $options;
     protected $log = '';
     protected $cwdBack;
-    protected $tempDir;
 
     public function __construct(Package $pkg, $options = null)
     {

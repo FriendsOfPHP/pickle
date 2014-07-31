@@ -4,6 +4,8 @@ namespace Pickle;
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
+use Pickle\FileOps;
+
 class InstallerBinaryWindows
 {
     use FileOps;
@@ -14,7 +16,6 @@ class InstallerBinaryWindows
     private $progress = null;
     private $input = null;
     private $output = null;
-    private $tempDir = null;
     private $extDll = null;
 
     /**

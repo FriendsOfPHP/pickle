@@ -3,6 +3,8 @@ namespace Pickle;
 
 trait FileOps
 {
+    protected $tempDir = null;
+
     public function createTempDir($name = '')
     {
         $tmp = sys_get_temp_dir();
