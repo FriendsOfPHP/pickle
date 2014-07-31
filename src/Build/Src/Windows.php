@@ -54,37 +54,42 @@ class Windows extends AbstractBuild implements Build
         }
     }
 
+    protected function prepareConfigOpts()
+    {
+        $configureOptions = '';
+        foreach ($this->options as $name => $option) {
+            $decision = NULL;
+            if ('enable' === $option->type) {
+                $decision = true == $option->input ? 'enable' : 'disable';
+            } elseif ('disable' == $option->type) {
+                $decision = false == $option->input ? 'enable' : 'disable';
+            }
+
+            if (!is_null($decision)) {
+                $configureOptions .= ' --' . $decision . '-' . $name;
+            }
+        }
+
+        $extEnableOption = $this->options[$this->pkg->getName()];
+        if ('enable' == $extEnableOption->type) {
+            $confOption = '--enable-' . $this->pkg->getName() . '=shared';
+        } else {
+            $confOption = '--with-' . $this->pkg->getName() . '=shared';
+        }
+        $configureOptions = $confOption . ' ' . $configureOptions;
+
+        return $configureOptions;
+    }
+
     public function configure($opts = NULL)
     {
         /* duplicate src tree to do not pollute repo or src dir */
         $this->copySrcDir($this->pkg->getSourceDir(), $this->tempDir);
         $backCwd = getcwd();
         chdir($this->tempDir);
-        if ($opts) {
-            $configureOptions = $opts;
-        } else {
-            $configureOptions = '';
-            foreach ($this->options as $name => $option) {
-                $decision = NULL;
-                if ('enable' === $option->type) {
-                    $decision = true == $option->input ? 'enable' : 'disable';
-                } elseif ('disable' == $option->type) {
-                    $decision = false == $option->input ? 'enable' : 'disable';
-                }
 
-                if (!is_null($decision)) {
-                    $configureOptions .= ' --' . $decision . '-' . $name;
-                }
-            }
-
-            $extEnableOption = $this->options[$this->pkg->getName()];
-            if ('enable' == $extEnableOption->type) {
-                $confOption = '--enable-' . $this->pkg->getName() . '=shared';
-            } else {
-                $confOption = '--with-' . $this->pkg->getName() . '=shared';
-            }
-            $configureOptions = $confOption . ' ' . $configureOptions;
-	}
+        /* XXX check sanity */
+        $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
 
         $res = $this->runCommand($this->pkg->getSourceDir() . '/configure '. $configureOptions);
         chdir($backCwd);
