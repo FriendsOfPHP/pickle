@@ -1,7 +1,11 @@
 <?php
-namespace Pickle;
 
-class BuildSrcUnix extends BuildSrc
+namespace Pickle\Build\Src;
+
+use Pickle\Build\Src\Build;
+use Pickle\Build\Src\AbstractBuild;
+
+class Unix extends AbstractBuild implements Build
 {
     public function prepare()
     {

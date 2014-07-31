@@ -1,8 +1,11 @@
 <?php
 
-namespace Pickle;
+namespace Pickle\Build\Src;
 
-abstract class BuildSrc
+use Pickle\FileOps;
+use Pickle\Package;
+
+abstract class AbstractBuild
 {
     use FileOps;
 
@@ -18,12 +21,6 @@ abstract class BuildSrc
         $this->options = $options;
         $this->cwdBack = getcwd();
     }
-
-    public abstract function prepare();
-    public abstract function install();
-    public abstract function build();
-    public abstract function configure($opts = NULL);
-    public abstract function phpize();
 
     /**
      * @param integer $level

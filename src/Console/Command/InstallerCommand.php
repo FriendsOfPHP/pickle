@@ -10,10 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Helper\Table;
 use Pickle\Package;
-use Pickle\BuildSrcUnix;
 use Pickle\PhpDetection;
 use Pickle\InstallerBinaryWindows;
-use Pickle\BuildSrcWindows;
 use Symfony\Component\Console\Question\Question;
 
 class InstallerCommand extends Command
@@ -147,9 +145,9 @@ class InstallerCommand extends Command
         $helper = $this->getHelperSet()->get('question');
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $build = new BuildSrcWindows($package, $optionsValue);
+            $build = new \Pickle\Build\Src\Windows($package, $optionsValue);
         } else {
-            $build = new BuildSrcUnix($package, $optionsValue);
+            $build = new \Pickle\Build\Src\Unix($package, $optionsValue);
         }
         try {
             $build->prepare();
@@ -248,3 +246,4 @@ class InstallerCommand extends Command
         return 0;
     }
 }
+
