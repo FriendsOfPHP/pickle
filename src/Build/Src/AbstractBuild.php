@@ -48,10 +48,8 @@ abstract class AbstractBuild
         return implode("\n", $ret);
     }
 
-    public function saveLog($path)
+    protected function prepareSaveLog($path, &$def_fl)
     {
-        $logs = array();
-
         if ($path && !is_dir($path)) {
             if (!mkdir($path)) {
                 throw new \EXception("Location '$path' could not be created, unable to save build logs");
@@ -62,15 +60,32 @@ abstract class AbstractBuild
         if (file_exists($def_fl)) {
             unlink($def_fl);
         }
+    }
+
+    protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
+    {
+            $is_hint = (isset($log_item["hint"]) && !empty($log_item["hint"]));
+            $fname = $is_hint ? $path . DIRECTORY_SEPARATOR . "$log_item[hint].log" : $def_fl;
+
+            if (!in_array($fname, $logs)) {
+                if (file_exists($fname)) {
+                    unlink($fname);
+                }
+                $logs[] = $fname;
+            }
+
+            return $fname;
+    }
+
+    public function saveLog($path)
+    {
+        $logs = array();
+        $def_fl = NULL;
+
+        $this->prepareSaveLog($path, $def_fl);
 
         foreach($this->log as $item) {
-            $is_hint = (isset($item["hint"]) && !empty($item["hint"]));
-            $fname = $is_hint ? $path . DIRECTORY_SEPARATOR . "$item[hint].log" : $def_fl;
-
-            if (!in_array($fname, $logs) && file_exists($fname)) {
-                unlink($fname);
-            }
-            $logs[] = $fname;
+            $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
 
             if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item["msg"])+1) {
                 throw new \Exception("Couldn't write contents to '$fname'");
