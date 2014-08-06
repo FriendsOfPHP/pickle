@@ -64,6 +64,11 @@ class InstallerCommand extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 'path to the additional configure options'
+            )->addOption(
+                'save-logs',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to save the build logs'
             );
 
 
@@ -156,6 +161,12 @@ class InstallerCommand extends Command
             $build->configure($force_opts);
             $build->make();
             $build->install();
+
+            $save_log_path = $input->getOption('save-logs');
+            if ($save_log_path) {
+                $build->saveLog($save_log_path);
+            }
+
         } catch (\Exception $e) {
             $output->writeln('The following error(s) happened: ' . $e->getMessage());
             $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
