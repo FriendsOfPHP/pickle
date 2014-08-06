@@ -145,6 +145,14 @@ class InstallerCommand extends Command
         $bld->install();
     }
 
+    protected function saveSourceInstallLogs(InputInterface $input, $build)
+    {
+            $save_log_path = $input->getOption('save-logs');
+            if ($save_log_path) {
+                $build->saveLog($save_log_path);
+            }
+    }
+
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = "")
     {
         $helper = $this->getHelperSet()->get('question');
@@ -162,12 +170,11 @@ class InstallerCommand extends Command
             $build->make();
             $build->install();
 
-            $save_log_path = $input->getOption('save-logs');
-            if ($save_log_path) {
-                $build->saveLog($save_log_path);
-            }
+            $this->saveSourceInstallLogs($input, $build);
 
         } catch (\Exception $e) {
+            $this->saveSourceInstallLogs($input, $build);
+
             $output->writeln('The following error(s) happened: ' . $e->getMessage());
             $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
             if ($helper->ask($input, $output, $prompt)) {
