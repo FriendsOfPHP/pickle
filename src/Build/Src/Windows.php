@@ -70,27 +70,7 @@ class Windows extends AbstractBuild implements Build
             }
         }
 
-        $opt = $this->pkg->getConfigureOptions();
-        if (isset($opt[$this->pkg->getName()])) {
-            $extEnableOption = $opt[$this->pkg->getName()];
-            if ('enable' == $extEnableOption->type) {
-                $confOption = '--enable-' . $this->pkg->getName() . '=shared';
-            } else {
-                $confOption = '--with-' . $this->pkg->getName() . '=shared';
-            }
-            $configureOptions = $confOption . ' ' . $configureOptions;
-        } else {
-            $name = str_replace('_', '-', $this->pkg->getName());
-            if (isset($opt[$name])) {
-                $extEnableOption = $opt[$name];
-                if ('enable' == $extEnableOption->type) {
-                    $confOption = '--enable-' . $name . '=shared';
-                } else {
-                    $confOption = '--with-' . $name . '=shared';
-                }
-                $configureOptions = $confOption . ' ' . $configureOptions;
-            }
-        }
+        $this->appendPkgConfigureOptions($configureOptions);
 
         return $configureOptions;
     }
