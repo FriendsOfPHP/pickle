@@ -61,7 +61,13 @@ class Package extends CompletePackage implements PackageInterface
         $options = [];
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $config = file_get_contents($this->getSourceDir() . '/config.w32');
+            $config_file = $this->getSourceDir() . '/config.w32';
+
+            if (!file_exists($config_file)) {
+                throw new \Exception("cnofig.w32 not found");
+            }
+
+            $config = file_get_contents($config_file);
 
             $options = array_merge(
                 $this->fetchArgWindows('ARG_WITH', $config),
