@@ -34,11 +34,14 @@ abstract class AbstractBuild
         ];
     }
 
-    public function getLog()
+    public function getLog($hint = NULL)
     {
         $ret = array();
 
         foreach($this->log as $item) {
+            if (isset($hint) && $hint !== $item["hint"]) {
+                continue;
+            }
             $tmp = explode("\n", $item["msg"]);
             foreach($tmp as $ln) {
                 $ret[] =  $item["level"] . ": " . $ln;

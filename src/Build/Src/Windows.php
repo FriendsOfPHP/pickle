@@ -90,6 +90,15 @@ class Windows extends AbstractBuild implements Build
         if (!$res) {
             throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');
         }
+
+	/* This post check is required for the case when config.w32 doesn't
+           bail out on error but silently disables an extension. In this
+           case we won't see any bad exit status. */
+        $opts = $this->pkg->getConfigureOptions();
+        list($ext, ) = each($opts);
+        if (preg_match(',\|\s+' . preg_quote($ext) . '\s+\|\s+shared\s+\|,Sm', $this->getlog("configure")) < 1) {
+            throw new \Exception("failed to configure the '$ext' extension");
+        }
     }
 
     public function make()
