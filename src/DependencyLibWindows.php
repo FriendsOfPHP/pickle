@@ -75,6 +75,7 @@ class DependencyLibWindows
 			foreach ($dll as $dll_name => $dll_installed) {
 				if (in_array($dll_name, $pkg)) {
 					$packages[] = $pkg_name;
+					continue 2;
 				}
 			}
 		}
