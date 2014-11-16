@@ -32,7 +32,7 @@ class PackageHelper extends Helper
             ->setRows([
                 ['<info>Package name</info>', $package->getPrettyName()],
                 ['<info>Package version (current release)</info>', $package->getPrettyVersion()],
-                ['<info>Package status</info>', $package->getStability()]
+                ['<info>Package status</info>', $package->getStability()],
             ])
             ->render();
     }
@@ -53,7 +53,7 @@ class PackageHelper extends Helper
             $table->addRow([
                 $option->type,
                 wordwrap($option->prompt, 40, PHP_EOL),
-                $default
+                $default,
             ]);
         }
 
@@ -67,14 +67,13 @@ class PackageHelper extends Helper
      * @param $path
      * @return Package
      */
-    public function convey(InputInterface $input, OutputInterface $output, $path, $target = NULL)
+    public function convey(InputInterface $input, OutputInterface $output, $path, $target = null)
     {
         $helperSet = $this->getHelperSet();
-        $io = new ConsoleIO($input, $output, ($helperSet ? $helperSet : new HelperSet));
+        $io = new ConsoleIO($input, $output, ($helperSet ? $helperSet : new HelperSet()));
 
         $no_convert = $input->hasOption("no-convert") ? $input->getOption("no-convert") : false;
 
         return (new Convey($path, $io))->deliver($target, $no_convert);
     }
 }
-

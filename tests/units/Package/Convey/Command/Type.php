@@ -78,7 +78,6 @@ class Type extends atoum
             ->string(Command\Type::determine("file:///path/to/repo.git#some_branch123", true))
                 ->isIdenticalTo(Command\Type::GIT)
                 ;
-
     }
 
     public function test_determine_tgz()
@@ -101,4 +100,3 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::ANY);
     }
 }
-

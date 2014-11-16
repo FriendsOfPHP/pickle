@@ -10,7 +10,6 @@ class Type
     const SRC_DIR = "srcdir";
     const ANY = "any";
 
-
     public static function match($regs, $arg, &$matches)
     {
         foreach ($regs as $reg) {
@@ -63,15 +62,14 @@ class Type
     {
         if ('.tgz' == substr($path, -4) || '.tar.gz' == substr($path, -7)) {
             return self::TGZ;
-        } else if ($remote && self::determinePecl($path, $matches) > 0) {
+        } elseif ($remote && self::determinePecl($path, $matches) > 0) {
             return self::PECL;
-        } else if ($remote && self::determineGit($path, $matches) > 0) {
+        } elseif ($remote && self::determineGit($path, $matches) > 0) {
             return self::GIT;
-        } else if (!$remote && is_dir($path)) {
+        } elseif (!$remote && is_dir($path)) {
             return self::SRC_DIR;
         }
-        
+
         return self::ANY;
     }
 }
-

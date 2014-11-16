@@ -3,7 +3,6 @@ namespace Pickle;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
-
 use Pickle\FileOps;
 
 class InstallerBinaryWindows
@@ -145,16 +144,21 @@ class InstallerBinaryWindows
         $output = $this->output;
         $progress = $this->progress;
 
-        $ctx = stream_context_create(array(), array('notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
-            switch ($notificationCode) {
-                case STREAM_NOTIFY_FILE_SIZE_IS:
-                    $progress->start($output, $bytesMax);
-                    break;
-                case STREAM_NOTIFY_PROGRESS:
-                    $progress->setCurrent($bytesTransferred);
-                    break;
-            }
-        }));
+        $ctx = stream_context_create(
+            array(),
+            array(
+                'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
+                    switch ($notificationCode) {
+                        case STREAM_NOTIFY_FILE_SIZE_IS:
+                            $progress->start($output, $bytesMax);
+                            break;
+                        case STREAM_NOTIFY_PROGRESS:
+                            $progress->setCurrent($bytesTransferred);
+                            break;
+                    }
+                },
+            )
+        );
         $output->writeln("downloading $url ");
         $fileContents = file_get_contents($url, false, $ctx);
         $progress->finish();

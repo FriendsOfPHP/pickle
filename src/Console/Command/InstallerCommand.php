@@ -71,7 +71,6 @@ class InstallerCommand extends Command
                 'path to save the build logs'
             );
 
-
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->addOption(
                 'binary',
@@ -147,10 +146,10 @@ class InstallerCommand extends Command
 
     protected function saveSourceInstallLogs(InputInterface $input, $build)
     {
-            $save_log_path = $input->getOption('save-logs');
-            if ($save_log_path) {
-                $build->saveLog($save_log_path);
-            }
+        $save_log_path = $input->getOption('save-logs');
+        if ($save_log_path) {
+            $build->saveLog($save_log_path);
+        }
     }
 
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = "")
@@ -171,7 +170,6 @@ class InstallerCommand extends Command
             $build->install();
 
             $this->saveSourceInstallLogs($input, $build);
-
         } catch (\Exception $e) {
             $this->saveSourceInstallLogs($input, $build);
 
@@ -193,11 +191,11 @@ class InstallerCommand extends Command
         if ($force_opts) {
             if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
                 throw new \Exception("File '$force_opts' is unusable");
-	    }
+            }
 
-	    $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
+            $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
 
-            return [NULL, $force_opts];
+            return [null, $force_opts];
         }
 
         $options = $package->getConfigureOptions();
@@ -219,11 +217,11 @@ class InstallerCommand extends Command
             } else {
                 if ($opt->type == 'enable') {
                     $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
-                 } else {
+                } else {
                     $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
-                 }
+                }
 
-                 $value = $helper->ask($input, $output, $prompt);
+                $value = $helper->ask($input, $output, $prompt);
             }
 
             $optionsValue[$name] = (object) [
@@ -232,7 +230,7 @@ class InstallerCommand extends Command
             ];
         }
 
-        return [$optionsValue, NULL];
+        return [$optionsValue, null];
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -264,4 +262,3 @@ class InstallerCommand extends Command
         return 0;
     }
 }
-

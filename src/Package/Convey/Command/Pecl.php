@@ -3,7 +3,6 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-
 use Pickle\Package;
 use Pickle\Downloader\PECLDownloader;
 use Pickle\Package\Convey\Command\Command;
@@ -35,7 +34,6 @@ class Pecl extends AbstractCommand implements Command
             $this->version = 'latest';
             $this->prettyVersion = 'latest-' . $this->stability;
         }
-
     }
 
     protected function fetch($target)

@@ -19,19 +19,19 @@ class Loader extends atoum
                 ->object($this->testedInstance->load($path))->isIdenticalTo($package)
             ->given($path = uniqid())
             ->then
-                ->exception(function() use ($path) {
+                ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('File not found: ' . $path)
             ->given($path = FIXTURES_DIR . '/package-no-extension/package.xml')
             ->then
-                ->exception(function() use ($path) {
+                ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('Only extension packages are supported')
             ->given($path = FIXTURES_DIR . '/package-pre-2.0/package.xml')
             ->then
-                ->exception(function() use ($path) {
+                ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('Unsupported package.xml version, 2.0 or later only is supported')
@@ -48,7 +48,7 @@ class Loader extends atoum
             )
             ->if($this->newTestedInstance($loader))
             ->then
-                ->exception(function() use ($path) {
+                ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('Failed to read ' . $path)

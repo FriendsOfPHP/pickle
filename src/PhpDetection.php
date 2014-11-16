@@ -45,7 +45,7 @@ class PhpDetection
         }
 
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
-        $this->zts = (boolean)$this->zts;
+        $this->zts = (boolean) $this->zts;
 
         list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
     }

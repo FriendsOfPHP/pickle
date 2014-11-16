@@ -8,14 +8,14 @@ class Windows extends AbstractBuild implements Build
 {
     public function prepare()
     {
-    	if (!file_exists("c:\\php-sdk\\bin")) {
-		throw new \Exception("PHP SDK not found");
-	}
+        if (!file_exists("c:\\php-sdk\\bin")) {
+            throw new \Exception("PHP SDK not found");
+        }
         putenv("path=c:\\php-sdk\\bin;" . getenv("path"));
 
-	if (!$this->runCommand("phpsdk_setvars")) {
-		throw new \Exception("phpsdk_setvars failed");
-	}
+        if (!$this->runCommand("phpsdk_setvars")) {
+            throw new \Exception("phpsdk_setvars failed");
+        }
     }
 
     /**
@@ -58,7 +58,7 @@ class Windows extends AbstractBuild implements Build
     {
         $configureOptions = '';
         foreach ($this->options as $name => $option) {
-            $decision = NULL;
+            $decision = null;
             if ('enable' === $option->type) {
                 $decision = true == $option->input ? 'enable' : 'disable';
             } elseif ('disable' == $option->type) {
@@ -75,7 +75,7 @@ class Windows extends AbstractBuild implements Build
         return $configureOptions;
     }
 
-    public function configure($opts = NULL)
+    public function configure($opts = null)
     {
         /* duplicate src tree to do not pollute repo or src dir */
         $this->copySrcDir($this->pkg->getSourceDir(), $this->tempDir);
@@ -91,11 +91,11 @@ class Windows extends AbstractBuild implements Build
             throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');
         }
 
-	/* This post check is required for the case when config.w32 doesn't
+        /* This post check is required for the case when config.w32 doesn't
            bail out on error but silently disables an extension. In this
            case we won't see any bad exit status. */
         $opts = $this->pkg->getConfigureOptions();
-        list($ext, ) = each($opts);
+        list($ext) = each($opts);
         if (preg_match(',\|\s+' . preg_quote($ext) . '\s+\|\s+shared\s+\|,Sm', $this->getlog("configure")) < 1) {
             throw new \Exception("failed to configure the '$ext' extension");
         }
@@ -124,4 +124,3 @@ class Windows extends AbstractBuild implements Build
         }
     }
 }
-

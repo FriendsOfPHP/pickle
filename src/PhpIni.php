@@ -22,7 +22,7 @@ class PhpIni
         if (false === $this->raw) {
             throw new \Exception('Cannot read php.ini');
         }
-        
+
         $this->setupPickleSectionPositions();
     }
 
@@ -50,7 +50,6 @@ class PhpIni
 
         return implode("\n", $new);
     }
-
 
     protected function setupPickleSectionPositions()
     {
@@ -80,7 +79,6 @@ class PhpIni
                 }
             } while (false !== $pos);
 
-
             $this->pickleFooterStartPos = strpos($this->raw, "\n", $this->pickleFooterStartPos);
         } else {
             $this->pickleFooterStartPos = $posFooter;
@@ -107,7 +105,7 @@ class PhpIni
             $pickleSection = $this->rebuildPickleParts($this->getPickleSection(), $dlls) . "\n" . $pickleSection;
 
             $before = substr($this->raw, 0, $this->pickleHeaderStartPos);
-            
+
             /* If the footer end pos is < 0, there was no footer in php.ini. In this case the footer start pos
                means the end of the last extension directive after the header start, where the footer should  be */
             if ($this->pickleFooterEndPos > 0) {
@@ -124,7 +122,5 @@ class PhpIni
         if (!@file_put_contents($this->path, $this->raw)) {
             throw new \Exception('Cannot update php.ini');
         }
-
     }
 }
-

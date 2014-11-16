@@ -3,11 +3,9 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-
 use Pickle\Package;
 use Pickle\Package\Convey\Command\Command;
 use Pickle\Package\Convey\Command\Type;
-
 
 class SrcDir extends AbstractCommand implements Command
 {

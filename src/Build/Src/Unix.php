@@ -9,7 +9,6 @@ class Unix extends AbstractBuild implements Build
 {
     public function prepare()
     {
-
     }
 
     public function phpize()
@@ -38,7 +37,7 @@ class Unix extends AbstractBuild implements Build
                 } elseif ($option->input == 'no' || $option->input == '0' || $option->type === false) {
                     $configureOptions .= ' --without-' . $name;
                 } else {
-                     $configureOptions .= ' --with-' . $name. '=' . $option->input;
+                    $configureOptions .= ' --with-' . $name. '=' . $option->input;
                 }
             }
         }
@@ -48,7 +47,7 @@ class Unix extends AbstractBuild implements Build
         return $configureOptions;
     }
 
-    public function configure($opts = NULL)
+    public function configure($opts = null)
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
@@ -86,4 +85,3 @@ class Unix extends AbstractBuild implements Build
         }
     }
 }
-

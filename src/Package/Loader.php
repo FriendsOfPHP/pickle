@@ -3,7 +3,6 @@ namespace Pickle\Package;
 
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
-
 use Pickle\Package;
 
 class Loader implements LoaderInterface
@@ -67,8 +66,7 @@ class Loader implements LoaderInterface
 
     protected function isValid($config, $key, $type = "any")
     {
-        switch ($type)
-        {
+        switch ($type) {
             case "string":
                 return (isset($config[$key]) && !empty($config[$key]) && is_string($config[$key]));
 
@@ -141,4 +139,3 @@ class Loader implements LoaderInterface
         }
     }
 }
-
