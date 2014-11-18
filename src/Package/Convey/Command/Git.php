@@ -3,7 +3,6 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-
 use Pickle\Package;
 use Composer\Downloader\GitDownloader;
 use Pickle\Package\Convey\Command\Command;

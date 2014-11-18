@@ -29,7 +29,7 @@ class Dumper extends atoum
                         'authors',
                         'description',
                         'support',
-                        'extra'
+                        'extra',
                     ])
             ->given(
                 $license = uniqid(),
@@ -41,7 +41,7 @@ class Dumper extends atoum
             ->given(
                 $authors = [
                     'name' => 'Rasmus Lerdorf',
-                    'email' => 'rasmus@php.net'
+                    'email' => 'rasmus@php.net',
                 ],
                 [
                     'name' => 'Sara Golemon',
@@ -61,10 +61,10 @@ class Dumper extends atoum
                 ->string['description']->isEqualTo($description)
             ->given(
                 $support = [
-                    'email' => uniqid()
+                    'email' => uniqid(),
                 ],
                 $extra = [
-                    'configure-options' => []
+                    'configure-options' => [],
                 ],
                 $this->calling($package)->getSupport = $support,
                 $this->calling($package)->getExtra = $extra

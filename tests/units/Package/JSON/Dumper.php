@@ -24,13 +24,13 @@ class Dumper extends atoum
                     'name' => $name,
                     'version' => $version,
                     'type' => $type,
-                    'stability' => 'stable'
+                    'stability' => 'stable',
                 ], JSON_PRETTY_PRINT))
             ->given(
                 $license = uniqid(),
                 $authors = [
                     'name' => 'Rasmus Lerdorf',
-                    'email' => 'rasmus@php.net'
+                    'email' => 'rasmus@php.net',
                 ],
                 [
                     'name' => 'Sara Golemon',
@@ -38,10 +38,10 @@ class Dumper extends atoum
                 ],
                 $description = uniqid(),
                 $support = [
-                    'email' => uniqid()
+                    'email' => uniqid(),
                 ],
                 $extra = [
-                    'configure-options' => []
+                    'configure-options' => [],
                 ],
                 $this->calling($package)->getLicense = $license,
                 $this->calling($package)->getAuthors = $authors,
@@ -79,7 +79,7 @@ class Dumper extends atoum
                 $this->function->file_put_contents->doesNothing
             )
             ->if($this->newTestedInstance)
-            ->when(function() use ($package, $path) {
+            ->when(function () use ($package, $path) {
                 $this->testedInstance->dumpToFile($package, $path);
             })
                 ->function('file_put_contents')
@@ -87,7 +87,7 @@ class Dumper extends atoum
                         'name' => $name,
                         'version' => $version,
                         'type' => $type,
-                        'stability' => 'stable'
+                        'stability' => 'stable',
                     ], JSON_PRETTY_PRINT))->once
         ;
     }

@@ -77,7 +77,7 @@ class Loader
 
             $configureOptions[$name] = [
                 'default' => $default,
-                'prompt' => $prompt
+                'prompt' => $prompt,
             ];
         }
 

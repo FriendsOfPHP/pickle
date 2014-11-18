@@ -3,7 +3,6 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\IO\ConsoleIO;
-
 use Pickle\Package;
 use Pickle\Package\JSON\Dumper;
 
@@ -25,14 +24,14 @@ abstract class AbstractCommand
         $this->prepare();
     }
 
-    protected abstract function prepare();
+    abstract protected function prepare();
 
     protected function extConfigIsIn($path)
     {
         /* XXX implement config*.(m4|w32) search for the case it's somewhere in the subdir,
             in that case we can take that subdir as the extension root. */
         if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
-                return file_exists(realpath($path) . DIRECTORY_SEPARATOR . "config.w32");
+            return file_exists(realpath($path) . DIRECTORY_SEPARATOR . "config.w32");
         } else {
             $r = glob("$path/config*.m4");
 
@@ -44,7 +43,7 @@ abstract class AbstractCommand
     {
         $jsonLoader = new Package\JSON\Loader(new Package\Loader());
         $pickle_json = $target . DIRECTORY_SEPARATOR . 'pickle.json';
-        $package = NULL;
+        $package = null;
 
         if (file_exists($pickle_json)) {
             $package = $jsonLoader->load($pickle_json);
@@ -57,7 +56,7 @@ abstract class AbstractCommand
         if (null === $package) {
             if (file_exists($target . DIRECTORY_SEPARATOR . 'package2.xml')) {
                 $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package2.xml';
-            } else if (file_exists($target . DIRECTORY_SEPARATOR . 'package.xml')) {
+            } elseif (file_exists($target . DIRECTORY_SEPARATOR . 'package.xml')) {
                 $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package.xml';
             } else {
                 throw new \Exception("package.xml not found");
@@ -106,5 +105,4 @@ abstract class AbstractCommand
     {
         return $this->url;
     }
-
 }

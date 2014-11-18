@@ -117,7 +117,7 @@ class Package extends CompletePackage implements PackageInterface
 
             $elems = explode(',', $option);
             array_walk($elems, function (&$a) {
-                $a = str_replace([')', "'"], ['',''], $a);
+                $a = str_replace([')', "'"], ['', ''], $a);
                 $a = trim($a);
             });
 
@@ -199,10 +199,10 @@ class Package extends CompletePackage implements PackageInterface
 
             /* Description can be part of the 3rd argument */
             if (empty($desc) || $desc === '[]') {
-                list($name, , $desc) = explode(',', $option);
+                list($name,, $desc) = explode(',', $option);
                 $desc = preg_replace('/\s+/', ' ', trim($desc));
                 $desc = trim(substr($desc, 1, strlen($desc) - 2));
-                $desc = trim(str_replace(['[',']'], ['',''], $desc));
+                $desc = trim(str_replace(['[', ']'], ['', ''], $desc));
                 $s_a = strpos($desc, ' ');
                 $desc = trim(substr($desc, $s_a));
             }
@@ -212,7 +212,7 @@ class Package extends CompletePackage implements PackageInterface
             } elseif ('with' == $type) {
                 $default = (false !== strpos($option, '-without-')) ? true : false;
             }
-            $name = str_replace(['[',']'], ['',''], $name);
+            $name = str_replace(['[', ']'], ['', ''], $name);
             $options[$name] = (object) [
                 'prompt'  => trim($desc),
                 'type'    => $type,
@@ -247,19 +247,19 @@ class Package extends CompletePackage implements PackageInterface
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);
             if (!$contents) {
-                Throw new \Exception("Cannot read header <$header>");
+                throw new \Exception("Cannot read header <$header>");
             }
             $pos_version = strpos($contents, $version_define);
             if ($pos_version !== FALSE) {
                 $nl = strpos($contents, "\n", $pos_version);
-                $version_line = trim(substr($contents, $pos_version, $nl - $pos_version ));
+                $version_line = trim(substr($contents, $pos_version, $nl - $pos_version));
                 list($version_define, $version) = explode(' ', $version_line);
                 $version = trim(str_replace('"', '', $version));
                 break;
             }
         }
         if (empty($version)) {
-            Throw new \Exception('No ' . $version_define . ' can be found');
+            throw new \Exception('No ' . $version_define . ' can be found');
         }
 
         return [trim($version_define), $version];

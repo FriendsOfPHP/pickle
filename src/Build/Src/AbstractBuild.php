@@ -30,20 +30,20 @@ abstract class AbstractBuild
         $this->log[] = [
             "level" => $level,
             "msg" => $msg,
-            "hint" => $hint
+            "hint" => $hint,
         ];
     }
 
-    public function getLog($hint = NULL)
+    public function getLog($hint = null)
     {
         $ret = array();
 
-        foreach($this->log as $item) {
+        foreach ($this->log as $item) {
             if (isset($hint) && $hint !== $item["hint"]) {
                 continue;
             }
             $tmp = explode("\n", $item["msg"]);
-            foreach($tmp as $ln) {
+            foreach ($tmp as $ln) {
                 $ret[] =  $item["level"] . ": " . $ln;
             }
         }
@@ -67,27 +67,27 @@ abstract class AbstractBuild
 
     protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
     {
-            $is_hint = (isset($log_item["hint"]) && !empty($log_item["hint"]));
-            $fname = $is_hint ? $path . DIRECTORY_SEPARATOR . "$log_item[hint].log" : $def_fl;
+        $is_hint = (isset($log_item["hint"]) && !empty($log_item["hint"]));
+        $fname = $is_hint ? $path . DIRECTORY_SEPARATOR . "$log_item[hint].log" : $def_fl;
 
-            if (!in_array($fname, $logs)) {
-                if (file_exists($fname)) {
-                    unlink($fname);
-                }
-                $logs[] = $fname;
+        if (!in_array($fname, $logs)) {
+            if (file_exists($fname)) {
+                unlink($fname);
             }
+            $logs[] = $fname;
+        }
 
-            return $fname;
+        return $fname;
     }
 
     public function saveLog($path)
     {
         $logs = array();
-        $def_fl = NULL;
+        $def_fl = null;
 
         $this->prepareSaveLog($path, $def_fl);
 
-        foreach($this->log as $item) {
+        foreach ($this->log as $item) {
             $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
 
             if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item["msg"])+1) {
@@ -149,4 +149,3 @@ abstract class AbstractBuild
         }
     }
 }
-

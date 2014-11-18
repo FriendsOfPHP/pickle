@@ -4,7 +4,6 @@ namespace Pickle\Package;
 
 use Pickle\Package;
 use Composer\IO\ConsoleIO;
-
 use Pickle\Package\Convey\Command\Factory;
 use Pickle\Package\Convey\Command\Type;
 
@@ -29,4 +28,3 @@ class Convey
         return $this->command->execute($target, $no_convert);
     }
 }
-

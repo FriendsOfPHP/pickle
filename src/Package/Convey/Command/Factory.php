@@ -14,8 +14,7 @@ class Factory
 {
     public static function getCommand($type, $path, ConsoleIO $io)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case Type::PECL:
                 return new Pecl($path, $io);
 
@@ -28,7 +27,6 @@ class Factory
             case Type::SRC_DIR:
                 return new SrcDir($path, $io);
         }
-
 
         return new Any($path, $io);
     }

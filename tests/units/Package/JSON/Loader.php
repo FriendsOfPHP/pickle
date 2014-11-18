@@ -19,7 +19,7 @@ class Loader extends atoum
                 ->object($this->testedInstance->load($path))->isIdenticalTo($package)
             ->given($path = uniqid())
             ->then
-                ->exception(function() use ($path) {
+                ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('File not found: ' . $path)
@@ -36,7 +36,7 @@ class Loader extends atoum
             )
             ->if($this->newTestedInstance($loader))
             ->then
-                ->exception(function() use ($path) {
+                ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('Failed to read ' . $path)

@@ -11,10 +11,10 @@ class PhpIni extends atoum
     {
         $this->mockGenerator->shuntParentClassCalls();
 
-        $php =  new \mock\Pickle\PhpDetection;
+        $php =  new \mock\Pickle\PhpDetection();
 
-        $this->calling($php)->__construct = function($dummy) {};
-        $this->calling($php)->getPhpIniDir = function() use ($path) {
+        $this->calling($php)->__construct = function ($dummy) {};
+        $this->calling($php)->getPhpIniDir = function () use ($path) {
             return $path;
         };
 
@@ -27,7 +27,7 @@ class PhpIni extends atoum
     {
         $php = $this->getPhpDetectionMock("");
         $this->assert
-                ->exception(function() use($php) {
+                ->exception(function () use ($php) {
                         new \Pickle\PhpIni($php);
                     });
 
@@ -39,7 +39,6 @@ class PhpIni extends atoum
 
     public function testupdatePickleSection_empty()
     {
-
         /* empty file */
         $f = FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty";
         $this
@@ -58,7 +57,7 @@ class PhpIni extends atoum
     public function testupdatePickleSection_simple()
     {
         /* simple file with correct pickle section */
-        $f =FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.simple";
+        $f = FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.simple";
         $this->do_testupdatePickleSection($f);
     }
 
@@ -94,7 +93,7 @@ class PhpIni extends atoum
                     $this->invoke($ini)->rebuildPickleParts($in, array("php_c.dll"))
                 )->isEqualTo($exp);
     }
-    
+
     public function testrebuildPickleParts_1()
     {
         $php = $this->getPhpDetectionMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");

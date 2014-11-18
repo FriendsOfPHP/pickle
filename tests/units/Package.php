@@ -97,7 +97,7 @@ class Package extends atoum
                     'type' => 'enable',
                     'prompt' => 'Enable foo-bar',
                     'default' => false
-                ]
+                ],
             ],
             [
                 'AC_ARG_ENABLE(foo-bar,[--disable-foo-bar        Disable foo-bar],[ ])',
@@ -205,7 +205,7 @@ class Package extends atoum
                     'type' => 'enable',
                     'prompt' => 'Enable foo-bar',
                     'default' => 'no'
-                ]
+                ],
             ],
             [
                 "ARG_ENABLE('foo-bar','Disable foo-bar','yes')",
