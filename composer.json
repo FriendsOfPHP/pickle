@@ -24,9 +24,9 @@
         "composer/composer": "~1.0-alpha8"
     },
     "require-dev": {
-        "atoum/atoum": "dev-edge",
+        "atoum/atoum": "~1.0",
         "atoum/praspel-extension": "~0.1",
-        "atoum/visibility-extension": "dev-master",
+        "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
         "symfony/process": "~2.5"
     },
