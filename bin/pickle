@@ -37,7 +37,7 @@ use Symfony\Component\Console\Application;
  ██║     ██║╚██████╗██║  ██╗███████╗███████╗
  ╚═╝     ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝ ';
 }
-$application = new Application($name, "0.1.2-dev");
+$application = new Application($name, "0.2.0-dev");
 
 $application->getHelperSet()->set(new \Pickle\Console\Helper\PackageHelper());
 
