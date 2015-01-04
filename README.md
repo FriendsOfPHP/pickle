@@ -45,14 +45,14 @@ $ cd pickle
 $ composer install
 ```
 
-A phar is also available at http://www.pierrejoye.com/pickle/pickle.phar
+A [phar is also available](https://github.com/FriendsOfPHP/pickle/releases/download/v0.2.0/pickle.phar).
 
 If you like to create your own phar from the pickle sources, you will need to install Box (http://box-project.org/). Then clone the repository and run the following commands:
 
 ```sh
 $ cd pickle
 $ composer install --no-dev --optimize-autoloader
-$ php -d phar.readonly=0 ..\box.phar build
+$ php -d phar.readonly=0 box.phar build
 ```
 
 Usage
