@@ -57,7 +57,7 @@ class PhpDetection
         foreach ($info as $s) {
             $pos_ext_dir = strpos($s, 'extension_dir');
             if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
-                list(, $extensionDir,) = explode('=>', $s);
+                list(, $extensionDir, ) = explode('=>', $s);
                 break;
             }
         }

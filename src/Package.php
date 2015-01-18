@@ -199,7 +199,7 @@ class Package extends CompletePackage implements PackageInterface
 
             /* Description can be part of the 3rd argument */
             if (empty($desc) || $desc === '[]') {
-                list($name,, $desc) = explode(',', $option);
+                list($name, , $desc) = explode(',', $option);
                 $desc = preg_replace('/\s+/', ' ', trim($desc));
                 $desc = trim(substr($desc, 1, strlen($desc) - 2));
                 $desc = trim(str_replace(['[', ']'], ['', ''], $desc));
@@ -250,7 +250,7 @@ class Package extends CompletePackage implements PackageInterface
                 throw new \Exception("Cannot read header <$header>");
             }
             $pos_version = strpos($contents, $version_define);
-            if ($pos_version !== FALSE) {
+            if ($pos_version !== false) {
                 $nl = strpos($contents, "\n", $pos_version);
                 $version_line = trim(substr($contents, $pos_version, $nl - $pos_version));
                 list($version_define, $version) = explode(' ', $version_line);
