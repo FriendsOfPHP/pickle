@@ -56,6 +56,7 @@ class PhpIni
         $posHeader = strpos($this->raw, $this->pickleHeader);
         if (false === $posHeader) {
             /* no pickle section here yet */
+            $this->pickleHeaderStartPos = strlen($this->raw);
             return;
         }
 
