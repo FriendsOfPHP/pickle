@@ -10,6 +10,7 @@ class DependencyLibWindows
     private $dllMap = null;
     private $php;
     const deplisterUrl = 'http://windows.php.net/downloads/pecl/tools/deplister.exe';
+    private $deplisterExe = null;
 
     public function __construct(PhpDetection $php)
     {
@@ -71,13 +72,16 @@ class DependencyLibWindows
         return $dlls;
     }
 
-    public function getZipUrlsForDll($binary)
+    public function getZipUrlsForDll($binary, $ignore_installed = false)
     {
         $dll = $this->getDllsForBinary($binary);
         $packages = [];
         foreach ($this->dllMap as $pkg_name => $pkg) {
             foreach ($dll as $dll_name => $dll_installed) {
                 if (in_array($dll_name, $pkg)) {
+		    if ($ignore_installed && $dll_installed) {
+		    	continue;
+		    }
                     $packages[] = $pkg_name;
                     continue 2;
                 }
@@ -85,5 +89,36 @@ class DependencyLibWindows
         }
 
         return $packages;
+    }
+
+    public function resolveForBin($dll, $resolve_multiple_cb = NULL)
+    {
+	$dep_zips = $this->getZipUrlsForDll($dll, true);
+
+	if (count($dep_zips) == 1) {
+		$dep_zip = $dep_zips[0];
+	} else if (count($dep_zips) > 1) {
+		if (NULL != $resolve_multiple_cb) {
+			$dep_zip = $resolve_multiple_cb($dep_zips);
+		} else {
+			throw new \Extension("Multiple choice for dependencies, couldn't resolve");
+		}
+	} else {
+		/* That might be not quite true, as we might just not have the
+		   corresponding dependency package. However it's fetched from
+		   the PECL build dependencies, no extension build should have
+		   been exist if there's no dependency package uploaded. */
+		return true;
+	}
+	var_dump($dep_zip); die;
+
+	/* XXX unpack and resolve for the just found dep package. */
+
+	return $this->resolveForZip($zip_name, $resolve_multiple_cb);
+    }
+
+    public function resolveForZip($zip_name, $resolve_multiple_cb = NULL)
+    {
+
     }
 }

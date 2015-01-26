@@ -8,11 +8,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
 use Pickle\Package;
 use Pickle\PhpDetection;
 use Pickle\InstallerBinaryWindows;
-use Symfony\Component\Console\Question\Question;
+use Pickle\DependencyLibWindows;
 
 class InstallerCommand extends Command
 {
@@ -108,6 +110,24 @@ class InstallerCommand extends Command
         $inst->setInput($input);
         $inst->setOutput($output);
         $inst->install();
+
+	$deps_handler = new DependencyLibWindows($php);
+	$helper = $this->getHelperSet()->get('question');
+	foreach ($inst->getExtDllPaths() as $dll) {
+		$cb = function($choices) use ($helper, $input, $output) {
+			$question = new ChoiceQuestion(
+				"Multiple choices found, please select the appropriate dependency package",
+				$choices
+				);
+			$question->setMultiselect(false);
+
+			return $helper->ask($input, $output, $question);
+		};
+
+		if (!$deps_handler->resolveForBin($dll, $cb)) {
+			throw new \Exception("Failed to resolve dependencies");
+		}
+	}
     }
 
     /**

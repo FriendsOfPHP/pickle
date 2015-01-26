@@ -259,4 +259,17 @@ class InstallerBinaryWindows
         $this->cleanup();
         $this->updateIni();
     }
+
+    public function getExtDllPaths()
+    {
+       $ret = array();
+
+       foreach ($this->extDll as $dll) {
+               $ret[] = $this->php->getExtensionDir() . DIRECTORY_SEPARATOR . $dll;
+       }
+
+       return $ret;
+    }
+
 }
+
