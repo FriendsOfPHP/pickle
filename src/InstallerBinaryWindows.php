@@ -4,6 +4,7 @@ namespace Pickle;
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 use Pickle\FileOps;
+use Pickle\PhpDetection;
 
 class InstallerBinaryWindows
 {

@@ -112,18 +112,23 @@ class InstallerCommand extends Command
         $inst->install();
 
 	$deps_handler = new DependencyLibWindows($php);
+        $deps_handler->setProgress($progress);
+        $deps_handler->setInput($input);
+        $deps_handler->setOutput($output);
+
 	$helper = $this->getHelperSet()->get('question');
+
+	$cb = function($choices) use ($helper, $input, $output) {
+		$question = new ChoiceQuestion(
+			"Multiple choices found, please select the appropriate dependency package",
+			$choices
+			);
+		$question->setMultiselect(false);
+
+		return $helper->ask($input, $output, $question);
+	};
+
 	foreach ($inst->getExtDllPaths() as $dll) {
-		$cb = function($choices) use ($helper, $input, $output) {
-			$question = new ChoiceQuestion(
-				"Multiple choices found, please select the appropriate dependency package",
-				$choices
-				);
-			$question->setMultiselect(false);
-
-			return $helper->ask($input, $output, $question);
-		};
-
 		if (!$deps_handler->resolveForBin($dll, $cb)) {
 			throw new \Exception("Failed to resolve dependencies");
 		}

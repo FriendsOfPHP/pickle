@@ -2,15 +2,27 @@
 
 namespace Pickle;
 
+use Symfony\Component\Console\Input\InputInterface as InputInterface;
+use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 use Pickle\PhpDetection;
+use Pickle\FileOps;
 
 class DependencyLibWindows
 {
+    use FileOps;
+
     const dllMapUrl = 'http://windows.php.net/downloads/pecl/deps/dllmapping.json';
     private $dllMap = null;
     private $php;
     const deplisterUrl = 'http://windows.php.net/downloads/pecl/tools/deplister.exe';
     private $deplisterExe = null;
+    const depsUrl = 'http://windows.php.net/downloads/pecl/deps';
+
+    private $progress = null;
+    private $input = null;
+    private $output = null;
+
+    private $fetchedZips = array();
 
     public function __construct(PhpDetection $php)
     {
@@ -93,11 +105,22 @@ class DependencyLibWindows
 
     public function resolveForBin($dll, $resolve_multiple_cb = NULL)
     {
-	$dep_zips = $this->getZipUrlsForDll($dll, true);
+	/* XXX Change it to false and implement a kinda --force option for that. */
+	$dep_zips = $this->getZipUrlsForDll($dll, false); 
 
 	if (count($dep_zips) == 1) {
 		$dep_zip = $dep_zips[0];
+
+		if (in_array($dep_zip, $this->fetchedZips)) {
+			return true;
+		}
 	} else if (count($dep_zips) > 1) {
+		foreach ($dep_zips as $dep_zip) {
+			/* The user has already picked one here, ignore it. */
+			if (in_array($dep_zip, $this->fetchedZips)) {
+				return true;
+			}
+		}
 		if (NULL != $resolve_multiple_cb) {
 			$dep_zip = $resolve_multiple_cb($dep_zips);
 		} else {
@@ -110,15 +133,115 @@ class DependencyLibWindows
 		   been exist if there's no dependency package uploaded. */
 		return true;
 	}
-	var_dump($dep_zip); die;
 
-	/* XXX unpack and resolve for the just found dep package. */
-
-	return $this->resolveForZip($zip_name, $resolve_multiple_cb);
+	return $this->resolveForZip($dep_zip, $resolve_multiple_cb);
     }
 
     public function resolveForZip($zip_name, $resolve_multiple_cb = NULL)
     {
+	if (in_array($zip_name, $this->fetchedZips)) {
+		return true;
+	}
 
+	$url = self::depsUrl . "/$zip_name";
+	$path = $this->download($url);
+	try {
+		$this->uncompress($path);
+		$lst = $this->copyFiles();
+	} catch (\Exception $e) {
+		$this->cleanup();
+		throw new \Exception($e->getMessage());
+	}
+	$this->cleanup();
+	$this->fetchedZips[] = $zip_name;
+
+	foreach ($lst as $bin) {
+		$this->resolveForBin($bin, $resolve_multiple_cb);
+	}
+
+	return true;
+    }
+
+    private function copyFiles()
+    {
+    	$ret = array();
+        $DLLs = glob($this->tempDir . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . '*.dll');
+
+	/* Copying ALL files from the zip, not just required. */
+        foreach ($DLLs as $dll) {
+            $dll = realpath($dll);
+            $basename = basename($dll);
+            $dest = dirname($this->php->getPhpCliPath()) . DIRECTORY_SEPARATOR . $basename;
+            $success = @copy($dll, dirname($this->php->getPhpCliPath()) . '/' . $basename);
+            if (!$success) {
+                throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
+            }
+
+	    $ret[] = $dest;
+        }
+
+	return $ret;
+    }
+
+    private function download($url)
+    {
+        $output = $this->output;
+        $progress = $this->progress;
+
+        $ctx = stream_context_create(
+            array(),
+            array(
+                'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
+                    switch ($notificationCode) {
+                        case STREAM_NOTIFY_FILE_SIZE_IS:
+                            $progress->start($output, $bytesMax);
+                            break;
+                        case STREAM_NOTIFY_PROGRESS:
+                            $progress->setCurrent($bytesTransferred);
+                            break;
+                    }
+                },
+            )
+        );
+        $output->writeln("downloading $url ");
+        $fileContents = file_get_contents($url, false, $ctx);
+        $progress->finish();
+        if (!$fileContents) {
+            throw new \Exception('Cannot fetch <' . $url . '>');
+        }
+        $tmpdir = sys_get_temp_dir();
+        $path = $tmpdir . DIRECTORY_SEPARATOR . basename($url);
+        if (!file_put_contents($path, $fileContents)) {
+            throw new \Exception('Cannot save temporary file <' . $path . '>');
+        }
+
+        return $path;
+    }
+    private function uncompress($zipFile)
+    {
+        $this->createTempDir();
+        $this->cleanup();
+        $zipArchive = new \ZipArchive();
+        if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
+            throw new \Exception('Cannot extract Zip archive <' . $zipFile . '>');
+        }
+        $this->output->writeln("Extracting archives...");
+        $zipArchive->extractTo($this->tempDir);
+    }
+
+    public function setProgress($progress)
+    {
+        $this->progress = $progress;
+    }
+
+    public function setInput(InputInterface $input)
+    {
+        $this->input = $input;
+    }
+
+    public function setOutput(OutputInterface $output)
+    {
+        $this->output = $output;
     }
 }
+
