@@ -4,8 +4,6 @@ namespace Pickle;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
-use Pickle\PhpDetection;
-use Pickle\FileOps;
 
 class DependencyLibWindows
 {
@@ -52,16 +50,16 @@ class DependencyLibWindows
 
     private function checkDepListerExe()
     {
-        $ret = exec('deplister.exe ' . $this->php->getPhpCliPath() . ' .');
+        $ret = exec('deplister.exe '.$this->php->getPhpCliPath().' .');
         if (empty($ret)) {
             $depexe = @file_get_contents(DependencyLibWindows::deplisterUrl);
             if (!$depexe) {
                 throw new \RuntimeException('Cannot fetch deplister.exe');
             }
             $dir = dirname($this->php->getPhpCliPath());
-            $path = $dir . DIRECTORY_SEPARATOR . 'deplister.exe';
+            $path = $dir.DIRECTORY_SEPARATOR.'deplister.exe';
             if (!@file_put_contents($path, $depexe)) {
-                throw new \RuntimeException('Cannot copy deplister.exe to ' . $dir);
+                throw new \RuntimeException('Cannot copy deplister.exe to '.$dir);
             }
         }
     }
@@ -69,7 +67,7 @@ class DependencyLibWindows
     private function getDllsForBinary($binary)
     {
         $out = [];
-        $ret = exec('deplister ' . escapeshellarg($binary) . ' .', $out);
+        $ret = exec('deplister '.escapeshellarg($binary).' .', $out);
         if (empty($ret) || !$ret) {
             throw new \RuntimeException('Error while running deplister.exe');
         }
@@ -91,9 +89,9 @@ class DependencyLibWindows
         foreach ($this->dllMap as $pkg_name => $pkg) {
             foreach ($dll as $dll_name => $dll_installed) {
                 if (in_array($dll_name, $pkg)) {
-		    if ($ignore_installed && $dll_installed) {
-		    	continue;
-		    }
+                    if ($ignore_installed && $dll_installed) {
+                        continue;
+                    }
                     $packages[] = $pkg_name;
                     continue 2;
                 }
@@ -103,84 +101,84 @@ class DependencyLibWindows
         return $packages;
     }
 
-    public function resolveForBin($dll, $resolve_multiple_cb = NULL)
+    public function resolveForBin($dll, $resolve_multiple_cb = null)
     {
-	/* XXX Change it to false and implement a kinda --force option for that. */
-	$dep_zips = $this->getZipUrlsForDll($dll, false); 
+        /* XXX Change it to false and implement a kinda --force option for that. */
+    $dep_zips = $this->getZipUrlsForDll($dll, false);
 
-	if (count($dep_zips) == 1) {
-		$dep_zip = $dep_zips[0];
+        if (count($dep_zips) == 1) {
+            $dep_zip = $dep_zips[0];
 
-		if (in_array($dep_zip, $this->fetchedZips)) {
-			return true;
-		}
-	} else if (count($dep_zips) > 1) {
-		foreach ($dep_zips as $dep_zip) {
-			/* The user has already picked one here, ignore it. */
-			if (in_array($dep_zip, $this->fetchedZips)) {
-				return true;
-			}
-		}
-		if (NULL != $resolve_multiple_cb) {
-			$dep_zip = $resolve_multiple_cb($dep_zips);
-		} else {
-			throw new \Extension("Multiple choice for dependencies, couldn't resolve");
-		}
-	} else {
-		/* That might be not quite true, as we might just not have the
-		   corresponding dependency package. However it's fetched from
-		   the PECL build dependencies, no extension build should have
-		   been exist if there's no dependency package uploaded. */
-		return true;
-	}
+            if (in_array($dep_zip, $this->fetchedZips)) {
+                return true;
+            }
+        } elseif (count($dep_zips) > 1) {
+            foreach ($dep_zips as $dep_zip) {
+                /* The user has already picked one here, ignore it. */
+            if (in_array($dep_zip, $this->fetchedZips)) {
+                return true;
+            }
+            }
+            if (null != $resolve_multiple_cb) {
+                $dep_zip = $resolve_multiple_cb($dep_zips);
+            } else {
+                throw new \Extension("Multiple choice for dependencies, couldn't resolve");
+            }
+        } else {
+            /* That might be not quite true, as we might just not have the
+           corresponding dependency package. However it's fetched from
+           the PECL build dependencies, no extension build should have
+           been exist if there's no dependency package uploaded. */
+        return true;
+        }
 
-	return $this->resolveForZip($dep_zip, $resolve_multiple_cb);
+        return $this->resolveForZip($dep_zip, $resolve_multiple_cb);
     }
 
-    public function resolveForZip($zip_name, $resolve_multiple_cb = NULL)
+    public function resolveForZip($zip_name, $resolve_multiple_cb = null)
     {
-	if (in_array($zip_name, $this->fetchedZips)) {
-		return true;
-	}
+        if (in_array($zip_name, $this->fetchedZips)) {
+            return true;
+        }
 
-	$url = self::depsUrl . "/$zip_name";
-	$path = $this->download($url);
-	try {
-		$this->uncompress($path);
-		$lst = $this->copyFiles();
-	} catch (\Exception $e) {
-		$this->cleanup();
-		throw new \Exception($e->getMessage());
-	}
-	$this->cleanup();
-	$this->fetchedZips[] = $zip_name;
+        $url = self::depsUrl."/$zip_name";
+        $path = $this->download($url);
+        try {
+            $this->uncompress($path);
+            $lst = $this->copyFiles();
+        } catch (\Exception $e) {
+            $this->cleanup();
+            throw new \Exception($e->getMessage());
+        }
+        $this->cleanup();
+        $this->fetchedZips[] = $zip_name;
 
-	foreach ($lst as $bin) {
-		$this->resolveForBin($bin, $resolve_multiple_cb);
-	}
+        foreach ($lst as $bin) {
+            $this->resolveForBin($bin, $resolve_multiple_cb);
+        }
 
-	return true;
+        return true;
     }
 
     private function copyFiles()
     {
-    	$ret = array();
-        $DLLs = glob($this->tempDir . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . '*.dll');
+        $ret = array();
+        $DLLs = glob($this->tempDir.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'*.dll');
 
-	/* Copying ALL files from the zip, not just required. */
+    /* Copying ALL files from the zip, not just required. */
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
-            $dest = dirname($this->php->getPhpCliPath()) . DIRECTORY_SEPARATOR . $basename;
-            $success = @copy($dll, dirname($this->php->getPhpCliPath()) . '/' . $basename);
+            $dest = dirname($this->php->getPhpCliPath()).DIRECTORY_SEPARATOR.$basename;
+            $success = @copy($dll, dirname($this->php->getPhpCliPath()).'/'.$basename);
             if (!$success) {
-                throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
+                throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
             }
 
-	    $ret[] = $dest;
+            $ret[] = $dest;
         }
 
-	return $ret;
+        return $ret;
     }
 
     private function download($url)
@@ -207,12 +205,12 @@ class DependencyLibWindows
         $fileContents = file_get_contents($url, false, $ctx);
         $progress->finish();
         if (!$fileContents) {
-            throw new \Exception('Cannot fetch <' . $url . '>');
+            throw new \Exception('Cannot fetch <'.$url.'>');
         }
         $tmpdir = sys_get_temp_dir();
-        $path = $tmpdir . DIRECTORY_SEPARATOR . basename($url);
+        $path = $tmpdir.DIRECTORY_SEPARATOR.basename($url);
         if (!file_put_contents($path, $fileContents)) {
-            throw new \Exception('Cannot save temporary file <' . $path . '>');
+            throw new \Exception('Cannot save temporary file <'.$path.'>');
         }
 
         return $path;
@@ -223,7 +221,7 @@ class DependencyLibWindows
         $this->cleanup();
         $zipArchive = new \ZipArchive();
         if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
-            throw new \Exception('Cannot extract Zip archive <' . $zipFile . '>');
+            throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
         }
         $this->output->writeln("Extracting archives...");
         $zipArchive->extractTo($this->tempDir);
@@ -244,4 +242,3 @@ class DependencyLibWindows
         $this->output = $output;
     }
 }
-

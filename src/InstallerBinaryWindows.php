@@ -3,8 +3,6 @@ namespace Pickle;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
-use Pickle\FileOps;
-use Pickle\PhpDetection;
 
 class InstallerBinaryWindows
 {
@@ -49,7 +47,7 @@ class InstallerBinaryWindows
 
     private function extensionPeclExists()
     {
-        $url = 'http://pecl.php.net/get/' . $this->extName;
+        $url = 'http://pecl.php.net/get/'.$this->extName;
         $headers = get_headers($url, 1);
         $status = $headers[0];
         if (strpos($status, '404')) {
@@ -96,22 +94,22 @@ class InstallerBinaryWindows
         $phpVc = $this->php->getCompiler();
         $phpArch = $this->php->getArchitecture();
         $phpZts = $this->php->getZts() ? '-ts' : '-nts';
-        $phpVersion = $this->php->getMajorVersion() . '.' .  $this->php->getMinorVersion();
+        $phpVersion = $this->php->getMajorVersion().'.'.$this->php->getMinorVersion();
         $pkgVersion = $this->extVersion;
         $extName =  strtolower($this->extName);
         $baseUrl = "http://windows.php.net/downloads/pecl/releases/";
 
-        if (!$this->findInLinks($baseUrl . $extName, $pkgVersion)) {
-            throw new \Exception('Binary for <' . $extName . '-' . $pkgVersion . '> cannot be found');
+        if (!$this->findInLinks($baseUrl.$extName, $pkgVersion)) {
+            throw new \Exception('Binary for <'.$extName.'-'.$pkgVersion.'> cannot be found');
         }
 
-        $fileToFind = 'php_' . $extName . '-' . $pkgVersion . '-' . $phpVersion . $phpZts . '-' . $phpVc . '-' . $phpArch . '.zip';
-        $fileUrl = $this->findInLinks($baseUrl . $extName . '/' . $pkgVersion, $fileToFind);
+        $fileToFind = 'php_'.$extName.'-'.$pkgVersion.'-'.$phpVersion.$phpZts.'-'.$phpVc.'-'.$phpArch.'.zip';
+        $fileUrl = $this->findInLinks($baseUrl.$extName.'/'.$pkgVersion, $fileToFind);
 
         if (!$fileUrl) {
-            throw new \Exception('Binary for <' . $fileToFind . '> cannot be found');
+            throw new \Exception('Binary for <'.$fileToFind.'> cannot be found');
         }
-        $url = $baseUrl . $extName . '/' . $pkgVersion . '/' . $fileToFind;
+        $url = $baseUrl.$extName.'/'.$pkgVersion.'/'.$fileToFind;
 
         return $url;
     }
@@ -127,7 +125,7 @@ class InstallerBinaryWindows
         $this->cleanup();
         $zipArchive = new \ZipArchive();
         if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
-            throw new \Exception('Cannot extract Zip archive <' . $zipFile . '>');
+            throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
         }
         $this->output->writeln("Extracting archives...");
         $zipArchive->extractTo($this->tempDir);
@@ -164,12 +162,12 @@ class InstallerBinaryWindows
         $fileContents = file_get_contents($url, false, $ctx);
         $progress->finish();
         if (!$fileContents) {
-            throw new \Exception('Cannot fetch <' . $url . '>');
+            throw new \Exception('Cannot fetch <'.$url.'>');
         }
         $tmpdir = sys_get_temp_dir();
-        $path = $tmpdir . '/' . $this->extName .'.zip';
+        $path = $tmpdir.'/'.$this->extName.'.zip';
         if (!file_put_contents($path, $fileContents)) {
-            throw new \Exception('Cannot save temporary file <' . $path . '>');
+            throw new \Exception('Cannot save temporary file <'.$path.'>');
         }
 
         return $path;
@@ -180,23 +178,23 @@ class InstallerBinaryWindows
      */
     private function copyFiles()
     {
-        $DLLs = glob($this->tempDir . '/*.dll');
+        $DLLs = glob($this->tempDir.'/*.dll');
         $this->extDll = [];
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
-            $dest = $this->php->getExtensionDir() . DIRECTORY_SEPARATOR . $basename;
+            $dest = $this->php->getExtensionDir().DIRECTORY_SEPARATOR.$basename;
             if (substr($basename, 0, 4) == 'php_') {
                 $this->extDll[] = $basename;
-                $this->output->writeln("copying $dll to " . $dest . "\n");
-                $success = @copy($dll, $this->php->getExtensionDir() . '/' . $basename);
+                $this->output->writeln("copying $dll to ".$dest."\n");
+                $success = @copy($dll, $this->php->getExtensionDir().'/'.$basename);
                 if (!$success) {
-                    throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
+                    throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
             } else {
-                $success = @copy($dll, dirname($this->php->getPhpCliPath()) . '/' . $basename);
+                $success = @copy($dll, dirname($this->php->getPhpCliPath()).'/'.$basename);
                 if (!$success) {
-                    throw new \Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
+                    throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
             }
         }
@@ -217,10 +215,10 @@ class InstallerBinaryWindows
      */
     private function getInfoFromPecl()
     {
-        $url = "http://pecl.php.net/get/" . $this->extName;
+        $url = "http://pecl.php.net/get/".$this->extName;
         $headers = get_headers($url);
         if (strpos($headers[0], '404') !== false) {
-            throw new \Exception('Cannot find extension <' . $this->extName . '>');
+            throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
         $headerPkg = false;
         foreach ($headers as $header) {
@@ -230,7 +228,7 @@ class InstallerBinaryWindows
             }
         }
         if ($headerPkg == false) {
-            throw new \Exception('Cannot find extension <' . $this->extName . '>');
+            throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
         $q1 = strpos($headerPkg, '"') + 1;
         $packageFullname = substr($headerPkg, $q1, strlen($headerPkg) - 2 - 3 - $q1);
@@ -263,14 +261,12 @@ class InstallerBinaryWindows
 
     public function getExtDllPaths()
     {
-       $ret = array();
+        $ret = array();
 
-       foreach ($this->extDll as $dll) {
-               $ret[] = $this->php->getExtensionDir() . DIRECTORY_SEPARATOR . $dll;
-       }
+        foreach ($this->extDll as $dll) {
+            $ret[] = $this->php->getExtensionDir().DIRECTORY_SEPARATOR.$dll;
+        }
 
-       return $ret;
+        return $ret;
     }
-
 }
-
