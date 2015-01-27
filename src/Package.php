@@ -2,7 +2,7 @@
 namespace Pickle;
 
 use Composer\Package\CompletePackage;
-use Composer\Package\PackageInterface;
+use Pickle\PackageInterface;
 
 class Package extends CompletePackage implements PackageInterface
 {
