@@ -9,12 +9,12 @@ class DependencyLibWindows
 {
     use FileOps;
 
-    const dllMapUrl = 'http://windows.php.net/downloads/pecl/deps/dllmapping.json';
+    const DLL_MAP_URL = 'http://windows.php.net/downloads/pecl/deps/dllmapping.json';
+    const DEPLISTER_URL = 'http://windows.php.net/downloads/pecl/tools/deplister.exe';
+    const DEPS_URL = 'http://windows.php.net/downloads/pecl/deps';
+
     private $dllMap = null;
     private $php;
-    const deplisterUrl = 'http://windows.php.net/downloads/pecl/tools/deplister.exe';
-    private $deplisterExe = null;
-    const depsUrl = 'http://windows.php.net/downloads/pecl/deps';
 
     private $progress = null;
     private $input = null;
@@ -32,7 +32,7 @@ class DependencyLibWindows
     private function fetchDllMap()
     {
         if (is_null($this->dllMap)) {
-            $data = @file_get_contents(DependencyLibWindows::dllMapUrl);
+            $data = @file_get_contents(DependencyLibWindows::DLL_MAP_URL);
             if (!$data) {
                 throw new \RuntimeException('Cannot fetch the DLL mapping file');
             }
@@ -52,7 +52,7 @@ class DependencyLibWindows
     {
         $ret = exec('deplister.exe '.$this->php->getPhpCliPath().' .');
         if (empty($ret)) {
-            $depexe = @file_get_contents(DependencyLibWindows::deplisterUrl);
+            $depexe = @file_get_contents(DependencyLibWindows::DEPLISTER_URL);
             if (!$depexe) {
                 throw new \RuntimeException('Cannot fetch deplister.exe');
             }
@@ -141,7 +141,7 @@ class DependencyLibWindows
             return true;
         }
 
-        $url = self::depsUrl."/$zip_name";
+        $url = self::DEPS_URL."/$zip_name";
         $path = $this->download($url);
         try {
             $this->uncompress($path);
