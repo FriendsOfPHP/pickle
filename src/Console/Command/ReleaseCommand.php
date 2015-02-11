@@ -55,6 +55,10 @@ class ReleaseCommand extends Command
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
         }
 
+        if (null === $package) {
+            throw new \RuntimeException("Cannot find $path".DIRECTORY_SEPARATOR."{pickle.json,package.xml}");
+        }
+
         $package->setRootDir(realpath($path));
 
         $this->getHelper('package')->showInfo($output, $package);
