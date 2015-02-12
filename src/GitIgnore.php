@@ -11,8 +11,6 @@ class GitIgnore
         $path = $package->getSourceDir() . '/.gitignore';
         $this->excluded = [
             "$dir/.git/", "$dir/.gitignore", "$dir/.gitmodules",
-            "$dir/.svn/",
-            "$dir/.hg/"
         ];
 
         if (is_file($path) === false) {
