@@ -26,18 +26,6 @@ abstract class AbstractCommand
 
     abstract protected function prepare();
 
-    protected function extConfigIsIn($path)
-    {
-        /* XXX implement config*.(m4|w32) search for the case it's somewhere in the subdir,
-            in that case we can take that subdir as the extension root. */
-        if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
-            return file_exists(realpath($path) . DIRECTORY_SEPARATOR . "config.w32");
-        } else {
-            $r = glob("$path/config*.m4");
-
-            return (is_array($r) && !empty($r));
-        }
-    }
 
     public function execute($target, $no_convert)
     {

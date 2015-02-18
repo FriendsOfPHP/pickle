@@ -35,6 +35,15 @@ class Package extends CompletePackage implements PackageInterface
             $path = $release;
         }
 
+	/* Do subdir search */
+	if (!$this->extConfigIsIn($path)) {
+		$path = $this->locateSourceDirByExtConfig($path);
+
+		if (!$path) {
+			throw new \Exception("config*.(m4|w32) not found");
+		}
+	}
+
         return $path;
     }
 
@@ -264,4 +273,32 @@ class Package extends CompletePackage implements PackageInterface
 
         return [trim($version_define), $version];
     }
+
+    protected function extConfigIsIn($path)
+    {
+        if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
+            return file_exists(realpath($path) . DIRECTORY_SEPARATOR . "config.w32");
+        } else {
+            $r = glob("$path/config*.m4");
+
+            return (is_array($r) && !empty($r));
+        }
+    }
+
+    protected function locateSourceDirByExtConfig($path)
+    {
+    	$it = new \RecursiveIteratorIterator(
+		new \RecursiveDirectoryIterator($path),
+		\RecursiveIteratorIterator::SELF_FIRST
+	);
+
+    	foreach ($it as $fl_obj) {
+		if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
+			return $fl_obj->getPath();
+		}
+	}
+
+	return NULL;
+    }
 }
+
