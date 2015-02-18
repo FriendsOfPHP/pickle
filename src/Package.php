@@ -39,7 +39,7 @@ class Package extends CompletePackage implements PackageInterface
 	if (!$this->extConfigIsIn($path)) {
 		$path = $this->locateSourceDirByExtConfig($path);
 
-		if (!$path) {
+		if (NULL === $path) {
 			throw new \Exception("config*.(m4|w32) not found");
 		}
 	}
