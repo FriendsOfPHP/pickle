@@ -37,8 +37,8 @@ class ReleaseCommand extends Command
         $jsonLoader = new Package\JSON\Loader(new Package\Loader());
         $package = null;
 
-        if (file_exists($path . DIRECTORY_SEPARATOR . 'pickle.json')) {
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
+        if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
         }
 
         if (null === $package && $input->getOption('no-convert')) {
@@ -50,9 +50,9 @@ class ReleaseCommand extends Command
             $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
 
             $dumper = new Dumper();
-            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
+            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'composer.json');
 
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'pickle.json');
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
         }
 
         $package->setRootDir(realpath($path));

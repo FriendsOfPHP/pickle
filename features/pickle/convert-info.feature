@@ -50,7 +50,7 @@ Feature: convert package.xml to information files
       | Package status                    | beta   |
       +-----------------------------------+--------+
       """
-    And "pickle.json" JSON file should contain:
+    And "composer.json" JSON file should contain:
       """
       {
           "name": "dummy",

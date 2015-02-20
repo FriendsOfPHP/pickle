@@ -1,10 +1,10 @@
 Feature: Install pickle package
   In order to use pickle on my package
   As an extension developer
-  I should be able to install my extension from pickle.json
+  I should be able to install my extension from composer.json
 
   Background:
-    Given a file named "pickle.json" with:
+    Given a file named "composer.json" with:
       """
       {
           "name": "dummy",

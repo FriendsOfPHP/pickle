@@ -40,7 +40,7 @@ class ConvertCommand extends Command
         $convertCl->parse();
         $convertCl->generateReleaseFile();
         $dumper = new Dumper();
-        $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'pickle.json');
+        $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'composer.json');
 
         $output->writeln('<info>Successfully converted ' . $package->getPrettyName() . '</info>');
 

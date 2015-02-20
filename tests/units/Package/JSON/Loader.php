@@ -10,7 +10,7 @@ class Loader extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/pickle.json',
+                $path = FIXTURES_DIR . '/package/composer.json',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
                 $this->calling($loader)->load = $package = new \mock\Composer\Package\PackageInterface()
             )
@@ -30,7 +30,7 @@ class Loader extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/pickle.json',
+                $path = FIXTURES_DIR . '/package/composer.json',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
                 $this->function->json_decode = false
             )

@@ -1,5 +1,5 @@
 {
-    "name": "pickle.json",
+    "name": "composer.json",
     "type": "object",
     "additionalProperties": false,
     "properties": {

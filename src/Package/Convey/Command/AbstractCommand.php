@@ -30,7 +30,7 @@ abstract class AbstractCommand
     public function execute($target, $no_convert)
     {
         $jsonLoader = new Package\JSON\Loader(new Package\Loader());
-        $pickle_json = $target . DIRECTORY_SEPARATOR . 'pickle.json';
+        $pickle_json = $target . DIRECTORY_SEPARATOR . 'composer.json';
         $package = null;
 
         if (file_exists($pickle_json)) {

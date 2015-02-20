@@ -1,7 +1,7 @@
-Feature: convert package.xml to pickle.json
+Feature: convert package.xml to composer.json
   In order to use pickle on my package
   As an extension developer
-  I should be able to create pickle.json from my package.xml
+  I should be able to create composer.json from my package.xml
 
   Background:
     Given a file named "package.xml" with:
@@ -36,7 +36,7 @@ Feature: convert package.xml to pickle.json
       | Package status                    | beta   |
       +-----------------------------------+--------+
       """
-    And "pickle.json" JSON file should contain:
+    And "composer.json" JSON file should contain:
       """
       {
           "name": "dummy",
@@ -59,7 +59,7 @@ Feature: convert package.xml to pickle.json
       | Package status                    | beta   |
       +-----------------------------------+--------+
       """
-    And "../pickle.json" JSON file should contain:
+    And "../composer.json" JSON file should contain:
       """
       {
           "name": "dummy",
