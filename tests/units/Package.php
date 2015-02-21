@@ -71,7 +71,7 @@ class Package extends atoum
             ->given(
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $prettyVersion = $this->sample($this->packagePrettyVersion)
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
