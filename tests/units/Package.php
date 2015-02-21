@@ -312,7 +312,9 @@ class Package extends atoum
 	}
 
 	unlink($packageSourceRoot . DIRECTORY_SEPARATOR . "config.w32");
-	unlink($packageSourceRoot . DIRECTORY_SEPARATOR . "config0.m4");
+	foreach (glob($packageSourceRoot . DIRECTORY_SEPARATOR . "config*.m4") as $f) {
+		unlink($f);
+	}
 	rmdir($packageSourceRoot);
 	rmdir($packageRoot);
     }
