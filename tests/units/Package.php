@@ -54,8 +54,7 @@ class Package extends atoum
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
                 $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = fs\directory::get(),
-                $configM4 = fs\file::getSubStream($packageRoot, defined('PHP_WINDOWS_VERSION_MAJOR') ? 'config.w32' : 'config.m4')
+                $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package"
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
@@ -73,18 +72,20 @@ class Package extends atoum
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
                 $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = fs\directory::get(),
-                $configM4 = fs\file::getSubStream($packageRoot, 'config.m4'),
-                $configM4->setContents($config)
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
+		list($packageRoot, $packageSourceRoot) = $this->createTmpPackageStruct(),
+                $configM4 = $packageSourceRoot . DIRECTORY_SEPARATOR . 'config.m4',
+                file_put_contents($configM4, $config),
                 $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
                 ->array($this->testedInstance->getConfigureOptionsFromFile((string) $configM4))
                     ->object[$optName]->isEqualTo((object) $option)
         ;
+
+	$this->removeTmpPackageStruct($packageRoot, $packageSourceRoot);
     }
 
     protected function testGetConfigureOptionsDataProvider()
@@ -180,19 +181,21 @@ class Package extends atoum
             ->given(
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = fs\directory::get(),
-                $configW32 = fs\file::getSubStream($packageRoot, 'config.w32'),
-                $configW32->setContents($config)
+                $prettyVersion = $this->sample($this->packagePrettyVersion)
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
+		list($packageRoot, $packageSourceRoot) = $this->createTmpPackageStruct(),
+                $configW32 = $packageSourceRoot . DIRECTORY_SEPARATOR . 'config.w32',
+                file_put_contents($configW32, $config),
                 $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
                 ->array($this->testedInstance->getConfigureOptions())
                     ->object[$optName]->isEqualTo((object) $option)
         ;
+
+	$this->removeTmpPackageStruct($packageRoot, $packageSourceRoot);
     }
 
     protected function testGetConfigureOptionsWindowsDataProvider()
@@ -269,7 +272,7 @@ class Package extends atoum
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
                 $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = fs\directory::get()
+                $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package"
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
@@ -279,11 +282,38 @@ class Package extends atoum
                 ->string($this->testedInstance->getSourceDir())->isEqualTo((string) $packageRoot)
             ->if(
                 clearstatcache(),
-                $packageSourceRoot = fs\directory::getSubStream($packageRoot, $this->testedInstance->getPrettyName() . '-' . $this->testedInstance->getPrettyVersion()),
-                $packageSourceRoot->url_stat = ['mode' => 17000] // Be a directory
+		list($packageRoot, $packageSourceRoot) = $this->createTmpPackageStruct(),
+                $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
                 ->string($this->testedInstance->getSourceDir())->isEqualTo((string) $packageSourceRoot)
         ;
+
+	$this->removeTmpPackageStruct($packageRoot, $packageSourceRoot);
+
+    }
+
+    protected function createTmpPackageStruct()
+    {
+	$packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package-" . md5(uniqid());
+	$packageSourceRoot = $packageRoot . DIRECTORY_SEPARATOR . $this->testedInstance->getPrettyName() . '-' . $this->testedInstance->getPrettyVersion();
+	mkdir($packageRoot);
+	mkdir($packageSourceRoot);
+	file_put_contents($packageSourceRoot . DIRECTORY_SEPARATOR . "config.w32", "");
+	file_put_contents($packageSourceRoot . DIRECTORY_SEPARATOR . "config0.m4", "");
+
+	return array($packageRoot, $packageSourceRoot);
+    }
+
+    protected function removeTmpPackageStruct($packageRoot, $packageSourceRoot)
+    {
+	if (!$packageSourceRoot) {
+		$packageSourceRoot = $packageRoot;
+	}
+
+	unlink($packageSourceRoot . DIRECTORY_SEPARATOR . "config.w32");
+	unlink($packageSourceRoot . DIRECTORY_SEPARATOR . "config0.m4");
+	rmdir($packageSourceRoot);
+	rmdir($packageRoot);
     }
 }
