@@ -293,6 +293,24 @@ class Package extends atoum
 
     }
 
+    public function testGetSourceDirInSubdir()
+    {
+        $this
+            ->given(
+                $name = $this->sample($this->packageName),
+                $version = $this->sample($this->packageVersion),
+                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package-subdir-src"
+            )
+            ->if(
+                $this->newTestedInstance($name, $version, $prettyVersion),
+                $this->testedInstance->setRootDir((string) $packageRoot)
+            )
+            ->then
+                ->string($this->testedInstance->getSourceDir())->isEqualTo(((string) $packageRoot) . DIRECTORY_SEPARATOR . "ext-source")
+        ;
+    }
+
     protected function createTmpPackageStruct()
     {
 	$packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package-" . md5(uniqid());
