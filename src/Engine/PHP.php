@@ -158,7 +158,7 @@ class PHP extends AbstractEngine implements Engine
         }
         $cliDir = dirname($this->phpCli);
         $res = glob($cliDir . DIRECTORY_SEPARATOR . 'phpize*');
-        if (!$res || empty($res)) {
+        if (!$res) {
             $this->hasSdk = false;
         }
         $this->phpize = $res[0];
