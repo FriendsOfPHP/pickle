@@ -2,6 +2,7 @@
 
 namespace Pickle\Engine;
 
+use Pickle\Engine;
 use Pickle\Engine\Ini;
 
 class Ini
