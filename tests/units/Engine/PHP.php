@@ -1,16 +1,16 @@
 <?php
 
-namespace Pickle\tests\units;
+namespace Pickle\tests\units\Engine;
 
 use atoum;
 use Pickle\tests;
 
-class PhpDetection extends atoum
+class PHP extends atoum
 {
     public function beforeTestMethod($method)
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR') === false) {
-            $this->skip('Cannot only run on Windows');
+            $this->skip('Can only run on Windows');
         }
     }
 
@@ -18,31 +18,31 @@ class PhpDetection extends atoum
     {
         $this->assert
             ->exception(function () {
-                new \Pickle\PhpDetection("");
+                new \Pickle\Engine\PHP("");
             });
 
         $this->assert
             ->exception(function () {
-                new \Pickle\PhpDetection("c:\\windows\\system32\\at.exe");
+                new \Pickle\Engine\PHP("c:\\windows\\system32\\at.exe");
             });
     }
 
     public function test__construct_ok()
     {
-        $p = new \Pickle\PhpDetection();
+        $p = new \Pickle\Engine\PHP();
 
         $this
             ->object($p)
-                ->isInstanceOf('\Pickle\PhpDetection');
+                ->isInstanceOf('\Pickle\Engine\PHP');
     }
 
     public function testgetFromConstants_ok()
     {
-        $p = new \Pickle\PhpDetection();
+        $p = new \Pickle\Engine\PHP();
 
         $this
             ->object($p)
-                ->isInstanceOf('\Pickle\PhpDetection');
+                ->isInstanceOf('\Pickle\Engine\PHP');
 
         $this
             ->string($p->getArchitecture())
@@ -53,9 +53,9 @@ class PhpDetection extends atoum
                 ->match("/vc\d{1,2}/");
 
         $this
-            ->boolean(file_exists($p->getPhpCliPath()))
+            ->boolean(file_exists($p->getPath()))
                 ->isTrue()
-            ->boolean(is_executable($p->getPhpCliPath()))
+            ->boolean(is_executable($p->getPath()))
                 ->isTrue();
 
         $this
@@ -78,9 +78,9 @@ class PhpDetection extends atoum
                 ->isTrue();
 
         $this
-            ->boolean(file_exists($p->getPhpIniDir()))
+            ->boolean(file_exists($p->getIniPath()))
                 ->isTrue()
-            ->boolean(is_dir($p->getPhpIniDir()) || is_file($p->getPhpIniDir()))
+            ->boolean(is_dir($p->getIniPath()) || is_file($p->getIniPath()))
                 ->isTrue();
     }
 }
