@@ -2,7 +2,6 @@
 
 namespace Pickle;
 
-use Pickle\Engine;
 use Pickle\Engine\HHVM;
 use Pickle\Engine\PHP;
 
@@ -27,6 +26,5 @@ class Engine
 
 		return self::$instance;
 	}
-
 }
 

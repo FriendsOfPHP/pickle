@@ -1,8 +1,11 @@
 <?php
 
-namespace Pickle;
+namespace Pickle\Engine\Ini;
 
-class PhpIni
+use Pickle\Engine\Ini\Ini;
+use Pickle\Engine\Ini\AbstractIni;
+
+class PHP extends AbstractIni implements Ini
 {
     protected $raw;
     protected $path;
@@ -16,6 +19,8 @@ class PhpIni
 
     public function __construct(\Pickle\Engine\Engine $php)
     {
+    	parent::__construct($php);
+
         $this->path = $php->getIniPath();
 
         $this->raw = @file_get_contents($this->path);

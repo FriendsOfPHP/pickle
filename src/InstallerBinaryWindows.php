@@ -205,7 +205,7 @@ class InstallerBinaryWindows
      */
     private function updateIni()
     {
-        $ini = new PhpIni($this->php);
+        $ini = \Pickle\Engine\Ini::factory($this->php);
         $ini->updatePickleSection($this->extDll);
     }
 
