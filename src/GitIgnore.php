@@ -9,7 +9,9 @@ class GitIgnore
     {
         $dir = $package->getSourceDir();
         $path = $package->getSourceDir() . '/.gitignore';
-        $this->excluded = glob("$dir/.git/*");
+        $this->excluded = [
+            "$dir/.git/", "$dir/.gitignore", "$dir/.gitmodules",
+        ];
 
         if (is_file($path) === false) {
             throw new \InvalidArgumentException('File not found: ' . $path);
@@ -51,9 +53,11 @@ class GitIgnore
 
     public function isExcluded(\SplFileInfo $file)
     {
-        return (
-            in_array(basename($file), ['.gitignore', '.gitmodules']) ||
-            in_array($file->getRealPath(), $this->excluded)
-        );
+        foreach ($this->excluded as $path) {
+            if (!strncmp($file,  $path, strlen($path))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
