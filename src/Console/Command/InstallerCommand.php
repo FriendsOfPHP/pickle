@@ -12,7 +12,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
 use Pickle\Package;
-use Pickle\PhpDetection;
+use Pickle\Engine;
 use Pickle\InstallerBinaryWindows;
 use Pickle\DependencyLibWindows;
 
@@ -90,17 +90,17 @@ class InstallerCommand extends Command
      */
     protected function binaryInstallWindows($path, $input, $output)
     {
-        $php = new PhpDetection();
+        $php = Engine::factory();
         $table = new Table($output);
         $table
             ->setRows([
-               ['<info>PHP Path</info>', $php->getPhpCliPath()],
-               ['<info>PHP Version</info>', $php->getVersion()],
+               ['<info>' . $php->getName() . ' Path</info>', $php->getPath()],
+               ['<info>' . $php->getName() . ' Version</info>', $php->getVersion()],
                ['<info>Compiler</info>', $php->getCompiler()],
                ['<info>Architecture</info>', $php->getArchitecture()],
                ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
                ['<info>Extension dir</info>', $php->getExtensionDir()],
-               ['<info>php.ini</info>', $php->getPhpIniDir()],
+               ['<info>php.ini</info>', $php->getIniPath()],
             ])
             ->render();
 
@@ -143,18 +143,18 @@ class InstallerCommand extends Command
      /* XXX this method seems to be dead code */
     protected function sourceInstallWindows($path, $input, $output)
     {
-        $php = new PhpDetection();
+        $php = Engine::factory();
         $php->hasSdk();
         $table = new Table($output);
         $table
             ->setRows([
-               ['<info>PHP Path</info>', $php->getPhpCliPath()],
-               ['<info>PHP Version</info>', $php->getVersion()],
+               ['<info>' . $php->getName() . ' Path</info>', $php->getPath()],
+               ['<info>' . $php->getName() . ' Version</info>', $php->getVersion()],
                ['<info>Compiler</info>', $php->getCompiler()],
                ['<info>Architecture</info>', $php->getArchitecture()],
                ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
                ['<info>Extension dir</info>', $php->getExtensionDir()],
-               ['<info>php.ini</info>', $php->getPhpIniDir()],
+               ['<info>php.ini</info>', $php->getIniPath()],
             ])
             ->render();
 

@@ -22,7 +22,7 @@ class DependencyLibWindows
 
     private $fetchedZips = array();
 
-    public function __construct(PhpDetection $php)
+    public function __construct(\Pickle\Engine\Engine $php)
     {
         $this->php = $php;
         $this->checkDepListerExe();
@@ -59,13 +59,13 @@ class DependencyLibWindows
 
     private function checkDepListerExe()
     {
-        $ret = exec('deplister.exe '.$this->php->getPhpCliPath().' .');
+        $ret = exec('deplister.exe '.$this->php->getPath().' .');
         if (empty($ret)) {
             $depexe = @file_get_contents(DependencyLibWindows::DEPLISTER_URL);
             if (!$depexe) {
                 throw new \RuntimeException('Cannot fetch deplister.exe');
             }
-            $dir = dirname($this->php->getPhpCliPath());
+            $dir = dirname($this->php->getPath());
             $path = $dir.DIRECTORY_SEPARATOR.'deplister.exe';
             if (!@file_put_contents($path, $depexe)) {
                 throw new \RuntimeException('Cannot copy deplister.exe to '.$dir);
@@ -76,7 +76,7 @@ class DependencyLibWindows
     private function getDllsForBinary($binary)
     {
         $out = [];
-        $ret = exec('deplister '.escapeshellarg($binary).' .', $out);
+        $ret = exec('deplister.exe '.escapeshellarg($binary).' .', $out);
         if (empty($ret) || !$ret) {
             throw new \RuntimeException('Error while running deplister.exe');
         }
@@ -178,8 +178,8 @@ class DependencyLibWindows
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
-            $dest = dirname($this->php->getPhpCliPath()).DIRECTORY_SEPARATOR.$basename;
-            $success = @copy($dll, dirname($this->php->getPhpCliPath()).'/'.$basename);
+            $dest = dirname($this->php->getPath()).DIRECTORY_SEPARATOR.$basename;
+            $success = @copy($dll, dirname($this->php->getPath()).'/'.$basename);
             if (!$success) {
                 throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
             }

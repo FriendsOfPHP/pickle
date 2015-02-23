@@ -1,7 +1,11 @@
 <?php
-namespace Pickle;
 
-class PhpDetection
+namespace Pickle\Engine;
+
+use Pickle\Engine\Engine;
+use Pickle\Engine\AbstractEngine;
+
+class PHP extends AbstractEngine implements Engine
 {
     private $phpCli;
     private $phpize;
@@ -142,6 +146,11 @@ class PhpDetection
         return [$compiler, $arch, $iniPath, $extensionDir];
     }
 
+    public function getName()
+    {
+        return "php";
+    }
+
     public function hasSdk()
     {
         if (isset($this->hasSdk)) {
@@ -167,7 +176,7 @@ class PhpDetection
         return $this->compiler;
     }
 
-    public function getPhpCliPath()
+    public function getPath()
     {
         return $this->phpCli;
     }
@@ -202,7 +211,7 @@ class PhpDetection
         return $this->extensionDir;
     }
 
-    public function getPhpIniDir()
+    public function getIniPath()
     {
         return $this->iniPath;
     }

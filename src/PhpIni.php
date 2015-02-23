@@ -14,9 +14,9 @@ class PhpIni
     protected $pickleFooterStartPos = -1;
     protected $pickleFooterEndPos = -1;
 
-    public function __construct(PhpDetection $php)
+    public function __construct(\Pickle\Engine\Engine $php)
     {
-        $this->path = $php->getPhpIniDir();
+        $this->path = $php->getIniPath();
 
         $this->raw = @file_get_contents($this->path);
         if (false === $this->raw) {

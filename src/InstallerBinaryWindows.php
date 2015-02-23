@@ -19,7 +19,7 @@ class InstallerBinaryWindows
     /**
      * @param string $ext
      */
-    public function __construct(PhpDetection $php, $ext)
+    public function __construct(\Pickle\Engine\Engine $php, $ext)
     {
         // used only if only the extension name is given
         if (strpos('//', $ext) !== false) {
@@ -192,7 +192,7 @@ class InstallerBinaryWindows
                     throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
             } else {
-                $success = @copy($dll, dirname($this->php->getPhpCliPath()).'/'.$basename);
+                $success = @copy($dll, dirname($this->php->getPath()).'/'.$basename);
                 if (!$success) {
                     throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
