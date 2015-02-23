@@ -2,7 +2,6 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Engine;
 use Pickle\Engine\Ini;
 
 class Ini
@@ -12,7 +11,7 @@ class Ini
 	public static function factory($engine = NULL)
 	{
 		if (NULL == self::$instance) {
-			$engine = NULL == $engine ? Engine::factory() : $engine;
+			$engine = NULL == $engine ? \Pickle\Engine::factory() : $engine;
 
 			switch ($engine->getName()) {
 				case "php":
