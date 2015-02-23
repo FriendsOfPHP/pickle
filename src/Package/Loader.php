@@ -23,45 +23,75 @@ class Loader implements LoaderInterface
         $package = new $class($config['name'], $version, $config['version']);
         $package->setType('extension');
 
+        $this->setPackageSource($package, $config);
+        $this->setPackageDist($package, $config);
+        $this->setPackageReleaseDate($package, $config);
+        $this->setPackageStability($package, $config);
+        $this->setPackageExtra($package, $config);
+        $this->setPackageDescription($package, $config);
+        $this->setPackageHomepage($package, $config);
+        $this->setPackageKeywords($package, $config);
+        $this->setPackageLicense($package, $config);
+        $this->setPackageAuthors($package, $config);
+        $this->setPackageSupport($package, $config);
+
+        return $package;
+    }
+
+    protected function setPackageStability(Package $package, array $config)
+    {
         if ($this->isValid($config, "stability", "string")) {
             $package->setStability($config['stability']);
         }
+    }
 
+    protected function setPackageExtra(Package $package, array $config)
+    {
         if ($this->isValid($config, "extra", "array")) {
             $package->setExtra($config['extra']);
         }
+    }
 
-        $this->setPackageSource($package, $config);
-
-        $this->setPackageDist($package, $config);
-
-        $this->setPackageReleaseDate($package, $config);
-
+    protected function setPackageDescription(Package $package, array $config)
+    {
         if ($this->isValid($config, "description", "string")) {
             $package->setDescription($config['description']);
         }
+    }
 
+    protected function setPackageHomepage(Package $package, array $config)
+    {
         if ($this->isValid($config, "homepage", "string")) {
             $package->setHomepage($config['homepage']);
         }
+    }
 
+    protected function setPackageKeywords(Package $package, array $config)
+    {
         if ($this->isValid($config, "keywords", "array")) {
             $package->setKeywords($config['keywords']);
         }
+    }
 
+    protected function setPackageLicense(Package $package, array $config)
+    {
         if (!empty($config['license'])) {
             $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
         }
+    }
 
+    protected function setPackageAuthors(Package $package, array $config)
+    {
         if ($this->isValid($config, "authors", "array")) {
             $package->setAuthors($config['authors']);
         }
+    }
 
+    protected function setPackageSupport(Package $package, array $config)
+    {
         if (isset($config['support'])) {
             $package->setSupport($config['support']);
         }
-
-        return $package;
     }
 
     protected function isValid($config, $key, $type = "any")
