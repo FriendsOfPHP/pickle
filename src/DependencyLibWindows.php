@@ -46,13 +46,13 @@ class DependencyLibWindows
         $compiler = $this->php->getCompiler();
         $architecture = $this->php->getArchitecture();
         if (!isset($dllMap->{$compiler}->{$architecture})) {
-	    /* Just for the case the given compiler/arch set isn't defined in the dllmap,
-	       or we've got a corrupted file, or ...
-	       The dllMap property should be ensured an array. */
+        /* Just for the case the given compiler/arch set isn't defined in the dllmap,
+           or we've got a corrupted file, or ...
+           The dllMap property should be ensured an array. */
             $this->dllMap = array();
-	} else {
+    } else {
             $this->dllMap = $dllMap->{$compiler}->{$architecture};
-	}
+    }
 
         return true;
     }

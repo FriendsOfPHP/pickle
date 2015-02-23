@@ -35,14 +35,14 @@ class Package extends CompletePackage implements PackageInterface
             $path = $release;
         }
 
-	/* Do subdir search */
-	if (!$this->extConfigIsIn($path)) {
-		$path = $this->locateSourceDirByExtConfig($path);
+    /* Do subdir search */
+    if (!$this->extConfigIsIn($path)) {
+        $path = $this->locateSourceDirByExtConfig($path);
 
-		if (NULL === $path) {
-			throw new \Exception("config*.(m4|w32) not found");
-		}
-	}
+        if (NULL === $path) {
+            throw new \Exception("config*.(m4|w32) not found");
+        }
+    }
 
         return $path;
     }
@@ -287,18 +287,18 @@ class Package extends CompletePackage implements PackageInterface
 
     protected function locateSourceDirByExtConfig($path)
     {
-    	$it = new \RecursiveIteratorIterator(
-		new \RecursiveDirectoryIterator($path),
-		\RecursiveIteratorIterator::SELF_FIRST
-	);
+        $it = new \RecursiveIteratorIterator(
+        new \RecursiveDirectoryIterator($path),
+        \RecursiveIteratorIterator::SELF_FIRST
+    );
 
-    	foreach ($it as $fl_obj) {
-		if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
-			return $fl_obj->getPath();
-		}
-	}
+        foreach ($it as $fl_obj) {
+        if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
+            return $fl_obj->getPath();
+        }
+    }
 
-	return NULL;
+    return NULL;
     }
 }
 

@@ -19,7 +19,7 @@ class PHP extends AbstractIni implements Ini
 
     public function __construct(\Pickle\Engine\Engine $php)
     {
-    	parent::__construct($php);
+        parent::__construct($php);
 
         $this->path = $php->getIniPath();
 

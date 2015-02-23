@@ -4,16 +4,16 @@ namespace Pickle\Engine\Ini;
 
 class AbstractIni
 {
-	protected $engine = NULL;
+    protected $engine = NULL;
 
-	public function __construct(\Pickle\Engine\Engine $php)
-	{
-		$this->engine = $php;
-	}
+    public function __construct(\Pickle\Engine\Engine $php)
+    {
+        $this->engine = $php;
+    }
 
-	public function getengine()
-	{
-		return $this->engine;
-	}
+    public function getengine()
+    {
+        return $this->engine;
+    }
 }
 
