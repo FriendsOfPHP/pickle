@@ -99,7 +99,7 @@ class InstallerBinaryWindows
         $extName =  strtolower($this->extName);
         $baseUrl = "http://windows.php.net/downloads/pecl/releases/";
 
-        if (!$this->findInLinks($baseUrl.$extName, $pkgVersion)) {
+        if (false === $this->findInLinks($baseUrl.$extName, $pkgVersion)) {
             throw new \Exception('Binary for <'.$extName.'-'.$pkgVersion.'> cannot be found');
         }
 
