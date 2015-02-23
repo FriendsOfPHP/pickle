@@ -5,6 +5,11 @@ use Pickle\Package;
 
 class Dumper extends Package\Dumper
 {
+    /**
+     * @param Package $package
+     *
+     * @return string
+     */
     public function dump(Package $package)
     {
         return json_encode(parent::dump($package), JSON_PRETTY_PRINT);

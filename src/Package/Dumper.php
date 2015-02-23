@@ -5,6 +5,11 @@ use Pickle\Package;
 
 class Dumper
 {
+    /**
+     * @param Package $package
+     *
+     * @return array
+     */
     public function dump(Package $package)
     {
         $data = [];
