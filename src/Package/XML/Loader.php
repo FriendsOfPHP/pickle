@@ -16,7 +16,7 @@ class Loader
     /**
      * @param string $path
      *
-     * @return \Composer\Package\PackageInterface
+     * @return \Pickle\Package
      */
     public function load($path)
     {
