@@ -38,7 +38,7 @@ class HHVM extends AbstractEngine implements Engine
 		return HHVM_VERSION;
 	}
 
-	protected getParsedVersion($type)
+	protected function getParsedVersion($type)
 	{
 		if ($type < 1 || $type > 2) {
 			throw new \Exception("Invalid version info requested");
