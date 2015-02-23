@@ -81,7 +81,7 @@ class DependencyLibWindows
             throw new \RuntimeException('Error while running deplister.exe');
         }
         $dlls = [];
-        foreach ($out as $l) {
+        foreach ((array)$out as $l) {
             list($dllname, $found) = explode(',', $l);
             $found = trim($found);
             $dllname = trim($dllname);
