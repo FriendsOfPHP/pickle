@@ -2,7 +2,8 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Engine\Ini;
+use Pickle\Engine\PHP;
+use Pickle\Engine\HHVM;
 use Pickle\Base\Interfaces;
 
 class Ini
@@ -16,11 +17,11 @@ class Ini
 
             switch ($engine->getName()) {
                 case "php":
-                    self::$instance = new Ini\PHP($engine);
+                    self::$instance = new PHP\Ini($engine);
                     break;
 
                 case "hhvm":
-                    self::$instance = new Ini\HHVM($engine);
+                    self::$instance = new HHVM\Ini($engine);
                     break;
 
                 default:

@@ -1,11 +1,11 @@
 <?php
 
-namespace Pickle\tests\units\Engine\Ini;
+namespace Pickle\tests\units\Engine\PHP;
 
 use atoum;
 use Pickle\tests;
 
-class PHP extends atoum
+class Ini extends atoum
 {
     protected function getEngineMock($path)
     {
@@ -28,13 +28,13 @@ class PHP extends atoum
         $php = $this->getEngineMock("");
         $this->assert
                 ->exception(function () use ($php) {
-                        new \Pickle\Engine\Ini\PHP($php);
+                        new \Pickle\Engine\PHP\Ini($php);
                     });
 
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
         $this
-            ->object(new \Pickle\Engine\Ini\PHP($php))
-                ->isInstanceOf("\Pickle\Engine\Ini\PHP");
+            ->object(new \Pickle\Engine\PHP\Ini($php))
+                ->isInstanceOf("\Pickle\Engine\PHP\Ini");
     }
 
     public function testupdatePickleSection_empty()
@@ -69,7 +69,7 @@ class PHP extends atoum
 
         $php = $this->getEngineMock($fl);
 
-        $ini = new \Pickle\Engine\Ini\PHP($php);
+        $ini = new \Pickle\Engine\PHP\Ini($php);
         $ini->updatePickleSection(array("php_pumpkin.dll", "php_hello.dll"));
 
         $this
@@ -87,7 +87,7 @@ class PHP extends atoum
         $exp = "extension=php_a.dll\nextension=php_b.dll";
 
         $this
-            ->if($ini = new \Pickle\Engine\Ini\PHP($php))
+            ->if($ini = new \Pickle\Engine\PHP\Ini($php))
             ->then
                 ->string(
                     $this->invoke($ini)->rebuildPickleParts($in, array("php_c.dll"))
@@ -102,7 +102,7 @@ class PHP extends atoum
         $exp = "extension=php_a.dll\nextension=php_c.dll";
 
         $this
-            ->if($ini = new \Pickle\Engine\Ini\PHP($php))
+            ->if($ini = new \Pickle\Engine\PHP\Ini($php))
             ->then
                 ->string(
                     $this->invoke($ini)->rebuildPickleParts($in, array("php_b.dll"))

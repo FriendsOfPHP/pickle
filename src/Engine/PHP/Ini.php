@@ -1,11 +1,11 @@
 <?php
 
-namespace Pickle\Engine\Ini;
+namespace Pickle\Engine\PHP;
 
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
 
-class PHP extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
+class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
     protected $raw;
     protected $path;
