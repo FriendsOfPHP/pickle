@@ -6,7 +6,7 @@ use Pickle\Package\PHP;
 class Dumper extends PHP\Util\Dumper
 {
     /**
-     * @param Package $package
+     * @param \Pickle\Base\Interfaces\Package $package
      *
      * @return string
      */
@@ -16,7 +16,7 @@ class Dumper extends PHP\Util\Dumper
     }
 
     /**
-     * @param Package $package
+     * @param \Pickle\Base\Interfaces\Package $package
      * @param string  $path
      */
     public function dumpToFile(PHP\Package $package, $path)
