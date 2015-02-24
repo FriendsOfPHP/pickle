@@ -1,6 +1,8 @@
 <?php
 namespace Pickle\Base\Util;
 
+use Pickle\Package;
+
 class GitIgnore
 {
     protected $excluded = [];
