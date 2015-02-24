@@ -1,11 +1,11 @@
 <?php
 
-namespace Pickle\Build\Src;
+namespace Pickle\Base\Abstracts\Package;
 
 use Pickle\Base\Util\FileOps;
 use Pickle\Package;
 
-abstract class AbstractBuild
+abstract class Build
 {
     use FileOps;
 

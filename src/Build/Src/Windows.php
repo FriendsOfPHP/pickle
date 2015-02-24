@@ -1,10 +1,10 @@
 <?php
 namespace Pickle\Build\Src;
 
-use Pickle\Build\Src\Build;
-use Pickle\Build\Src\AbstractBuild;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 
-class Windows extends AbstractBuild implements Build
+class Windows extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
     public function prepare()
     {

@@ -2,10 +2,10 @@
 
 namespace Pickle\Build\Src;
 
-use Pickle\Build\Src\Build;
-use Pickle\Build\Src\AbstractBuild;
+use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
-class Unix extends AbstractBuild implements Build
+class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
     public function prepare()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pickle\Build\Src;
+namespace Pickle\Base\Interfaces\Package;
 
 use Pickle\Package;
 
