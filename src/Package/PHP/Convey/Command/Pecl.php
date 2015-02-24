@@ -7,6 +7,7 @@ use Composer\Config;
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
 use Pickle\Package\PHP;
+use Pickle\Engine;
 use Pickle\Downloader\PECLDownloader;
 use Pickle\Package\Convey\Command\Type;
 
