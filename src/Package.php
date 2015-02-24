@@ -3,6 +3,8 @@ namespace Pickle;
 
 use Composer\Package\CompletePackage;
 
+use Pickle\Base\Util\GitIgnore;
+
 class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 {
     /**

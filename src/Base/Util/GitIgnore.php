@@ -1,5 +1,5 @@
 <?php
-namespace Pickle;
+namespace Pickle\Base\Util;
 
 class GitIgnore
 {
