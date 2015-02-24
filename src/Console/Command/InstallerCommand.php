@@ -135,40 +135,6 @@ class InstallerCommand extends Command
     }
     }
 
-    /**
-     * @param string          $path
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
-     /* XXX this method seems to be dead code */
-    protected function sourceInstallWindows($path, $input, $output)
-    {
-        $php = Engine::factory();
-        $php->hasSdk();
-        $table = new Table($output);
-        $table
-            ->setRows([
-               ['<info>' . $php->getName() . ' Path</info>', $php->getPath()],
-               ['<info>' . $php->getName() . ' Version</info>', $php->getVersion()],
-               ['<info>Compiler</info>', $php->getCompiler()],
-               ['<info>Architecture</info>', $php->getArchitecture()],
-               ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
-               ['<info>Extension dir</info>', $php->getExtensionDir()],
-               ['<info>php.ini</info>', $php->getIniPath()],
-            ])
-            ->render();
-
-        $bld = new BuildSrcWindows($php, $path);
-        $progress = $this->getHelperSet()->get('progress');
-        $bld->setProgress($progress);
-        $bld->setInput($input);
-        $bld->setOutput($output);
-        $bld->prepare();
-        $bld->phpize();
-        $bld->configure();
-        $bld->install();
-    }
-
     protected function saveSourceInstallLogs(InputInterface $input, $build)
     {
         $save_log_path = $input->getOption('save-logs');
@@ -181,11 +147,8 @@ class InstallerCommand extends Command
     {
         $helper = $this->getHelperSet()->get('question');
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $build = new \Pickle\Build\Src\Windows($package, $optionsValue);
-        } else {
-            $build = new \Pickle\Build\Src\Unix($package, $optionsValue);
-        }
+        $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
+
         try {
             $build->prepare();
             $build->phpize();

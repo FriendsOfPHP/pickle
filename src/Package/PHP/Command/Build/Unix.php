@@ -1,6 +1,6 @@
 <?php
 
-namespace Pickle\Build\Src;
+namespace Pickle\Package\PHP\Command\Build;
 
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
