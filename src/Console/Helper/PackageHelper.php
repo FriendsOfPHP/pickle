@@ -24,7 +24,7 @@ class PackageHelper extends Helper
         return 'package';
     }
 
-    public function showInfo(OutputInterface $output, Pickle\Base\Interfaces\Package $package)
+    public function showInfo(OutputInterface $output, \Pickle\Base\Interfaces\Package $package)
     {
         $table = new Table($output);
         $table
