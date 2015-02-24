@@ -6,7 +6,7 @@ use Pickle\Base\Interfaces;
 class Archive
 {
     /**
-     * @var Package
+     * @var \Pickle\Base\Interfaces\Package
      */
     private $pkg;
 
