@@ -2,7 +2,7 @@
 
 namespace Pickle\Base\Interfaces\Package;
 
-use Pickle\Package;
+use Pickle\Base\Interfaces\Package;
 
 interface Build
 {

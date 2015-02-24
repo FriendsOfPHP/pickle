@@ -1,12 +1,12 @@
 <?php
 
-namespace Pickle\Package\Convey\Command;
+namespace Pickle\Package\PHP\Convey\Command;
 
 use Composer\Config;
 
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
-use Pickle\Package;
+use Pickle\Package\PHP;
 use Pickle\Downloader\PECLDownloader;
 use Pickle\Package\Convey\Command\Type;
 
@@ -14,9 +14,15 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
 {
     protected function prepare()
     {
+	$engine = Engine::factory();
+
         if (Type::determinePecl($this->path, $matches) < 1) {
-            throw new \Exception("Not valid pecl URI");
+            throw new \Exception("Not valid PECL URI");
         }
+
+	if ("php" != $engine->getName()) {
+            throw new \Exception("PECL is only supported with PHP");
+	}
 
         $this->name = $matches['package'];
         $this->url = 'http://pecl.php.net/get/' . $matches['package'];
@@ -40,7 +46,7 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
 
     protected function fetch($target)
     {
-        $package = new Package($this->name, $this->version, $this->prettyVersion);
+        $package = \Pickle\Package::factory($this->name, $this->version, $this->prettyVersion);
         $package->setDistUrl($this->url);
 
         $package->setRootDir($target);
@@ -55,7 +61,8 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
     {
         $this->fetch($target);
 
-        return parent::execute($target, $no_convert);
+	$exe = new DefaultExecutor($this);
+        return $exe->execute($target, $no_convert);
     }
 
     public function getType()

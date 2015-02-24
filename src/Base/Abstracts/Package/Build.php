@@ -3,7 +3,7 @@
 namespace Pickle\Base\Abstracts\Package;
 
 use Pickle\Base\Util\FileOps;
-use Pickle\Package;
+use Pickle\Base\Interfaces\Package;
 
 abstract class Build
 {

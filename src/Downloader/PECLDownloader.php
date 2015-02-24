@@ -1,7 +1,7 @@
 <?php
 namespace Pickle\Downloader;
 
-use Pickle\Base\Interfaces\Package;
+use Composer\Package\PackageInterface as Package;
 
 class PECLDownloader extends TGZDownloader
 {

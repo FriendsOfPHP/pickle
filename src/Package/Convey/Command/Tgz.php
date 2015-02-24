@@ -22,7 +22,7 @@ class Tgz extends Abstracts\Package\Convey\Command implements Interfaces\Package
 
     protected function fetch($target)
     {
-        $package = new Package($this->name, $this->version, $this->prettyVersion);
+        $package = Package::factory($this->name, $this->version, $this->prettyVersion);
 
         $package->setDistUrl($this->url);
         $package->setRootDir($target);
@@ -37,7 +37,8 @@ class Tgz extends Abstracts\Package\Convey\Command implements Interfaces\Package
     {
         $this->fetch($target);
 
-        return parent::execute($target, $no_convert);
+	$exe = DefaultExecutor::factory($this);
+        return $exe->execute($target, $no_convert);
     }
 
     public function getType()

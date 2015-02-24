@@ -3,7 +3,7 @@
 namespace Pickle\Package\Convey\Command;
 
 use Pickle\Package\Convey\Command\Type;
-use Pickle\Package\Convey\Command\Pecl;
+use Pickle\Package\PHP\Convey\Command\Pecl;
 use Pickle\Package\Convey\Command\Git;
 use Pickle\Package\Convey\Command\Tgz;
 use Pickle\Package\Convey\Command\SrcDir;

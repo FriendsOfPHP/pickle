@@ -11,7 +11,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
-use Pickle\Package;
+use Pickle\Base\Interfaces\Package;
 use Pickle\Engine;
 use Pickle\InstallerBinaryWindows;
 use Pickle\DependencyLibWindows;

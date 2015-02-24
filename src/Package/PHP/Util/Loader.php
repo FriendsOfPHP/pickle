@@ -1,9 +1,9 @@
 <?php
-namespace Pickle\Package;
+namespace Pickle\Package\PHP\Util;
 
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
-use Pickle\Package;
+use Pickle\Package\PHP;
 
 class Loader implements LoaderInterface
 {
@@ -16,11 +16,11 @@ class Loader implements LoaderInterface
         $this->loadOptions = $loadOptions;
     }
 
-    public function load(array $config, $class = 'Pickle\Package')
+    public function load(array $config, $package = 'Pickle\Package\PHP\Package')
     {
         $version = $this->versionParser->normalize($config['version']);
 
-        $package = new $class($config['name'], $version, $config['version']);
+        $package = new PHP\Package($config['name'], $version, $config['version']);
         $package->setType('extension');
 
         $this->setPackageSource($package, $config);
@@ -38,56 +38,56 @@ class Loader implements LoaderInterface
         return $package;
     }
 
-    protected function setPackageStability(Package $package, array $config)
+    protected function setPackageStability(PHP\Package $package, array $config)
     {
         if ($this->isValid($config, "stability", "string")) {
             $package->setStability($config['stability']);
         }
     }
 
-    protected function setPackageExtra(Package $package, array $config)
+    protected function setPackageExtra(PHP\Package $package, array $config)
     {
         if ($this->isValid($config, "extra", "array")) {
             $package->setExtra($config['extra']);
         }
     }
 
-    protected function setPackageDescription(Package $package, array $config)
+    protected function setPackageDescription(PHP\Package $package, array $config)
     {
         if ($this->isValid($config, "description", "string")) {
             $package->setDescription($config['description']);
         }
     }
 
-    protected function setPackageHomepage(Package $package, array $config)
+    protected function setPackageHomepage(PHP\Package $package, array $config)
     {
         if ($this->isValid($config, "homepage", "string")) {
             $package->setHomepage($config['homepage']);
         }
     }
 
-    protected function setPackageKeywords(Package $package, array $config)
+    protected function setPackageKeywords(PHP\Package $package, array $config)
     {
         if ($this->isValid($config, "keywords", "array")) {
             $package->setKeywords($config['keywords']);
         }
     }
 
-    protected function setPackageLicense(Package $package, array $config)
+    protected function setPackageLicense(PHP\Package $package, array $config)
     {
         if (!empty($config['license'])) {
             $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
         }
     }
 
-    protected function setPackageAuthors(Package $package, array $config)
+    protected function setPackageAuthors(PHP\Package $package, array $config)
     {
         if ($this->isValid($config, "authors", "array")) {
             $package->setAuthors($config['authors']);
         }
     }
 
-    protected function setPackageSupport(Package $package, array $config)
+    protected function setPackageSupport(PHP\Package $package, array $config)
     {
         if (isset($config['support'])) {
             $package->setSupport($config['support']);
@@ -107,7 +107,7 @@ class Loader implements LoaderInterface
         return false;
     }
 
-    protected function setPackageSource(Package $package, array $config)
+    protected function setPackageSource(PHP\Package $package, array $config)
     {
         if (!isset($config['source'])) {
             return;
@@ -128,7 +128,7 @@ class Loader implements LoaderInterface
         }
     }
 
-    protected function setPackageDist(Package $package, array $config)
+    protected function setPackageDist(PHP\Package $package, array $config)
     {
         if (!isset($config['dist'])) {
             return;
@@ -153,7 +153,7 @@ class Loader implements LoaderInterface
         }
     }
 
-    protected function setPackageReleaseDate(Package $package, array $config)
+    protected function setPackageReleaseDate(PHP\Package $package, array $config)
     {
         if (empty($config['time'])) {
             return;

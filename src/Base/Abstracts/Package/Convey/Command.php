@@ -3,8 +3,6 @@
 namespace Pickle\Base\Abstracts\Package\Convey;
 
 use Composer\IO\ConsoleIO;
-use Pickle\Package;
-use Pickle\Package\JSON\Dumper;
 
 abstract class Command
 {
@@ -29,39 +27,7 @@ abstract class Command
 
     public function execute($target, $no_convert)
     {
-        $jsonLoader = new Package\JSON\Loader(new Package\Loader());
-        $pickle_json = $target . DIRECTORY_SEPARATOR . 'composer.json';
-        $package = null;
-
-        if (file_exists($pickle_json)) {
-            $package = $jsonLoader->load($pickle_json);
-        }
-
-        if (null === $package && $no_convert) {
-            throw new \RuntimeException('XML package are not supported. Please convert it before install');
-        }
-
-        if (null === $package) {
-            if (file_exists($target . DIRECTORY_SEPARATOR . 'package2.xml')) {
-                $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package2.xml';
-            } elseif (file_exists($target . DIRECTORY_SEPARATOR . 'package.xml')) {
-                $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package.xml';
-            } else {
-                throw new \Exception("package.xml not found");
-            }
-
-            $loader = new Package\XML\Loader(new Package\Loader());
-            $package = $loader->load($pkg_xml);
-
-            $dumper = new Dumper();
-            $dumper->dumpToFile($package, $pickle_json);
-
-            $package = $jsonLoader->load($pickle_json);
-        }
-
-        $package->setRootDir($target);
-
-        return $package;
+    	throw new \Exception("No command::execute implementation found ");
     }
 
     public function getPath()

@@ -19,7 +19,9 @@ class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     {
         /* Override target, otherwise we'd need to copy ext root each time */
         $target = realpath($this->path);
-        return parent::execute($target, $no_convert);
+
+	$exe = DefaultExecutor::factory($this);
+        return $exe->execute($target, $no_convert);
     }
 
     public function getType()

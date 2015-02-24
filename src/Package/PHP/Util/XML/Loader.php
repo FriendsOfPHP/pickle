@@ -1,8 +1,8 @@
 <?php
-namespace Pickle\Package\XML;
+namespace Pickle\Package\PHP\Util\XML;
 
 use Composer\Package\Loader\LoaderInterface;
-use Pickle\Package;
+use Pickle\Package\PHP;
 
 class Loader
 {
@@ -16,7 +16,7 @@ class Loader
     /**
      * @param string $path
      *
-     * @return \Pickle\Package
+     * @return Pickle\Base\Interfaces\Package
      */
     public function load($path)
     {
