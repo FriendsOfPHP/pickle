@@ -30,7 +30,7 @@ class ValidateCommand extends Command
             throw new \InvalidArgumentException('File not found: ' . $path . DIRECTORY_SEPARATOR . 'package.xml');
         }
 
-        $loader = new Package\XML\Loader(new Package\Loader());
+        $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
         $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
 
         $this->getHelper('package')->showInfo($output, $package);

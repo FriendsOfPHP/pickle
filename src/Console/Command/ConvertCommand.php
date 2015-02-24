@@ -1,7 +1,7 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package\JSON\Dumper;
+use Pickle\Package\PHP\Util\JSON\Dumper;
 use Pickle\Package;
 use Pickle\ConvertChangeLog;
 use Symfony\Component\Console\Command\Command;
@@ -33,7 +33,7 @@ class ConvertCommand extends Command
             throw new \InvalidArgumentException('File not found: ' . $xml);
         }
 
-        $loader = new Package\XML\Loader(new Package\Loader());
+        $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
         $package = $loader->load($xml);
         $package->setRootDir($path);
         $convertCl = new ConvertChangeLog($xml);
