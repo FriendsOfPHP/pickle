@@ -46,7 +46,7 @@ class ReleaseCommand extends Command
         }
 
         if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
-            $loader = new Package\XML\Loader(new Package\Loader());
+            $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
             $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
 
             $dumper = new Dumper();
