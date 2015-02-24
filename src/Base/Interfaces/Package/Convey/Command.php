@@ -1,6 +1,6 @@
 <?php
 
-namespace Pickle\Package\Convey\Command;
+namespace Pickle\Base\Interfaces\Package\Convey;
 
 use Composer\IO\ConsoleIO;
 
@@ -10,3 +10,4 @@ interface Command
     public function execute($target, $no_convert);
     public function getType();
 }
+

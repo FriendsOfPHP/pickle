@@ -3,12 +3,14 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
+
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 use Pickle\Package;
 use Pickle\Downloader\PECLDownloader;
-use Pickle\Package\Convey\Command\Command;
 use Pickle\Package\Convey\Command\Type;
 
-class Pecl extends AbstractCommand implements Command
+class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
     protected function prepare()
     {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Pickle\Package\Convey\Command;
+namespace Pickle\Base\Abstracts\Package\Convey;
 
 use Composer\IO\ConsoleIO;
 use Pickle\Package;
 use Pickle\Package\JSON\Dumper;
 
-abstract class AbstractCommand
+abstract class Command
 {
     protected $path;
     protected $version;

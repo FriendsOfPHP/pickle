@@ -3,10 +3,11 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-use Pickle\Package;
-use Pickle\Package\Convey\Command\Command;
 
-class Any extends AbstractCommand implements Command
+use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
+
+class Any extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
     protected function prepare()
     {
@@ -15,9 +16,11 @@ class Any extends AbstractCommand implements Command
 
     public function execute($target, $no_convert)
     {
+        throw new \Exception("Unsupported package type");
     }
 
     public function getType()
     {
+        throw new \Exception("Unsupported package type");
     }
 }

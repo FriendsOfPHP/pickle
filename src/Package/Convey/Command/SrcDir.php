@@ -3,11 +3,12 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-use Pickle\Package;
-use Pickle\Package\Convey\Command\Command;
+
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 use Pickle\Package\Convey\Command\Type;
 
-class SrcDir extends AbstractCommand implements Command
+class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
     protected function prepare()
     {

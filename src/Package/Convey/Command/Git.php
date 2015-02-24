@@ -3,12 +3,14 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
+
+use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Composer\Downloader\GitDownloader;
-use Pickle\Package\Convey\Command\Command;
 use Pickle\Package\Convey\Command\Type;
 
-class Git extends AbstractCommand implements Command
+class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
     protected function prepare()
     {
