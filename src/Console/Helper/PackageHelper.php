@@ -3,7 +3,6 @@ namespace Pickle\Console\Helper;
 
 use Composer\Config;
 use Composer\IO\ConsoleIO;
-use Composer\Package\PackageInterface;
 use Pickle\Package;
 use Pickle\Package\Convey;
 use Symfony\Component\Console\Helper\Helper;
@@ -25,7 +24,7 @@ class PackageHelper extends Helper
         return 'package';
     }
 
-    public function showInfo(OutputInterface $output, PackageInterface $package)
+    public function showInfo(OutputInterface $output, Pickle\Base\Interfaces\Package $package)
     {
         $table = new Table($output);
         $table
