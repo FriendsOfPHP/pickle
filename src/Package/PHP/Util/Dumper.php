@@ -6,7 +6,7 @@ use Pickle\Package\PHP;
 class Dumper
 {
     /**
-     * @param Package $package
+     * @param \Pickle\Base\Interfaces\Package $package
      *
      * @return array
      */
