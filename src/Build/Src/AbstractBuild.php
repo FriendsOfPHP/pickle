@@ -2,7 +2,7 @@
 
 namespace Pickle\Build\Src;
 
-use Pickle\FileOps;
+use Pickle\Base\Util\FileOps;
 use Pickle\Package;
 
 abstract class AbstractBuild

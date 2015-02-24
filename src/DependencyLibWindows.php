@@ -5,6 +5,8 @@ namespace Pickle;
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
+use Pickle\Base\Util\FileOps;
+
 class DependencyLibWindows
 {
     use FileOps;
