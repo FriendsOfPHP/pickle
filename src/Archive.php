@@ -13,7 +13,7 @@ class Archive
     /**
      * Constructor
      *
-     * @param Package $package
+     * @param \Pickle\Base\Interfaces\Package $package
      */
     public function __construct(Interfaces\Package $package)
     {
