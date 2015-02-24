@@ -51,7 +51,11 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
         $this->zts = (boolean) $this->zts;
 
-        list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
+	if (defined("PHP_WINDOWS_VERSION_MAJOR")) {
+		list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
+	} else {
+		/* TODO till now we didn't need his on linux*/
+	}
     }
 
     protected function getExtensionDirFromPhpInfo($info)

@@ -1,7 +1,7 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package\JSON\Dumper;
+use Pickle\Package\PHP\Util\JSON\Dumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +34,7 @@ class ReleaseCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
-        $jsonLoader = new Package\JSON\Loader(new Package\Loader());
+        $jsonLoader = new Package\PHP\Util\JSON\Loader(new Package\PHP\Util\Loader());
         $package = null;
 
         if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {

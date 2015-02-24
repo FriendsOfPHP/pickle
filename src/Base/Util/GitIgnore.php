@@ -1,13 +1,13 @@
 <?php
 namespace Pickle\Base\Util;
 
-use Pickle\Package;
+use Pickle\Base\Interfaces;
 
 class GitIgnore
 {
     protected $excluded = [];
 
-    public function __construct(Package $package)
+    public function __construct(Interfaces\Package $package)
     {
         $dir = $package->getSourceDir();
         $path = $package->getSourceDir() . '/.gitignore';

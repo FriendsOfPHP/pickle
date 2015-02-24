@@ -1,6 +1,8 @@
 <?php
 namespace Pickle;
 
+use Pickle\Base\Interfaces;
+
 class Archive
 {
     /**
@@ -13,7 +15,7 @@ class Archive
      *
      * @param Package $package
      */
-    public function __construct(Package $package)
+    public function __construct(Interfaces\Package $package)
     {
         $this->pkg = $package;
     }

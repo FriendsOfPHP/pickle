@@ -3,7 +3,7 @@ namespace Pickle\Console\Helper;
 
 use Composer\Config;
 use Composer\IO\ConsoleIO;
-use Pickle\Package;
+use Pickle\Base\Interfaces;
 use Pickle\Package\Convey;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -24,7 +24,7 @@ class PackageHelper extends Helper
         return 'package';
     }
 
-    public function showInfo(OutputInterface $output, \Pickle\Base\Interfaces\Package $package)
+    public function showInfo(OutputInterface $output, Interfaces\Package $package)
     {
         $table = new Table($output);
         $table
@@ -36,7 +36,7 @@ class PackageHelper extends Helper
             ->render();
     }
 
-    public function showOptions(OutputInterface $output, Package $package)
+    public function showOptions(OutputInterface $output, Interfaces\Package $package)
     {
         $table = new Table($output);
         $table->setHeaders(['Type', 'Description', 'Default']);
@@ -64,7 +64,7 @@ class PackageHelper extends Helper
      * @param  OutputInterface $output
      * @param $url
      * @param $path
-     * @return Package
+     * @return Pickle\Base\Interfaces\Package
      */
     public function convey(InputInterface $input, OutputInterface $output, $path, $target = null)
     {
