@@ -2,10 +2,10 @@
 
 namespace Pickle\Engine\Ini;
 
-use Pickle\Engine\Ini\Ini;
-use Pickle\Engine\Ini\AbstractIni;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 
-class PHP extends AbstractIni implements Ini
+class PHP extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
     protected $raw;
     protected $path;
@@ -17,7 +17,7 @@ class PHP extends AbstractIni implements Ini
     protected $pickleFooterStartPos = -1;
     protected $pickleFooterEndPos = -1;
 
-    public function __construct(\Pickle\Engine\Engine $php)
+    public function __construct(Interfaces\Engine $php)
     {
         parent::__construct($php);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pickle\Engine;
+namespace Pickle\Base\Interfaces;
 
 interface Engine
 {

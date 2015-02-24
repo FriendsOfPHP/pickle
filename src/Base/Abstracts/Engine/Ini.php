@@ -1,12 +1,12 @@
 <?php
 
-namespace Pickle\Engine\Ini;
+namespace Pickle\Base\Abstracts\Engine;
 
-class AbstractIni
+class Ini
 {
     protected $engine = NULL;
 
-    public function __construct(\Pickle\Engine\Engine $php)
+    public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {
         $this->engine = $php;
     }

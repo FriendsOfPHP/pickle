@@ -19,7 +19,7 @@ class InstallerBinaryWindows
     /**
      * @param string $ext
      */
-    public function __construct(\Pickle\Engine\Engine $php, $ext)
+    public function __construct(\Pickle\Base\Interfaces\Engine $php, $ext)
     {
         // used only if only the extension name is given
         if (strpos('//', $ext) !== false) {

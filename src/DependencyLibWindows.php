@@ -22,7 +22,7 @@ class DependencyLibWindows
 
     private $fetchedZips = array();
 
-    public function __construct(\Pickle\Engine\Engine $php)
+    public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {
         $this->php = $php;
         $this->checkDepListerExe();

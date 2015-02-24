@@ -2,13 +2,13 @@
 
 namespace Pickle\Engine\Ini;
 
-use Pickle\Engine\Ini\Ini;
-use Pickle\Engine\Ini\AbstractIni;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 
-class HHVM extends AbstractIni implements Ini
+class HHVM extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
     
-    public function __construct(\Pickle\Engine\Engine $php)
+    public function __construct(Interfaces\Engine $php)
     {
         parent::__construct($php);
     }

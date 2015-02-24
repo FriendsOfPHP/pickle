@@ -2,10 +2,10 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Engine\Engine;
-use Pickle\Engine\AbstractEngine;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 
-class HHVM extends AbstractEngine implements Engine
+class HHVM extends Abstracts\Engine implements Interfaces\Engine
 {
 
     public function __construct($phpCli = PHP_BINARY)

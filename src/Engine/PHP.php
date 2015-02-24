@@ -2,10 +2,10 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Engine\Engine;
-use Pickle\Engine\AbstractEngine;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts;
 
-class PHP extends AbstractEngine implements Engine
+class PHP extends Abstracts\Engine implements Interfaces\Engine
 {
     private $phpCli;
     private $phpize;

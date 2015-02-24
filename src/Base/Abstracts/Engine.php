@@ -1,8 +1,8 @@
 <?php
 
-namespace Pickle\Engine;
+namespace Pickle\Base\Abstracts;
 
-abstract class AbstractEngine
+abstract class Engine
 {
     public function getArchitecture()
     {
