@@ -1,5 +1,5 @@
 <?php
-namespace Pickle\tests\units;
+namespace Pickle\tests\units\Package\PHP;
 
 use atoum;
 use mageekguy\atoum\mock\streams\fs;

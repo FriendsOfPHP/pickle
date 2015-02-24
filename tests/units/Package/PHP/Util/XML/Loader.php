@@ -1,16 +1,16 @@
 <?php
-namespace Pickle\tests\units\Package\JSON;
+namespace Pickle\tests\units\Package\PHP\Util\XML;
 
 use atoum;
 use Pickle\tests;
 
 class Loader extends atoum
 {
-    public function testLoad()
+    public function testParse()
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/composer.json',
+                $path = FIXTURES_DIR . '/package/package.xml',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
                 $this->calling($loader)->load = $package = new \mock\Composer\Package\PackageInterface()
             )
@@ -23,16 +23,28 @@ class Loader extends atoum
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('File not found: ' . $path)
+            ->given($path = FIXTURES_DIR . '/package-no-extension/package.xml')
+            ->then
+                ->exception(function () use ($path) {
+                    $this->testedInstance->load($path);
+                })
+                    ->hasMessage('Only extension packages are supported')
+            ->given($path = FIXTURES_DIR . '/package-pre-2.0/package.xml')
+            ->then
+                ->exception(function () use ($path) {
+                    $this->testedInstance->load($path);
+                })
+                    ->hasMessage('Unsupported package.xml version, 2.0 or later only is supported')
         ;
     }
 
-    public function testLoadJsonDecodeError()
+    public function testParseXmlError()
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/composer.json',
+                $path = FIXTURES_DIR . '/package/package.xml',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
-                $this->function->json_decode = false
+                $this->function->simplexml_load_file = false
             )
             ->if($this->newTestedInstance($loader))
             ->then
@@ -40,8 +52,6 @@ class Loader extends atoum
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('Failed to read ' . $path)
-                ->mock($loader)
-                    ->call('load')->never
         ;
     }
 }

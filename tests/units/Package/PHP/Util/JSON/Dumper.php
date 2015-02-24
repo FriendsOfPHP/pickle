@@ -1,5 +1,5 @@
 <?php
-namespace Pickle\tests\units\Package\JSON;
+namespace Pickle\tests\units\Package\PHP\Util\JSON;
 
 use atoum;
 use Pickle\tests;
@@ -13,7 +13,7 @@ class Dumper extends atoum
                 $name = uniqid(),
                 $version = '1.0.0',
                 $type = 'extension',
-                $package = new \mock\Pickle\Package($name, $version, $version),
+                $package = new \mock\Pickle\Package\PHP\Package($name, $version, $version),
                 $this->calling($package)->getPrettyName = $name,
                 $this->calling($package)->getVersion = $version,
                 $this->calling($package)->getType = $type
@@ -72,7 +72,7 @@ class Dumper extends atoum
                 $name = uniqid(),
                 $version = '1.0.0',
                 $type = 'extension',
-                $package = new \mock\Pickle\Package($name, $version, $version),
+                $package = new \mock\Pickle\Package\PHP\Package($name, $version, $version),
                 $this->calling($package)->getPrettyName = $name,
                 $this->calling($package)->getVersion = $version,
                 $this->calling($package)->getType = $type,
