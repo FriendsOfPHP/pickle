@@ -2,7 +2,6 @@
 
 namespace Pickle\Package\Command;
 
-use Pickle\Base\Interfaces;
 use Pickle\Engine;
 use Pickle\Package\PHP;
 use Pickle\Package\HHVM;
