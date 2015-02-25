@@ -36,7 +36,7 @@ class DependencyLib
         $dllMap = null;
 
         if (is_null($this->dllMap)) {
-            $data = @file_get_contents(DependencyLibWindows::DLL_MAP_URL);
+            $data = @file_get_contents(self::DLL_MAP_URL);
             if (!$data) {
                 throw new \RuntimeException('Cannot fetch the DLL mapping file');
             }
@@ -63,7 +63,7 @@ class DependencyLib
     {
         $ret = exec('deplister.exe '.$this->php->getPath().' .');
         if (empty($ret)) {
-            $depexe = @file_get_contents(DependencyLibWindows::DEPLISTER_URL);
+            $depexe = @file_get_contents(self::DEPLISTER_URL);
             if (!$depexe) {
                 throw new \RuntimeException('Cannot fetch deplister.exe');
             }
