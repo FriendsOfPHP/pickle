@@ -15,7 +15,6 @@ class Validate
 		switch($engine->getName()) {
 			case "php":
 				return new PHP\Command\Validate($path, $cb);
-				break;
 
 			case "hhvm":
 				throw new \Exception("Not implemented for engine '{$engine->getName()}'");

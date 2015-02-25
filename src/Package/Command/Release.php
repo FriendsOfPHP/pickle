@@ -15,7 +15,6 @@ class Release
 		switch($engine->getName()) {
 			case "php":
 				return new PHP\Command\Release($path, $cb, $noConvert);
-				break;
 
 			case "hhvm":
 				throw new \Exception("Not implemented for engine '{$engine->getName()}'");

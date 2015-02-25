@@ -21,7 +21,6 @@ class Build
 					return new PHP\Command\Build\Unix($package, $optionValue);
 
 				}
-				break;
 
 			case "hhvm":
 				throw new \Exception("Not implemented for engine '{$engine->getName()}'");
