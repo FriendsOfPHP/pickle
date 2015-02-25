@@ -9,6 +9,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
     public function prepare()
     {
+	    $this->phpize();
     }
 
     public function phpize()

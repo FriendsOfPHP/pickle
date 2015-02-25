@@ -16,6 +16,8 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         if (!$this->runCommand("phpsdk_setvars")) {
             throw new \Exception("phpsdk_setvars failed");
         }
+
+	$this->phpize();
     }
 
     /**
