@@ -16,7 +16,6 @@ class Info
 		switch($engine->getName()) {
 			case "php":
 				return new PHP\Command\Info($path, $cb);
-				break;
 
 			case "hhvm":
 				throw new \Exception("Not implemented for engine '{$engine->getName()}'");

@@ -22,7 +22,6 @@ class Install
 						"except you really need to install a binary."
 					);
 				}
-				break;
 
 			case "hhvm":
 				throw new \Exception("Not implemented for engine '{$engine->getName()}'");

@@ -16,7 +16,6 @@ class Convert
 		switch($engine->getName()) {
 			case "php":
 				return new PHP\Command\Convert($path, $cb);
-				break;
 
 			case "hhvm":
 				throw new \Exception("Nothing to convert for engine '{$engine->getName()}'");
