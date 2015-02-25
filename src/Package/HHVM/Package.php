@@ -9,14 +9,21 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 {
     public function setRootDir($path)
     {
+        $this->path = $path;
     }
 
     public function getRootDir()
     {
+        return $this->path;
     }
     
     public function getSourceDir()
     {
-	    // TODO check by cmake file precence
+            $conf = glob("{$this->path}/config.cmake");
+	    if (!$conf) {
+		throw new \Exception("Couldn't determine package source dir");
+	    }
+
+	    return dirname($conf[0]);
     }
 }
