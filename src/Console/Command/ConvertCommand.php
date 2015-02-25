@@ -1,13 +1,12 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package\PHP\Util\JSON\Dumper;
-use Pickle\Package;
-use Pickle\ConvertChangeLog;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use Pickle\Package\Command\Convert;
 
 class ConvertCommand extends Command
 {
@@ -27,23 +26,13 @@ class ConvertCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = rtrim($input->getArgument('path'), '/\\');
-        $xml = $path . DIRECTORY_SEPARATOR . 'package.xml';
-        if (false === is_file($xml)) {
-            throw new \InvalidArgumentException('File not found: ' . $xml);
-        }
-
-        $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
-        $package = $loader->load($xml);
-        $package->setRootDir($path);
-        $convertCl = new ConvertChangeLog($xml);
-        $convertCl->parse();
-        $convertCl->generateReleaseFile();
-        $dumper = new Dumper();
-        $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'composer.json');
-
-        $output->writeln('<info>Successfully converted ' . $package->getPrettyName() . '</info>');
-
-        $this->getHelper('package')->showInfo($output, $package);
+    	$helper = $this->getHelper('package');
+    	$cb = function(\Pickle\Base\Interfaces\Package $package) use ($helper, $output) {
+		$output->writeln('<info>Successfully converted ' . $package->getPrettyName() . '</info>');
+		$helper->showInfo($output, $package);
+	};
+	$convert = Convert::factory($input->getArgument('path'), $cb);
+	$convert->process();
     }
 }
+
