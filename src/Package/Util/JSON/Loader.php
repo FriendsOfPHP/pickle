@@ -1,8 +1,7 @@
 <?php
-namespace Pickle\Package\PHP\Util\JSON;
+namespace Pickle\Package\Util\JSON;
 
 use Composer\Package\Loader\LoaderInterface;
-use Pickle\Package\PHP;
 
 class Loader
 {
@@ -44,7 +43,7 @@ class Loader
 
     protected function validate($json)
     {
-        $schema = json_decode(file_get_contents(__DIR__ . '/../../../../../res/pickle-schema.json'));
+        $schema = json_decode(file_get_contents(__DIR__ . '/../../../../res/pickle-schema.json'));
         $validator = new \JsonSchema\Validator();
         $validator->check($json, $schema);
 

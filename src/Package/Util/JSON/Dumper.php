@@ -1,16 +1,18 @@
 <?php
-namespace Pickle\Package\PHP\Util\JSON;
+namespace Pickle\Package\Util\JSON;
 
-use Pickle\Package\PHP;
+use Pickle\Base\Interfaces;
+use Pickle\Package;
+use Pickle\Package\Util;
 
-class Dumper extends PHP\Util\Dumper
+class Dumper extends Util\Dumper
 {
     /**
      * @param \Pickle\Base\Interfaces\Package $package
      *
      * @return string
      */
-    public function dump(PHP\Package $package)
+    public function dump(Interfaces\Package $package)
     {
         return json_encode(parent::dump($package), JSON_PRETTY_PRINT);
     }
@@ -19,7 +21,7 @@ class Dumper extends PHP\Util\Dumper
      * @param \Pickle\Base\Interfaces\Package $package
      * @param string  $path
      */
-    public function dumpToFile(PHP\Package $package, $path)
+    public function dumpToFile(Interfaces\Package $package, $path)
     {
         file_put_contents($path, $this->dump($package));
     }

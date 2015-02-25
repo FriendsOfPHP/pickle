@@ -1,9 +1,11 @@
 <?php
-namespace Pickle\Package\PHP\Util;
+namespace Pickle\Package\Util;
 
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
-use Pickle\Package\PHP;
+
+use Pickle\Base\Interfaces;
+use Pickle\Package;
 
 class Loader implements LoaderInterface
 {
@@ -22,11 +24,11 @@ class Loader implements LoaderInterface
      *
      * @return \Pickle\Base\Interfaces\Package $package
      */
-    public function load(array $config, $package = 'Pickle\Package\PHP\Package')
+    public function load(array $config, $package = 'Pickle\Base\Interface\Package')
     {
         $version = $this->versionParser->normalize($config['version']);
 
-        $package = new PHP\Package($config['name'], $version, $config['version']);
+        $package = Package::factory($config['name'], $version, $config['version']);
         $package->setType('extension');
 
         $this->setPackageSource($package, $config);
@@ -44,56 +46,56 @@ class Loader implements LoaderInterface
         return $package;
     }
 
-    protected function setPackageStability(PHP\Package $package, array $config)
+    protected function setPackageStability(Interfaces\Package $package, array $config)
     {
         if ($this->isValid($config, "stability", "string")) {
             $package->setStability($config['stability']);
         }
     }
 
-    protected function setPackageExtra(PHP\Package $package, array $config)
+    protected function setPackageExtra(Interfaces\Package $package, array $config)
     {
         if ($this->isValid($config, "extra", "array")) {
             $package->setExtra($config['extra']);
         }
     }
 
-    protected function setPackageDescription(PHP\Package $package, array $config)
+    protected function setPackageDescription(Interfaces\Package $package, array $config)
     {
         if ($this->isValid($config, "description", "string")) {
             $package->setDescription($config['description']);
         }
     }
 
-    protected function setPackageHomepage(PHP\Package $package, array $config)
+    protected function setPackageHomepage(Interfaces\Package $package, array $config)
     {
         if ($this->isValid($config, "homepage", "string")) {
             $package->setHomepage($config['homepage']);
         }
     }
 
-    protected function setPackageKeywords(PHP\Package $package, array $config)
+    protected function setPackageKeywords(Interfaces\Package $package, array $config)
     {
         if ($this->isValid($config, "keywords", "array")) {
             $package->setKeywords($config['keywords']);
         }
     }
 
-    protected function setPackageLicense(PHP\Package $package, array $config)
+    protected function setPackageLicense(Interfaces\Package $package, array $config)
     {
         if (!empty($config['license'])) {
             $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
         }
     }
 
-    protected function setPackageAuthors(PHP\Package $package, array $config)
+    protected function setPackageAuthors(Interfaces\Package $package, array $config)
     {
         if ($this->isValid($config, "authors", "array")) {
             $package->setAuthors($config['authors']);
         }
     }
 
-    protected function setPackageSupport(PHP\Package $package, array $config)
+    protected function setPackageSupport(Interfaces\Package $package, array $config)
     {
         if (isset($config['support'])) {
             $package->setSupport($config['support']);
@@ -113,7 +115,7 @@ class Loader implements LoaderInterface
         return false;
     }
 
-    protected function setPackageSource(PHP\Package $package, array $config)
+    protected function setPackageSource(Interfaces\Package $package, array $config)
     {
         if (!isset($config['source'])) {
             return;
@@ -134,7 +136,7 @@ class Loader implements LoaderInterface
         }
     }
 
-    protected function setPackageDist(PHP\Package $package, array $config)
+    protected function setPackageDist(Interfaces\Package $package, array $config)
     {
         if (!isset($config['dist'])) {
             return;
@@ -159,7 +161,7 @@ class Loader implements LoaderInterface
         }
     }
 
-    protected function setPackageReleaseDate(PHP\Package $package, array $config)
+    protected function setPackageReleaseDate(Interfaces\Package $package, array $config)
     {
         if (empty($config['time'])) {
             return;

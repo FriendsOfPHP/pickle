@@ -1,7 +1,6 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package\JSON\Dumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

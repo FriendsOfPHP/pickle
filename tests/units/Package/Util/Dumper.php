@@ -1,5 +1,5 @@
 <?php
-namespace Pickle\tests\units\Package\PHP\Util;
+namespace Pickle\tests\units\Package\Util;
 
 use atoum;
 use Pickle\tests;

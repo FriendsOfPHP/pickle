@@ -1,5 +1,5 @@
 <?php
-namespace Pickle\tests\units\Package\PHP\Util\JSON;
+namespace Pickle\tests\units\Package\Util\JSON;
 
 use atoum;
 use Pickle\tests;

@@ -4,7 +4,7 @@ namespace Pickle\Package\PHP\Command;
 
 use Pickle\Base\Interfaces;
 use Pickle\Package;
-use Pickle\Package\PHP\Util\JSON\Dumper;
+use Pickle\Package\Util\JSON\Dumper;
 
 class Release implements Interfaces\Package\Release
 {
@@ -40,7 +40,7 @@ class Release implements Interfaces\Package\Release
 
     protected function readPackage($path)
     {
-        $jsonLoader = new Package\PHP\Util\JSON\Loader(new Package\PHP\Util\Loader());
+        $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
         $package = null;
 
         if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {
@@ -52,7 +52,7 @@ class Release implements Interfaces\Package\Release
         }
 
         if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
-            $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
+            $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
             $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
 
             $dumper = new Dumper();

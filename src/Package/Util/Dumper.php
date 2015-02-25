@@ -1,7 +1,7 @@
 <?php
-namespace Pickle\Package\PHP\Util;
+namespace Pickle\Package\Util;
 
-use Pickle\Package\PHP;
+use Pickle\Base\Interfaces;
 
 class Dumper
 {
@@ -10,7 +10,7 @@ class Dumper
      *
      * @return array
      */
-    public function dump(PHP\Package $package)
+    public function dump(Interfaces\Package $package)
     {
         $data = [];
 

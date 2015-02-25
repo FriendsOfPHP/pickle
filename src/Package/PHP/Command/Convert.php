@@ -7,7 +7,7 @@ use Pickle\Base\Interfaces;
 
 use Pickle\Package;
 use Pickle\Package\PHP\Util\ConvertChangeLog;
-use Pickle\Package\PHP\Util\JSON\Dumper;
+use Pickle\Package\Util\JSON\Dumper;
 
 class Convert 
 {
@@ -28,7 +28,7 @@ class Convert
 		    throw new \InvalidArgumentException('File not found: ' . $xml);
 		}
 
-		$loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
+		$loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
 		$package = $loader->load($xml);
 		$package->setRootDir($path);
 		$convertCl = new ConvertChangeLog($xml);

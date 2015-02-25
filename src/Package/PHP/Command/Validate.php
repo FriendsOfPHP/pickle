@@ -22,7 +22,7 @@ class Validate implements Interfaces\Package\Validate
             throw new \InvalidArgumentException('File not found: ' . $this->path . DIRECTORY_SEPARATOR . 'package.xml');
         }
 
-        $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
+        $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
         $package = $loader->load($this->path . DIRECTORY_SEPARATOR . 'package.xml');
 
 	if ($this->cb) {
