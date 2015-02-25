@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
 use Pickle\Base\Util\FileOps;
 
-class DependencyLibWindows
+class DependencyLib
 {
     use FileOps;
 
