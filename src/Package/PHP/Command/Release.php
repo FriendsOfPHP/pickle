@@ -30,9 +30,10 @@ class Release implements Interfaces\Package\Release
      * @param Closure $cb
      * @param bool    $noConvert
      */
-    public function __construct($path, $cb, $noConvert)
+    public function __construct($path, $cb = NULL, $noConvert = false)
     {
-        $this->pkg = $this->readPackage($path);
+        $this->pkg       = $this->readPackage($path);
+        $this->cb        = $cb;
 	$this->noConvert = $noConvert;
     }
 
@@ -102,7 +103,7 @@ class Release implements Interfaces\Package\Release
 
 	if ($this->cb) {
 		$cb = $this->cb;
-		$cb($package);
+		$cb($this->pkg);
 	}
     }
 }

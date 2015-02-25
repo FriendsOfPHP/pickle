@@ -35,6 +35,7 @@ class ReleaseCommand extends Command
     	$helper = $this->getHelper('package');
 	
     	$cb = function(Interfaces\Package $package) use ($helper, $output) {
+		/* TODO Rework this to use the Info package command */
 		$helper->showInfo($output, $package);
 	};
         $path = rtrim($input->getArgument('path'), '/\\');

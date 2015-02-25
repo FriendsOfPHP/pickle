@@ -2,11 +2,9 @@
 
 namespace Pickle\Base\Interfaces\Package;
 
-use Pickle\Base\Interfaces;
-
 interface Release
 {
-    public function __construct($path, $cb, $noConvert);
+    public function __construct($path, $cb = NULL, $noConvert = false);
     public function create();
 }
 

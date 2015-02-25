@@ -1,11 +1,12 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Pickle\Base\Interfaces;
+use Pickle\Package\Command\Validate;
 
 class ValidateCommand extends Command
 {
@@ -25,15 +26,15 @@ class ValidateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
+    	$helper = $this->getHelper('package');
+	
+    	$cb = function(Interfaces\Package $package) use ($helper, $output) {
+		/* TODO Rework this to use the Info package command */
+		$helper->showInfo($output, $package);
+		$output->writeln(trim($package->getDescription()));
+	};
 
-        if (false === is_file($path . DIRECTORY_SEPARATOR . 'package.xml')) {
-            throw new \InvalidArgumentException('File not found: ' . $path . DIRECTORY_SEPARATOR . 'package.xml');
-        }
-
-        $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
-        $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
-
-        $this->getHelper('package')->showInfo($output, $package);
-        $output->writeln(trim($package->getDescription()));
+	$validate = Validate::factory($path, $cb);
+	$validate->process();
     }
 }
