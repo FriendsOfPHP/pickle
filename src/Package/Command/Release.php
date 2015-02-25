@@ -10,12 +10,11 @@ class Release
 {
 	public static function factory($path, $cb, $noConvert = false)
 	{
-		$ret = NULL;
 		$engine = Engine::factory();
 
 		switch($engine->getName()) {
 			case "php":
-				$ret = new PHP\Command\Release($path, $cb, $noConvert);
+				return new PHP\Command\Release($path, $cb, $noConvert);
 				break;
 
 			case "hhvm":
@@ -25,7 +24,5 @@ class Release
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
 		}
-
-		return $ret;
 	}
 }

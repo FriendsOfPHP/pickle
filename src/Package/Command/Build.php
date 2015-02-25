@@ -11,15 +11,14 @@ class Build
 {
 	public static function factory(Interfaces\Package $package, $optionValue)
 	{
-		$ret = NULL;
 		$engine = Engine::factory();
 
 		switch($engine->getName()) {
 			case "php":
 				if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-					$ret = new PHP\Command\Build\Windows($package, $optionValue);
+					return new PHP\Command\Build\Windows($package, $optionValue);
 				}else {
-					$ret = new PHP\Command\Build\Unix($package, $optionValue);
+					return new PHP\Command\Build\Unix($package, $optionValue);
 
 				}
 				break;
@@ -31,7 +30,5 @@ class Build
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
 		}
-
-		return $ret;
 	}
 }

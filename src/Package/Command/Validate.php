@@ -10,12 +10,11 @@ class Validate
 {
 	public static function factory($path, $cb)
 	{
-		$ret = NULL;
 		$engine = Engine::factory();
 
 		switch($engine->getName()) {
 			case "php":
-				$ret = new PHP\Command\Validate($path, $cb);
+				return new PHP\Command\Validate($path, $cb);
 				break;
 
 			case "hhvm":
@@ -25,7 +24,5 @@ class Validate
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
 		}
-
-		return $ret;
 	}
 }

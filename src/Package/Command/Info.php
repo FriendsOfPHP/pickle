@@ -11,12 +11,11 @@ class Info
 {
 	public static function factory($path, $cb)
 	{
-		$ret = NULL;
 		$engine = Engine::factory();
 
 		switch($engine->getName()) {
 			case "php":
-				$ret = new PHP\Command\Info($path, $cb);
+				return new PHP\Command\Info($path, $cb);
 				break;
 
 			case "hhvm":
@@ -26,7 +25,5 @@ class Info
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
 		}
-
-		return $ret;
 	}
 }

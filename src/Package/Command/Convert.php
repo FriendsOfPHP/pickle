@@ -11,12 +11,11 @@ class Convert
 {
 	public static function factory($path, $cb)
 	{
-		$ret = NULL;
 		$engine = Engine::factory();
 
 		switch($engine->getName()) {
 			case "php":
-				$ret = new PHP\Command\Convert($path, $cb);
+				return new PHP\Command\Convert($path, $cb);
 				break;
 
 			case "hhvm":
@@ -26,7 +25,5 @@ class Convert
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
 		}
-
-		return $ret;
 	}
 }
