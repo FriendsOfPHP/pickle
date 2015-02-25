@@ -1,11 +1,13 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use Pickle\Base\Interfaces;
+use Pickle\Package\Command\Info;
 
 class InfoCommand extends Command
 {
@@ -24,15 +26,27 @@ class InfoCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+    	$helper = $this->getHelper('package');
+
+    	$cb = function(Interfaces\Package\Info $info) use ($helper, $output) {
+		/* TODO The part of the helper showing package info plus the
+			concrete info class implementation should be
+			reworked. The concrete Info class should provide
+			information for this callback, whereby the output
+			format and how it is shown should be controleld by
+			the helper. */
+		$helper->showInfo($output, $info->getPackage());
+		$output->writeln(['', trim($info->getPackage()->getDescription()), '']);
+		$output->writeln('<info>Configure options</info>');
+		$helper->showOptions($output, $info->getPackage());
+	};
+
         $path = rtrim($input->getArgument('path'), DIRECTORY_SEPARATOR);
+        $package = $helper->convey($input, $output, $path);
 
-        $package = $this->getHelper("package")->convey($input, $output, $path);
+	$info = Info::factory($package, $cb);
+	$info->show();
 
-        $this->getHelper('package')->showInfo($output, $package);
-
-        $output->writeln(['', trim($package->getDescription()), '']);
-
-        $output->writeln('<info>Configure options</info>');
-        $this->getHelper('package')->showOptions($output, $package);
     }
 }
+
