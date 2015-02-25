@@ -1,14 +1,13 @@
 <?php
 namespace Pickle\Console\Command;
 
-use Pickle\Package\PHP\Util\JSON\Dumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Pickle\Archive;
-use Pickle\Package;
+use Pickle\Base\Interfaces;
+use Pickle\Package\Command\Release;
 
 class ReleaseCommand extends Command
 {
@@ -33,32 +32,14 @@ class ReleaseCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+    	$helper = $this->getHelper('package');
+	
+    	$cb = function(Interfaces\Package $package) use ($helper, $output) {
+		$helper->showInfo($output, $package);
+	};
         $path = rtrim($input->getArgument('path'), '/\\');
-        $jsonLoader = new Package\PHP\Util\JSON\Loader(new Package\PHP\Util\Loader());
-        $package = null;
 
-        if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
-        }
-
-        if (null === $package && $input->getOption('no-convert')) {
-            throw new \RuntimeException('XML package are not supported. Please convert it before install');
-        }
-
-        if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
-            $loader = new Package\PHP\Util\XML\Loader(new Package\PHP\Util\Loader());
-            $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
-
-            $dumper = new Dumper();
-            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'composer.json');
-
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
-        }
-
-        $package->setRootDir(realpath($path));
-
-        $this->getHelper('package')->showInfo($output, $package);
-        $arch = new Archive($package);
-        $arch->create();
+	$release = Release::factory($path, $cb, $input->getOption('no-convert'));
+	$release->create();
     }
 }
