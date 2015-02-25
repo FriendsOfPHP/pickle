@@ -26,4 +26,14 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 
 	    return dirname($conf[0]);
     }
+
+    public function setStability($stability)
+    {
+        $this->stability = $stability;
+    }
+
+    public function getConfigureOptions()
+    {
+	return array();
+    }
 }

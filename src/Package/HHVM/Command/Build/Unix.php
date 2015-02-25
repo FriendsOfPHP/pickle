@@ -17,10 +17,10 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $backCwd = getcwd();
         chdir($this->pkg->getSourceDir());
 
-        $res = $this->runCommand('phpize');
+        $res = $this->runCommand('hphpize');
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('phpize failed');
+            throw new \Exception('hphpize failed');
         }
     }
 

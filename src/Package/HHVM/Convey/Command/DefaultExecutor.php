@@ -1,11 +1,12 @@
 <?php
 
-namespace Pickle\Package\PHP\Convey\Command;
+namespace Pickle\Package\HHVM\Convey\Command;
 
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts\Package\Convey;
 use Pickle\Package\Util\JSON\Dumper;
-use Pickle\Package\PHP;
+use Pickle\Package\HHVM\Util\Cmake;
+use Pickle\Package\HHVM;
 
 
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
@@ -25,26 +26,24 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
             $package = $jsonLoader->load($pickle_json);
         }
 
-        if (null === $package && $no_convert) {
+	/* Do we really need to check this here? */
+        /*if (null === $package && $no_convert) {
             throw new \RuntimeException('XML package are not supported. Please convert it before install');
-        }
+	}*/
 
         if (null === $package) {
-            if (file_exists($target . DIRECTORY_SEPARATOR . 'package2.xml')) {
-                $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package2.xml';
-            } elseif (file_exists($target . DIRECTORY_SEPARATOR . 'package.xml')) {
-                $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package.xml';
-            } else {
-                throw new \Exception("package.xml not found");
-            }
+		$config_cmake = $target . DIRECTORY_SEPARATOR . 'config.cmake';
+		if (!file_exists($config_cmake)) {
+			throw new \Exception("config.cmake not found");
+		}
 
-            $loader = new PHP\Util\XML\Loader(new \Pickle\Package\Util\Loader());
-            $package = $loader->load($pkg_xml);
+		$cmp = new Cmake\Parser(new \Pickle\Package\Util\Loader());
+		$package = $cmp->load($config_cmake);
 
-            $dumper = new Dumper();
-            $dumper->dumpToFile($package, $pickle_json);
+		$dumper = new Dumper();
+		$dumper->dumpToFile($package, $pickle_json);
 
-            $package = $jsonLoader->load($pickle_json);
+		$package = $jsonLoader->load($pickle_json);
         }
 
         $package->setRootDir($target);

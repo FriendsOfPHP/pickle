@@ -7,5 +7,7 @@ interface Package extends ComposerPackageInterface {
     public function setRootDir($path);
     public function getRootDir();
     public function getSourceDir();
+    public function setStability($stability);
+    public function getConfigureOptions();
 }
 
