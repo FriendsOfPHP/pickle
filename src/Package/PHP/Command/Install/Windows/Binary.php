@@ -1,12 +1,13 @@
 <?php
-namespace Pickle;
+namespace Pickle\Package\PHP\Command\Install\Windows;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
 use Pickle\Base\Util\FileOps;
+use Pickle\Engine;
 
-class InstallerBinaryWindows
+class Binary
 {
     use FileOps;
 
@@ -21,7 +22,7 @@ class InstallerBinaryWindows
     /**
      * @param string $ext
      */
-    public function __construct(\Pickle\Base\Interfaces\Engine $php, $ext)
+    public function __construct($ext)
     {
         // used only if only the extension name is given
         if (strpos('//', $ext) !== false) {
@@ -29,7 +30,7 @@ class InstallerBinaryWindows
         }
 
         $this->extName = $ext;
-        $this->php = $php;
+        $this->php = Engine::factory();
     }
 
     public function setProgress($progress)

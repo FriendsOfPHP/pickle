@@ -1,6 +1,6 @@
 <?php
 
-namespace Pickle;
+namespace Pickle\Package\Util\Windows;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;

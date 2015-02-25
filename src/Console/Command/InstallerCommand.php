@@ -13,8 +13,9 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
 use Pickle\Base\Interfaces\Package;
 use Pickle\Engine;
-use Pickle\InstallerBinaryWindows;
-use Pickle\DependencyLibWindows;
+use Pickle\Package\Util\Windows;
+use Pickle\Base\Interfaces;
+use Pickle\Package\Command\Install;
 
 class InstallerCommand extends Command
 {
@@ -104,35 +105,35 @@ class InstallerCommand extends Command
             ])
             ->render();
 
-        $inst = new InstallerBinaryWindows($php, $path);
+        $inst = Install::factory($path);
         $progress = $this->getHelperSet()->get('progress');
         $inst->setProgress($progress);
         $inst->setInput($input);
         $inst->setOutput($output);
         $inst->install();
 
-    $deps_handler = new DependencyLibWindows($php);
+        $deps_handler = new Windows\DependencyLib($php);
         $deps_handler->setProgress($progress);
         $deps_handler->setInput($input);
         $deps_handler->setOutput($output);
 
-    $helper = $this->getHelperSet()->get('question');
+        $helper = $this->getHelperSet()->get('question');
 
-    $cb = function($choices) use ($helper, $input, $output) {
-        $question = new ChoiceQuestion(
-            "Multiple choices found, please select the appropriate dependency package",
-            $choices
+        $cb = function($choices) use ($helper, $input, $output) {
+            $question = new ChoiceQuestion(
+                "Multiple choices found, please select the appropriate dependency package",
+                $choices
             );
-        $question->setMultiselect(false);
+            $question->setMultiselect(false);
 
-        return $helper->ask($input, $output, $question);
-    };
+            return $helper->ask($input, $output, $question);
+        };
 
-    foreach ($inst->getExtDllPaths() as $dll) {
-        if (!$deps_handler->resolveForBin($dll, $cb)) {
-            throw new \Exception("Failed to resolve dependencies");
+        foreach ($inst->getExtDllPaths() as $dll) {
+            if (!$deps_handler->resolveForBin($dll, $cb)) {
+                throw new \Exception("Failed to resolve dependencies");
+            }
         }
-    }
     }
 
     protected function saveSourceInstallLogs(InputInterface $input, $build)
@@ -237,6 +238,7 @@ class InstallerCommand extends Command
 
         $package = $this->getHelper("package")->convey($input, $output, $path);
 
+	/* TODO Info package command should be used here. */
         $this->getHelper('package')->showInfo($output, $package);
 
         list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
