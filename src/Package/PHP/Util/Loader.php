@@ -16,6 +16,12 @@ class Loader implements LoaderInterface
         $this->loadOptions = $loadOptions;
     }
 
+    /**
+     * @param array  $config
+     * @param string $package
+     *
+     * @return \Pickle\Base\Interfaces\Package $package
+     */
     public function load(array $config, $package = 'Pickle\Package\PHP\Package')
     {
         $version = $this->versionParser->normalize($config['version']);
