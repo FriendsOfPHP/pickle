@@ -19,12 +19,14 @@ class Build
 					return new PHP\Command\Build\Windows($package, $optionValue);
 				}else {
 					return new PHP\Command\Build\Unix($package, $optionValue);
-
 				}
 
 			case "hhvm":
-				throw new \Exception("Not implemented for engine '{$engine->getName()}'");
-				break;	
+				if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+					throw new \Exception("Not implemented for engine '{$engine->getName()} on Windows'");
+				}else {
+					return new HHVM\Command\Build\Unix($package, $optionValue);
+				}
 
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
