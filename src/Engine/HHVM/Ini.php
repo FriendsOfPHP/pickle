@@ -81,13 +81,13 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $after = "";
 
         $pickleSection = '';
-    $names = array();
-    foreach ($dsos as $dso) {
-        /* HHVM currently doesn't support Windows, so just a guess here. */
-        $pre = defined('PHP_WINDOWS_VERSION_MAJOR') ? "php_" : "";
-        $suf = defined('PHP_WINDOWS_VERSION_MAJOR') ? ".dll" : ".so";
-        $item = "$pre$dso$suf";
-        $names[] = $item;
+        $names = array();
+        foreach ($dsos as $dso) {
+            /* HHVM currently doesn't support Windows, so just a guess here. */
+            $pre = defined('PHP_WINDOWS_VERSION_MAJOR') ? "php_" : "";
+            $suf = defined('PHP_WINDOWS_VERSION_MAJOR') ? ".dll" : ".so";
+            $item = "$pre$dso$suf";
+            $names[] = $item;
             $pickleSection .=  "hhvm.dynamic_extensions[$dso]=$item\n";
         }
 
