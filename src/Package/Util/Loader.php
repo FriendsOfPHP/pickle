@@ -28,7 +28,7 @@ class Loader implements LoaderInterface
     {
         $version = $this->versionParser->normalize($config['version']);
 
-        $package = Package::factory($config['name'], $version, $config['version']);
+        $package = Package::factory($config['name'], $version, $config['version'], true);
         $package->setType('extension');
 
         $this->setPackageSource($package, $config);

@@ -11,9 +11,9 @@ class Package
 {
 	protected static $instance = NULL;
 
-	public static function factory($name, $version, $prettyVersion)
+	public static function factory($name, $version, $prettyVersion, $force = false)
 	{
-		if (is_null(self::$instance)) {
+		if (is_null(self::$instance) || $force) {
 			$engine = Engine::factory();
 			switch($engine->getName()) {
 				case "php":
