@@ -115,7 +115,7 @@ class DependencyLib
     public function resolveForBin($dll, $resolve_multiple_cb = null)
     {
         /* XXX Change it to false and implement a kinda --force option for that. */
-    $dep_zips = $this->getZipUrlsForDll($dll, false);
+        $dep_zips = $this->getZipUrlsForDll($dll, false);
 
         if (count($dep_zips) == 1) {
             $dep_zip = $dep_zips[0];
