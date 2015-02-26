@@ -7,6 +7,8 @@ use Pickle\Base\Util\GitIgnore;
 
 class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 {
+    protected $path;
+
     public function setRootDir($path)
     {
         $this->path = $path;

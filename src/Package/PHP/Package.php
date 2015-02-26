@@ -10,7 +10,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     /**
      * @var string Package's root directory
      */
-    private $path;
+    protected $path;
 
     /**
      * Get the package's root directory
