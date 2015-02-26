@@ -13,8 +13,14 @@ class Package
 
 	public static function factory($name, $version, $prettyVersion, $force = false)
 	{
-		if (is_null(self::$instance) || $force) {
+		if ($force && self::$instance) {
+			/* XXX does this leak the previous instance? */
+			self::$instance = NULl;
+		}
+
+		if (is_null(self::$instance)) {
 			$engine = Engine::factory();
+
 			switch($engine->getName()) {
 				case "php":
 					self::$instance = new PHP\Package($name, $version, $prettyVersion);
