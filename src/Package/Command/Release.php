@@ -8,19 +8,19 @@ use Pickle\Package\HHVM;
 
 class Release
 {
-	public static function factory($path, $cb, $noConvert = false)
-	{
-		$engine = Engine::factory();
+    public static function factory($path, $cb, $noConvert = false)
+    {
+        $engine = Engine::factory();
 
-		switch($engine->getName()) {
-			case "php":
-				return new PHP\Command\Release($path, $cb, $noConvert);
+        switch($engine->getName()) {
+            case "php":
+                return new PHP\Command\Release($path, $cb, $noConvert);
 
-			case "hhvm":
-				throw new \Exception("Not implemented for engine '{$engine->getName()}'");
+            case "hhvm":
+                throw new \Exception("Not implemented for engine '{$engine->getName()}'");
 
-			default:
-				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
-		}
-	}
+            default:
+                throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
+        }
+    }
 }

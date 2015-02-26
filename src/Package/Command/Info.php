@@ -9,19 +9,19 @@ use Pickle\Package\HHVM;
 
 class Info
 {
-	public static function factory($path, $cb)
-	{
-		$engine = Engine::factory();
+    public static function factory($path, $cb)
+    {
+        $engine = Engine::factory();
 
-		switch($engine->getName()) {
-			case "php":
-				return new PHP\Command\Info($path, $cb);
+        switch($engine->getName()) {
+            case "php":
+                return new PHP\Command\Info($path, $cb);
 
-			case "hhvm":
-				throw new \Exception("Not implemented for engine '{$engine->getName()}'");
+            case "hhvm":
+                throw new \Exception("Not implemented for engine '{$engine->getName()}'");
 
-			default:
-				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
-		}
-	}
+            default:
+                throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
+        }
+    }
 }

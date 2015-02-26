@@ -9,19 +9,19 @@ use Pickle\Package\HHVM;
 
 class Convert
 {
-	public static function factory($path, $cb)
-	{
-		$engine = Engine::factory();
+    public static function factory($path, $cb)
+    {
+        $engine = Engine::factory();
 
-		switch($engine->getName()) {
-			case "php":
-				return new PHP\Command\Convert($path, $cb);
+        switch($engine->getName()) {
+            case "php":
+                return new PHP\Command\Convert($path, $cb);
 
-			case "hhvm":
-				throw new \Exception("Nothing to convert for engine '{$engine->getName()}'");
+            case "hhvm":
+                throw new \Exception("Nothing to convert for engine '{$engine->getName()}'");
 
-			default:
-				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
-		}
-	}
+            default:
+                throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
+        }
+    }
 }
