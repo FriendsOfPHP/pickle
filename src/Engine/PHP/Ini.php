@@ -7,24 +7,9 @@ use Pickle\Base\Abstracts;
 
 class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
-    protected $raw;
-    protected $path;
-
-    protected $pickleHeaderStartPos = -1;
-    protected $pickleHeaderEndPos = -1;
-    protected $pickleFooterStartPos = -1;
-    protected $pickleFooterEndPos = -1;
-
     public function __construct(Interfaces\Engine $php)
     {
         parent::__construct($php);
-
-        $this->path = $php->getIniPath();
-
-        $this->raw = @file_get_contents($this->path);
-        if (false === $this->raw) {
-            throw new \Exception('Cannot read php.ini');
-        }
 
         $this->setupPickleSectionPositions();
     }
@@ -90,11 +75,6 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         }
     }
 
-    protected function getPickleSection()
-    {
-        return substr($this->raw, $this->pickleHeaderEndPos, $this->pickleFooterStartPos - $this->pickleHeaderEndPos);
-    }
-
     public function updatePickleSection(array $dlls)
     {
         $before = "";
@@ -128,3 +108,4 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         }
     }
 }
+

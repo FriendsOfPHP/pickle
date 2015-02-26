@@ -55,6 +55,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     protected function updateIni()
     {
-	
+        $ini = \Pickle\Engine\Ini::factory(\Pickle\Engine::factory());
+        $ini->updatePickleSection(array($this->pkg->getName()));
     }
 }
