@@ -52,9 +52,9 @@ class DependencyLib
            or we've got a corrupted file, or ...
            The dllMap property should be ensured an array. */
             $this->dllMap = array();
-    } else {
+        } else {
             $this->dllMap = $dllMap->{$compiler}->{$architecture};
-    }
+        }
 
         return true;
     }
