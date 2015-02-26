@@ -21,12 +21,14 @@ class Parser
 
 	$cont = file_get_contents($path);
 
-	/* XXX this is a dummy yet */
+	/* Only the ext name seems to be readable from cmake yet,
+		anything else left a dummy. Need some way to gather this
+       		info in the future, where ever it's provided. */
         $package = [
             'name' => $this->getExtName($cont),
-            'version' => '1.2.3',
+            'version' => '0.0.0',
             'stability' => 'alpha',
-            'description' => 'unknown',
+            'description' => 'no description',
         ];
 
 	return $this->loader->load($package);
