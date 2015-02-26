@@ -27,7 +27,7 @@ abstract class Command
 
     public function execute($target, $no_convert)
     {
-    	throw new \Exception("No command::execute implementation found ");
+        throw new \Exception("No command::execute implementation found ");
     }
 
     public function getPath()
