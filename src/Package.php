@@ -11,14 +11,21 @@ class Package
 {
 	protected static $instance = NULL;
 
-	public static function factory($name, $version, $prettyVersion, $force = false)
+	protected static function deliverFresh($force)
 	{
-		if ($force && self::$instance) {
+		if ($force && self::$instance || is_null(self::$instance)) {
 			/* XXX does this leak the previous instance? */
 			self::$instance = NULl;
+
+			return true;
 		}
 
-		if (is_null(self::$instance)) {
+		return false;
+	}
+
+	public static function factory($name, $version, $prettyVersion, $force = false)
+	{
+		if (self::deliverFresh($force)) {
 			$engine = Engine::factory();
 
 			switch($engine->getName()) {
