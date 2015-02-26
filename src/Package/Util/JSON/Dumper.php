@@ -5,7 +5,7 @@ use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\Util;
 
-class Dumper extends Util\Dumper
+class Dumper
 {
     /**
      * @param \Pickle\Base\Interfaces\Package $package
@@ -14,7 +14,7 @@ class Dumper extends Util\Dumper
      */
     public function dump(Interfaces\Package $package)
     {
-        return json_encode(parent::dump($package), JSON_PRETTY_PRINT);
+        return json_encode((new Util\Dumper)->dump($package), JSON_PRETTY_PRINT);
     }
 
     /**
