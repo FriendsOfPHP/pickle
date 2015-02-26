@@ -140,7 +140,7 @@ class DependencyLib
            corresponding dependency package. However it's fetched from
            the PECL build dependencies, no extension build should have
            been exist if there's no dependency package uploaded. */
-        return true;
+           return true;
         }
 
         return $this->resolveForZip($dep_zip, $resolve_multiple_cb);
