@@ -56,6 +56,8 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         if (null !== $downloader) {
             $downloader->download($package, $target);
         }
+
+	unset($package, $downloader);
     }
 
     public function execute($target, $no_convert)
