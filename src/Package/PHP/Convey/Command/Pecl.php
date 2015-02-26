@@ -15,15 +15,15 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
 {
     protected function prepare()
     {
-	$engine = Engine::factory();
+        $engine = Engine::factory();
 
         if (Type::determinePecl($this->path, $matches) < 1) {
             throw new \Exception("Not valid PECL URI");
         }
 
-	if ("php" != $engine->getName()) {
+        if ("php" != $engine->getName()) {
             throw new \Exception("PECL is only supported with PHP");
-	}
+        }
 
         $this->name = $matches['package'];
         $this->url = 'http://pecl.php.net/get/' . $matches['package'];
@@ -57,14 +57,14 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
             $downloader->download($package, $target);
         }
 
-	unset($package, $downloader);
+        unset($package, $downloader);
     }
 
     public function execute($target, $no_convert)
     {
         $this->fetch($target);
 
-	$exe = new DefaultExecutor($this);
+        $exe = new DefaultExecutor($this);
         return $exe->execute($target, $no_convert);
     }
 

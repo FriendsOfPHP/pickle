@@ -14,27 +14,27 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 
     public static function factory(Interfaces\Package\Convey\Command $command)
     {
-	    $engine = Engine::factory();
+        $engine = Engine::factory();
 
-	    switch ($engine->getName()) {
-		    case "php";
-			return new PHP\Convey\Command\DefaultExecutor($command);
+        switch ($engine->getName()) {
+            case "php";
+            return new PHP\Convey\Command\DefaultExecutor($command);
 
-		    case "hhvm";
-			return new HHVM\Convey\Command\DefaultExecutor($command);
-	    }
+            case "hhvm";
+            return new HHVM\Convey\Command\DefaultExecutor($command);
+        }
 
-	    return new self($command);
+        return new self($command);
     }
 
     public function __construct(Interfaces\Package\Convey\Command $command)
     {
-	    $this->command = $command;
+        $this->command = $command;
     }
 
     public function execute($target, $no_convert)
     {
-	throw new \Exception("Default executor cannot be used without concrete implementation");
+        throw new \Exception("Default executor cannot be used without concrete implementation");
     }
 }
 

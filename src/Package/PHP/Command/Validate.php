@@ -12,8 +12,8 @@ class Validate implements Interfaces\Package\Validate
 
     public function __construct($path, $cb = NULL)
     {
-	$this->path = $path;
-	$this->cb = $cb;
+    $this->path = $path;
+    $this->cb = $cb;
     }
 
     public function process()
@@ -25,10 +25,10 @@ class Validate implements Interfaces\Package\Validate
         $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
         $package = $loader->load($this->path . DIRECTORY_SEPARATOR . 'package.xml');
 
-	if ($this->cb) {
-		$cb = $this->cb;
-		$cb($package);
-	}
+        if ($this->cb) {
+            $cb = $this->cb;
+            $cb($package);
+        }
     }
 }
 

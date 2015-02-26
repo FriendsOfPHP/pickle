@@ -20,7 +20,7 @@ class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         /* Override target, otherwise we'd need to copy ext root each time */
         $target = realpath($this->path);
 
-	$exe = DefaultExecutor::factory($this);
+    $exe = DefaultExecutor::factory($this);
         return $exe->execute($target, $no_convert);
     }
 

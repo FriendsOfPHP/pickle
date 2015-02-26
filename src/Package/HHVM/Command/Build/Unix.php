@@ -9,12 +9,12 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
     public function prepare()
     {
-	    $this->hphpize();
+        $this->hphpize();
     }
 
     public function hphpize()
     {
-	$newcwd = $this->pkg->getSourceDir();
+        $newcwd = $this->pkg->getSourceDir();
 
         $res = $this->runCommand("cd $newcwd && hphpize");
         if (!$res) {
@@ -24,7 +24,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function configure($opts = null)
     {
-	$newcwd = $this->pkg->getSourceDir();
+        $newcwd = $this->pkg->getSourceDir();
 
         $res = $this->runCommand("cd $newcwd && cmake .");
         if (!$res) {
@@ -34,7 +34,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function make()
     {
-	$newcwd = $this->pkg->getSourceDir();
+        $newcwd = $this->pkg->getSourceDir();
 
         $res = $this->runCommand("cd $newcwd && make");
         if (!$res) {
@@ -44,13 +44,13 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function install()
     {
-	$newcwd = $this->pkg->getSourceDir();
+        $newcwd = $this->pkg->getSourceDir();
         $res = $this->runCommand("cd $newcwd && make install");
         if (!$res) {
             throw new \Exception('make install failed');
         }
 
-	$this->updateIni();
+        $this->updateIni();
     }
 
     protected function updateIni()

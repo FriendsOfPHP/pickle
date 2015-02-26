@@ -37,7 +37,7 @@ class Tgz extends Abstracts\Package\Convey\Command implements Interfaces\Package
     {
         $this->fetch($target);
 
-	$exe = DefaultExecutor::factory($this);
+    $exe = DefaultExecutor::factory($this);
         return $exe->execute($target, $no_convert);
     }
 

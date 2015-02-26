@@ -17,7 +17,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
             throw new \Exception("phpsdk_setvars failed");
         }
 
-	$this->phpize();
+        $this->phpize();
     }
 
     /**

@@ -21,12 +21,12 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     
     public function getSourceDir()
     {
-            $conf = glob("{$this->path}/config.cmake");
-	    if (!$conf) {
-		throw new \Exception("Couldn't determine package source dir");
-	    }
+        $conf = glob("{$this->path}/config.cmake");
+        if (!$conf) {
+            throw new \Exception("Couldn't determine package source dir");
+        }
 
-	    return dirname($conf[0]);
+        return dirname($conf[0]);
     }
 
     public function setStability($stability)
@@ -36,6 +36,6 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 
     public function getConfigureOptions()
     {
-	return array();
+        return array();
     }
 }

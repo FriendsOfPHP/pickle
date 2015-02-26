@@ -34,7 +34,7 @@ class Release implements Interfaces\Package\Release
     {
         $this->pkg       = $this->readPackage($path);
         $this->cb        = $cb;
-	$this->noConvert = $noConvert;
+        $this->noConvert = $noConvert;
     }
 
 
@@ -61,14 +61,14 @@ class Release implements Interfaces\Package\Release
             $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
         }
 
-	if (NULL == $package) {
-		/* Just ensure it's correct, */
-		throw new \Exception("Couldn't read package info at '$path'"); 
-	}
+        if (NULL == $package) {
+            /* Just ensure it's correct, */
+            throw new \Exception("Couldn't read package info at '$path'"); 
+        }
 
         $package->setRootDir(realpath($path));
 
-	return $package;
+        return $package;
     }
 
 
@@ -101,10 +101,10 @@ class Release implements Interfaces\Package\Release
         rename($tempName . '.gz', $archBasename . '.tgz');
         unlink($tempName);
 
-	if ($this->cb) {
-		$cb = $this->cb;
-		$cb($this->pkg);
-	}
+        if ($this->cb) {
+            $cb = $this->cb;
+            $cb($this->pkg);
+        }
     }
 }
 

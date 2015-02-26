@@ -19,11 +19,11 @@ class Parser
             throw new \InvalidArgumentException('File not found: ' . $path);
         }
 
-	$cont = file_get_contents($path);
+        $cont = file_get_contents($path);
 
-	/* Only the ext name seems to be readable from cmake yet,
-		anything else left a dummy. Need some way to gather this
-       		info in the future, where ever it's provided. */
+        /* Only the ext name seems to be readable from cmake yet,
+        anything else left a dummy. Need some way to gather this
+               info in the future, where ever it's provided. */
         $package = [
             'name' => $this->getExtName($cont),
             'version' => '0.0.0',
@@ -31,22 +31,22 @@ class Parser
             'description' => 'no description',
         ];
 
-	return $this->loader->load($package);
+        return $this->loader->load($package);
     }
 
     public function getExtName($cont)
     {
-	$ret = NULL;
-	
-	if (preg_match(",HHVM_EXTENSION\(([^\s]+)\s+,", $cont, $m)) {
-		$ret = $m[1];
-	}
+        $ret = NULL;
+    
+        if (preg_match(",HHVM_EXTENSION\(([^\s]+)\s+,", $cont, $m)) {
+            $ret = $m[1];
+        }
 
-	if (!$ret) {
-		throw new \Exception("Couldn't parse extension name");
-	}
+        if (!$ret) {
+            throw new \Exception("Couldn't parse extension name");
+        }
 
-	return $ret;
+        return $ret;
     }
 }
 
