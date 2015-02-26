@@ -78,7 +78,13 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
 
     public function getIniPath()
     {
-        return php_ini_loaded_file();
+	    $ini = php_ini_loaded_file();
+
+	    if (!$ini && file_exists("/etc/hhvm/php.ini")) {
+		$ini = "/etc/hhvm/php.ini";
+	    }
+
+	    return $ini;
     }
 }
 
