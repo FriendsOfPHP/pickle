@@ -14,11 +14,9 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function hphpize()
     {
-        $backCwd = getcwd();
-        chdir($this->pkg->getSourceDir());
+	$newcwd = $this->pkg->getSourceDir();
 
-        $res = $this->runCommand('hphpize');
-        chdir($backCwd);
+        $res = $this->runCommand("cd $newcwd && hphpize");
         if (!$res) {
             throw new \Exception('hphpize failed');
         }
@@ -26,11 +24,9 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function configure($opts = null)
     {
-        $backCwd = getcwd();
-        chdir($this->pkg->getSourceDir());
+	$newcwd = $this->pkg->getSourceDir();
 
-        $res = $this->runCommand('cmake .');
-        chdir($backCwd);
+        $res = $this->runCommand("cd $newcwd && cmake .");
         if (!$res) {
             throw new \Exception('cmake failed');
         }
@@ -38,11 +34,9 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function make()
     {
-        $backCwd = getcwd();
-        chdir($this->tempDir);
-        $res = $this->runCommand('make');
-        chdir($backCwd);
+	$newcwd = $this->pkg->getSourceDir();
 
+        $res = $this->runCommand("cd $newcwd && make");
         if (!$res) {
             throw new \Exception('make failed');
         }
@@ -50,10 +44,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function install()
     {
-        $backCwd = getcwd();
-        chdir($this->tempDir);
-        $res = $this->runCommand('make install');
-        chdir($backCwd);
+	$newcwd = $this->pkg->getSourceDir();
+        $res = $this->runCommand("cd $newcwd && make install");
         if (!$res) {
             throw new \Exception('make install failed');
         }
