@@ -9,8 +9,6 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
     protected $raw;
     protected $path;
-    protected $pickleHeader = ';Pickle installed extension, do not edit this line and below';
-    protected $pickleFooter = ';Pickle installed extension, do not edit this line and above';
 
     protected $pickleHeaderStartPos = -1;
     protected $pickleHeaderEndPos = -1;
@@ -58,7 +56,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     protected function setupPickleSectionPositions()
     {
-        $posHeader = strpos($this->raw, $this->pickleHeader);
+        $posHeader = strpos($this->raw, self::PICKLE_HEADER);
         if (false === $posHeader) {
             /* no pickle section here yet */
             $this->pickleHeaderStartPos = strlen($this->raw);
@@ -66,9 +64,9 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         }
 
         $this->pickleHeaderStartPos = $posHeader;
-        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + strlen($this->pickleHeader);
+        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + strlen(self::PICKLE_HEADER);
 
-        $posFooter = strpos($this->raw, $this->pickleFooter);
+        $posFooter = strpos($this->raw, self::PICKLE_FOOTER);
         if (false === $posFooter) {
             /* This is bad, no end of section marker, will have to lookup. The strategy is
                 - look for the last extension directve after the header
@@ -88,7 +86,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             $this->pickleFooterStartPos = strpos($this->raw, "\n", $this->pickleFooterStartPos);
         } else {
             $this->pickleFooterStartPos = $posFooter;
-            $this->pickleFooterEndPos = $this->pickleFooterStartPos + strlen($this->pickleFooter);
+            $this->pickleFooterEndPos = $this->pickleFooterStartPos + strlen(self::PICKLE_FOOTER);
         }
     }
 
@@ -124,7 +122,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             $after = ltrim($after);
         }
 
-        $this->raw = $before . "\n\n" . $this->pickleHeader . "\n" . trim($pickleSection) . "\n" . $this->pickleFooter . "\n\n" . $after;
+        $this->raw = $before . "\n\n" . self::PICKLE_HEADER . "\n" . trim($pickleSection) . "\n" . self::PICKLE_FOOTER . "\n\n" . $after;
         if (!@file_put_contents($this->path, $this->raw)) {
             throw new \Exception('Cannot update php.ini');
         }
