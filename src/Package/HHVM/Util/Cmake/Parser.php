@@ -36,13 +36,15 @@ class Parser
     {
 	$ret = NULL;
 	
-	if (preg_match(",HHVM_EXTENSION\(([^\s])\s+,", $cont, $m)) {
+	if (preg_match(",HHVM_EXTENSION\(([^\s]+)\s+,", $cont, $m)) {
 		$ret = $m[1];
 	}
 
 	if (!$ret) {
 		throw new \Exception("Couldn't parse extension name");
 	}
+
+	return $ret;
     }
 }
 
