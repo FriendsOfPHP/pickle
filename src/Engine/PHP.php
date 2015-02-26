@@ -70,7 +70,12 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             }
         }
 
-        return trim($extensionDir);
+	$extensionDir = trim($extensionDir);
+        if ('' == $extensionDir) {
+            throw new \Exception('Cannot detect PHP extension directory');
+        }
+
+        return $extensionDir;
     }
 
     protected function getArchFromPhpInfo($info)
@@ -84,7 +89,12 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             }
         }
 
-        return trim($arch);
+        $arch = trim($arch);
+        if ('' == $arch) {
+            throw new \Exception('Cannot detect PHP build architecture');
+        }
+
+        return $arch;
     }
 
     protected function getIniPathFromPhpInfo($info)
@@ -102,7 +112,12 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             }
         }
 
-        return trim($iniPath);
+        $iniPath = trim($iniPath);
+        if ('' == $iniPath) {
+            throw new \Exception('Cannot detect php.ini directory');
+        }
+
+        return $iniPath;
     }
 
     protected function getCompilerFromPhpInfo($info)
@@ -116,7 +131,12 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             }
         }
 
-        return trim($compiler);
+        $compiler = trim($compiler);
+        if ('' == $compiler) {
+            throw new \Exception('Cannot detect PHP build compiler version');
+        }
+
+        return $compiler;
     }
 
     private function getFromPhpInfo()
@@ -130,22 +150,15 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         $arch = $this->getArchFromPhpInfo($info);
         $iniPath = $this->getIniPathFromPhpInfo($info);
-        $compiler = $this->getCompilerFromPhpInfo($info);
         $extensionDir = $this->getExtensionDirFromPhpInfo($info);
 
-        $compiler = trim(strtolower(str_replace('MS', '', substr($compiler, 0, 6))));
-        if (!$iniPath) {
-            throw new \Exception('Cannot detect php.ini directory');
-        }
-        if (!$arch) {
-            throw new \Exception('Cannot detect PHP build architecture');
-        }
-        if (!$compiler) {
-            throw new \Exception('Cannot detect PHP build compiler version');
-        }
-        if (!$extensionDir) {
-            throw new \Exception('Cannot detect PHP extension directory');
-        }
+        $compiler = trim(
+	    strtolower(
+	        str_replace('MS', '', substr(
+                    $this->getCompilerFromPhpInfo($info), 0, 6)
+                )
+            )
+        );
 
         return [$compiler, $arch, $iniPath, $extensionDir];
     }
