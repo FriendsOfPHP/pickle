@@ -19,7 +19,6 @@ class Convert
 
 			case "hhvm":
 				throw new \Exception("Nothing to convert for engine '{$engine->getName()}'");
-				break;	
 
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");

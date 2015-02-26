@@ -25,7 +25,6 @@ class Install
 
 			case "hhvm":
 				throw new \Exception("Not implemented for engine '{$engine->getName()}'");
-				break;	
 
 			default:
 				throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
