@@ -49,5 +49,12 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         if (!$res) {
             throw new \Exception('make install failed');
         }
+
+	$this->updateIni();
+    }
+
+    protected function updateIni()
+    {
+	
     }
 }
