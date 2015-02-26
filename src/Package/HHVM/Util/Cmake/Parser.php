@@ -23,13 +23,26 @@ class Parser
 
 	/* XXX this is a dummy yet */
         $package = [
-            'name' => 'unknown',
+            'name' => $this->getExtName($cont),
             'version' => '1.2.3',
             'stability' => 'alpha',
             'description' => 'unknown',
         ];
 
 	return $this->loader->load($package);
+    }
+
+    public function getExtName($cont)
+    {
+	$ret = NULL;
+	
+	if (preg_match(",HHVM_EXTENSION\(([^\s])\s+,", $cont, $m)) {
+		$ret = $m[1];
+	}
+
+	if (!$ret) {
+		throw new \Exception("Couldn't parse extension name");
+	}
     }
 }
 
