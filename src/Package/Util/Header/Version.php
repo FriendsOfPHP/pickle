@@ -28,15 +28,19 @@ class Version
 
 		if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
 			$headers = (array)glob($this->package->getSourceDir() . DIRECTORY_SEPARATOR . "*.h");
+			$found = false;
 			foreach ($headers as $h) {
 				if ($this->fileHasVersionMacro($h)) {
 					$header = $h;
+					$found = true;
 					break;
 				}
 			}
 
-			throw new \Exception("No macro named {$this->macroName} was found in the headers. " .
-				"This macro is recommended to be defined with the current extension version");
+			if (!$found) {
+				throw new \Exception("No macro named {$this->macroName} was found in the headers. " .
+					"This macro is recommended to be defined with the current extension version");
+			}
 		}
 
 		return $header;
