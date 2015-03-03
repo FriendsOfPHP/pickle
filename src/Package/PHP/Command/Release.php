@@ -5,6 +5,7 @@ namespace Pickle\Package\PHP\Command;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\Util\JSON\Dumper;
+use Pickle\Package\Util\Header;
 
 class Release implements Interfaces\Package\Release
 {
@@ -67,6 +68,8 @@ class Release implements Interfaces\Package\Release
         }
 
         $package->setRootDir(realpath($path));
+
+	(new Header\Version($package))->updateJSON();
 
         return $package;
     }
