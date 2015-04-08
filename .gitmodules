@@ -1,0 +1,3 @@
+[submodule "res/logo"]
+	path = res/logo
+	url = https://github.com/tarekdj/Pickle-Logo
