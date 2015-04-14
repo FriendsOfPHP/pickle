@@ -4,6 +4,20 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+$required_exts = array(
+	"zlib",
+	"mbstring",
+	"simplexml",
+	"json",
+	"dom",
+	"openssl",
+);
+foreach ($required_exts as $ext) {
+	if (!extension_loaded($ext)) {
+		die("Extension '$ext' required but not loaded");
+	}
+}
+
 // application.php
 function includeIfExists($file)
 {
