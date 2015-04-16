@@ -20,6 +20,10 @@
         "php": ">=5.4",
         "ext-zlib": "*",
         "ext-mbstring": "*",
+	"ext-simplexml": "*",
+	"ext-json": "*",
+	"ext-dom": "*",
+	"ext-openssl": "*",
         "symfony/console": "~2.5",
         "justinrainbow/json-schema": "~1.1",
         "composer/composer": "~1.0-alpha8"
