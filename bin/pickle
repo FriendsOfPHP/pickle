@@ -11,10 +11,11 @@ $required_exts = array(
 	"json",
 	"dom",
 	"openssl",
+	"phar",
 );
 foreach ($required_exts as $ext) {
 	if (!extension_loaded($ext)) {
-		die("Extension '$ext' required but not loaded");
+		die("Extension '$ext' required but not loaded, full required list: " . implode(", ", $required_exts));
 	}
 }
 
