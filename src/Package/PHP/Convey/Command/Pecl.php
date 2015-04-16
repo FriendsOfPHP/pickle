@@ -26,7 +26,7 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         }
 
         $this->name = $matches['package'];
-        $this->url = 'http://pecl.php.net/get/' . $matches['package'];
+        $this->url = 'https://pecl.php.net/get/' . $matches['package'];
 
         if (isset($matches['stability']) && '' !== $matches['stability']) {
             $this->stability = $matches['stability'];

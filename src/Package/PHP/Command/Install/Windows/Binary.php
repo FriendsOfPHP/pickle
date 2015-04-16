@@ -50,7 +50,7 @@ class Binary
 
     private function extensionPeclExists()
     {
-        $url = 'http://pecl.php.net/get/'.$this->extName;
+        $url = 'https://pecl.php.net/get/'.$this->extName;
         $headers = get_headers($url, 1);
         $status = $headers[0];
         if (strpos($status, '404')) {
