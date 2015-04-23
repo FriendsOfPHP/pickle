@@ -4,6 +4,7 @@ namespace Pickle\Package\PHP\Command;
 
 use Pickle\Base\Interfaces;
 use Pickle\Package;
+use Pickle\Package\PHP\Util\PackageXml;
 
 class Validate implements Interfaces\Package\Validate
 {
