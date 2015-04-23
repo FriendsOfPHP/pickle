@@ -75,12 +75,12 @@ Feature: convert package.xml to composer.json
     When I run "pickle convert"
     Then it should fail with:
       """
-      File not found: %%TEST_DIR%%/empty-dir/package.xml
+      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
       """
 
     Given I am in the ".." path
     When I run "pickle convert empty-dir"
     Then it should fail with:
       """
-      File not found: empty-dir/package.xml
+      The path 'empty-dir' doesn't contain package.xml
       """

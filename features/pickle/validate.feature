@@ -55,12 +55,12 @@ Feature: validate package.xml
     When I run "pickle validate"
     Then it should fail with:
       """
-      File not found: %%TEST_DIR%%/empty-dir/package.xml
+      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
       """
 
     Given I am in the ".." path
     When I run "pickle validate empty-dir"
     Then it should fail with:
       """
-      File not found: empty-dir/package.xml
+      The path 'empty-dir' doesn't contain package.xml
       """
