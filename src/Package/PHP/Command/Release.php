@@ -56,11 +56,9 @@ class Release implements Interfaces\Package\Release
                 $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
 
                 $pkgXml = new PackageXml($path);
-                $package = $pkgXml->getPackage();
-                $package->dump();
+                $pkgXml->dump();
 
-                $jsonPath = $package->getJsonPath();
-                unset($package);
+                $jsonPath = $pkgXml->getJsonPath();
 
                 $package = $jsonLoader->load($jsonPath);
             } catch (Exception $e) {
