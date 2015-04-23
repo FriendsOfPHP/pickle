@@ -4,15 +4,12 @@ namespace Pickle\Package\PHP\Convey\Command;
 
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts\Package\Convey;
-use Pickle\Package\Util\JSON\Dumper;
 use Pickle\Package\PHP;
-
 
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 {
     public function __construct(Interfaces\Package\Convey\Command $command)
     {
-
     }
 
     public function execute($target, $no_convert)
@@ -44,4 +41,3 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         return $package;
     }
 }
-

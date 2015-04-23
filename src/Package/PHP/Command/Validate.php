@@ -8,12 +8,12 @@ use Pickle\Package;
 class Validate implements Interfaces\Package\Validate
 {
     protected $path;
-    protected $cb = NULL;
+    protected $cb = null;
 
-    public function __construct($path, $cb = NULL)
+    public function __construct($path, $cb = null)
     {
-    $this->path = $path;
-    $this->cb = $cb;
+        $this->path = $path;
+        $this->cb = $cb;
     }
 
     public function process()
@@ -27,4 +27,3 @@ class Validate implements Interfaces\Package\Validate
         }
     }
 }
-

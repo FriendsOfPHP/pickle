@@ -2,18 +2,15 @@
 
 namespace Pickle\Package\PHP\Command;
 
-use Pickle\Base\Abstracts;
-use Pickle\Base\Interfaces;
-
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
 
-class Convert 
+class Convert
 {
     protected $path;
     protected $cb;
 
-    public function __construct($path, $cb = NULL)
+    public function __construct($path, $cb = null)
     {
         $this->path = $path;
         $this->cb   = $cb;
@@ -36,4 +33,3 @@ class Convert
         }
     }
 }
-

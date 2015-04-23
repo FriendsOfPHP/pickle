@@ -12,12 +12,12 @@ class Release implements Interfaces\Package\Release
     /**
      * @var \Pickle\Base\Interfaces\Package
      */
-    protected $pkg = NULL;
+    protected $pkg = null;
 
     /*
      * @var Closure
      */
-    protected $cb = NULL;
+    protected $cb = null;
 
     /*
      * @var bool
@@ -31,21 +31,20 @@ class Release implements Interfaces\Package\Release
      * @param Closure $cb
      * @param bool    $noConvert
      */
-    public function __construct($path, $cb = NULL, $noConvert = false)
+    public function __construct($path, $cb = null, $noConvert = false)
     {
         $this->pkg       = $this->readPackage($path);
         $this->cb        = $cb;
         $this->noConvert = $noConvert;
     }
 
-
     protected function readPackage($path)
     {
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
         $package = null;
 
-        if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
+        if (file_exists($path.DIRECTORY_SEPARATOR.'composer.json')) {
+            $package = $jsonLoader->load($path.DIRECTORY_SEPARATOR.'composer.json');
         }
 
         if (null === $package && $this->noConvert) {
@@ -62,16 +61,16 @@ class Release implements Interfaces\Package\Release
 
                 $jsonPath = $package->getJsonPath();
                 unset($package);
-        
+
                 $package = $jsonLoader->load($jsonPath);
             } catch (Exception $e) {
                 /* pass for now, be compatible */
             }
         }
 
-        if (NULL == $package) {
+        if (null == $package) {
             /* Just ensure it's correct, */
-            throw new \Exception("Couldn't read package info at '$path'"); 
+            throw new \Exception("Couldn't read package info at '$path'");
         }
 
         $package->setRootDir(realpath($path));
@@ -81,17 +80,16 @@ class Release implements Interfaces\Package\Release
         return $package;
     }
 
-
     /**
      * Create package
      */
     public function create()
     {
-        $archBasename = $this->pkg->getName() . '-' . $this->pkg->getPrettyVersion();
+        $archBasename = $this->pkg->getName().'-'.$this->pkg->getPrettyVersion();
 
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
-        $tempName = getcwd() . '/pkl-tmp.tar';
+        $tempName = getcwd().'/pkl-tmp.tar';
 
         $arch = new \PharData($tempName);
         $pkgDir = $this->pkg->getRootDir();
@@ -103,12 +101,12 @@ class Release implements Interfaces\Package\Release
             }
         }
         if (file_exists($tempName)) {
-            @unlink($tempName . '.gz');
+            @unlink($tempName.'.gz');
         }
         $arch->compress(\Phar::GZ);
         unset($arch);
 
-        rename($tempName . '.gz', $archBasename . '.tgz');
+        rename($tempName.'.gz', $archBasename.'.tgz');
         unlink($tempName);
 
         if ($this->cb) {
@@ -117,4 +115,3 @@ class Release implements Interfaces\Package\Release
         }
     }
 }
-
