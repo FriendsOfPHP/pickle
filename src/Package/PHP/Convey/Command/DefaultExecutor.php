@@ -28,11 +28,10 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         }
 
         if (null === $package) {
-            $pkgXml = new PackageXml($path);
-            $package = $pkgXml->getPackage();
-            $package->dump();
+            $pkgXml = new PackageXml($target);
+            $pkgXml->dump();
 
-            $jsonPath = $package->getJsonPath();
+            $jsonPath = $pkgXml->getJsonPath();
             unset($package);
 
             $package = $jsonLoader->load($jsonPath);
