@@ -18,7 +18,6 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
     public function execute($target, $no_convert)
     {
         $jsonLoader = new \Pickle\Package\Util\JSON\Loader(new \Pickle\Package\Util\Loader());
-        $pickle_json = $target . DIRECTORY_SEPARATOR . 'composer.json';
         $package = null;
 
         if (file_exists($pickle_json)) {
@@ -30,21 +29,14 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         }
 
         if (null === $package) {
-            if (file_exists($target . DIRECTORY_SEPARATOR . 'package2.xml')) {
-                $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package2.xml';
-            } elseif (file_exists($target . DIRECTORY_SEPARATOR . 'package.xml')) {
-                $pkg_xml = $target . DIRECTORY_SEPARATOR . 'package.xml';
-            } else {
-                throw new \Exception("package.xml not found");
-            }
+            $pkgXml = new PackageXml($path);
+            $package = $pkgXml->getPackage();
+            $package->dump();
 
-            $loader = new PHP\Util\XML\Loader(new \Pickle\Package\Util\Loader());
-            $package = $loader->load($pkg_xml);
+            $jsonPath = $package->getJsonPath();
+            unset($package);
 
-            $dumper = new Dumper();
-            $dumper->dumpToFile($package, $pickle_json);
-
-            $package = $jsonLoader->load($pickle_json);
+            $package = $jsonLoader->load($jsonPath);
         }
 
         $package->setRootDir($target);

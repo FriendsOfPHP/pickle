@@ -6,8 +6,7 @@ use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
 
 use Pickle\Package;
-use Pickle\Package\PHP\Util\ConvertChangeLog;
-use Pickle\Package\Util\JSON\Dumper;
+use Pickle\Package\PHP\Util\PackageXml;
 
 class Convert 
 {
@@ -23,19 +22,13 @@ class Convert
     public function process()
     {
         $path = rtrim($this->path, '/\\');
-        $xml = $path . DIRECTORY_SEPARATOR . 'package.xml';
-        if (false === is_file($xml)) {
-            throw new \InvalidArgumentException('File not found: ' . $xml);
-        }
 
-        $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-        $package = $loader->load($xml);
+        $pkgXml = new PackageXml($path);
+        $package = $pkgXml->getPackage();
         $package->setRootDir($path);
-        $convertCl = new ConvertChangeLog($xml);
-        $convertCl->parse();
-        $convertCl->generateReleaseFile();
-        $dumper = new Dumper();
-        $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'composer.json');
+
+        $pkgXml->convertChangeLog();
+        $pkgXml->dump();
 
         if ($this->cb) {
             $cb = $this->cb;

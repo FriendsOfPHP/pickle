@@ -4,7 +4,7 @@ namespace Pickle\Package\PHP\Command;
 
 use Pickle\Base\Interfaces;
 use Pickle\Package;
-use Pickle\Package\Util\JSON\Dumper;
+use Pickle\Package\PHP\Util\PackageXml;
 use Pickle\Package\Util\Header;
 
 class Release implements Interfaces\Package\Release
@@ -52,14 +52,21 @@ class Release implements Interfaces\Package\Release
             throw new \RuntimeException('XML package are not supported. Please convert it before install');
         }
 
-        if (null === $package && file_exists($path . DIRECTORY_SEPARATOR . 'package.xml')) {
-            $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-            $package = $loader->load($path . DIRECTORY_SEPARATOR . 'package.xml');
+        if (null === $package) {
+            try {
+                $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
 
-            $dumper = new Dumper();
-            $dumper->dumpToFile($package, $path . DIRECTORY_SEPARATOR . 'composer.json');
+                $pkgXml = new PackageXml($path);
+                $package = $pkgXml->getPackage();
+                $package->dump();
 
-            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
+                $jsonPath = $package->getJsonPath();
+                unset($package);
+        
+                $package = $jsonLoader->load($jsonPath);
+            } catch (Exception $e) {
+                /* pass for now, be compatible */
+            }
         }
 
         if (NULL == $package) {
@@ -69,7 +76,7 @@ class Release implements Interfaces\Package\Release
 
         $package->setRootDir(realpath($path));
 
-	(new Header\Version($package))->updateJSON();
+        (new Header\Version($package))->updateJSON();
 
         return $package;
     }

@@ -18,12 +18,8 @@ class Validate implements Interfaces\Package\Validate
 
     public function process()
     {
-        if (false === is_file($this->path . DIRECTORY_SEPARATOR . 'package.xml')) {
-            throw new \InvalidArgumentException('File not found: ' . $this->path . DIRECTORY_SEPARATOR . 'package.xml');
-        }
-
-        $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-        $package = $loader->load($this->path . DIRECTORY_SEPARATOR . 'package.xml');
+        $pkgXml = new PackageXml($path);
+        $package = $pkgXml->getPackage();
 
         if ($this->cb) {
             $cb = $this->cb;
