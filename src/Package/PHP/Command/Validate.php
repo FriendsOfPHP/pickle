@@ -19,7 +19,7 @@ class Validate implements Interfaces\Package\Validate
 
     public function process()
     {
-        $pkgXml = new PackageXml($path);
+        $pkgXml = new PackageXml($this->path);
         $package = $pkgXml->getPackage();
 
         if ($this->cb) {
