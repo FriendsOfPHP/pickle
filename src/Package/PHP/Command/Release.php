@@ -88,7 +88,9 @@ class Release implements Interfaces\Package\Release
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
         $tempName = getcwd().'/pkl-tmp.tar';
-
+        if (file_exists($tempName)) {
+            unlink($tempName);
+        }
         $arch = new \PharData($tempName);
         $pkgDir = $this->pkg->getRootDir();
 
