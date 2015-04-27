@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Info;
+use Pickle\Base\Util;
 
 class InfoCommand extends Command
 {
@@ -26,6 +27,7 @@ class InfoCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        Util\TmpDir::set($input->getOption("tmp-dir"));
     	$helper = $this->getHelper('package');
 
     	$cb = function(Interfaces\Package\Info $info) use ($helper, $output) {

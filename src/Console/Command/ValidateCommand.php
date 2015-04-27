@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Validate;
+use Pickle\Base\Util;
 
 class ValidateCommand extends Command
 {
@@ -27,6 +28,7 @@ class ValidateCommand extends Command
     {
         $path = rtrim($input->getArgument('path'), '/\\');
     	$helper = $this->getHelper('package');
+        Util\TmpDir::set($input->getOption("tmp-dir"));
 	
     	$cb = function(Interfaces\Package $package) use ($helper, $output) {
 		/* TODO Rework this to use the Info package command */

@@ -1,6 +1,9 @@
 <?php
 namespace Pickle\Base\Util;
 
+/* This is a completely static class to manage a global temporary dir.
+   The temporary dir has to be setup from the --tmp-dir option in the
+   corresponding command. */
 class TmpDir
 {
     public static $tmpDir;

@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Pickle\Package\Command\Convert;
+use Pickle\Base\Util;
 
 class ConvertCommand extends Command
 {
@@ -26,6 +27,7 @@ class ConvertCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        Util\TmpDir::set($input->getOption("tmp-dir"));
     	$helper = $this->getHelper('package');
     	$cb = function(\Pickle\Base\Interfaces\Package $package) use ($helper, $output) {
 		$output->writeln('<info>Successfully converted ' . $package->getPrettyName() . '</info>');
