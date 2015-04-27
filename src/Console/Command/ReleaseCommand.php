@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Release;
+use Pickle\Base\Util;
 
 class ReleaseCommand extends Command
 {
@@ -33,6 +34,7 @@ class ReleaseCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
     	$helper = $this->getHelper('package');
+        Util\TmpDir::set($input->getOption("tmp-dir"));
 	
     	$cb = function(Interfaces\Package $package) use ($helper, $output) {
 		/* TODO Rework this to use the Info package command */

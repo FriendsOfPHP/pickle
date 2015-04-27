@@ -7,7 +7,7 @@ trait FileOps
 
     public function createTempDir($name = '')
     {
-        $tmp = sys_get_temp_dir();
+        $tmp = TmpDir::get();
         if (!$name) {
             $name = md5(uniqid());
         }

@@ -15,6 +15,7 @@ use Pickle\Engine;
 use Pickle\Package\Util\Windows;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Install;
+use Pickle\Base\Util;
 
 class InstallerCommand extends Command
 {
@@ -223,6 +224,7 @@ class InstallerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
+        Util\TmpDir::set($input->getOption("tmp-dir"));
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

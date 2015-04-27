@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use Symfony\Component\Console\Input\InputArgument;
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -61,4 +63,13 @@ $application->add(new Command\ConvertCommand);
 $application->add(new Command\ReleaseCommand);
 $application->add(new Command\InstallerCommand);
 $application->add(new Command\InfoCommand);
+
+/* foreach ($application->all() as $cmd) {
+    $cmd->addOption('format', null, InputArgument::OPTIONAL, 'To output help in other formats', 'txt');
+} */
+
+foreach ($application->all() as $cmd) {
+    $cmd->addOption('tmp-dir', null, InputArgument::OPTIONAL, 'path to a custom temp dir', sys_get_temp_dir());
+}
+
 $application->run();

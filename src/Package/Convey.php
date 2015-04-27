@@ -6,6 +6,7 @@ use Pickle\Package;
 use Composer\IO\ConsoleIO;
 use Pickle\Package\Convey\Command\Factory;
 use Pickle\Package\Convey\Command\Type;
+use Pickle\Base\Util;
 
 class Convey
 {
@@ -23,7 +24,7 @@ class Convey
 
     public function deliver($target = "", $no_convert = false)
     {
-        $target = $target ? realpath($target) : sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->command->getName();
+        $target = $target ? realpath($target) : Util\TmpDir::get() . DIRECTORY_SEPARATOR . $this->command->getName();
 
         return $this->command->execute($target, $no_convert);
     }

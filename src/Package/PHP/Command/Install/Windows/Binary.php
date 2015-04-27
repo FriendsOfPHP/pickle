@@ -6,6 +6,7 @@ use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
+use Pickle\Base\Util;
 
 class Binary
 {
@@ -167,7 +168,7 @@ class Binary
         if (!$fileContents) {
             throw new \Exception('Cannot fetch <'.$url.'>');
         }
-        $tmpdir = sys_get_temp_dir();
+        $tmpdir = Util\TmpDir::get();
         $path = $tmpdir.'/'.$this->extName.'.zip';
         if (!file_put_contents($path, $fileContents)) {
             throw new \Exception('Cannot save temporary file <'.$path.'>');

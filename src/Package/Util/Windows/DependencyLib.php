@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
 use Pickle\Base\Util\FileOps;
+use Pickle\Base\Util;
 
 class DependencyLib
 {
@@ -218,7 +219,7 @@ class DependencyLib
         if (!$fileContents) {
             throw new \Exception('Cannot fetch <'.$url.'>');
         }
-        $tmpdir = sys_get_temp_dir();
+        $tmpdir = Util\TmpDir::get();
         $path = $tmpdir.DIRECTORY_SEPARATOR.basename($url);
         if (!file_put_contents($path, $fileContents)) {
             throw new \Exception('Cannot save temporary file <'.$path.'>');
