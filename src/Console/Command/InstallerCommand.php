@@ -11,37 +11,22 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
 use Pickle\Base\Interfaces\Package;
+use Pickle\Base\Abstracts\Console\Command\BuildCommand;
 use Pickle\Engine;
 use Pickle\Package\Util\Windows;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Install;
 use Pickle\Base\Util;
 
-class InstallerCommand extends Command
+class InstallerCommand extends BuildCommand
 {
     protected function configure()
     {
+    	parent::configure();
+
         $this
             ->setName('install')
             ->setDescription('Install a php extension')
-            ->addArgument(
-                'path',
-                InputArgument::OPTIONAL,
-                'Path to the PECL extension root directory (default pwd), archive or extension name',
-                getcwd()
-            )
-            ->addOption(
-                'no-convert',
-                null,
-                InputOption::VALUE_NONE,
-                'Disable package conversion'
-            )
-            ->addOption(
-                'defaults',
-                null,
-                InputOption::VALUE_NONE,
-                'Use defaults configure options values'
-            )
             ->addOption(
                 'dry-run',
                 null,
@@ -62,11 +47,6 @@ class InstallerCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'use source package'
-            )->addOption(
-                'with-configure-options',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'path to the additional configure options'
             )->addOption(
                 'save-logs',
                 null,
@@ -136,14 +116,6 @@ class InstallerCommand extends Command
         }
     }
 
-    protected function saveSourceInstallLogs(InputInterface $input, $build)
-    {
-        $save_log_path = $input->getOption('save-logs');
-        if ($save_log_path) {
-            $build->saveLog($save_log_path);
-        }
-    }
-
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = "")
     {
         $helper = $this->getHelperSet()->get('question');
@@ -157,9 +129,9 @@ class InstallerCommand extends Command
             $build->make();
             $build->install();
 
-            $this->saveSourceInstallLogs($input, $build);
+            $this->saveBuildLogs($input, $build);
         } catch (\Exception $e) {
-            $this->saveSourceInstallLogs($input, $build);
+            $this->saveBuildLogs($input, $build);
 
             $output->writeln('The following error(s) happened: ' . $e->getMessage());
             $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
@@ -168,57 +140,6 @@ class InstallerCommand extends Command
             }
         }
         $build->cleanup();
-    }
-
-    protected function buildOptions(Package $package, InputInterface $input, OutputInterface $output)
-    {
-        $helper = $this->getHelperSet()->get('question');
-
-        $force_opts = $input->getOption('with-configure-options');
-
-        if ($force_opts) {
-            if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
-                throw new \Exception("File '$force_opts' is unusable");
-            }
-
-            $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
-
-            return [null, $force_opts];
-        }
-
-        $options = $package->getConfigureOptions();
-        $optionsValue = [];
-
-        foreach ($options as $name => $opt) {
-            /* enable/with-<extname> */
-            if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
-                $optionsValue[$name] = (object) [
-                'type' => $opt->type,
-                'input' => true
-                ];
-
-                continue;
-            }
-
-            if ($input->getOption('defaults')) {
-                $value = $opt->default;
-            } else {
-                if ($opt->type == 'enable') {
-                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
-                } else {
-                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
-                }
-
-                $value = $helper->ask($input, $output, $prompt);
-            }
-
-            $optionsValue[$name] = (object) [
-                'type' => $opt->type,
-                'input' => $value
-            ];
-        }
-
-        return [$optionsValue, null];
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -252,3 +173,4 @@ class InstallerCommand extends Command
         return 0;
     }
 }
+

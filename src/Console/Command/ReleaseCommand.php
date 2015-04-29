@@ -7,28 +7,35 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Pickle\Base\Interfaces;
+use Pickle\Base\Abstracts\Console\Command\BuildCommand;
 use Pickle\Package\Command\Release;
 use Pickle\Base\Util;
 
-class ReleaseCommand extends Command
+class ReleaseCommand extends BuildCommand
 {
     protected function configure()
     {
+    	parent::configure();
+
         $this
             ->setName('release')
             ->setDescription('Package a PECL extension for release')
-            ->addArgument(
-                'path',
-                InputArgument::OPTIONAL,
-                'Path to the PECL extension root directory (default pwd)',
-                getcwd()
-            )
+	    /* TODO: make it to take value like zip, tgz, etc. should this functionality be expanded */
             ->addOption(
-                'no-convert',
+                'binary',
                 null,
                 InputOption::VALUE_NONE,
-                'Disable package conversion'
+                'create binary package'
             );
+
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $this->addOption(
+                'binary',
+                null,
+                InputOption::VALUE_NONE,
+                'use binary package'
+            );
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -42,7 +49,7 @@ class ReleaseCommand extends Command
 	};
         $path = rtrim($input->getArgument('path'), '/\\');
 
-	$release = Release::factory($path, $cb, $input->getOption('no-convert'));
+	$release = Release::factory($path, $cb, $input->getOption('no-convert'), $input->getOption("binary"));
 	$release->create();
     }
 }
