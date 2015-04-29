@@ -24,6 +24,7 @@
 	"ext-json": "*",
 	"ext-dom": "*",
 	"ext-openssl": "*",
+	"ext-zip": "*",
         "symfony/console": "~2.5",
         "justinrainbow/json-schema": "~1.1",
         "composer/composer": "~1.0-alpha8"

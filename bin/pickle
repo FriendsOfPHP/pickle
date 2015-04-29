@@ -14,6 +14,7 @@ $required_exts = array(
 	"dom",
 	"openssl",
 	"phar",
+	"zip",
 );
 foreach ($required_exts as $ext) {
 	if (!extension_loaded($ext)) {
