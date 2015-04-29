@@ -148,4 +148,9 @@ abstract class Build
             }
         }
     }
+
+    public function getPackage()
+    {
+        return $this->pkg;
+    }
 }

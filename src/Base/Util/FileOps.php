@@ -42,4 +42,9 @@ trait FileOps
             rmdir($this->tempDir);
         }
     }
+
+    public function getTempDir()
+    {
+       return $this->tempDir;
+    }
 }

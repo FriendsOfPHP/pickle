@@ -81,7 +81,7 @@ class Release implements Interfaces\Package\Release
     /**
      * Create package
      */
-    public function create()
+    public function create(array $args = array())
     {
         $archBasename = $this->pkg->getName().'-'.$this->pkg->getPrettyVersion();
 

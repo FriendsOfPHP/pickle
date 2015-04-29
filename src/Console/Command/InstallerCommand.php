@@ -116,6 +116,7 @@ class InstallerCommand extends BuildCommand
         }
     }
 
+    /*  The most of this needs to be incapsulated into an extra Build class*/
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = "")
     {
         $helper = $this->getHelperSet()->get('question');

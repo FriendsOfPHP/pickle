@@ -50,6 +50,36 @@ class ReleaseCommand extends BuildCommand
         $path = rtrim($input->getArgument('path'), '/\\');
 
 	$release = Release::factory($path, $cb, $input->getOption('no-convert'), $input->getOption("binary"));
-	$release->create();
+
+	if ($input->getOption("binary")) {
+             $package = $this->getHelper("package")->convey($input, $output, $path);
+             list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
+
+             $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
+
+            try {
+                $build->prepare();
+                $build->createTempDir($package->getName() . $package->getVersion());
+                $build->configure($force_opts);
+                $build->make();
+                $this->saveBuildLogs($input, $build);
+            } catch (\Exception $e) {
+                $this->saveBuildLogs($input, $build);
+
+                $output->writeln('The following error(s) happened: ' . $e->getMessage());
+                $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
+            }
+
+            $args = array(
+	        "build" => $build,
+            );
+	    $release->create($args);
+
+            $build->cleanup();
+        } else {
+            /* imply --source */
+	    $release->create();
+	}
     }
 }
+
