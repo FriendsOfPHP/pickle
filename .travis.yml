@@ -24,7 +24,7 @@ script:
   - composer install --no-dev --optimize-autoloader
   - ~/.composer/vendor/bin/box build
   - composer install
-  - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+  - PICKLE_BEHAT_PROCESS_TIMEOUT=0 sudo vendor/bin/behat --format=progress
 
 after_script:
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
