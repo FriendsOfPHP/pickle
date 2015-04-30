@@ -165,10 +165,10 @@ class Binary implements Interfaces\Package\Release
 	$info = array();
 	$info = array_merge($info, $this->getInfoFromPhpizeLog($build));
 	$info = array_merge($info, $this->getInfoFromConfigureLog($build));
-	var_dump($info);die;
 
 	$tmp_dir = $build->getTempDir();
 
+	$tmp = $build->getLog("configure");
 	if (preg_match(",Build dir:\s+([0-9a-zA-Z\\\\_]+),", $tmp, $m)) {
             $build_dir = $tmp_dir . DIRECTORY_SEPARATOR . $m[1];
 	} else {
@@ -209,11 +209,31 @@ class Binary implements Interfaces\Package\Release
             $ext_pdb = NULL;
 	}
 
+        /* pack the outcome */
+        $zip_name = "php_" . $info["name"] . "-"
+            . $info["version"] . "-"
+            . $info["php_major"] . "-"
+            . $info["php_minor"] . "-"
+            . ($info["thread_safe"] ? "ts" : "nts") . "-"
+            . $info["compiler"] . "-"
+            . $info["arch"]
+            . ".zip";
 
-        /* $zip_name = "php_" . $info["name"] . "-" 
-        $zip = new */
-	var_dump($info, $composer_json, $license, $readme, $ext_dll, $ext_pdb, $build);
+        $zip = new \ZipArchive;
+        if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
+            throw new \Exception("Failed to open '$zip_name' for writing");
+        }
 
+        $zip->addFile($composer_json, basename($composer_json));
+        $zip->addFile($license, basename($license));
+        $zip->addFile($ext_dll, basename($ext_dll));
+        if ($readme) {
+            $zip->addFile($readme, basename($readme));
+        }
+        if ($ext_pdb) {
+            $zip->addFile($ext_pdb, basename($ext_pdb));
+        }
+        $zip->close();
     }
 }
 
