@@ -78,17 +78,44 @@ class Binary implements Interfaces\Package\Release
         return $package;
     }
 
-    /**
-     * Create package
-     */
-    public function create(array $args = array())
-    {
-        if (!isset($args["build"]) || !($args["build"] instanceof Interfaces\Package\Build)) {
-            throw new \Exception("Invalid or NULL object passed as Interfaces\Package\Build");
-	}
-    	$build = $args["build"];
 
-	/* XXX this is probably not the best way to do it, but there is currently no other way */
+    protected function getInfoFromPhpizeLog(Interfaces\Package\Build $build)
+    {
+        $ret = array(
+            "php_major" => NULL,
+	    "php_minor" => NULL,
+	    "php_patch" => NULL,
+        );
+
+	$tmp = $build->getLog("phpize");
+	if (!preg_match(",Rebuilding configure.js[\n\r\d:]+\s+(.+)[\n\r]+,", $tmp, $m)) {
+		throw new \Exception("Couldn't determine PHP development SDK path");
+	}
+	$sdk = $m[1];
+
+        $ver_header = file_get_contents("$sdk/include/main/php_version.h");
+
+        if (!preg_match(",PHP_MAJOR_VERSION\s+(\d+),", $ver_header, $m)) {
+		throw new \Exception("Couldn't determine PHP_MAJOR_VERSION");
+	}
+	$ret["php_major"] = $m[1];
+   
+        if (!preg_match(",PHP_MINOR_VERSION\s+(\d+),", $ver_header, $m)) {
+		throw new \Exception("Couldn't determine PHP_MINOR_VERSION");
+	}
+	$ret["php_minor"] = $m[1];
+   
+        if (!preg_match(",PHP_RELEASE_VERSION\s+(\d+),", $ver_header, $m)) {
+		throw new \Exception("Couldn't determine PHP_RELEASE_VERSION");
+	}
+	$ret["php_patch"] = $m[1];
+
+        return $ret;
+    }
+
+
+    protected function getInfoFromConfigureLog(Interfaces\Package\Build $build)
+    {
 	$info = array(
 		"thread_safe" => NULL,
 		"compiler"      => NULL,
@@ -96,6 +123,7 @@ class Binary implements Interfaces\Package\Release
 		"version"       => NULL,
 		"name"          => NULL,
 	);
+
 	$tmp = $build->getLog("configure");
 
 	if (!preg_match(",Build type\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
@@ -113,19 +141,41 @@ class Binary implements Interfaces\Package\Release
 	}
 	$info["compiler"] = "vc" . $m[1];
 
-	if (!preg_match(",Architecture\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
+	if (!preg_match(",Architecture\s+\|\s+([a-zA-Z0-9]+),", $tmp, $m)) {
 		throw new \Exception("Couldn't determine the build architecture");
 	}
-	$info["arch"] = strtolower($m[1]) == "yes";
+	$info["arch"] = $m[1];
 
 	$info["version"] = $build->getPackage()->getPrettyVersion();
 	$info["name"] = $build->getPackage()->getName();
 
+        return $info;
+    }
+
+    /**
+     * Create package
+     */
+    public function create(array $args = array())
+    {
+        if (!isset($args["build"]) || !($args["build"] instanceof Interfaces\Package\Build)) {
+            throw new \Exception("Invalid or NULL object passed as Interfaces\Package\Build");
+	}
+    	$build = $args["build"];
+
+	$info = array();
+	$info = array_merge($info, $this->getInfoFromPhpizeLog($build));
+	$info = array_merge($info, $this->getInfoFromConfigureLog($build));
+	var_dump($info);die;
+
 	$tmp_dir = $build->getTempDir();
 
-	$build_dir = "x86" == $info["arch"] ? $tmp_dir : $tmp_dir . DIRECTORY_SEPARATOR . "x64";
-	$build_dir .= DIRECTORY_SEPARATOR . ($is_release ? "Release" : "Debug");
-	$build_dir .= ($info["thread_safe"] ? "_TS" : "");
+	if (preg_match(",Build dir:\s+([0-9a-zA-Z\\\\_]+),", $tmp, $m)) {
+            $build_dir = $tmp_dir . DIRECTORY_SEPARATOR . $m[1];
+	} else {
+	    $build_dir = "x86" == $info["arch"] ? $tmp_dir : $tmp_dir . DIRECTORY_SEPARATOR . "x64";
+	    $build_dir .= DIRECTORY_SEPARATOR . ($is_release ? "Release" : "Debug");
+	    $build_dir .= ($info["thread_safe"] ? "_TS" : "");
+	}
 
         /* Various file paths to pack. */
         $composer_json = $tmp_dir . DIRECTORY_SEPARATOR . "composer.json";
@@ -160,7 +210,9 @@ class Binary implements Interfaces\Package\Release
 	}
 
 
-	var_dump($info, $composer_json, $license, $readme, $ext_dll, $ext_pdb);
+        /* $zip_name = "php_" . $info["name"] . "-" 
+        $zip = new */
+	var_dump($info, $composer_json, $license, $readme, $ext_dll, $ext_pdb, $build);
 
     }
 }
