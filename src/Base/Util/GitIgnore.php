@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Base\Util;
 
 use Pickle\Base\Interfaces;
@@ -10,14 +11,14 @@ class GitIgnore
     public function __construct(Interfaces\Package $package)
     {
         $dir = $package->getSourceDir();
-        $path = $package->getSourceDir() . '/.gitignore';
+        $path = $package->getSourceDir().'/.gitignore';
         $this->excluded = glob("$dir/.git/*");
 
         $this->excluded = [
             "$dir/.git/", "$dir/.gitignore", "$dir/.gitmodules",
         ];
         if (is_file($path) === false) {
-            throw new \InvalidArgumentException('File not found: ' . $path);
+            throw new \InvalidArgumentException('File not found: '.$path);
         }
 
         foreach (file($path) as $line) {
@@ -61,6 +62,7 @@ class GitIgnore
                 return true;
             }
         }
+
         return false;
     }
 }

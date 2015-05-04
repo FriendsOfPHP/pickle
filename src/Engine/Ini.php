@@ -2,25 +2,23 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Engine\PHP;
-use Pickle\Engine\HHVM;
 use Pickle\Base\Interfaces;
 
 class Ini
 {
-    protected static $instance = NULL;
+    protected static $instance = null;
 
-    public static function factory(Interfaces\Engine $engine = NULL)
+    public static function factory(Interfaces\Engine $engine = null)
     {
-        if (NULL == self::$instance) {
-            $engine = NULL == $engine ? \Pickle\Engine::factory() : $engine;
+        if (null == self::$instance) {
+            $engine = null == $engine ? \Pickle\Engine::factory() : $engine;
 
             switch ($engine->getName()) {
-                case "php":
+                case 'php':
                     self::$instance = new PHP\Ini($engine);
                     break;
 
-                case "hhvm":
+                case 'hhvm':
                     self::$instance = new HHVM\Ini($engine);
                     break;
 
@@ -28,8 +26,7 @@ class Ini
                     throw new \Exception("Unsupported engine '{$engine->getName()}'");
             }
         }
-        
+
         return self::$instance;
     }
 }
-

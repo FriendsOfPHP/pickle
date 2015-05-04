@@ -25,7 +25,7 @@ class Release implements Interfaces\Package\Release
     protected $noConvert = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string  $path
      * @param Closure $cb
@@ -79,7 +79,7 @@ class Release implements Interfaces\Package\Release
     }
 
     /**
-     * Create package
+     * Create package.
      */
     public function create(array $args = array())
     {

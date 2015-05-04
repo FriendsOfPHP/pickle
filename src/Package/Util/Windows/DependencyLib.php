@@ -4,7 +4,6 @@ namespace Pickle\Package\Util\Windows;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
-
 use Pickle\Base\Util\FileOps;
 use Pickle\Base\Util;
 
@@ -49,7 +48,7 @@ class DependencyLib
         $compiler = $this->php->getCompiler();
         $architecture = $this->php->getArchitecture();
         if (!isset($dllMap->{$compiler}->{$architecture})) {
-        /* Just for the case the given compiler/arch set isn't defined in the dllmap,
+            /* Just for the case the given compiler/arch set isn't defined in the dllmap,
            or we've got a corrupted file, or ...
            The dllMap property should be ensured an array. */
             $this->dllMap = array();
@@ -84,7 +83,7 @@ class DependencyLib
             throw new \RuntimeException('Error while running deplister.exe');
         }
         $dlls = [];
-        foreach ((array)$out as $l) {
+        foreach ((array) $out as $l) {
             list($dllname, $found) = explode(',', $l);
             $found = trim($found);
             $dllname = trim($dllname);
@@ -235,7 +234,7 @@ class DependencyLib
         if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
             throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
         }
-        $this->output->writeln("Extracting archives...");
+        $this->output->writeln('Extracting archives...');
         $zipArchive->extractTo($this->tempDir);
     }
 

@@ -33,25 +33,25 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     private function getFromConstants()
     {
-        $script = 'echo PHP_VERSION . \"\n\"; ' .
-                'echo PHP_MAJOR_VERSION . \"\n\"; ' .
-                'echo PHP_MINOR_VERSION . \"\n\"; ' .
-                'echo PHP_RELEASE_VERSION . \"\n\"; ' .
+        $script = 'echo PHP_VERSION . \"\n\"; '.
+                'echo PHP_MAJOR_VERSION . \"\n\"; '.
+                'echo PHP_MINOR_VERSION . \"\n\"; '.
+                'echo PHP_RELEASE_VERSION . \"\n\"; '.
                 'echo PHP_EXTRA_VERSION . \"\n\"; '.
-                'echo PHP_ZTS . \"\n\"; ' .
+                'echo PHP_ZTS . \"\n\"; '.
                 'echo PHP_DEBUG . \"\n\"; ';
 
-        $cmd = $this->phpCli . ' -r ' . '"' . str_replace("\n", '', $script) . '"';
+        $cmd = $this->phpCli.' -r '.'"'.str_replace("\n", '', $script).'"';
 
         exec($cmd, $info);
         if (7 !== count($info)) {
-            throw new \Exception("Could not determine info from the PHP binary");
+            throw new \Exception('Could not determine info from the PHP binary');
         }
 
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
         $this->zts = (boolean) $this->zts;
 
-        if (defined("PHP_WINDOWS_VERSION_MAJOR")) {
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
         } else {
             /* TODO till now we didn't need his on linux*/
@@ -65,12 +65,12 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         foreach ($info as $s) {
             $pos_ext_dir = strpos($s, 'extension_dir');
             if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
-                list(, $extensionDir, ) = explode('=>', $s);
+                list(, $extensionDir) = explode('=>', $s);
                 break;
             }
         }
 
-	$extensionDir = trim($extensionDir);
+        $extensionDir = trim($extensionDir);
         if ('' == $extensionDir) {
             throw new \Exception('Cannot detect PHP extension directory');
         }
@@ -102,7 +102,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $iniPath = '';
 
         foreach ($info as $s) {
-            if (false !== strpos($s, "Loaded Configuration File")) {
+            if (false !== strpos($s, 'Loaded Configuration File')) {
                 list(, $iniPath) = explode('=>', $s);
                 if ('(None)' === $iniPath) {
                     $iniPath = '';
@@ -141,7 +141,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     private function getFromPhpInfo()
     {
-        $cmd = $this->phpCli . ' -i';
+        $cmd = $this->phpCli.' -i';
         exec($cmd, $info);
 
         if (!is_array($info)) {
@@ -153,8 +153,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $extensionDir = $this->getExtensionDirFromPhpInfo($info);
 
         $compiler = trim(
-	    strtolower(
-	        str_replace('MS', '', substr(
+        strtolower(
+            str_replace('MS', '', substr(
                     $this->getCompilerFromPhpInfo($info), 0, 6)
                 )
             )
@@ -165,7 +165,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     public function getName()
     {
-        return "php";
+        return 'php';
     }
 
     public function hasSdk()
@@ -174,7 +174,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             return $this->hasSdk;
         }
         $cliDir = dirname($this->phpCli);
-        $res = glob($cliDir . DIRECTORY_SEPARATOR . 'phpize*');
+        $res = glob($cliDir.DIRECTORY_SEPARATOR.'phpize*');
         if (!$res) {
             $this->hasSdk = false;
         }

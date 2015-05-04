@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Package\Util\JSON;
 
 use Composer\Package\Loader\LoaderInterface;
@@ -20,7 +21,7 @@ class Loader
     public function load($path)
     {
         if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: ' . $path);
+            throw new \InvalidArgumentException('File not found: '.$path);
         }
 
         $json = @json_decode(file_get_contents($path));
@@ -33,7 +34,7 @@ class Loader
                 $exception = new \Exception($error['message'], $error['type']);
             }
 
-            throw new \RuntimeException('Failed to read ' . $path, 0, $exception);
+            throw new \RuntimeException('Failed to read '.$path, 0, $exception);
         }
 
         $this->validate($json);
@@ -43,7 +44,7 @@ class Loader
 
     protected function validate($json)
     {
-        $schema = json_decode(file_get_contents(__DIR__ . '/../../../../res/pickle-schema.json'));
+        $schema = json_decode(file_get_contents(__DIR__.'/../../../../res/pickle-schema.json'));
         $validator = new \JsonSchema\Validator();
         $validator->check($json, $schema);
 
@@ -51,7 +52,7 @@ class Loader
             $message = '';
 
             foreach ($validator->getErrors() as $error) {
-                $message .= sprintf('[%s] %s', $error['property'], $error['message']) . PHP_EOL;
+                $message .= sprintf('[%s] %s', $error['property'], $error['message']).PHP_EOL;
             }
 
             throw new \RuntimeException($message);

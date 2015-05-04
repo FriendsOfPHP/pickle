@@ -34,11 +34,11 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
                 false == $option->input ? 'enable' : 'disable';
             } elseif ('with' === $option->type) {
                 if ($option->input == 'yes' || $option->input == '1' || $option->type === true) {
-                    $configureOptions .= ' --with-' . $name;
+                    $configureOptions .= ' --with-'.$name;
                 } elseif ($option->input == 'no' || $option->input == '0' || $option->type === false) {
-                    $configureOptions .= ' --without-' . $name;
+                    $configureOptions .= ' --without-'.$name;
                 } else {
-                    $configureOptions .= ' --with-' . $name. '=' . $option->input;
+                    $configureOptions .= ' --with-'.$name.'='.$option->input;
                 }
             }
         }
@@ -56,10 +56,10 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         /* XXX check sanity */
         $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
 
-        $res = $this->runCommand($this->pkg->getSourceDir() . '/configure '. $configureOptions);
+        $res = $this->runCommand($this->pkg->getSourceDir().'/configure '.$configureOptions);
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');
+            throw new \Exception('configure failed, see log at '.$this->tempDir.'\config.log');
         }
     }
 

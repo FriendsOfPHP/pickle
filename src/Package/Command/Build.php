@@ -13,18 +13,18 @@ class Build
     {
         $engine = Engine::factory();
 
-        switch($engine->getName()) {
-            case "php":
+        switch ($engine->getName()) {
+            case 'php':
                 if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
                     return new PHP\Command\Build\Windows($package, $optionValue);
-                }else {
+                } else {
                     return new PHP\Command\Build\Unix($package, $optionValue);
                 }
 
-            case "hhvm":
+            case 'hhvm':
                 if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
                     throw new \Exception("Not implemented for engine '{$engine->getName()} on Windows'");
-                }else {
+                } else {
                     return new HHVM\Command\Build\Unix($package, $optionValue);
                 }
 

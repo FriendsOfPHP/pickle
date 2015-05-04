@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Downloader;
 
 use Composer\Downloader\ArchiveDownloader;

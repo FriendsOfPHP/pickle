@@ -2,12 +2,7 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Package\Convey\Command\Type;
 use Pickle\Package\PHP\Convey\Command\Pecl;
-use Pickle\Package\Convey\Command\Git;
-use Pickle\Package\Convey\Command\Tgz;
-use Pickle\Package\Convey\Command\SrcDir;
-use Pickle\Package\Convey\Command\Any;
 use Composer\IO\ConsoleIO;
 
 class Factory
@@ -15,6 +10,8 @@ class Factory
     public static function getCommand($type, $path, ConsoleIO $io)
     {
         switch ($type) {
+            case Type::PICKLE:
+                return new Pickle($path, $io);
             case Type::PECL:
                 return new Pecl($path, $io);
 

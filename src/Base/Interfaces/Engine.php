@@ -17,4 +17,3 @@ interface Engine
     public function getExtensionDir();
     public function getIniPath();
 }
-

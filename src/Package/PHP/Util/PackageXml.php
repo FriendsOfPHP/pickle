@@ -14,8 +14,8 @@ class PackageXml
     public function __construct($path)
     {
         $names = array(
-                        "package2.xml",
-                        "package.xml",
+                        'package2.xml',
+                        'package.xml',
                 );
 
         foreach ($names as $fl) {
@@ -30,7 +30,7 @@ class PackageXml
             throw new \InvalidArgumentException("The path '$path' doesn't contain package.xml");
         }
 
-        $this->jsonPath = $path.DIRECTORY_SEPARATOR."composer.json";
+        $this->jsonPath = $path.DIRECTORY_SEPARATOR.'composer.json';
     }
 
     public function load()
@@ -60,11 +60,11 @@ class PackageXml
     public function dump($fname = null)
     {
         if (!$this->package) {
-        $this->load();
+            $this->load();
         }
 
         if ($fname) {
-        $this->jsonPath = $fname;
+            $this->jsonPath = $fname;
         }
 
         $dumper = new Dumper();
@@ -90,4 +90,3 @@ class PackageXml
         return $this->jsonPath;
     }
 }
-

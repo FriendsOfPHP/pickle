@@ -26,7 +26,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $new = [];
         foreach ($lines as $l) {
             $l = trim($l);
-            if (0 !== strpos($l, "hhvm.pickle_extensions[")) {
+            if (0 !== strpos($l, 'hhvm.pickle_extensions[')) {
                 continue;
             }
             list(, $dllname) = explode('=', $l);
@@ -45,6 +45,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         if (false === $posHeader) {
             /* no pickle section here yet */
             $this->pickleHeaderStartPos = strlen($this->raw);
+
             return;
         }
 
@@ -61,7 +62,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             */
             $pos = $this->pickleHeaderEndPos;
             do {
-                $pos = strpos($this->raw, "hhvm.dynamic_extensions[", $pos);
+                $pos = strpos($this->raw, 'hhvm.dynamic_extensions[', $pos);
                 if (false !== $pos) {
                     $this->pickleFooterStartPos = $pos;
                     $pos++;
@@ -77,22 +78,22 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     public function updatePickleSection(array $dsos)
     {
-        $before = "";
-        $after = "";
+        $before = '';
+        $after = '';
 
         $pickleSection = '';
         $names = array();
         foreach ($dsos as $dso) {
             /* HHVM currently doesn't support Windows, so just a guess here. */
-            $pre = defined('PHP_WINDOWS_VERSION_MAJOR') ? "php_" : "";
-            $suf = defined('PHP_WINDOWS_VERSION_MAJOR') ? ".dll" : ".so";
+            $pre = defined('PHP_WINDOWS_VERSION_MAJOR') ? 'php_' : '';
+            $suf = defined('PHP_WINDOWS_VERSION_MAJOR') ? '.dll' : '.so';
             $item = "$pre$dso$suf";
             $names[] = $item;
             $pickleSection .=  "hhvm.dynamic_extensions[$dso]=$item\n";
         }
 
         if ($this->pickleHeaderStartPos > 0) {
-            $pickleSection = $this->rebuildPickleParts($this->getPickleSection(), $names) . "\n" . $pickleSection;
+            $pickleSection = $this->rebuildPickleParts($this->getPickleSection(), $names)."\n".$pickleSection;
 
             $before = substr($this->raw, 0, $this->pickleHeaderStartPos);
 
@@ -108,10 +109,9 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             $after = ltrim($after);
         }
 
-        $this->raw = $before . "\n\n" . self::PICKLE_HEADER . "\n" . trim($pickleSection) . "\n" . self::PICKLE_FOOTER . "\n\n" . $after;
+        $this->raw = $before."\n\n".self::PICKLE_HEADER."\n".trim($pickleSection)."\n".self::PICKLE_FOOTER."\n\n".$after;
         if (!@file_put_contents($this->path, $this->raw)) {
             throw new \Exception('Cannot update php.ini');
         }
     }
 }
-

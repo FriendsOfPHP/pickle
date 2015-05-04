@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Package\PHP\Util\XML;
 
 use Composer\Package\Loader\LoaderInterface;
@@ -21,7 +22,7 @@ class Loader
     public function load($path)
     {
         if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: ' . $path);
+            throw new \InvalidArgumentException('File not found: '.$path);
         }
 
         $xml = @simplexml_load_file($path);
@@ -34,7 +35,7 @@ class Loader
                 $exception = new \Exception($error['message'], $error['type']);
             }
 
-            throw new \RuntimeException('Failed to read ' . $path, 0, $exception);
+            throw new \RuntimeException('Failed to read '.$path, 0, $exception);
         }
 
         $this->validate($xml);

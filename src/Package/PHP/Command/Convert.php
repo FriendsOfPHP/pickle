@@ -2,7 +2,6 @@
 
 namespace Pickle\Package\PHP\Command;
 
-use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
 
 class Convert

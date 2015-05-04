@@ -7,10 +7,8 @@ use Pickle\Base\Abstracts;
 
 class HHVM extends Abstracts\Engine implements Interfaces\Engine
 {
-
     public function __construct($phpCli = PHP_BINARY)
     {
-
     }
 
     public function hasSdk()
@@ -20,12 +18,12 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
 
     public function getName()
     {
-        return "hhvm";
+        return 'hhvm';
     }
 
     public function getCompiler()
     {
-        return "";
+        return '';
     }
 
     public function getPath()
@@ -41,7 +39,7 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
     protected function getParsedVersion($type)
     {
         if ($type < 1 || $type > 2) {
-            throw new \Exception("Invalid version info requested");
+            throw new \Exception('Invalid version info requested');
         }
 
         if (!preg_match(",(\d*)\.(\d*)\.(\d*),", HHVM_VERSION, $m)) {
@@ -73,18 +71,17 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
 
     public function getExtensionDir()
     {
-        return ini_get("extension_dir");
+        return ini_get('extension_dir');
     }
 
     public function getIniPath()
     {
         $ini = php_ini_loaded_file();
 
-        if (!$ini && file_exists("/etc/hhvm/php.ini")) {
-            $ini = "/etc/hhvm/php.ini";
+        if (!$ini && file_exists('/etc/hhvm/php.ini')) {
+            $ini = '/etc/hhvm/php.ini';
         }
 
         return $ini;
     }
 }
-

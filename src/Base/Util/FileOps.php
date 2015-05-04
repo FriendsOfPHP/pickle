@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Base\Util;
 
 trait FileOps
@@ -11,7 +12,7 @@ trait FileOps
         if (!$name) {
             $name = md5(uniqid());
         }
-        $tempDir = $tmp . '/pickle-' . $name;
+        $tempDir = $tmp.'/pickle-'.$name;
 
         if (is_dir($tempDir)) {
             $this->cleanup();
@@ -45,6 +46,6 @@ trait FileOps
 
     public function getTempDir()
     {
-       return $this->tempDir;
+        return $this->tempDir;
     }
 }

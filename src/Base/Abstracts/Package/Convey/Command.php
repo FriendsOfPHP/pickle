@@ -24,10 +24,9 @@ abstract class Command
 
     abstract protected function prepare();
 
-
     public function execute($target, $no_convert)
     {
-        throw new \Exception("No command::execute implementation found ");
+        throw new \Exception('No command::execute implementation found ');
     }
 
     public function getPath()
@@ -60,4 +59,3 @@ abstract class Command
         return $this->url;
     }
 }
-

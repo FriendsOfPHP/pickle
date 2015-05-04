@@ -1,9 +1,8 @@
 <?php
+
 namespace Pickle\Package\HHVM;
 
 use Composer\Package\CompletePackage;
-
-use Pickle\Base\Util\GitIgnore;
 
 class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 {
@@ -18,7 +17,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     {
         return $this->path;
     }
-    
+
     public function getSourceDir()
     {
         $conf = glob("{$this->path}/config.cmake");

@@ -2,13 +2,16 @@
 
 namespace Pickle\Package\Convey\Command;
 
+use Composer\Package\Version\VersionParser;
+
 class Type
 {
-    const PECL = "pecl";
-    const GIT = "git";
-    const TGZ = "tgz";
-    const SRC_DIR = "srcdir";
-    const ANY = "any";
+    const PICKLE = 'pickle';
+    const PECL = 'pecl';
+    const GIT = 'git';
+    const TGZ = 'tgz';
+    const SRC_DIR = 'srcdir';
+    const ANY = 'any';
 
     public static function match($regs, $arg, &$matches)
     {
@@ -20,6 +23,19 @@ class Type
         }
 
         return 0;
+    }
+
+    public static function determinePickle($arg, &$matches)
+    {
+        $versionParser = new VersionParser();
+        $res = $versionParser->parseNameVersionPairs([$arg]);
+
+        $matches = [
+                'package' => $res[0]['name'],
+                'version' => $res[0]['version'],
+            ];
+
+        return 1;
     }
 
     public static function determinePecl($arg, &$matches)
@@ -68,6 +84,8 @@ class Type
             return self::GIT;
         } elseif (!$remote && is_dir($path)) {
             return self::SRC_DIR;
+        } elseif (self::determinePickle($path, $matches)>0) {
+            return self::PICKLE;
         }
 
         return self::ANY;

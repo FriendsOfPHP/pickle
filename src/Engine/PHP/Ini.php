@@ -26,7 +26,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $new = [];
         foreach ($lines as $l) {
             $l = trim($l);
-            if (0 !== strpos($l, "extension")) {
+            if (0 !== strpos($l, 'extension')) {
                 continue;
             }
             list(, $dllname) = explode('=', $l);
@@ -45,6 +45,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         if (false === $posHeader) {
             /* no pickle section here yet */
             $this->pickleHeaderStartPos = strlen($this->raw);
+
             return;
         }
 
@@ -61,7 +62,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             */
             $pos = $this->pickleHeaderEndPos;
             do {
-                $pos = strpos($this->raw, "extension", $pos);
+                $pos = strpos($this->raw, 'extension', $pos);
                 if (false !== $pos) {
                     $this->pickleFooterStartPos = $pos;
                     $pos++;
@@ -77,16 +78,16 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     public function updatePickleSection(array $dlls)
     {
-        $before = "";
-        $after = "";
+        $before = '';
+        $after = '';
 
         $pickleSection = '';
         foreach ($dlls as $dll) {
-            $pickleSection .=  'extension=' . $dll . "\n";
+            $pickleSection .=  'extension='.$dll."\n";
         }
 
         if ($this->pickleHeaderStartPos > 0) {
-            $pickleSection = $this->rebuildPickleParts($this->getPickleSection(), $dlls) . "\n" . $pickleSection;
+            $pickleSection = $this->rebuildPickleParts($this->getPickleSection(), $dlls)."\n".$pickleSection;
 
             $before = substr($this->raw, 0, $this->pickleHeaderStartPos);
 
@@ -102,10 +103,9 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             $after = ltrim($after);
         }
 
-        $this->raw = $before . "\n\n" . self::PICKLE_HEADER . "\n" . trim($pickleSection) . "\n" . self::PICKLE_FOOTER . "\n\n" . $after;
+        $this->raw = $before."\n\n".self::PICKLE_HEADER."\n".trim($pickleSection)."\n".self::PICKLE_FOOTER."\n\n".$after;
         if (!@file_put_contents($this->path, $this->raw)) {
             throw new \Exception('Cannot update php.ini');
         }
     }
 }
-

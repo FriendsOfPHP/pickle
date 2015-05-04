@@ -1,8 +1,8 @@
 <?php
+
 namespace Pickle\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,12 +15,12 @@ class ReleaseCommand extends BuildCommand
 {
     protected function configure()
     {
-    	parent::configure();
+        parent::configure();
 
         $this
             ->setName('release')
             ->setDescription('Package a PECL extension for release')
-	    /* TODO: make it to take value like zip, tgz, etc. should this functionality be expanded */
+        /* TODO: make it to take value like zip, tgz, etc. should this functionality be expanded */
             ->addOption(
                 'binary',
                 null,
@@ -40,46 +40,45 @@ class ReleaseCommand extends BuildCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-    	$helper = $this->getHelper('package');
-        Util\TmpDir::set($input->getOption("tmp-dir"));
-	
-    	$cb = function(Interfaces\Package $package) use ($helper, $output) {
-		/* TODO Rework this to use the Info package command */
-		$helper->showInfo($output, $package);
-	};
+        $helper = $this->getHelper('package');
+        Util\TmpDir::set($input->getOption('tmp-dir'));
+
+        $cb = function (Interfaces\Package $package) use ($helper, $output) {
+        /* TODO Rework this to use the Info package command */
+        $helper->showInfo($output, $package);
+    };
         $path = rtrim($input->getArgument('path'), '/\\');
 
-	$release = Release::factory($path, $cb, $input->getOption('no-convert'), $input->getOption("binary"));
+        $release = Release::factory($path, $cb, $input->getOption('no-convert'), $input->getOption('binary'));
 
-	if ($input->getOption("binary")) {
-             $package = $this->getHelper("package")->convey($input, $output, $path);
-             list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
+        if ($input->getOption('binary')) {
+            $package = $this->getHelper('package')->convey($input, $output, $path);
+            list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
 
-             $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
+            $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
 
             try {
                 $build->prepare();
-                $build->createTempDir($package->getName() . $package->getVersion());
+                $build->createTempDir($package->getName().$package->getVersion());
                 $build->configure($force_opts);
                 $build->make();
                 $this->saveBuildLogs($input, $build);
             } catch (\Exception $e) {
                 $this->saveBuildLogs($input, $build);
 
-                $output->writeln('The following error(s) happened: ' . $e->getMessage());
+                $output->writeln('The following error(s) happened: '.$e->getMessage());
                 $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
             }
 
             $args = array(
-	        "build" => $build,
+            'build' => $build,
             );
-	    $release->create($args);
+            $release->create($args);
 
             $build->cleanup();
         } else {
             /* imply --source */
-	    $release->create();
-	}
+        $release->create();
+        }
     }
 }
-

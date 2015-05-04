@@ -10,4 +10,3 @@ interface Command
     public function execute($target, $no_convert);
     public function getType();
 }
-

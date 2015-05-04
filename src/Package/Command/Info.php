@@ -2,7 +2,6 @@
 
 namespace Pickle\Package\Command;
 
-use Pickle\Base\Interfaces;
 use Pickle\Engine;
 use Pickle\Package\PHP;
 use Pickle\Package\HHVM;
@@ -13,11 +12,11 @@ class Info
     {
         $engine = Engine::factory();
 
-        switch($engine->getName()) {
-            case "php":
+        switch ($engine->getName()) {
+            case 'php':
                 return new PHP\Command\Info($path, $cb);
 
-            case "hhvm":
+            case 'hhvm':
                 throw new \Exception("Not implemented for engine '{$engine->getName()}'");
 
             default:

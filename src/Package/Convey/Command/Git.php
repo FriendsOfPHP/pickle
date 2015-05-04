@@ -3,19 +3,17 @@
 namespace Pickle\Package\Convey\Command;
 
 use Composer\Config;
-
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Composer\Downloader\GitDownloader;
-use Pickle\Package\Convey\Command\Type;
 
 class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
     protected function prepare()
     {
         if (Type::determineGit($this->path, $matches) < 1) {
-            throw new \Exception("Not valid git URI");
+            throw new \Exception('Not valid git URI');
         }
 
         $this->name = $matches['package'];
@@ -44,6 +42,7 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         $this->fetch($target);
 
         $exe = DefaultExecutor::factory($this);
+
         return $exe->execute($target, $no_convert);
     }
 
@@ -52,4 +51,3 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         return Type::GIT;
     }
 }
-

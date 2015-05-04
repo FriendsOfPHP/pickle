@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -27,16 +28,16 @@ class ValidateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
-    	$helper = $this->getHelper('package');
-        Util\TmpDir::set($input->getOption("tmp-dir"));
-	
-    	$cb = function(Interfaces\Package $package) use ($helper, $output) {
-		/* TODO Rework this to use the Info package command */
-		$helper->showInfo($output, $package);
-		$output->writeln(trim($package->getDescription()));
-	};
+        $helper = $this->getHelper('package');
+        Util\TmpDir::set($input->getOption('tmp-dir'));
 
-	$validate = Validate::factory($path, $cb);
-	$validate->process();
+        $cb = function (Interfaces\Package $package) use ($helper, $output) {
+        /* TODO Rework this to use the Info package command */
+        $helper->showInfo($output, $package);
+        $output->writeln(trim($package->getDescription()));
+    };
+
+        $validate = Validate::factory($path, $cb);
+        $validate->process();
     }
 }

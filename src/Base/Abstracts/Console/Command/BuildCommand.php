@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Base\Abstracts\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -7,15 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\Table;
 use Pickle\Base\Interfaces\Package;
-use Pickle\Engine;
-use Pickle\Package\Util\Windows;
-use Pickle\Base\Interfaces;
-use Pickle\Package\Command\Install;
-use Pickle\Base\Util;
 
 abstract class BuildCommand extends Command
 {
@@ -55,9 +49,7 @@ abstract class BuildCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'path to save the build logs'
             );
-
     }
-
 
     protected function saveBuildLogs(InputInterface $input, $build)
     {
@@ -78,7 +70,7 @@ abstract class BuildCommand extends Command
                 throw new \Exception("File '$force_opts' is unusable");
             }
 
-            $force_opts = preg_replace(",\s+,", " ", file_get_contents($force_opts));
+            $force_opts = preg_replace(",\s+,", ' ', file_get_contents($force_opts));
 
             return [null, $force_opts];
         }
@@ -91,7 +83,7 @@ abstract class BuildCommand extends Command
             if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
                 $optionsValue[$name] = (object) [
                 'type' => $opt->type,
-                'input' => true
+                'input' => true,
                 ];
 
                 continue;
@@ -101,9 +93,9 @@ abstract class BuildCommand extends Command
                 $value = $opt->default;
             } else {
                 if ($opt->type == 'enable') {
-                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
+                    $prompt = new ConfirmationQuestion($opt->prompt.' (default: '.($opt->default ? 'yes' : 'no').'): ', $opt->default);
                 } else {
-                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ? $opt->default : '') . '): ', $opt->default);
+                    $prompt = new Question($opt->prompt.' (default: '.($opt->default ? $opt->default : '').'): ', $opt->default);
                 }
 
                 $value = $helper->ask($input, $output, $prompt);
@@ -111,11 +103,10 @@ abstract class BuildCommand extends Command
 
             $optionsValue[$name] = (object) [
                 'type' => $opt->type,
-                'input' => $value
+                'input' => $value,
             ];
         }
 
         return [$optionsValue, null];
     }
 }
-

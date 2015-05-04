@@ -16,7 +16,7 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
     public function execute($target, $no_convert)
     {
         $jsonLoader = new \Pickle\Package\Util\JSON\Loader(new \Pickle\Package\Util\Loader());
-        $pickle_json = $target . DIRECTORY_SEPARATOR . "composer.json";
+        $pickle_json = $target.DIRECTORY_SEPARATOR.'composer.json';
         $package = null;
 
         if (file_exists($pickle_json)) {

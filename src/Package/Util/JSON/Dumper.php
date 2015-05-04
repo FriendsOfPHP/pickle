@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Package\Util\JSON;
 
 use Pickle\Base\Interfaces;
@@ -14,12 +15,12 @@ class Dumper
      */
     public function dump(Interfaces\Package $package)
     {
-        return json_encode((new Util\Dumper)->dump($package), JSON_PRETTY_PRINT);
+        return json_encode((new Util\Dumper())->dump($package), JSON_PRETTY_PRINT);
     }
 
     /**
      * @param \Pickle\Base\Interfaces\Package $package
-     * @param string  $path
+     * @param string                          $path
      */
     public function dumpToFile(Interfaces\Package $package, $path)
     {

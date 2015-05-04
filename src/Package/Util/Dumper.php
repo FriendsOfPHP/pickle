@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Package\Util;
 
 use Pickle\Base\Interfaces;

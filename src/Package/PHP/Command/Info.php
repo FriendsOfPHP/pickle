@@ -9,7 +9,7 @@ class Info implements Interfaces\Package\Info
     protected $package;
     protected $cb;
 
-    public function __construct(Interfaces\Package $package, $cb = NULL)
+    public function __construct(Interfaces\Package $package, $cb = null)
     {
         $this->package = $package;
         $this->cb   = $cb;
@@ -28,4 +28,3 @@ class Info implements Interfaces\Package\Info
         return $this->package;
     }
 }
-

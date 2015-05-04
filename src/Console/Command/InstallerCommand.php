@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +15,6 @@ use Pickle\Base\Interfaces\Package;
 use Pickle\Base\Abstracts\Console\Command\BuildCommand;
 use Pickle\Engine;
 use Pickle\Package\Util\Windows;
-use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Install;
 use Pickle\Base\Util;
 
@@ -22,7 +22,7 @@ class InstallerCommand extends BuildCommand
 {
     protected function configure()
     {
-    	parent::configure();
+        parent::configure();
 
         $this
             ->setName('install')
@@ -75,8 +75,8 @@ class InstallerCommand extends BuildCommand
         $table = new Table($output);
         $table
             ->setRows([
-               ['<info>' . $php->getName() . ' Path</info>', $php->getPath()],
-               ['<info>' . $php->getName() . ' Version</info>', $php->getVersion()],
+               ['<info>'.$php->getName().' Path</info>', $php->getPath()],
+               ['<info>'.$php->getName().' Version</info>', $php->getVersion()],
                ['<info>Compiler</info>', $php->getCompiler()],
                ['<info>Architecture</info>', $php->getArchitecture()],
                ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
@@ -99,9 +99,9 @@ class InstallerCommand extends BuildCommand
 
         $helper = $this->getHelperSet()->get('question');
 
-        $cb = function($choices) use ($helper, $input, $output) {
+        $cb = function ($choices) use ($helper, $input, $output) {
             $question = new ChoiceQuestion(
-                "Multiple choices found, please select the appropriate dependency package",
+                'Multiple choices found, please select the appropriate dependency package',
                 $choices
             );
             $question->setMultiselect(false);
@@ -111,13 +111,13 @@ class InstallerCommand extends BuildCommand
 
         foreach ($inst->getExtDllPaths() as $dll) {
             if (!$deps_handler->resolveForBin($dll, $cb)) {
-                throw new \Exception("Failed to resolve dependencies");
+                throw new \Exception('Failed to resolve dependencies');
             }
         }
     }
 
     /*  The most of this needs to be incapsulated into an extra Build class*/
-    protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = "")
+    protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = '')
     {
         $helper = $this->getHelperSet()->get('question');
 
@@ -125,7 +125,7 @@ class InstallerCommand extends BuildCommand
 
         try {
             $build->prepare();
-            $build->createTempDir($package->getName() . $package->getVersion());
+            $build->createTempDir($package->getName().$package->getVersion());
             $build->configure($force_opts);
             $build->make();
             $build->install();
@@ -134,7 +134,7 @@ class InstallerCommand extends BuildCommand
         } catch (\Exception $e) {
             $this->saveBuildLogs($input, $build);
 
-            $output->writeln('The following error(s) happened: ' . $e->getMessage());
+            $output->writeln('The following error(s) happened: '.$e->getMessage());
             $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
             if ($helper->ask($input, $output, $prompt)) {
                 $output->write($build->getLog());
@@ -146,7 +146,7 @@ class InstallerCommand extends BuildCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
-        Util\TmpDir::set($input->getOption("tmp-dir"));
+        Util\TmpDir::set($input->getOption('tmp-dir'));
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -158,9 +158,9 @@ class InstallerCommand extends BuildCommand
             }
         }
 
-        $package = $this->getHelper("package")->convey($input, $output, $path);
+        $package = $this->getHelper('package')->convey($input, $output, $path);
 
-	/* TODO Info package command should be used here. */
+    /* TODO Info package command should be used here. */
         $this->getHelper('package')->showInfo($output, $package);
 
         list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
@@ -174,4 +174,3 @@ class InstallerCommand extends BuildCommand
         return 0;
     }
 }
-

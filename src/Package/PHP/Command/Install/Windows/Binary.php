@@ -1,9 +1,9 @@
 <?php
+
 namespace Pickle\Package\PHP\Command\Install\Windows;
 
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
-
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
 use Pickle\Base\Util;
@@ -101,7 +101,7 @@ class Binary
         $phpVersion = $this->php->getMajorVersion().'.'.$this->php->getMinorVersion();
         $pkgVersion = $this->extVersion;
         $extName =  strtolower($this->extName);
-        $baseUrl = "http://windows.php.net/downloads/pecl/releases/";
+        $baseUrl = 'http://windows.php.net/downloads/pecl/releases/';
 
         if (false === $this->findInLinks($baseUrl.$extName, $pkgVersion)) {
             throw new \Exception('Binary for <'.$extName.'-'.$pkgVersion.'> cannot be found');
@@ -131,7 +131,7 @@ class Binary
         if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
             throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
         }
-        $this->output->writeln("Extracting archives...");
+        $this->output->writeln('Extracting archives...');
         $zipArchive->extractTo($this->tempDir);
     }
 
@@ -215,11 +215,12 @@ class Binary
 
     /**
      * @return array
+     *
      * @throws \Exception
      */
     private function getInfoFromPecl()
     {
-        $url = "http://pecl.php.net/get/".$this->extName;
+        $url = 'http://pecl.php.net/get/'.$this->extName;
         $headers = get_headers($url);
         if (strpos($headers[0], '404') !== false) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
@@ -248,7 +249,7 @@ class Binary
      *  1. check if ext exists
      *  2. check if given version requested
      *  2.1 yes? check if builds available
-     *  2.2 no? get latest version+build
+     *  2.2 no? get latest version+build.
      *
      * @throws \Exception
      */

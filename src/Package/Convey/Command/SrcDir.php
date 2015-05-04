@@ -2,11 +2,8 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Composer\Config;
-
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
-use Pickle\Package\Convey\Command\Type;
 
 class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
@@ -20,7 +17,8 @@ class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         /* Override target, otherwise we'd need to copy ext root each time */
         $target = realpath($this->path);
 
-    $exe = DefaultExecutor::factory($this);
+        $exe = DefaultExecutor::factory($this);
+
         return $exe->execute($target, $no_convert);
     }
 

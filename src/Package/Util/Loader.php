@@ -1,9 +1,9 @@
 <?php
+
 namespace Pickle\Package\Util;
 
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
-
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 
@@ -48,35 +48,35 @@ class Loader implements LoaderInterface
 
     protected function setPackageStability(Interfaces\Package $package, array $config)
     {
-        if ($this->isValid($config, "stability", "string")) {
+        if ($this->isValid($config, 'stability', 'string')) {
             $package->setStability($config['stability']);
         }
     }
 
     protected function setPackageExtra(Interfaces\Package $package, array $config)
     {
-        if ($this->isValid($config, "extra", "array")) {
+        if ($this->isValid($config, 'extra', 'array')) {
             $package->setExtra($config['extra']);
         }
     }
 
     protected function setPackageDescription(Interfaces\Package $package, array $config)
     {
-        if ($this->isValid($config, "description", "string")) {
+        if ($this->isValid($config, 'description', 'string')) {
             $package->setDescription($config['description']);
         }
     }
 
     protected function setPackageHomepage(Interfaces\Package $package, array $config)
     {
-        if ($this->isValid($config, "homepage", "string")) {
+        if ($this->isValid($config, 'homepage', 'string')) {
             $package->setHomepage($config['homepage']);
         }
     }
 
     protected function setPackageKeywords(Interfaces\Package $package, array $config)
     {
-        if ($this->isValid($config, "keywords", "array")) {
+        if ($this->isValid($config, 'keywords', 'array')) {
             $package->setKeywords($config['keywords']);
         }
     }
@@ -90,7 +90,7 @@ class Loader implements LoaderInterface
 
     protected function setPackageAuthors(Interfaces\Package $package, array $config)
     {
-        if ($this->isValid($config, "authors", "array")) {
+        if ($this->isValid($config, 'authors', 'array')) {
             $package->setAuthors($config['authors']);
         }
     }
@@ -102,13 +102,13 @@ class Loader implements LoaderInterface
         }
     }
 
-    protected function isValid($config, $key, $type = "any")
+    protected function isValid($config, $key, $type = 'any')
     {
         switch ($type) {
-            case "string":
+            case 'string':
                 return (isset($config[$key]) && !empty($config[$key]) && is_string($config[$key]));
 
-            case "array":
+            case 'array':
                 return (isset($config[$key]) && !empty($config[$key]) && is_array($config[$key]));
         }
 

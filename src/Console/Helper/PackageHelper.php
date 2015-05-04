@@ -1,7 +1,7 @@
 <?php
+
 namespace Pickle\Console\Helper;
 
-use Composer\Config;
 use Composer\IO\ConsoleIO;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Convey;
@@ -17,6 +17,7 @@ class PackageHelper extends Helper
      * Returns the canonical name of this helper.
      *
      * @return string The canonical name
+     *
      * @api
      */
     public function getName()
@@ -45,7 +46,7 @@ class PackageHelper extends Helper
             $default = $option->default;
 
             if ($option->type === 'enable') {
-                $option->type = '<fg=yellow>' . $option->type . '</fg=yellow>';
+                $option->type = '<fg=yellow>'.$option->type.'</fg=yellow>';
                 $default = $default ? '<fg=green>yes</fg=green>' : '<fg=red>no</fg=red>';
             }
 
@@ -60,10 +61,11 @@ class PackageHelper extends Helper
     }
 
     /**
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      * @param $url
      * @param $path
+     *
      * @return Pickle\Base\Interfaces\Package
      */
     public function convey(InputInterface $input, OutputInterface $output, $path, $target = null)
@@ -71,7 +73,7 @@ class PackageHelper extends Helper
         $helperSet = $this->getHelperSet();
         $io = new ConsoleIO($input, $output, ($helperSet ? $helperSet : new HelperSet()));
 
-        $no_convert = $input->hasOption("no-convert") ? $input->getOption("no-convert") : false;
+        $no_convert = $input->hasOption('no-convert') ? $input->getOption('no-convert') : false;
 
         return (new Convey($path, $io))->deliver($target, $no_convert);
     }

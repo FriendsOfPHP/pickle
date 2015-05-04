@@ -3,7 +3,6 @@
 namespace Pickle\Package\PHP\Convey\Command;
 
 use Composer\Config;
-
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
 use Pickle\Package\PHP;
@@ -18,30 +17,30 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         $engine = Engine::factory();
 
         if (Type::determinePecl($this->path, $matches) < 1) {
-            throw new \Exception("Not valid PECL URI");
+            throw new \Exception('Not valid PECL URI');
         }
 
-        if ("php" != $engine->getName()) {
-            throw new \Exception("PECL is only supported with PHP");
+        if ('php' != $engine->getName()) {
+            throw new \Exception('PECL is only supported with PHP');
         }
 
         $this->name = $matches['package'];
-        $this->url = 'https://pecl.php.net/get/' . $matches['package'];
+        $this->url = 'https://pecl.php.net/get/'.$matches['package'];
 
         if (isset($matches['stability']) && '' !== $matches['stability']) {
             $this->stability = $matches['stability'];
-            $this->url .= '-' . $matches['stability'];
+            $this->url .= '-'.$matches['stability'];
         } else {
             $this->stability = 'stable';
         }
 
         if (isset($matches['version']) && '' !== $matches['version']) {
-            $this->url .= '/' . $matches['version'];
+            $this->url .= '/'.$matches['version'];
             $this->prettyVersion = $matches['version'];
             $this->version = $matches['version'];
         } else {
             $this->version = 'latest';
-            $this->prettyVersion = 'latest-' . $this->stability;
+            $this->prettyVersion = 'latest-'.$this->stability;
         }
     }
 
@@ -65,6 +64,7 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         $this->fetch($target);
 
         $exe = new DefaultExecutor($this);
+
         return $exe->execute($target, $no_convert);
     }
 

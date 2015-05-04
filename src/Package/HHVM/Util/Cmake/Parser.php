@@ -1,8 +1,8 @@
 <?php
+
 namespace Pickle\Package\HHVM\Util\Cmake;
 
 use Composer\Package\Loader\LoaderInterface;
-use Pickle\Package\HHVM;
 
 class Parser
 {
@@ -16,7 +16,7 @@ class Parser
     public function load($path)
     {
         if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: ' . $path);
+            throw new \InvalidArgumentException('File not found: '.$path);
         }
 
         $cont = file_get_contents($path);
@@ -36,8 +36,8 @@ class Parser
 
     public function getExtName($cont)
     {
-        $ret = NULL;
-    
+        $ret = null;
+
         if (preg_match(",HHVM_EXTENSION\(([^\s]+)\s+,", $cont, $m)) {
             $ret = $m[1];
         }
@@ -49,4 +49,3 @@ class Parser
         return $ret;
     }
 }
-

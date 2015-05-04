@@ -1,8 +1,8 @@
 <?php
+
 namespace Pickle\Package\PHP;
 
 use Composer\Package\CompletePackage;
-
 use Pickle\Base\Util\GitIgnore;
 
 class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
@@ -13,7 +13,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     protected $path;
 
     /**
-     * Get the package's root directory
+     * Get the package's root directory.
      *
      * @return string
      */
@@ -23,14 +23,14 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     }
 
     /**
-     * Get the package's root directory
+     * Get the package's root directory.
      *
      * @return string
      */
     public function getSourceDir()
     {
         $path = $this->getRootDir();
-        $release = $path . DIRECTORY_SEPARATOR . $this->getPrettyName() . '-' . $this->getPrettyVersion();
+        $release = $path.DIRECTORY_SEPARATOR.$this->getPrettyName().'-'.$this->getPrettyVersion();
 
         if (is_dir($release)) {
             $path = $release;
@@ -40,8 +40,8 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     if (!$this->extConfigIsIn($path)) {
         $path = $this->locateSourceDirByExtConfig($path);
 
-        if (NULL === $path) {
-            throw new \Exception("config*.(m4|w32) not found");
+        if (null === $path) {
+            throw new \Exception('config*.(m4|w32) not found');
         }
     }
 
@@ -49,7 +49,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     }
 
     /**
-     * Set the package's source directory, containing config.m4/config.w32
+     * Set the package's source directory, containing config.m4/config.w32.
      *
      * @param string $path
      */
@@ -71,10 +71,10 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
         $options = [];
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $config_file = $this->getSourceDir() . '/config.w32';
+            $config_file = $this->getSourceDir().'/config.w32';
 
             if (!file_exists($config_file)) {
-                throw new \Exception("cnofig.w32 not found");
+                throw new \Exception('cnofig.w32 not found');
             }
 
             $config = file_get_contents($config_file);
@@ -84,7 +84,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
                 $this->fetchArgWindows('ARG_ENABLE', $config)
             );
         } else {
-            $configs = glob($this->getSourceDir() . '/' . 'config*.m4');
+            $configs = glob($this->getSourceDir().'/'.'config*.m4');
 
             if (!empty($configs)) {
                 foreach ($configs as $config) {
@@ -109,7 +109,6 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     }
 
     /**
-     *
      * @param string $which
      * @param string $config
      *
@@ -136,7 +135,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
             $options[$name] = (object) [
                 'prompt'  => $prompt,
                 'type'    => $type,
-                'default' => $default
+                'default' => $default,
             ];
             $next = $e + 1;
         }
@@ -145,7 +144,6 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     }
 
     /**
-     *
      * @param string $which
      * @param string $config
      *
@@ -178,7 +176,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
             $options[$name] = (object) [
                 'prompt'  => $desc,
                 'type'    => $type,
-                'default' => $default
+                'default' => $default,
             ];
 
             $next = $e + 1;
@@ -226,7 +224,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
             $options[$name] = (object) [
                 'prompt'  => trim($desc),
                 'type'    => $type,
-                'default' => $default
+                'default' => $default,
             ];
             $next = $e + 1;
         }
@@ -235,7 +233,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     }
 
     /**
-     * Get files, will not return gitignore files
+     * Get files, will not return gitignore files.
      *
      * @return \CallbackFilterIterator
      */
@@ -251,9 +249,9 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
 
     public function getVersionFromHeader()
     {
-        $headers = glob($this->path . DIRECTORY_SEPARATOR . '*.h');
+        $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
         $ext_name = $this->getName();
-        $version_define = 'PHP_' . strtoupper($ext_name) . '_VERSION';
+        $version_define = 'PHP_'.strtoupper($ext_name).'_VERSION';
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);
             if (!$contents) {
@@ -269,7 +267,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
             }
         }
         if (empty($version)) {
-            throw new \Exception('No ' . $version_define . ' can be found');
+            throw new \Exception('No '.$version_define.' can be found');
         }
 
         return [trim($version_define), $version];
@@ -278,7 +276,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     protected function extConfigIsIn($path)
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
-            return file_exists(realpath($path) . DIRECTORY_SEPARATOR . "config.w32");
+            return file_exists(realpath($path).DIRECTORY_SEPARATOR.'config.w32');
         } else {
             $r = glob("$path/config*.m4");
 
@@ -294,12 +292,11 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     );
 
         foreach ($it as $fl_obj) {
-        if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
-            return $fl_obj->getPath();
+            if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
+                return $fl_obj->getPath();
+            }
         }
-    }
 
-    return NULL;
+        return;
     }
 }
-

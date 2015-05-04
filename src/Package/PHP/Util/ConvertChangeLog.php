@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Package\PHP\Util;
 
 class ConvertChangeLog
@@ -12,7 +13,7 @@ class ConvertChangeLog
     public function __construct($path)
     {
         if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: ' . $path);
+            throw new \InvalidArgumentException('File not found: '.$path);
         }
 
         $this->path = $path;
@@ -49,18 +50,18 @@ class ConvertChangeLog
 
         $contents = '';
         foreach ($this->changelog as $cl) {
-            $contents .= 'Version: ' . $cl->version->release . "\n" .
-                     'Date: ' . $cl->date . ' '. $cl->time . "\n" .
-                     'Stability: ' . $cl->stability->release . "\n" .
-                     "\n" .
-                     'notes: ' . $cl->notes . "\n" .
-                     "\n" .
-                     "\n" .
+            $contents .= 'Version: '.$cl->version->release."\n".
+                     'Date: '.$cl->date.' '.$cl->time."\n".
+                     'Stability: '.$cl->stability->release."\n".
+                     "\n".
+                     'notes: '.$cl->notes."\n".
+                     "\n".
+                     "\n".
                      "\n";
         }
 
-        if (file_put_contents(dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES', $contents) === false) {
-            throw new \RuntimeException('cannot save RELEASE file in <' . dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES>');
+        if (file_put_contents(dirname($this->path).DIRECTORY_SEPARATOR.'RELEASES', $contents) === false) {
+            throw new \RuntimeException('cannot save RELEASE file in <'.dirname($this->path).DIRECTORY_SEPARATOR.'RELEASES>');
         }
     }
 }

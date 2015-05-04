@@ -7,7 +7,6 @@ use Pickle\Package\PHP;
 use Pickle\Package\HHVM;
 use Pickle\Engine;
 
-
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 {
     protected $command;
@@ -17,10 +16,12 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         $engine = Engine::factory();
 
         switch ($engine->getName()) {
-            case "php";
+            case 'php';
+
             return new PHP\Convey\Command\DefaultExecutor($command);
 
-            case "hhvm";
+            case 'hhvm';
+
             return new HHVM\Convey\Command\DefaultExecutor($command);
         }
 
@@ -34,7 +35,6 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 
     public function execute($target, $no_convert)
     {
-        throw new \Exception("Default executor cannot be used without concrete implementation");
+        throw new \Exception('Default executor cannot be used without concrete implementation');
     }
 }
-

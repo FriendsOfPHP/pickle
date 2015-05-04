@@ -1,4 +1,5 @@
 <?php
+
 namespace Pickle\Package\PHP\Command\Build;
 
 use Pickle\Base\Interfaces;
@@ -9,12 +10,12 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
     public function prepare()
     {
         if (!file_exists("c:\\php-sdk\\bin")) {
-            throw new \Exception("PHP SDK not found");
+            throw new \Exception('PHP SDK not found');
         }
-        putenv("path=c:\\php-sdk\\bin;" . getenv("path"));
+        putenv("path=c:\\php-sdk\\bin;".getenv('path'));
 
-        if (!$this->runCommand("phpsdk_setvars")) {
-            throw new \Exception("phpsdk_setvars failed");
+        if (!$this->runCommand('phpsdk_setvars')) {
+            throw new \Exception('phpsdk_setvars failed');
         }
 
         $this->phpize();
@@ -26,8 +27,8 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
     private function copySrcDir($src, $dest)
     {
         foreach (scandir($src) as $file) {
-            $srcfile = rtrim($src, '/') .'/'. $file;
-            $destfile = rtrim($dest, '/') .'/'. $file;
+            $srcfile = rtrim($src, '/').'/'.$file;
+            $destfile = rtrim($dest, '/').'/'.$file;
             if (!is_readable($srcfile)) {
                 continue;
             }
@@ -68,7 +69,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
             }
 
             if (!is_null($decision)) {
-                $configureOptions .= ' --' . $decision . '-' . $name;
+                $configureOptions .= ' --'.$decision.'-'.$name;
             }
         }
 
@@ -87,10 +88,10 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         /* XXX check sanity */
         $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
 
-        $res = $this->runCommand($this->pkg->getSourceDir() . '/configure '. $configureOptions);
+        $res = $this->runCommand($this->pkg->getSourceDir().'/configure '.$configureOptions);
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('configure failed, see log at '. $this->tempDir . '\config.log');
+            throw new \Exception('configure failed, see log at '.$this->tempDir.'\config.log');
         }
 
         /* This post check is required for the case when config.w32 doesn't
@@ -98,7 +99,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
            case we won't see any bad exit status. */
         $opts = $this->pkg->getConfigureOptions();
         list($ext) = each($opts);
-        if (preg_match(',\|\s+' . preg_quote($ext) . '\s+\|\s+shared\s+\|,Sm', $this->getlog("configure")) < 1) {
+        if (preg_match(',\|\s+'.preg_quote($ext).'\s+\|\s+shared\s+\|,Sm', $this->getlog('configure')) < 1) {
             throw new \Exception("failed to configure the '$ext' extension");
         }
     }

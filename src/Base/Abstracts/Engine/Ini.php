@@ -4,7 +4,7 @@ namespace Pickle\Base\Abstracts\Engine;
 
 class Ini
 {
-    protected $engine = NULL;
+    protected $engine = null;
     protected $path;
     protected $raw;
 
@@ -36,6 +36,4 @@ class Ini
     {
         return substr($this->raw, $this->pickleHeaderEndPos, $this->pickleFooterStartPos - $this->pickleHeaderEndPos);
     }
-
 }
-

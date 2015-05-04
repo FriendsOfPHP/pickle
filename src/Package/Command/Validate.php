@@ -12,11 +12,11 @@ class Validate
     {
         $engine = Engine::factory();
 
-        switch($engine->getName()) {
-            case "php":
+        switch ($engine->getName()) {
+            case 'php':
                 return new PHP\Command\Validate($path, $cb);
 
-            case "hhvm":
+            case 'hhvm':
                 throw new \Exception("Not implemented for engine '{$engine->getName()}'");
 
             default:
