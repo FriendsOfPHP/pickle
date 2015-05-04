@@ -212,7 +212,7 @@ class Binary implements Interfaces\Package\Release
         /* pack the outcome */
         $zip_name = "php_" . $info["name"] . "-"
             . $info["version"] . "-"
-            . $info["php_major"] . "-"
+            . $info["php_major"] . "."
             . $info["php_minor"] . "-"
             . ($info["thread_safe"] ? "ts" : "nts") . "-"
             . $info["compiler"] . "-"
