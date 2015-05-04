@@ -166,13 +166,19 @@ class Binary implements Interfaces\Package\Release
 
         $tmp_dir = $build->getTempDir();
 
-        $tmp = $build->getLog('configure');
-        if (preg_match(",Build dir:\s+([0-9a-zA-Z\\\\_]+),", $tmp, $m)) {
-            $build_dir = $tmp_dir.DIRECTORY_SEPARATOR.$m[1];
+        $tmp = $build->getLog("configure");
+        if (preg_match(",Build dir:\s+([\:\-\.0-9a-zA-Z\\\\_]+),", $tmp, $m)) {
+            if (preg_match(",^[a-z]\:\\\\,i", $m[1]) && is_dir($m[1])) {
+                /* Parsed the fully qualified path */
+                $build_dir = $m[1];
+            } else {
+                /* otherwise construct */
+                $build_dir = $tmp_dir . DIRECTORY_SEPARATOR . $m[1];
+            }
         } else {
-            $build_dir = 'x86' == $info['arch'] ? $tmp_dir : $tmp_dir.DIRECTORY_SEPARATOR.'x64';
-            $build_dir .= DIRECTORY_SEPARATOR.($is_release ? 'Release' : 'Debug');
-            $build_dir .= ($info['thread_safe'] ? '_TS' : '');
+            $build_dir = "x86" == $info["arch"] ? $tmp_dir : $tmp_dir . DIRECTORY_SEPARATOR . "x64";
+            $build_dir .= DIRECTORY_SEPARATOR . ($is_release ? "Release" : "Debug");
+            $build_dir .= ($info["thread_safe"] ? "_TS" : "");
         }
 
         /* Various file paths to pack. */
