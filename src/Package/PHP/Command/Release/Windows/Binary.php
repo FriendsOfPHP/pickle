@@ -182,7 +182,7 @@ class Binary implements Interfaces\Package\Release
         }
 
         /* Various file paths to pack. */
-        $composer_json = $tmp_dir.DIRECTORY_SEPARATOR.'composer.json';
+        $composer_json = $this->pkg->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
 
         if (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'LICENSE')) {
             $license = $tmp_dir.DIRECTORY_SEPARATOR.'LICENSE';
