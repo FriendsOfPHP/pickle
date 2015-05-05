@@ -44,16 +44,13 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
             }
         } else {
             $versionConstraints = $versionParser->parseConstraints($matches['version']);
-            print_r($versionConstraints);
             /* versions are sorted decreasing */
             foreach ($extension['packages'][$this->name] as $version => $release) {
-                echo "$version: ";
                 $constraint = new VersionConstraint('=', $version);
                 if ($versionConstraints->matches($constraint)) {
                     $versionToUse = $version;
                     break;
                 }
-                echo "no\n";
             }
         }
 
