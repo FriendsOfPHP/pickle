@@ -96,6 +96,31 @@ abstract class Build
         }
     }
 
+    /* zip is default */
+    public function packLog($path)
+    {
+        $logs = array();
+
+        $zip = new \ZipArchive;
+        if (!$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
+            throw new \Exception("Failed to open '$path' for writing");
+        }
+
+        $no_hint_logs = "";
+        foreach ($this->log as $item) {
+            if ((isset($item["hint"]) && !empty($item["hint"]))) {
+                $zip->addFromString("$item[hint].log", $item["msg"]);
+            } else {
+                $no_hint_logs = "$no_hint_logs\n\n$item[msg]";
+            }
+        }
+        if ($no_hint_logs) {
+            $zip->addFromString("build.log", $item["msg"]);
+        }
+
+        $zip->close();
+    }
+
     /**
      * @param string $command
      *
