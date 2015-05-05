@@ -46,6 +46,11 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
             $versionConstraints = $versionParser->parseConstraints($matches['version']);
             /* versions are sorted decreasing */
             foreach ($extension['packages'][$this->name] as $version => $release) {
+				/* Looks like composer's constraint fails to manage equality or I do smtg wrong */
+				if ($version == $matches['version']) {
+					$versionToUse = $version;
+					break;
+				}
                 $constraint = new VersionConstraint('=', $version);
                 if ($versionConstraints->matches($constraint)) {
                     $versionToUse = $version;
