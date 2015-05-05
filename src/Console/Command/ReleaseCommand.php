@@ -49,10 +49,11 @@ class ReleaseCommand extends BuildCommand
     };
         $path = rtrim($input->getArgument('path'), '/\\');
 
-        $release = Release::factory($path, $cb, $input->getOption('no-convert'), $input->getOption('binary'));
+        /* Getting package unpacked first, then use the path*/
+        $package = $this->getHelper("package")->convey($input, $output, $path);
+        $release = Release::factory($package->getRootDir(), $cb, $input->getOption('no-convert'), $input->getOption("binary"));
 
         if ($input->getOption('binary')) {
-            $package = $this->getHelper('package')->convey($input, $output, $path);
             list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
 
             $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
@@ -67,7 +68,6 @@ class ReleaseCommand extends BuildCommand
                 $this->saveBuildLogs($input, $build);
 
                 $output->writeln('The following error(s) happened: '.$e->getMessage());
-                $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
             }
 
             $args = array(

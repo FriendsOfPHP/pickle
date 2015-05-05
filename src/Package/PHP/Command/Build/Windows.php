@@ -59,7 +59,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 
     protected function prepareConfigOpts()
     {
-        $configureOptions = '';
+        $configureOptions = '--enable-debug-pack';
         foreach ($this->options as $name => $option) {
             $decision = null;
             if ('enable' === $option->type) {
