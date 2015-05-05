@@ -26,6 +26,12 @@ class ReleaseCommand extends BuildCommand
                 null,
                 InputOption::VALUE_NONE,
                 'create binary package'
+            )
+            ->addOption(
+                'pack-logs',
+                null,
+                InputOption::VALUE_NONE,
+                'package build logs'
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -71,7 +77,8 @@ class ReleaseCommand extends BuildCommand
             }
 
             $args = array(
-            'build' => $build,
+                'build' => $build,
+                'pack_logs' => $input->getOption("pack-logs"),
             );
             $release->create($args);
 

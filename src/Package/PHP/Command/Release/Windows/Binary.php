@@ -160,6 +160,8 @@ class Binary implements Interfaces\Package\Release
         }
         $build = $args['build'];
 
+        $pack_logs = isset($args["pack_logs"]) && $args["pack_logs"];
+
         $info = array();
         $info = array_merge($info, $this->getInfoFromPhpizeLog($build));
         $info = array_merge($info, $this->getInfoFromConfigureLog($build));
@@ -213,15 +215,16 @@ class Binary implements Interfaces\Package\Release
             $ext_pdb = null;
         }
 
-        /* pack the outcome */
-        $zip_name = 'php_'.$info['name'].'-'
+        $zip_base_name = 'php_'.$info['name'].'-'
             .$info['version'].'-'
             .$info['php_major'].'.'
             .$info['php_minor'].'-'
             .($info['thread_safe'] ? 'ts' : 'nts').'-'
             .$info['compiler'].'-'
-            .$info['arch']
-            .'.zip';
+            .$info['arch'];
+
+        /* pack the outcome */
+	$zip_name = "$zip_base_name.zip";
 
         $zip = new \ZipArchive();
         if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
@@ -238,5 +241,10 @@ class Binary implements Interfaces\Package\Release
             $zip->addFile($ext_pdb, basename($ext_pdb));
         }
         $zip->close();
+
+        if ($pack_logs) {
+            $build->packLog("$zip_base_name-logs.zip");
+	}
     }
 }
+
