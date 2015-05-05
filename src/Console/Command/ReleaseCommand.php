@@ -50,8 +50,8 @@ class ReleaseCommand extends BuildCommand
         $path = rtrim($input->getArgument('path'), '/\\');
 
         /* Getting package unpacked first, then use the path*/
-        $package = $this->getHelper("package")->convey($input, $output, $path);
-        $release = Release::factory($package->getRootDir(), $cb, $input->getOption('no-convert'), $input->getOption("binary"));
+        $package = $this->getHelper('package')->convey($input, $output, $path);
+        $release = Release::factory($package->getRootDir(), $cb, $input->getOption('no-convert'), $input->getOption('binary'));
 
         if ($input->getOption('binary')) {
             list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);

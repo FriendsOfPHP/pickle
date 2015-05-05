@@ -19,7 +19,14 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
 
     protected function fetchPackageJson()
     {
-        $extensionJson = file_get_contents('http://localhost:8080/json/'.$this->name.'.json');
+        $extensionJson = @file_get_contents('http://localhost:8080/json/'.$this->name.'.json');
+        if (!$extensionJson) {
+            if (strpos($http_response_header[0], '404') !== false) {
+                throw new \Exception("cannot find $this->name");
+            } else {
+                throw new \Exception("http error while loading informatio for $this->name: ".$http_response_header[0]);
+            }
+        }
 
         return json_decode($extensionJson, true);
     }
@@ -44,14 +51,10 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
             }
         } else {
             $versionConstraints = $versionParser->parseConstraints($matches['version']);
+
             /* versions are sorted decreasing */
             foreach ($extension['packages'][$this->name] as $version => $release) {
-				/* Looks like composer's constraint fails to manage equality or I do smtg wrong */
-				if ($version == $matches['version']) {
-					$versionToUse = $version;
-					break;
-				}
-                $constraint = new VersionConstraint('=', $version);
+                $constraint = new VersionConstraint('=', $versionParser->normalize($version));
                 if ($versionConstraints->matches($constraint)) {
                     $versionToUse = $version;
                     break;
