@@ -69,7 +69,7 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     {
         $package = Package::factory($this->name, $this->version, $this->prettyVersion);
 
-        $package->setSourceType('git');
+        $package->setSourceType($this->type);
         $package->setSourceUrl($this->url);
         $package->setSourceReference($this->version);
         $package->setRootDir($target);
