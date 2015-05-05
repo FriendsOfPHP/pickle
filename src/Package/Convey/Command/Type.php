@@ -32,7 +32,7 @@ class Type
 
         $matches = [
                 'package' => $res[0]['name'],
-                'version' => $res[0]['version'],
+                'version' => isset($res[0]['version']) ? $res[0]['version'] : '',
             ];
 
         return 1;
