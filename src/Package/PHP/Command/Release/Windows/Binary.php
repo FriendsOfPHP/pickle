@@ -24,6 +24,11 @@ class Binary implements Interfaces\Package\Release
      */
     protected $noConvert = false;
 
+    /*
+     * @var Interfaces\Package\Build
+     */
+    protected $build;
+ 
     /**
      * Constructor.
      *
@@ -78,76 +83,18 @@ class Binary implements Interfaces\Package\Release
         return $package;
     }
 
-    protected function getInfoFromPhpizeLog(Interfaces\Package\Build $build)
+    protected function getZipBaseName(Interfaces\Package\Build $build)
     {
-        $ret = array(
-            'php_major' => null,
-        'php_minor' => null,
-        'php_patch' => null,
-        );
 
-        $tmp = $build->getLog('phpize');
-        if (!preg_match(",Rebuilding configure.js[\n\r\d:]+\s+(.+)[\n\r]+,", $tmp, $m)) {
-            throw new \Exception("Couldn't determine PHP development SDK path");
-        }
-        $sdk = $m[1];
+        $info = $build->getInfo();
 
-        $ver_header = file_get_contents("$sdk/include/main/php_version.h");
-
-        if (!preg_match(",PHP_MAJOR_VERSION\s+(\d+),", $ver_header, $m)) {
-            throw new \Exception("Couldn't determine PHP_MAJOR_VERSION");
-        }
-        $ret['php_major'] = $m[1];
-
-        if (!preg_match(",PHP_MINOR_VERSION\s+(\d+),", $ver_header, $m)) {
-            throw new \Exception("Couldn't determine PHP_MINOR_VERSION");
-        }
-        $ret['php_minor'] = $m[1];
-
-        if (!preg_match(",PHP_RELEASE_VERSION\s+(\d+),", $ver_header, $m)) {
-            throw new \Exception("Couldn't determine PHP_RELEASE_VERSION");
-        }
-        $ret['php_patch'] = $m[1];
-
-        return $ret;
-    }
-
-    protected function getInfoFromConfigureLog(Interfaces\Package\Build $build)
-    {
-        $info = array(
-        'thread_safe' => null,
-        'compiler'      => null,
-        'arch'          => null,
-        'version'       => null,
-        'name'          => null,
-    );
-
-        $tmp = $build->getLog('configure');
-
-        if (!preg_match(",Build type\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
-            throw new \Exception("Couldn't determine the build thread safety");
-        }
-        $is_release = 'Release' == $m[1];
-
-        if (!preg_match(",Thread Safety\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
-            throw new \Exception("Couldn't determine the build thread safety");
-        }
-        $info['thread_safe'] = strtolower($m[1]) == 'yes';
-
-        if (!preg_match(",Compiler\s+\|\s+MSVC(\d+),", $tmp, $m)) {
-            throw new \Exception('Currently only MSVC is supported');
-        }
-        $info['compiler'] = 'vc'.$m[1];
-
-        if (!preg_match(",Architecture\s+\|\s+([a-zA-Z0-9]+),", $tmp, $m)) {
-            throw new \Exception("Couldn't determine the build architecture");
-        }
-        $info['arch'] = $m[1];
-
-        $info['version'] = $build->getPackage()->getPrettyVersion();
-        $info['name'] = $build->getPackage()->getName();
-
-        return $info;
+        return 'php_'.$info['name'].'-'
+            .$info['version'].'-'
+            .$info['php_major'].'.'
+            .$info['php_minor'].'-'
+            .($info['thread_safe'] ? 'ts' : 'nts').'-'
+            .$info['compiler'].'-'
+            .$info['arch'];
     }
 
     /**
@@ -158,13 +105,9 @@ class Binary implements Interfaces\Package\Release
         if (!isset($args['build']) || !($args['build'] instanceof Interfaces\Package\Build)) {
             throw new \Exception("Invalid or NULL object passed as Interfaces\Package\Build");
         }
-        $build = $args['build'];
+        $this->build = $build = $args['build'];
 
-        $pack_logs = isset($args["pack_logs"]) && $args["pack_logs"];
-
-        $info = array();
-        $info = array_merge($info, $this->getInfoFromPhpizeLog($build));
-        $info = array_merge($info, $this->getInfoFromConfigureLog($build));
+        $info = $build->getInfo();
 
         $tmp_dir = $build->getTempDir();
 
@@ -215,16 +158,8 @@ class Binary implements Interfaces\Package\Release
             $ext_pdb = null;
         }
 
-        $zip_base_name = 'php_'.$info['name'].'-'
-            .$info['version'].'-'
-            .$info['php_major'].'.'
-            .$info['php_minor'].'-'
-            .($info['thread_safe'] ? 'ts' : 'nts').'-'
-            .$info['compiler'].'-'
-            .$info['arch'];
-
         /* pack the outcome */
-	$zip_name = "$zip_base_name.zip";
+	$zip_name = $this->getZipBaseName($build) . ".zip";
 
         $zip = new \ZipArchive();
         if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
@@ -241,10 +176,14 @@ class Binary implements Interfaces\Package\Release
             $zip->addFile($ext_pdb, basename($ext_pdb));
         }
         $zip->close();
+    }
 
-        if ($pack_logs) {
-            $build->packLog("$zip_base_name-logs.zip");
-	}
+    public function packLog(Interfaces\Package\Build $build = NULL)
+    {
+        if (!$build) {
+	    $build = $this->build;
+        }
+        $build->packLog($this->getZipBaseName($build) . "-logs.zip");
     }
 }
 

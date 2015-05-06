@@ -11,4 +11,5 @@ interface Build
     public function configure($opts = null);
     public function make();
     public function install();
+    public function getInfo();
 }

@@ -58,4 +58,11 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $ini = \Pickle\Engine\Ini::factory(\Pickle\Engine::factory());
         $ini->updatePickleSection(array($this->pkg->getName()));
     }
+
+    public function getInfo()
+    {
+        /* XXX implementat it */
+        return array();
+    }
+
 }

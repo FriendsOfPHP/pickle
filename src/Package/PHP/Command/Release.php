@@ -114,4 +114,9 @@ class Release implements Interfaces\Package\Release
             $cb($this->pkg);
         }
     }
+
+    public function packLog()
+    {
+        /* pass, no logging seems to be happening here yet */
+    }
 }

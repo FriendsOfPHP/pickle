@@ -71,21 +71,45 @@ class ReleaseCommand extends BuildCommand
                 $build->make();
                 $this->saveBuildLogs($input, $build);
             } catch (\Exception $e) {
-                $this->saveBuildLogs($input, $build);
+                if ($input->getOption("pack-logs")) {
+                    $release->packLog($build);
+		} else {
+                    $this->saveBuildLogs($input, $build);
+                }
 
                 $output->writeln('The following error(s) happened: '.$e->getMessage());
             }
 
             $args = array(
                 'build' => $build,
-                'pack_logs' => $input->getOption("pack-logs"),
             );
-            $release->create($args);
+	    
+	    try {
+                $release->create($args);
+                if ($input->getOption("pack-logs")) {
+                    $release->packLog();
+		}
+	    } catch (Exception $e) {
+                if ($input->getOption("pack-logs")) {
+                    $release->packLog();
+		}
+                $build->cleanup();
+		throw new \Exception($e->getMessage());
+	    }
 
-            $build->cleanup();
         } else {
             /* imply --source */
-        $release->create();
+            try {
+                $release->create();
+                if ($input->getOption("pack-logs")) {
+                    $release->packLog();
+		}
+	    } catch (Exception $e) {
+                if ($input->getOption("pack-logs")) {
+                    $release->packLog();
+		}
+		throw new \Exception($e->getMessage());
+	    }
         }
     }
 }

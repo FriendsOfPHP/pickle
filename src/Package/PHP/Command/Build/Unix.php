@@ -85,4 +85,10 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
             throw new \Exception('make install failed');
         }
     }
+
+    public function getInfo()
+    {
+        /* XXX implementat it */
+        return array();
+    }
 }
