@@ -35,8 +35,6 @@
         "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
         "symfony/process": "~2.5",
-        "ext-igbinary": "~1.5",
-        "pierrejoye/igbinary": "~1.5"
     },
     "autoload": {
         "psr-4": {
