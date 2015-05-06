@@ -222,6 +222,7 @@ class Binary
     {
         $url = 'http://pecl.php.net/get/'.$this->extName;
         $headers = get_headers($url);
+
         if (strpos($headers[0], '404') !== false) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
@@ -235,8 +236,12 @@ class Binary
         if ($headerPkg == false) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
-        $q1 = strpos($headerPkg, '"') + 1;
-        $packageFullname = substr($headerPkg, $q1, strlen($headerPkg) - 2 - 3 - $q1);
+
+        if (!preg_match("|=(.*)\.[a-z0-9]{2,3}$|", $headerPkg, $m)) {
+            throw new \Exception('Invalid response from pecl.php.net');
+        }
+        $packageFullname = $m[1];
+
         list($name, $version) = explode('-', $packageFullname);
         if ($name == '' || $version == '') {
             throw new \Exception('Invalid response from pecl.php.net');
