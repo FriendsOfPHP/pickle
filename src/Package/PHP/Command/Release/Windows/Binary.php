@@ -24,6 +24,17 @@ class Binary implements Interfaces\Package\Release
      */
     protected $noConvert = false;
 
+    /*
+     * @var string
+     */
+    protected $zip_base_name;
+ 
+
+    /*
+     * @var Interfaces\Package\Build
+     */
+    protected $build;
+ 
     /**
      * Constructor.
      *
@@ -158,13 +169,19 @@ class Binary implements Interfaces\Package\Release
         if (!isset($args['build']) || !($args['build'] instanceof Interfaces\Package\Build)) {
             throw new \Exception("Invalid or NULL object passed as Interfaces\Package\Build");
         }
-        $build = $args['build'];
-
-        $pack_logs = isset($args["pack_logs"]) && $args["pack_logs"];
+        $this->build = $build = $args['build'];
 
         $info = array();
         $info = array_merge($info, $this->getInfoFromPhpizeLog($build));
         $info = array_merge($info, $this->getInfoFromConfigureLog($build));
+
+        $this->zip_base_name = 'php_'.$info['name'].'-'
+            .$info['version'].'-'
+            .$info['php_major'].'.'
+            .$info['php_minor'].'-'
+            .($info['thread_safe'] ? 'ts' : 'nts').'-'
+            .$info['compiler'].'-'
+            .$info['arch'];
 
         $tmp_dir = $build->getTempDir();
 
@@ -215,16 +232,8 @@ class Binary implements Interfaces\Package\Release
             $ext_pdb = null;
         }
 
-        $zip_base_name = 'php_'.$info['name'].'-'
-            .$info['version'].'-'
-            .$info['php_major'].'.'
-            .$info['php_minor'].'-'
-            .($info['thread_safe'] ? 'ts' : 'nts').'-'
-            .$info['compiler'].'-'
-            .$info['arch'];
-
         /* pack the outcome */
-	$zip_name = "$zip_base_name.zip";
+	$zip_name = "{$this->zip_base_name}.zip";
 
         $zip = new \ZipArchive();
         if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
@@ -241,10 +250,16 @@ class Binary implements Interfaces\Package\Release
             $zip->addFile($ext_pdb, basename($ext_pdb));
         }
         $zip->close();
+    }
 
-        if ($pack_logs) {
-            $build->packLog("$zip_base_name-logs.zip");
-	}
+    public function packLog()
+    {
+        if (!$this->zip_base_name) {
+            /* return silently, something hardl bad could have happened
+	       in the creation phase so there are no logs at all. */
+            return;
+        }
+        $this->build->packLog("{$this->zip_base_name}-logs.zip");
     }
 }
 
