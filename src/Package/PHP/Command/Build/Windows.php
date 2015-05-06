@@ -126,4 +126,87 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
             throw new \Exception('nmake install failed');
         }
     }
+
+    public function getInfo()
+    {
+        $info = array();
+        $info = array_merge($info, $this->getInfoFromPhpizeLog());
+        $info = array_merge($info, $this->getInfoFromConfigureLog());
+
+        return $info;
+    }
+
+    protected function getInfoFromPhpizeLog()
+    {
+        $ret = array(
+            'php_major' => null,
+        'php_minor' => null,
+        'php_patch' => null,
+        );
+
+        $tmp = $this->getLog('phpize');
+        if (!preg_match(",Rebuilding configure.js[\n\r\d:]+\s+(.+)[\n\r]+,", $tmp, $m)) {
+            throw new \Exception("Couldn't determine PHP development SDK path");
+        }
+        $sdk = $m[1];
+
+        $ver_header = file_get_contents("$sdk/include/main/php_version.h");
+
+        if (!preg_match(",PHP_MAJOR_VERSION\s+(\d+),", $ver_header, $m)) {
+            throw new \Exception("Couldn't determine PHP_MAJOR_VERSION");
+        }
+        $ret['php_major'] = $m[1];
+
+        if (!preg_match(",PHP_MINOR_VERSION\s+(\d+),", $ver_header, $m)) {
+            throw new \Exception("Couldn't determine PHP_MINOR_VERSION");
+        }
+        $ret['php_minor'] = $m[1];
+
+        if (!preg_match(",PHP_RELEASE_VERSION\s+(\d+),", $ver_header, $m)) {
+            throw new \Exception("Couldn't determine PHP_RELEASE_VERSION");
+        }
+        $ret['php_patch'] = $m[1];
+
+        return $ret;
+    }
+
+    protected function getInfoFromConfigureLog()
+    {
+        $info = array(
+            'thread_safe' => null,
+            'compiler'      => null,
+            'arch'          => null,
+            'version'       => null,
+            'name'          => null,
+        );
+
+        $tmp = $this->getLog('configure');
+
+        if (!preg_match(",Build type\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
+            throw new \Exception("Couldn't determine the build thread safety");
+        }
+        $is_release = 'Release' == $m[1];
+
+        if (!preg_match(",Thread Safety\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
+            throw new \Exception("Couldn't determine the build thread safety");
+        }
+        $info['thread_safe'] = strtolower($m[1]) == 'yes';
+
+        if (!preg_match(",Compiler\s+\|\s+MSVC(\d+),", $tmp, $m)) {
+            throw new \Exception('Currently only MSVC is supported');
+        }
+        $info['compiler'] = 'vc'.$m[1];
+
+        if (!preg_match(",Architecture\s+\|\s+([a-zA-Z0-9]+),", $tmp, $m)) {
+            throw new \Exception("Couldn't determine the build architecture");
+        }
+        $info['arch'] = $m[1];
+
+        $info['version'] = $this->getPackage()->getPrettyVersion();
+        $info['name'] = $this->getPackage()->getName();
+
+        return $info;
+    }
+
 }
+

@@ -71,7 +71,11 @@ class ReleaseCommand extends BuildCommand
                 $build->make();
                 $this->saveBuildLogs($input, $build);
             } catch (\Exception $e) {
-                $this->saveBuildLogs($input, $build);
+                if ($input->getOption("pack-logs")) {
+                    $release->packLog($build);
+		} else {
+                    $this->saveBuildLogs($input, $build);
+                }
 
                 $output->writeln('The following error(s) happened: '.$e->getMessage());
             }
