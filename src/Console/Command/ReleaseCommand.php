@@ -113,3 +113,4 @@ class ReleaseCommand extends BuildCommand
         }
     }
 }
+

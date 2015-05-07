@@ -148,16 +148,6 @@ class Binary implements Interfaces\Package\Release
             $readme = $tmp_dir.DIRECTORY_SEPARATOR.'README.md';
         }
 
-        $ext_dll = $build_dir.DIRECTORY_SEPARATOR.'php_'.$info['name'].'.dll';
-        if (!file_exists($ext_dll)) {
-            throw new \Exception("Couldn't find extension DLL");
-        }
-
-        $ext_pdb = $build_dir.DIRECTORY_SEPARATOR.'php_'.$info['name'].'.pdb';
-        if (!file_exists($ext_pdb)) {
-            $ext_pdb = null;
-        }
-
         /* pack the outcome */
 	$zip_name = $this->getZipBaseName($build) . ".zip";
 
@@ -166,14 +156,34 @@ class Binary implements Interfaces\Package\Release
             throw new \Exception("Failed to open '$zip_name' for writing");
         }
 
+        $ext_dll_found = false;
+        $ext_names = $this->getMultiExtensionNames();
+        foreach ($ext_names as $ext_name) {
+            $dll_name = 'php_' . $ext_name . '.dll';
+            $dll_file = $build_dir . DIRECTORY_SEPARATOR . $dll_name;
+
+            if (!file_exists($dll_file)) {
+                continue;
+            }
+	    $ext_dll_found = true;
+            $zip->addFile($dll_file, $dll_name);
+
+            $pdb_name = 'php_' . $ext_name . '.pdb';
+            $pdb_file = $build_dir . DIRECTORY_SEPARATOR . $pdb_name;
+            if (file_exists($pdb_file)) {
+                $zip->addFile($pdb_file, $pdb_name);
+            }
+        }
+
+        if (!$ext_dll_found) {
+            throw new \Exception("Couldn't find extension DLL");
+        }
+
         $zip->addFile($composer_json, basename($composer_json));
         $zip->addFile($license, basename($license));
         $zip->addFile($ext_dll, basename($ext_dll));
         if ($readme) {
             $zip->addFile($readme, basename($readme));
-        }
-        if ($ext_pdb) {
-            $zip->addFile($ext_pdb, basename($ext_pdb));
         }
         $zip->close();
     }
@@ -183,7 +193,32 @@ class Binary implements Interfaces\Package\Release
         if (!$build) {
 	    $build = $this->build;
         }
-        $build->packLog($this->getZipBaseName($build) . "-logs.zip");
+        
+        $path = $this->getZipBaseName($build) . "-logs.zip";
+
+        $build->packLog($path);
+
+        return realpath($path);
+    }
+
+    public function getMultiExtensionNames()
+    {
+        $info = $this->build->getInfo();
+        $ext_names = array($info["name"]);
+
+        /* config.w32 can contain multiple EXTENTION definitions, which would lead to
+         multiple DLLs be built. */
+        $config_w32_path = $this->build->getPackage()->getSourceDir() . DIRECTORY_SEPARATOR . 'config.w32';
+        $config_w32 = file_get_contents($config_w32_path);
+        if (preg_match_all("/EXTENSION\s*\(\s*('|\")([a-z0-9_]+)('|\")\s*,/Sm", $config_w32, $m, PREG_SET_ORDER)) {
+            foreach ($m as $r) {
+                if (!in_array($r[2], $ext_names)) {
+                    $ext_names[] = $r[2];
+                }
+            }
+        }
+
+        return $ext_names;
     }
 }
 
