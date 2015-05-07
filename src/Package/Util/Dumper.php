@@ -43,3 +43,5 @@ class Dumper
         return $data;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

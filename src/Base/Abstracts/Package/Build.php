@@ -181,3 +181,5 @@ abstract class Build
         return $this->pkg;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

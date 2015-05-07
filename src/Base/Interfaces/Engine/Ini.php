@@ -8,3 +8,5 @@ interface Ini
     public function updatePickleSection(array $dlls);
     public function getEngine();
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

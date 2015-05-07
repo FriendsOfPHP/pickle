@@ -27,3 +27,5 @@ class Dumper
         file_put_contents($path, $this->dump($package));
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

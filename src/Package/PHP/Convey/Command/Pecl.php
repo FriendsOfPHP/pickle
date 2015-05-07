@@ -73,3 +73,5 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         return Type::PECL;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

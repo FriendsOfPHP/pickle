@@ -78,3 +78,5 @@ class PackageHelper extends Helper
         return (new Convey($path, $io))->deliver($target, $no_convert);
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

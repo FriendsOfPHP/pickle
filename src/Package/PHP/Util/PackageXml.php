@@ -90,3 +90,5 @@ class PackageXml
         return $this->jsonPath;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

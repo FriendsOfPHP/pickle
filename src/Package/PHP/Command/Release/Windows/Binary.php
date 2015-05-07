@@ -222,3 +222,5 @@ class Binary implements Interfaces\Package\Release
     }
 }
 
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

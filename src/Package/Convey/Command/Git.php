@@ -51,3 +51,5 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         return Type::GIT;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

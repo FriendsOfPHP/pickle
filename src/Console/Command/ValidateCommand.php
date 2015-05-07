@@ -41,3 +41,5 @@ class ValidateCommand extends Command
         $validate->process();
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

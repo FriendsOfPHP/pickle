@@ -174,3 +174,5 @@ class InstallerCommand extends BuildCommand
         return 0;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

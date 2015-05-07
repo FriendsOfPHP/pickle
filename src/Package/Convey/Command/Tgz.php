@@ -45,3 +45,5 @@ class Tgz extends Abstracts\Package\Convey\Command implements Interfaces\Package
         return Type::TGZ;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

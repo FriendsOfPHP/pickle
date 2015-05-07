@@ -85,3 +85,5 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
         return $ini;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

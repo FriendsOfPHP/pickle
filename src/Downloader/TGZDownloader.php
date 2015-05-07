@@ -12,3 +12,5 @@ class TGZDownloader extends ArchiveDownloader
         $archive->decompress()->extractTo($path, null, true);
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

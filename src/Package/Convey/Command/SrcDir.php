@@ -27,3 +27,5 @@ class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         return Type::SRC_DIR;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

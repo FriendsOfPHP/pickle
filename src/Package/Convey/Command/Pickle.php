@@ -102,3 +102,5 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         return Type::GIT;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

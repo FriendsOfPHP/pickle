@@ -17,3 +17,5 @@ interface Engine
     public function getExtensionDir();
     public function getIniPath();
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

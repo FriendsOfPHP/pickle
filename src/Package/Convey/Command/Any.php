@@ -22,3 +22,5 @@ class Any extends Abstracts\Package\Convey\Command implements Interfaces\Package
         throw new \Exception('Unsupported package type');
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

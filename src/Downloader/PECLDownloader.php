@@ -11,3 +11,5 @@ class PECLDownloader extends TGZDownloader
         return parent::getFileName($package, $path).'.tgz';
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

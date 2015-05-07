@@ -91,3 +91,5 @@ class Type
         return self::ANY;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

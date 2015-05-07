@@ -120,3 +120,5 @@ class Release implements Interfaces\Package\Release
         /* pass, no logging seems to be happening here yet */
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

@@ -12,3 +12,5 @@ interface Package extends ComposerPackageInterface
     public function setStability($stability);
     public function getConfigureOptions();
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

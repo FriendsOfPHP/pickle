@@ -28,3 +28,5 @@ class Info implements Interfaces\Package\Info
         return $this->package;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

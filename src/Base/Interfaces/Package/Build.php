@@ -13,3 +13,5 @@ interface Build
     public function install();
     public function getInfo();
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

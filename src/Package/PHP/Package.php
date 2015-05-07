@@ -300,3 +300,5 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
         return;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

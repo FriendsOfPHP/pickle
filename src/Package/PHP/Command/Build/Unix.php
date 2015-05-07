@@ -92,3 +92,5 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         return array();
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

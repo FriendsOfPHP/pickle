@@ -110,3 +110,5 @@ abstract class BuildCommand extends Command
         return [$optionsValue, null];
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

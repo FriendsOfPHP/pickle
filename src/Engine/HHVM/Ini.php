@@ -115,3 +115,5 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         }
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

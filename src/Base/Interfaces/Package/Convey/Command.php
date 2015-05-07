@@ -10,3 +10,5 @@ interface Command
     public function execute($target, $no_convert);
     public function getType();
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

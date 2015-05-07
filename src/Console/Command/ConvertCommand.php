@@ -37,3 +37,5 @@ class ConvertCommand extends Command
         $convert->process();
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

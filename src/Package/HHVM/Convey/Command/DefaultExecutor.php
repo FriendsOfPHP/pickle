@@ -48,3 +48,5 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         return $package;
     }
 }
+
+/* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */
