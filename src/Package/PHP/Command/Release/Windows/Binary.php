@@ -149,7 +149,7 @@ class Binary implements Interfaces\Package\Release
         }
 
         /* pack the outcome */
-	$zip_name = $this->getZipBaseName($build) . ".zip";
+        $zip_name = $this->getZipBaseName($build) . ".zip";
 
         $zip = new \ZipArchive();
         if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {

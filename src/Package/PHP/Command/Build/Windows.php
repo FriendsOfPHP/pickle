@@ -133,6 +133,13 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         $info = array_merge($info, $this->getInfoFromPhpizeLog());
         $info = array_merge($info, $this->getInfoFromConfigureLog());
 
+        if (!preg_match(",(.+)/(.+),", $info["name"], $m)) {
+            $info["vendor"] = NULL;
+        } else {
+            $info["name"] = $m[2];
+            $info["vendor"] = $m[1];
+        }
+
         return $info;
     }
 
