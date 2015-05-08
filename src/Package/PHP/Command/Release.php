@@ -83,7 +83,7 @@ class Release implements Interfaces\Package\Release
      */
     public function create(array $args = array())
     {
-        $archBasename = $this->pkg->getName().'-'.$this->pkg->getPrettyVersion();
+        $archBasename = $this->pkg->getSimpleName().'-'.$this->pkg->getPrettyVersion();
 
         /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
         creates temp file and rename it */
