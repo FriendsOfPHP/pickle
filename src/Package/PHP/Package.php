@@ -2,10 +2,10 @@
 
 namespace Pickle\Package\PHP;
 
-use Composer\Package\CompletePackage;
+use Pickle\Base\Abstracts;
 use Pickle\Base\Util\GitIgnore;
 
-class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
+class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
 {
     /**
      * @var string Package's root directory
@@ -250,7 +250,7 @@ class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
     public function getVersionFromHeader()
     {
         $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
-        $ext_name = $this->getName();
+        $ext_name = $this->getSimpleName();
         $version_define = 'PHP_'.strtoupper($ext_name).'_VERSION';
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);

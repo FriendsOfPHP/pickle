@@ -16,14 +16,14 @@ class Version
     public function __construct(Interfaces\Package $package)
     {
         $this->package = $package;
-        $this->macroName = 'PHP_'.strtoupper($this->package->getName()).'_VERSION';
+        $this->macroName = 'PHP_'.strtoupper($this->package->getSimpleName()).'_VERSION';
         $this->header = $this->findHeader();
         $this->version = $this->getVersionFromHeader();
     }
 
     protected function findHeader()
     {
-        $header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getName().'.h';
+        $header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
 
         if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
             $headers = (array) glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');

@@ -2,9 +2,9 @@
 
 namespace Pickle\Package\HHVM;
 
-use Composer\Package\CompletePackage;
+use Pickle\Base\Abstracts;
 
-class Package extends CompletePackage implements \Pickle\Base\Interfaces\Package
+class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
 {
     protected $path;
 
