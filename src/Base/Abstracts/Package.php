@@ -10,7 +10,7 @@ class Package extends CompletePackage
     {
         $full_name = $this->getName();
 
-        if (!preg_match(",(.*)/(.+),", $full_name, $m)) {
+        if (!preg_match(",(.+)/(.+),", $full_name, $m)) {
             return $full_name;
         }
 
@@ -21,11 +21,16 @@ class Package extends CompletePackage
     {
         $full_name = $this->getName();
 
-        if (!preg_match(",(.*)/(.+),", $full_name, $m)) {
+        if (!preg_match(",(.+)/(.+),", $full_name, $m)) {
             return "";
         }
 
         return $m[1];
+    }
+
+    public function getUniqueNameForFs()
+    {
+        return sha1($this->getUniqueName());
     }
 }
 

@@ -66,7 +66,7 @@ class ReleaseCommand extends BuildCommand
 
             try {
                 $build->prepare();
-                $build->createTempDir($package->getName().$package->getVersion());
+                $build->createTempDir($package->getUniqueNameForFs());
                 $build->configure($force_opts);
                 $build->make();
                 $this->saveBuildLogs($input, $build);
