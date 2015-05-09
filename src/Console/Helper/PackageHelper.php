@@ -28,11 +28,12 @@ class PackageHelper extends Helper
     public function showInfo(OutputInterface $output, Interfaces\Package $package)
     {
         $table = new Table($output);
+        $stability = $package->getStability();
         $table
             ->setRows([
                 ['<info>Package name</info>', $package->getPrettyName()],
-                ['<info>Package version (current release)</info>', $package->getPrettyVersion()],
-                ['<info>Package status</info>', $package->getStability()],
+                ['<info>Package version (current release)</info>', str_replace("-$stability", "", $package->getPrettyVersion())],
+                ['<info>Package status</info>', $stability],
             ])
             ->render();
     }
