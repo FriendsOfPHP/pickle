@@ -16,9 +16,13 @@ class Dumper
         $data = [];
 
         $data['name'] = $package->getPrettyName();
-        $data['version'] = $package->getPrettyVersion();
+
+        $stability = $package->getStability();
+        /* not appending stable is ok */
+        $version_tail = $stability && "stable" != $stability ? "-$stability" : "";
+        $data['version'] = $package->getPrettyVersion() . $version_tail;
+
         $data['type'] = $package->getType();
-        $data['stability'] = $package->getStability();
 
         if ($license = $package->getLicense()) {
             $data['license'] = $license;
