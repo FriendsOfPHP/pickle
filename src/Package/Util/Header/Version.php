@@ -45,14 +45,14 @@ class Version
         return $header;
     }
 
-    protected function fileHasVersionMacro($fname)
+    public function fileHasVersionMacro($fname)
     {
         $cont = file_get_contents($fname);
 
         return false !== strstr($cont, $this->macroName);
     }
 
-    protected function getVersionFromHeader()
+    public function getVersionFromHeader()
     {
         $cont = file_get_contents($this->header);
         $pat = ',define\s+'.$this->macroName.'\s+"(.*)",i';
