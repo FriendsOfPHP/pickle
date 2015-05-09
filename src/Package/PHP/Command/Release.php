@@ -33,8 +33,8 @@ class Release implements Interfaces\Package\Release
      */
     public function __construct($path, $cb = null, $noConvert = false)
     {
-        $this->pkg       = $this->readPackage($path);
-        $this->cb        = $cb;
+        $this->pkg = $this->readPackage($path);
+        $this->cb = $cb;
         $this->noConvert = $noConvert;
     }
 

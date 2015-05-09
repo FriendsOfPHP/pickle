@@ -3,7 +3,6 @@
 namespace Pickle\Package\PHP\Convey\Command;
 
 use Pickle\Base\Interfaces;
-use Pickle\Base\Abstracts\Package\Convey;
 use Pickle\Package\PHP;
 use Pickle\Package\PHP\Util\PackageXml;
 

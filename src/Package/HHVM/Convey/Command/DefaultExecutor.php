@@ -3,7 +3,6 @@
 namespace Pickle\Package\HHVM\Convey\Command;
 
 use Pickle\Base\Interfaces;
-use Pickle\Base\Abstracts\Package\Convey;
 use Pickle\Package\Util\JSON\Dumper;
 use Pickle\Package\HHVM\Util\Cmake;
 

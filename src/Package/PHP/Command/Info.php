@@ -12,7 +12,7 @@ class Info implements Interfaces\Package\Info
     public function __construct(Interfaces\Package $package, $cb = null)
     {
         $this->package = $package;
-        $this->cb   = $cb;
+        $this->cb = $cb;
     }
 
     public function show()

@@ -19,7 +19,7 @@ class Ini
     public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {
         $this->engine = $php;
-        $this->path   = $php->getIniPath();
+        $this->path = $php->getIniPath();
 
         $this->raw = @file_get_contents($this->path);
         if (false === $this->raw) {

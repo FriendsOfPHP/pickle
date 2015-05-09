@@ -71,9 +71,9 @@ class ReleaseCommand extends BuildCommand
                 $build->make();
                 $this->saveBuildLogs($input, $build);
             } catch (\Exception $e) {
-                if ($input->getOption("pack-logs")) {
+                if ($input->getOption('pack-logs')) {
                     $release->packLog($build);
-		} else {
+                } else {
                     $this->saveBuildLogs($input, $build);
                 }
 
@@ -83,36 +83,34 @@ class ReleaseCommand extends BuildCommand
             $args = array(
                 'build' => $build,
             );
-	    
-	    try {
-                $release->create($args);
-                if ($input->getOption("pack-logs")) {
-                    $release->packLog();
-		}
-	    } catch (Exception $e) {
-                if ($input->getOption("pack-logs")) {
-                    $release->packLog();
-		}
-                $build->cleanup();
-		throw new \Exception($e->getMessage());
-	    }
 
+            try {
+                $release->create($args);
+                if ($input->getOption('pack-logs')) {
+                    $release->packLog();
+                }
+            } catch (Exception $e) {
+                if ($input->getOption('pack-logs')) {
+                    $release->packLog();
+                }
+                $build->cleanup();
+                throw new \Exception($e->getMessage());
+            }
         } else {
             /* imply --source */
             try {
                 $release->create();
-                if ($input->getOption("pack-logs")) {
+                if ($input->getOption('pack-logs')) {
                     $release->packLog();
-		}
-	    } catch (Exception $e) {
-                if ($input->getOption("pack-logs")) {
+                }
+            } catch (Exception $e) {
+                if ($input->getOption('pack-logs')) {
                     $release->packLog();
-		}
-		throw new \Exception($e->getMessage());
-	    }
+                }
+                throw new \Exception($e->getMessage());
+            }
         }
     }
 }
-
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

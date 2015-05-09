@@ -133,8 +133,8 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             @list($name, $prompt, $default) = $elems;
             $name = str_replace('"', '', $name);
             $options[$name] = (object) [
-                'prompt'  => $prompt,
-                'type'    => $type,
+                'prompt' => $prompt,
+                'type' => $type,
                 'default' => $default,
             ];
             $next = $e + 1;
@@ -174,8 +174,8 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $desc = trim(substr($desc, $s_a));
 
             $options[$name] = (object) [
-                'prompt'  => $desc,
-                'type'    => $type,
+                'prompt' => $desc,
+                'type' => $type,
                 'default' => $default,
             ];
 
@@ -222,8 +222,8 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             }
             $name = str_replace(['[', ']'], ['', ''], $name);
             $options[$name] = (object) [
-                'prompt'  => trim($desc),
-                'type'    => $type,
+                'prompt' => trim($desc),
+                'type' => $type,
                 'default' => $default,
             ];
             $next = $e + 1;

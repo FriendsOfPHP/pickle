@@ -9,10 +9,10 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 {
     public function prepare()
     {
-        if (!file_exists("c:\\php-sdk\\bin")) {
+        if (!file_exists('c:\\php-sdk\\bin')) {
             throw new \Exception('PHP SDK not found');
         }
-        putenv("path=c:\\php-sdk\\bin;".getenv('path'));
+        putenv('path=c:\\php-sdk\\bin;'.getenv('path'));
 
         if (!$this->runCommand('phpsdk_setvars')) {
             throw new \Exception('phpsdk_setvars failed');
@@ -133,11 +133,11 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         $info = array_merge($info, $this->getInfoFromPhpizeLog());
         $info = array_merge($info, $this->getInfoFromConfigureLog());
 
-        if (!preg_match(",(.+)/(.+),", $info["name"], $m)) {
-            $info["vendor"] = NULL;
+        if (!preg_match(',(.+)/(.+),', $info['name'], $m)) {
+            $info['vendor'] = null;
         } else {
-            $info["name"] = $m[2];
-            $info["vendor"] = $m[1];
+            $info['name'] = $m[2];
+            $info['vendor'] = $m[1];
         }
 
         return $info;
@@ -181,10 +181,10 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
     {
         $info = array(
             'thread_safe' => null,
-            'compiler'      => null,
-            'arch'          => null,
-            'version'       => null,
-            'name'          => null,
+            'compiler' => null,
+            'arch' => null,
+            'version' => null,
+            'name' => null,
         );
 
         $tmp = $this->getLog('configure');
@@ -214,8 +214,6 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 
         return $info;
     }
-
 }
-
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

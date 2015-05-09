@@ -45,9 +45,9 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         if ($matches['version'] == '') {
             $versions = array_keys($extension['packages'][$this->name]);
             if (count($versions) > 1) {
-                $versionToUse  = $versions[1];
+                $versionToUse = $versions[1];
             } else {
-                $versionToUse  = $versions[0];
+                $versionToUse = $versions[0];
             }
         } else {
             $versionConstraints = $versionParser->parseConstraints($matches['version']);
@@ -63,7 +63,7 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         }
 
         $package = $extension['packages'][$this->name][$versionToUse];
-        $this->version       = $versionToUse;
+        $this->version = $versionToUse;
         $this->normalizedVersion = $versionParser->normalize($versionToUse);
 
         $this->name = $matches['package'];

@@ -100,7 +100,7 @@ class Binary
         $phpZts = $this->php->getZts() ? '-ts' : '-nts';
         $phpVersion = $this->php->getMajorVersion().'.'.$this->php->getMinorVersion();
         $pkgVersion = $this->extVersion;
-        $extName =  strtolower($this->extName);
+        $extName = strtolower($this->extName);
         $baseUrl = 'http://windows.php.net/downloads/pecl/releases/';
 
         if (false === $this->findInLinks($baseUrl.$extName, $pkgVersion)) {

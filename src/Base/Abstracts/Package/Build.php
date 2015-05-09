@@ -44,7 +44,7 @@ abstract class Build
             }
             $tmp = explode("\n", $item['msg']);
             foreach ($tmp as $ln) {
-                $ret[] =  $item['level'].': '.$ln;
+                $ret[] = $item['level'].': '.$ln;
             }
         }
 
@@ -90,7 +90,7 @@ abstract class Build
         foreach ($this->log as $item) {
             $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
 
-            if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item['msg'])+1) {
+            if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item['msg']) + 1) {
                 throw new \Exception("Couldn't write contents to '$fname'");
             }
         }
@@ -101,21 +101,21 @@ abstract class Build
     {
         $logs = array();
 
-        $zip = new \ZipArchive;
+        $zip = new \ZipArchive();
         if (!$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
             throw new \Exception("Failed to open '$path' for writing");
         }
 
-        $no_hint_logs = "";
+        $no_hint_logs = '';
         foreach ($this->log as $item) {
-            if ((isset($item["hint"]) && !empty($item["hint"]))) {
-                $zip->addFromString("$item[hint].log", $item["msg"]);
+            if ((isset($item['hint']) && !empty($item['hint']))) {
+                $zip->addFromString("$item[hint].log", $item['msg']);
             } else {
                 $no_hint_logs = "$no_hint_logs\n\n$item[msg]";
             }
         }
         if ($no_hint_logs) {
-            $zip->addFromString("build.log", $item["msg"]);
+            $zip->addFromString('build.log', $item['msg']);
         }
 
         $zip->close();

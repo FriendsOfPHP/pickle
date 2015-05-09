@@ -28,7 +28,7 @@ class Binary implements Interfaces\Package\Release
      * @var Interfaces\Package\Build
      */
     protected $build;
- 
+
     /**
      * Constructor.
      *
@@ -38,8 +38,8 @@ class Binary implements Interfaces\Package\Release
      */
     public function __construct($path, $cb = null, $noConvert = false)
     {
-        $this->pkg       = $this->readPackage($path);
-        $this->cb        = $cb;
+        $this->pkg = $this->readPackage($path);
+        $this->cb = $cb;
         $this->noConvert = $noConvert;
     }
 
@@ -85,7 +85,6 @@ class Binary implements Interfaces\Package\Release
 
     protected function getZipBaseName(Interfaces\Package\Build $build)
     {
-
         $info = $build->getInfo();
 
         return 'php_'.$info['name'].'-'
@@ -149,7 +148,7 @@ class Binary implements Interfaces\Package\Release
         }
 
         /* pack the outcome */
-        $zip_name = $this->getZipBaseName($build) . ".zip";
+        $zip_name = $this->getZipBaseName($build).'.zip';
 
         $zip = new \ZipArchive();
         if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
@@ -159,17 +158,17 @@ class Binary implements Interfaces\Package\Release
         $ext_dll_found = false;
         $ext_names = $this->getMultiExtensionNames();
         foreach ($ext_names as $ext_name) {
-            $dll_name = 'php_' . $ext_name . '.dll';
-            $dll_file = $build_dir . DIRECTORY_SEPARATOR . $dll_name;
+            $dll_name = 'php_'.$ext_name.'.dll';
+            $dll_file = $build_dir.DIRECTORY_SEPARATOR.$dll_name;
 
             if (!file_exists($dll_file)) {
                 continue;
             }
-	    $ext_dll_found = true;
+            $ext_dll_found = true;
             $zip->addFile($dll_file, $dll_name);
 
-            $pdb_name = 'php_' . $ext_name . '.pdb';
-            $pdb_file = $build_dir . DIRECTORY_SEPARATOR . $pdb_name;
+            $pdb_name = 'php_'.$ext_name.'.pdb';
+            $pdb_file = $build_dir.DIRECTORY_SEPARATOR.$pdb_name;
             if (file_exists($pdb_file)) {
                 $zip->addFile($pdb_file, $pdb_name);
             }
@@ -188,13 +187,13 @@ class Binary implements Interfaces\Package\Release
         $zip->close();
     }
 
-    public function packLog(Interfaces\Package\Build $build = NULL)
+    public function packLog(Interfaces\Package\Build $build = null)
     {
         if (!$build) {
-	    $build = $this->build;
+            $build = $this->build;
         }
-        
-        $path = $this->getZipBaseName($build) . "-logs.zip";
+
+        $path = $this->getZipBaseName($build).'-logs.zip';
 
         $build->packLog($path);
 
@@ -204,11 +203,11 @@ class Binary implements Interfaces\Package\Release
     public function getMultiExtensionNames()
     {
         $info = $this->build->getInfo();
-        $ext_names = array($info["name"]);
+        $ext_names = array($info['name']);
 
         /* config.w32 can contain multiple EXTENTION definitions, which would lead to
          multiple DLLs be built. */
-        $config_w32_path = $this->build->getPackage()->getSourceDir() . DIRECTORY_SEPARATOR . 'config.w32';
+        $config_w32_path = $this->build->getPackage()->getSourceDir().DIRECTORY_SEPARATOR.'config.w32';
         $config_w32 = file_get_contents($config_w32_path);
         if (preg_match_all("/EXTENSION\s*\(\s*('|\")([a-z0-9_]+)('|\")\s*,/Sm", $config_w32, $m, PREG_SET_ORDER)) {
             foreach ($m as $r) {
@@ -221,6 +220,5 @@ class Binary implements Interfaces\Package\Release
         return $ext_names;
     }
 }
-
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

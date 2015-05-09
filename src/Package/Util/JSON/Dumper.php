@@ -3,7 +3,6 @@
 namespace Pickle\Package\Util\JSON;
 
 use Pickle\Base\Interfaces;
-use Pickle\Package;
 use Pickle\Package\Util;
 
 class Dumper

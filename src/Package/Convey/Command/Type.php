@@ -84,7 +84,7 @@ class Type
             return self::GIT;
         } elseif (!$remote && is_dir($path)) {
             return self::SRC_DIR;
-        } elseif (self::determinePickle($path, $matches)>0) {
+        } elseif (self::determinePickle($path, $matches) > 0) {
             return self::PICKLE;
         }
 

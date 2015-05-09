@@ -12,7 +12,7 @@ class Convert
     public function __construct($path, $cb = null)
     {
         $this->path = $path;
-        $this->cb   = $cb;
+        $this->cb = $cb;
     }
 
     public function process()
