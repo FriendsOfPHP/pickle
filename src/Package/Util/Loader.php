@@ -26,9 +26,13 @@ class Loader implements LoaderInterface
      */
     public function load(array $config, $package = 'Pickle\Base\Interface\Package')
     {
-        $version = $this->versionParser->normalize($config['version']);
+        if (isset($config['version'])) {
+            $version = $this->versionParser->normalize($config['version']);
+            $package = Package::factory($config['name'], $version, $config['version'], true);
+        } else {
+            $package = Package::factory($config['name'], '', '', true);
+        }
 
-        $package = Package::factory($config['name'], $version, $config['version'], true);
         $package->setType('extension');
 
         $this->setPackageSource($package, $config);
