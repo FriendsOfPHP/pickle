@@ -17,13 +17,14 @@ class Version
     {
         $this->package = $package;
         $this->macroName = 'PHP_'.strtoupper($this->package->getSimpleName()).'_VERSION';
-        $this->header = $this->findHeader();
+
         $this->version = $this->getVersionFromHeader();
     }
 
-    protected function findHeader()
+    protected function findHeaders()
     {
-        $header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
+
+        //$header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
 
         if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
             $headers = (array) glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
@@ -54,15 +55,18 @@ class Version
 
     public function getVersionFromHeader()
     {
-        $cont = file_get_contents($this->header);
+        $headers = glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
         $pat = ',define\s+'.$this->macroName.'\s+"(.*)",i';
-
-        if (!preg_match($pat, $cont, $m)) {
-            throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro ".
-                "from the header '{$this->header}'");
+        foreach ($headers as $header) {
+            $headerContent = file_get_contents($header);
+            if (!$headerContent) {
+                throw new \Exception("Could not read $header");
+            }
+            if (preg_match($pat, $headerContent, $result)) {
+                return $result[1];
+            }
         }
-
-        return $m[1];
+        throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");
     }
 
     public function updateJSON()
