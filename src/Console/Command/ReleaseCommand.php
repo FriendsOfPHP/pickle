@@ -48,15 +48,15 @@ class ReleaseCommand extends BuildCommand
     {
         $helper = $this->getHelper('package');
         Util\TmpDir::set($input->getOption('tmp-dir'));
-
-        $cb = function (Interfaces\Package $package) use ($helper, $output) {
         /* TODO Rework this to use the Info package command */
-        $helper->showInfo($output, $package);
-    };
+        $cb = function (Interfaces\Package $package) use ($helper, $output) {
+                $helper->showInfo($output, $package);
+            };
         $path = rtrim($input->getArgument('path'), '/\\');
 
         /* Getting package unpacked first, then use the path*/
         $package = $this->getHelper('package')->convey($input, $output, $path);
+
         $release = Release::factory($package->getRootDir(), $cb, $input->getOption('no-convert'), $input->getOption('binary'));
 
         if ($input->getOption('binary')) {

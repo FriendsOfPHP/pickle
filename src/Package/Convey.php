@@ -18,6 +18,7 @@ class Convey
         }
 
         $type = Type::determine($path, (false === realpath($path)));
+
         $this->command = Factory::getCommand($type, $path, $io);
     }
 

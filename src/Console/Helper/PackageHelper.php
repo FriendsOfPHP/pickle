@@ -32,7 +32,7 @@ class PackageHelper extends Helper
         $table
             ->setRows([
                 ['<info>Package name</info>', $package->getPrettyName()],
-                ['<info>Package version (current release)</info>', str_replace("-$stability", "", $package->getPrettyVersion())],
+                ['<info>Package version (current release)</info>', str_replace("-$stability", '', $package->getPrettyVersion())],
                 ['<info>Package status</info>', $stability],
             ])
             ->render();

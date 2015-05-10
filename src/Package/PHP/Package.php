@@ -4,6 +4,7 @@ namespace Pickle\Package\PHP;
 
 use Pickle\Base\Abstracts;
 use Pickle\Base\Util\GitIgnore;
+use Composer\Package\Version\VersionParser;
 
 class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
 {
@@ -250,8 +251,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     public function getVersionFromHeader()
     {
         $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
-        $ext_name = $this->getSimpleName();
-        $version_define = 'PHP_'.strtoupper($ext_name).'_VERSION';
+        $version_define = 'PHP_'.strtoupper($this->getSimpleName()).'_VERSION';
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);
             if (!$contents) {

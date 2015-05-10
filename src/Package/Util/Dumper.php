@@ -19,8 +19,8 @@ class Dumper
 
         $stability = $package->getStability();
         /* not appending stable is ok */
-        $version_tail = $stability && "stable" != $stability ? "-$stability" : "";
-        $data['version'] = $package->getPrettyVersion() . $version_tail;
+        $version_tail = $stability && 'stable' != $stability ? "-$stability" : '';
+        $data['version'] = $package->getPrettyVersion().$version_tail;
 
         $data['type'] = $package->getType();
 

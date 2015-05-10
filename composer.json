@@ -34,12 +34,17 @@
         "atoum/praspel-extension": "~0.1",
         "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
-        "symfony/process": "~2.5"
+        "symfony/process": "~2.5",
+        "fabpot/php-cs-fixer": "~1.7"
     },
     "autoload": {
         "psr-4": {
             "Pickle\\": ["src/"]
         }
     },
-    "bin": ["bin/pickle"]
+    "bin": ["bin/pickle"],
+    "scripts"     : {
+        "cs"  : "vendor/bin/php-cs-fixer --ansi fix --config=sf23"
+    }
+
 }
