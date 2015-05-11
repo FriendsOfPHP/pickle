@@ -3,6 +3,7 @@
 namespace Pickle\Package\Util;
 
 use Pickle\Base\Interfaces;
+use Pickle\Package\Util\Header;
 
 class Dumper
 {
@@ -21,6 +22,12 @@ class Dumper
         /* not appending stable is ok */
         $version_tail = $stability && 'stable' != $stability ? "-$stability" : '';
         $data['version'] = $package->getPrettyVersion().$version_tail;
+
+        /* Should never happen actually, as the version is always read from headers. But paranoia. */
+        $version = new Header\Version($package);
+        if ($version != $package->getPrettyVersion()) {
+            throw new \Exception("Version mismatch - '" . $version . "' != '" . $package->getVersion() . ". in source vs JSON");
+        }
 
         $data['type'] = $package->getType();
 
