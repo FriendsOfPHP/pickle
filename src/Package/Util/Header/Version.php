@@ -87,6 +87,11 @@ class Version
             throw new \Exception("Failed to update '$package_json'");
         }
     }
+
+    public function __tostring()
+    {
+        return $this->version;
+    }
 }
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

@@ -4,6 +4,7 @@ namespace Pickle\Package\PHP\Util\XML;
 
 use Composer\Package\Loader\LoaderInterface;
 use Pickle\Package\PHP;
+use Pickle\Package\Util\Header;
 
 class Loader
 {
@@ -90,7 +91,14 @@ class Loader
             $package['license'] = (string) $xml->license;
         }
 
-        return $this->loader->load($package);
+        $ret_pkg = $this->loader->load($package);
+
+        $src_ver = new Header\Version($ret_pkg);
+        if ($src_ver != $ret_pkg->getVersion()) {
+            throw new \Exception("Version mismatch - '" . src_ver . "' != '" . $ret_pkg->getVersion() . ". in source vs package.xml");
+        }
+
+        return $ret_pkg;
     }
 
     protected function validate(\SimpleXMLElement $xml)
