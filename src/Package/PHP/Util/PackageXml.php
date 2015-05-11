@@ -66,9 +66,6 @@ class PackageXml
         if ($fname) {
             $this->jsonPath = $fname;
         }
-        $this->package->setVersion('');
-
-        print_r($this->package);
         $dumper = new Dumper();
         $dumper->dumpToFile($this->package, $this->jsonPath);
     }
