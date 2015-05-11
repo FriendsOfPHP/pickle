@@ -180,7 +180,6 @@ class Binary implements Interfaces\Package\Release
 
         $zip->addFile($composer_json, basename($composer_json));
         $zip->addFile($license, basename($license));
-        $zip->addFile($ext_dll, basename($ext_dll));
         if ($readme) {
             $zip->addFile($readme, basename($readme));
         }
