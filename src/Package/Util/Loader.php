@@ -24,7 +24,7 @@ class Loader implements LoaderInterface
      *
      * @return \Pickle\Base\Interfaces\Package $package
      */
-    public function load(array $config, $package = 'Pickle\Base\Interface\Package')
+    public function load(array $config, $package = 'Pickle\Base\Interfaces\Package')
     {
         if (isset($config['version'])) {
             $version = $this->versionParser->normalize($config['version']);
