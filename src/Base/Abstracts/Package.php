@@ -3,6 +3,8 @@
 namespace Pickle\Base\Abstracts;
 
 use Composer\Package\CompletePackage;
+use Pickle\Package\Util\Header;
+use Composer\Package\Version\VersionParser;
 
 class Package extends CompletePackage
 {
@@ -31,6 +33,20 @@ class Package extends CompletePackage
     public function getUniqueNameForFs()
     {
         return sha1($this->getUniqueName());
+    }
+
+    /* This might be not common for other extensions to
+        other engines. Lets see if this is needed to be
+        moved into the Interface so each engines package
+        is forced to implement it on its own. But so far ... */
+    public function updateVersion()
+    {
+        /* Be sure package root is set before! */
+        $version = new Header\Version($this);
+        $parser = new VersionParser();
+
+        $this->version = $parser->normalize($version);
+        $this->prettyVersion = (string)$version;
     }
 }
 

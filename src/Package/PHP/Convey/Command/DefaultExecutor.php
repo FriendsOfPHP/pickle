@@ -37,6 +37,7 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         }
 
         $package->setRootDir($target);
+        $package->updateVersion();
 
         return $package;
     }
