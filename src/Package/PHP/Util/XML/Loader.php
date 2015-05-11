@@ -92,10 +92,11 @@ class Loader
         }
 
         $ret_pkg = $this->loader->load($package);
+        $ret_pkg->setRootDir(dirname($path));
 
         $src_ver = new Header\Version($ret_pkg);
-        if ($src_ver != $ret_pkg->getVersion()) {
-            throw new \Exception("Version mismatch - '" . src_ver . "' != '" . $ret_pkg->getVersion() . ". in source vs package.xml");
+        if ($src_ver != $ret_pkg->getPrettyVersion()) {
+            throw new \Exception("Version mismatch - '" . $src_ver . "' != '" . $ret_pkg->getPrettyVersion() . "' in source vs. XML");
         }
 
         return $ret_pkg;
