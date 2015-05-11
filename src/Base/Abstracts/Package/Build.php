@@ -96,6 +96,17 @@ abstract class Build
         }
     }
 
+    protected function fixEol($s)
+    {
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $ret = preg_replace(",(?!\r)\n,", "\r\n", $s);
+        } else {
+            $ret = $s;
+        }
+
+        return $ret;
+    }
+
     /* zip is default */
     public function packLog($path)
     {
@@ -108,14 +119,15 @@ abstract class Build
 
         $no_hint_logs = '';
         foreach ($this->log as $item) {
+            $msg = $this->fixEol($item["msg"]);
             if ((isset($item['hint']) && !empty($item['hint']))) {
-                $zip->addFromString("$item[hint].log", $item['msg']);
+                $zip->addFromString("$item[hint].log", $msg);
             } else {
-                $no_hint_logs = "$no_hint_logs\n\n$item[msg]";
+                $no_hint_logs = "$no_hint_logs\n\n$msg";
             }
         }
         if ($no_hint_logs) {
-            $zip->addFromString('build.log', $item['msg']);
+            $zip->addFromString('build.log', $this->fixEol($item['msg']));
         }
 
         $zip->close();
