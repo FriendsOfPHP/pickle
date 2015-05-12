@@ -4,6 +4,7 @@ namespace Pickle\Package\PHP\Util;
 
 use Pickle\Package;
 use Pickle\Package\Util\JSON\Dumper;
+use Pickle\Package\Util\Header;
 
 class PackageXml
 {
@@ -65,6 +66,11 @@ class PackageXml
 
         if ($fname) {
             $this->jsonPath = $fname;
+        }
+
+        $version = new Header\Version($this->package);
+        if ($version != $this->package->getPrettyVersion()) {
+            throw new \Exception("Version mismatch - '" . $version . "' != '" . $this->package->getVersion() . ". in source vs JSON");
         }
 
         $dumper = new Dumper();
