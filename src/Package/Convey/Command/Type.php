@@ -29,7 +29,10 @@ class Type
     {
         $versionParser = new VersionParser();
         $res = $versionParser->parseNameVersionPairs([$arg]);
-
+        $argPrefix = substr($arg, 0, 1);
+        if ($argPrefix == '/' || $argPrefix == '.') {
+            return 0;
+        }
         $matches = [
                 'package' => $res[0]['name'],
                 'version' => isset($res[0]['version']) ? $res[0]['version'] : '',

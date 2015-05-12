@@ -48,9 +48,9 @@ class Loader
             'description' => (string) $xml->summary,
         ];
 
-		if (!isset($xml->providesextension)) {
-			Throw new \Exception('not a PHP extension package.xml, providesextension tag missing');
-		}
+        if (!isset($xml->providesextension)) {
+            throw new \Exception('not a PHP extension package.xml, providesextension tag missing');
+        }
         $authors = array_merge(
             iterator_to_array($xml->lead),
             iterator_to_array($xml->developer),
@@ -93,7 +93,7 @@ class Loader
         if (isset($xml->license)) {
             $package['license'] = (string) $xml->license;
         }
-		$package['type'] = 'extension';
+        $package['type'] = 'extension';
 
         $ret_pkg = $this->loader->load($package);
         $ret_pkg->setRootDir(dirname($path));
@@ -102,7 +102,7 @@ class Loader
         if ($src_ver != $ret_pkg->getPrettyVersion()) {
             throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
         }
-		$ret_pkg->setType('extension');
+        $ret_pkg->setType('extension');
 
         return $ret_pkg;
     }
