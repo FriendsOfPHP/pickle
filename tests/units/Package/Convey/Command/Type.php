@@ -8,11 +8,11 @@ use Pickle\Package\Convey\Command;
 
 class Type extends atoum
 {
-    public function test_determine_any()
+    public function test_determine_pickle()
     {
         $this
-            ->string(Command\Type::determine("hello", false))
-                ->isIdenticalTo(Command\Type::ANY);
+            ->string(Command\Type::determine("vendor/hello", true))
+                ->isIdenticalTo(Command\Type::PICKLE);
     }
 
     public function test_determine_pecl()

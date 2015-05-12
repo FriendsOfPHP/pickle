@@ -70,7 +70,7 @@ class PackageXml
 
         $version = new Header\Version($this->package);
         if ($version != $this->package->getPrettyVersion()) {
-            throw new \Exception("Version mismatch - '" . $version . "' != '" . $this->package->getVersion() . ". in source vs JSON");
+            throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
         }
 
         $dumper = new Dumper();

@@ -96,7 +96,7 @@ class Loader
 
         $src_ver = new Header\Version($ret_pkg);
         if ($src_ver != $ret_pkg->getPrettyVersion()) {
-            throw new \Exception("Version mismatch - '" . $src_ver . "' != '" . $ret_pkg->getPrettyVersion() . "' in source vs. XML");
+            throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
         }
 
         return $ret_pkg;

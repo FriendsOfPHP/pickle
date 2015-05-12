@@ -4,7 +4,6 @@ namespace Pickle\Package\PHP;
 
 use Pickle\Base\Abstracts;
 use Pickle\Base\Util\GitIgnore;
-use Composer\Package\Version\VersionParser;
 
 class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
 {

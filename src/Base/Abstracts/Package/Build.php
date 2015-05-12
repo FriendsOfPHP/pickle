@@ -119,7 +119,7 @@ abstract class Build
 
         $no_hint_logs = '';
         foreach ($this->log as $item) {
-            $msg = $this->fixEol($item["msg"]);
+            $msg = $this->fixEol($item['msg']);
             if ((isset($item['hint']) && !empty($item['hint']))) {
                 $zip->addFromString("$item[hint].log", $msg);
             } else {

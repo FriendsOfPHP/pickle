@@ -46,7 +46,7 @@ class Package extends CompletePackage
         $parser = new VersionParser();
 
         $this->version = $parser->normalize($version);
-        $this->prettyVersion = (string)$version;
+        $this->prettyVersion = (string) $version;
     }
 }
 
