@@ -33,7 +33,9 @@ class Loader implements LoaderInterface
             $package = Package::factory($config['name'], '', '', true);
         }
 
-        $package->setType('extension');
+        if ($package->getType() != 'extension') {
+            throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
+        }
 
         $this->setPackageSource($package, $config);
         $this->setPackageDist($package, $config);
