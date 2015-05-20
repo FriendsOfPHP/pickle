@@ -1,4 +1,4 @@
 composer.lock
 composer.phar
-pickle.phar
+pickle*.phar
 vendor/

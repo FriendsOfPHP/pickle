@@ -36,7 +36,6 @@
 
 namespace Pickle\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,7 +53,7 @@ class ReleaseCommand extends BuildCommand
         $this
             ->setName('release')
             ->setDescription('Package a PECL extension for release')
-        /* TODO: make it to take value like zip, tgz, etc. should this functionality be expanded */
+            /* TODO: make it to take value like zip, tgz, etc. should this functionality be expanded */
             ->addOption(
                 'binary',
                 null,
@@ -66,6 +65,13 @@ class ReleaseCommand extends BuildCommand
                 null,
                 InputOption::VALUE_NONE,
                 'package build logs'
+            )
+            ->addOption(
+                'tmp-dir',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to a custom temp dir',
+                sys_get_temp_dir()
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

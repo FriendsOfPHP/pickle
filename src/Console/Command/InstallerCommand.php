@@ -66,26 +66,37 @@ class InstallerCommand extends BuildCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Do not install extension'
-            )->addOption(
+            )
+            ->addOption(
                 'php',
                 null,
-                InputArgument::OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'path to an alternative php (exec)'
-            )->addOption(
+            )
+            ->addOption(
                 'ini',
                 null,
-                InputArgument::OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'path to an alternative php.ini'
-            )->addOption(
+            )
+            ->addOption(
                 'source',
                 null,
                 InputOption::VALUE_NONE,
                 'use source package'
-            )->addOption(
+            )
+            ->addOption(
                 'save-logs',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'path to save the build logs'
+            )
+            ->addOption(
+                'tmp-dir',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to a custom temp dir',
+                sys_get_temp_dir()
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

@@ -39,6 +39,7 @@ namespace Pickle\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Command\Validate;
@@ -56,6 +57,13 @@ class ValidateCommand extends Command
                 InputArgument::OPTIONAL,
                 'Path to the PECL extension root directory (default pwd)',
                 getcwd()
+            )
+            ->addOption(
+                'tmp-dir',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to a custom temp dir',
+                sys_get_temp_dir()
             );
     }
 
