@@ -96,6 +96,9 @@ class Loader
         $package['type'] = 'extension';
 
         $ret_pkg = $this->loader->load($package);
+	if (!$ret_pkg) {
+		throw new \Exception("Package from '$path' failed to load.");
+	}
         $ret_pkg->setRootDir(dirname($path));
 
         $src_ver = new Header\Version($ret_pkg);

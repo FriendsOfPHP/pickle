@@ -11,12 +11,13 @@ class Loader extends atoum
         $this
             ->given(
                 $path = FIXTURES_DIR . '/package/package.xml',
-                $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
-		$this->calling($loader)->load = $package = new \mock\Pickle\Base\Interfaces\Package()
+                $loader = new \mock\Composer\Package\Loader\LoaderInterface()
             )
             ->if($this->newTestedInstance($loader))
             ->then
-                ->object($this->testedInstance->load($path))->isIdenticalTo($package)
+                ->exception(function () use ($path) {
+			$this->testedInstance->load($path);
+		})
             ->given($path = uniqid())
             ->then
                 ->exception(function () use ($path) {
