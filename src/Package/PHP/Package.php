@@ -36,14 +36,14 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $path = $release;
         }
 
-    /* Do subdir search */
-    if (!$this->extConfigIsIn($path)) {
-        $path = $this->locateSourceDirByExtConfig($path);
+        /* Do subdir search */
+        if (!$this->extConfigIsIn($path)) {
+            $path = $this->locateSourceDirByExtConfig($path);
 
-        if (null === $path) {
-            throw new \Exception('config*.(m4|w32) not found');
+            if (null === $path) {
+                throw new \Exception('config*.(m4|w32) not found');
+            }
         }
-    }
 
         return $path;
     }
