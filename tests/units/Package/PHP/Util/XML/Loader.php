@@ -12,7 +12,7 @@ class Loader extends atoum
             ->given(
                 $path = FIXTURES_DIR . '/package/package.xml',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
-                $this->calling($loader)->load = $package = new \mock\Composer\Package\PackageInterface()
+		$this->calling($loader)->load = $package = new \mock\Pickle\Base\Interfaces\Package()
             )
             ->if($this->newTestedInstance($loader))
             ->then
