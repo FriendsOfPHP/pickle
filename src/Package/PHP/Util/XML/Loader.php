@@ -51,12 +51,13 @@ class Loader
         if (!isset($xml->providesextension)) {
             throw new \Exception('not a PHP extension package.xml, providesextension tag missing');
         }
-        $authors = array_merge(
-            iterator_to_array($xml->lead),
-            iterator_to_array($xml->developer),
-            iterator_to_array($xml->contributor),
-            iterator_to_array($xml->helper)
-        );
+
+        $authors = array();
+        foreach (array($xml->lead, $xml->developer, $xml->contributor, $xml->helper) as $devs) {
+            foreach($devs as $dev) {
+                $authors[] = $dev;
+            }
+        }
 
         if (false === empty($authors)) {
             $package['authors'] = [];
