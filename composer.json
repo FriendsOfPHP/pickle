@@ -43,8 +43,8 @@
         }
     },
     "bin": ["bin/pickle"],
-    "scripts"     : {
-        "cs"  : "vendor/bin/php-cs-fixer --ansi fix --config=sf23"
+    "scripts": {
+        "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23"
     }
 
 }
