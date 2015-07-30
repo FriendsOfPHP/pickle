@@ -20,17 +20,17 @@
         "php": ">=5.4",
         "ext-zlib": "*",
         "ext-mbstring": "*",
-	"ext-simplexml": "*",
-	"ext-json": "*",
-	"ext-dom": "*",
-	"ext-openssl": "*",
-	"ext-zip": "*",
+        "ext-simplexml": "*",
+        "ext-json": "*",
+        "ext-dom": "*",
+        "ext-openssl": "*",
+        "ext-zip": "*",
         "symfony/console": "~2.5",
         "justinrainbow/json-schema": "~1.1",
         "composer/composer": "~1.0-alpha8"
     },
     "require-dev": {
-        "atoum/atoum": "~1.0",
+        "atoum/atoum": "~2.1",
         "atoum/praspel-extension": "~0.1",
         "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
@@ -43,8 +43,8 @@
         }
     },
     "bin": ["bin/pickle"],
-    "scripts"     : {
-        "cs"  : "vendor/bin/php-cs-fixer --ansi fix --config=sf23"
+    "scripts": {
+        "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23"
     }
 
 }
