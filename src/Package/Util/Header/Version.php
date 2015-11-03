@@ -90,14 +90,19 @@ class Version
     public function getVersionFromHeader()
     {
         $headers = glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
-        $pat = ',define\s+'.$this->macroName.'\s+"(.*)",i';
+
+        # Match versions surrounded by quotes and versions without quotes
+        $versionMatcher = '(".*"|.*\b)';
+        $pat = ',define\s+'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
+
         foreach ($headers as $header) {
             $headerContent = file_get_contents($header);
             if (!$headerContent) {
                 throw new \Exception("Could not read $header");
             }
             if (preg_match($pat, $headerContent, $result)) {
-                return $result[1];
+                # Remove any quote characters we may have matched on
+                return trim($result[1], '"');
             }
         }
         throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");
