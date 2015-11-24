@@ -103,7 +103,7 @@ class InstallerCommand extends BuildCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function binaryInstallWindows($path, $input, $output)
+    protected function binaryInstallWindows($path, InputInterface $input, OutputInterface $output)
     {
         $php = Engine::factory();
         $table = new Table($output);
@@ -194,7 +194,7 @@ class InstallerCommand extends BuildCommand
 
         $package = $this->getHelper('package')->convey($input, $output, $path);
 
-    /* TODO Info package command should be used here. */
+        /* TODO Info package command should be used here. */
         $this->getHelper('package')->showInfo($output, $package);
 
         list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);

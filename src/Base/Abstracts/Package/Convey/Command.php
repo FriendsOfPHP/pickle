@@ -58,10 +58,7 @@ abstract class Command
 
     abstract protected function prepare();
 
-    public function execute($target, $no_convert)
-    {
-        throw new \Exception('No command::execute implementation found ');
-    }
+    abstract public function execute($target, $no_convert);
 
     public function getPath()
     {

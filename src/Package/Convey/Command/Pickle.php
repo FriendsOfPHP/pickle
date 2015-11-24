@@ -36,7 +36,7 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Composer\Config;
+use Pickle\Config;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
 use Pickle\Package;

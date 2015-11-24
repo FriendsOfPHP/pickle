@@ -41,6 +41,12 @@ use Composer\IO\ConsoleIO;
 
 class Factory
 {
+    /**
+     * @param $type
+     * @param $path
+     * @param ConsoleIO $io
+     * @return \Pickle\Base\Abstracts\Package\Convey\Command
+     */
     public static function getCommand($type, $path, ConsoleIO $io)
     {
         switch ($type) {
