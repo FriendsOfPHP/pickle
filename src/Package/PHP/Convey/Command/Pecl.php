@@ -36,7 +36,7 @@
 
 namespace Pickle\Package\PHP\Convey\Command;
 
-use Composer\Config;
+use Pickle\Config;
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
 use Pickle\Package\PHP;
