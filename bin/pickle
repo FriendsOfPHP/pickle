@@ -1,26 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Component\Console\Input\InputArgument;
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-$required_exts = array(
-	"zlib",
-	"mbstring",
-	"simplexml",
-	"json",
-	"dom",
-	"openssl",
-	"phar",
-	"zip",
-);
-foreach ($required_exts as $ext) {
-	if (!extension_loaded($ext)) {
-		die("Extension '$ext' required but not loaded, full required list: " . implode(", ", $required_exts));
-	}
-}
 
 // application.php
 function includeIfExists($file)
@@ -32,22 +14,19 @@ if ((!$loader = includeIfExists(__DIR__.'/../vendor/autoload.php')) && (!$loader
     echo 'You must set up the project dependencies, run the following commands:'.PHP_EOL.
         'curl -sS https://getcomposer.org/installer | php'.PHP_EOL.
         'php composer.phar install'.PHP_EOL;
+
     exit(1);
 }
 
-use Pickle\Console\Command;
-use Pickle\Console\Helper;
-use Symfony\Component\Console\Application;
-
- if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-	$name = '
+if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+    $name = '
    ____  _      _    _
   |  _ \(_) ___| | _| | ___
   | |_) | |/ __| |/ / |/ _ \
   |  __/| | (__|   <| |  __/
   |_|   |_|\___|_|\_\_|\___| ';
  } else {
-	$name = '
+    $name = '
  ██████╗ ██╗ ██████╗██╗  ██╗██╗     ███████╗
  ██╔══██╗██║██╔════╝██║ ██╔╝██║     ██╔════╝
  ██████╔╝██║██║     █████╔╝ ██║     █████╗
@@ -55,22 +34,6 @@ use Symfony\Component\Console\Application;
  ██║     ██║╚██████╗██║  ██╗███████╗███████╗
  ╚═╝     ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝ ';
 }
-$application = new Application($name, "0.4.0-dev");
 
-$application->getHelperSet()->set(new \Pickle\Console\Helper\PackageHelper());
-
-$application->add(new Command\ValidateCommand);
-$application->add(new Command\ConvertCommand);
-$application->add(new Command\ReleaseCommand);
-$application->add(new Command\InstallerCommand);
-$application->add(new Command\InfoCommand);
-
-/* foreach ($application->all() as $cmd) {
-    $cmd->addOption('format', null, InputArgument::OPTIONAL, 'To output help in other formats', 'txt');
-} */
-
-foreach ($application->all() as $cmd) {
-    $cmd->addOption('tmp-dir', null, InputArgument::OPTIONAL, 'path to a custom temp dir', sys_get_temp_dir());
-}
-
+$application = new Pickle\Console\Application($name);
 $application->run();

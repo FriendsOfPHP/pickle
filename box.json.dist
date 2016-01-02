@@ -31,8 +31,7 @@
             "in": "vendor"
         }
     ],
-    "git-commit": "git-commit",
-    "git-version": "git-version",
+    "git-tag": "pickle-version",
     "main": "bin/pickle",
     "output": "pickle.phar",
     "stub": true
