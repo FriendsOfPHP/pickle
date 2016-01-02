@@ -36,7 +36,17 @@
 
 use mageekguy\atoum\visibility;
 
+if (getenv('TRAVIS_PHP_VERSION') === '7.0') {
+    $script
+        ->php('php -n -ddate.timezone=Europe/Paris')
+        ->noCodeCoverage()
+    ;
+} else {
+    $script->noCodeCoverageForNamespaces('Composer');
+}
+
 $script->addTestsFromDirectory(__DIR__ . '/tests/units');
-$script->noCodeCoverageForNamespaces('Composer');
-$runner->addExtension(new \Atoum\PraspelExtension\Manifest());
-$runner->addExtension(new visibility\extension($script));
+$runner
+    ->addExtension(new \Atoum\PraspelExtension\Manifest())
+    ->addExtension(new visibility\extension($script))
+;
