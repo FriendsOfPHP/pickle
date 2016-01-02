@@ -72,9 +72,9 @@ class ConvertCommand extends Command
         Util\TmpDir::set($input->getOption('tmp-dir'));
         $helper = $this->getHelper('package');
         $cb = function (\Pickle\Base\Interfaces\Package $package) use ($helper, $output) {
-        $output->writeln('<info>Successfully converted '.$package->getPrettyName().'</info>');
-        $helper->showInfo($output, $package);
-    };
+            $output->writeln('<info>Successfully converted '.$package->getPrettyName().'</info>');
+            $helper->showInfo($output, $package);
+        };
         $convert = Convert::factory($input->getArgument('path'), $cb);
         $convert->process();
     }

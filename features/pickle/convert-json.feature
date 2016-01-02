@@ -24,6 +24,13 @@ Feature: convert package.xml to composer.json
           <changelog></changelog>
       </package>
       """
+    And a file named "config.m4" with:
+      """
+      """
+    And a file named "dummy.h" with:
+      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """
 
   Scenario: Search package.xml in CWD
     When I run "pickle convert"
@@ -41,8 +48,7 @@ Feature: convert package.xml to composer.json
       {
           "name": "dummy",
           "type": "extension",
-          "stability": "beta",
-          "version": "3.1.15",
+          "version": "3.1.15-beta",
           "description": "This is a dummy package"
       }
       """
@@ -64,8 +70,7 @@ Feature: convert package.xml to composer.json
       {
           "name": "dummy",
           "type": "extension",
-          "stability": "beta",
-          "version": "3.1.15",
+          "version": "3.1.15-beta",
           "description": "This is a dummy package"
       }
       """

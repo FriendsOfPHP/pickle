@@ -38,6 +38,13 @@ Feature: convert package.xml to information files
           </developer>
       </package>
       """
+    And a file named "config.m4" with:
+      """
+      """
+    And a file named "dummy.h" with:
+      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """
 
   Scenario: Create information files
     When I run "pickle convert"
@@ -55,8 +62,7 @@ Feature: convert package.xml to information files
       {
           "name": "dummy",
           "type": "extension",
-          "stability": "beta",
-          "version": "3.1.15",
+          "version": "3.1.15-beta",
           "description": "This is a dummy package",
           "license": [
               "PHP License"

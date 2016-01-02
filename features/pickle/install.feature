@@ -26,6 +26,10 @@ Feature: Install pickle package
       PHP_ARG_ENABLE(dummy, whether to enable dummy support,
       [  --enable-dummy           Enable dummy support])
       """
+    And a file named "dummy.h" with:
+      """
+      #define PHP_DUMMY_VERSION "1.0.0"
+      """
 
   Scenario: Install from CWD
     When I run "pickle install --dry-run"
