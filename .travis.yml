@@ -15,7 +15,7 @@ matrix:
     - php: hhvm-nightly
 
 before_script:
-  - git fetch --tags
+  - git fetch --unshallow --tags
   - composer install --prefer-source
   - composer global require 'kherge/box=~2.4' --prefer-source
   - wget https://scrutinizer-ci.com/ocular.phar
@@ -23,7 +23,7 @@ before_script:
 script:
   - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
   - composer install --no-dev --optimize-autoloader
-  - ~/.composer/vendor/bin/box build --always
+  - ~/.composer/vendor/bin/box build
   - composer install
   - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
 
