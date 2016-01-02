@@ -21,8 +21,8 @@ Feature: download and install extensions from git repository
 
     Examples:
       | url                                 | extension |
-      | git://github.com/krakjoe/apcu.git   | apcu      |
-      | https://github.com/krakjoe/apcu.git | apcu      |
+      | git://github.com/beberlei/env.git   | env       |
+      | https://github.com/beberlei/env.git | env       |
 
   Scenario Outline: Install extensions from git with version constraint
     Given I run "pickle install <url>#<version> --dry-run"
@@ -42,8 +42,8 @@ Feature: download and install extensions from git repository
 
     Examples:
       | url                                 | extension | version |
-      | git://github.com/krakjoe/apcu.git   | apcu      | master  |
-      | https://github.com/krakjoe/apcu.git | apcu      | v4.0.6  |
+      | git://github.com/beberlei/env.git   | env       | master  |
+      | https://github.com/beberlei/env.git | env       | v0.2.1  |
 
   Scenario Outline: Show info about downloaded extensions
     Given I run "pickle info <url>"
@@ -63,8 +63,8 @@ Feature: download and install extensions from git repository
 
     Examples:
       | url                                 | extension |
-      | git://github.com/krakjoe/apcu.git   | apcu      |
-      | https://github.com/krakjoe/apcu.git | apcu      |
+      | git://github.com/beberlei/env.git   | env       |
+      | https://github.com/beberlei/env.git | env       |
 
   Scenario Outline: Show info about extensions with version constraint
     Given I run "pickle info <url>#<version>"
@@ -84,5 +84,5 @@ Feature: download and install extensions from git repository
 
     Examples:
       | url                                 | extension | version |
-      | git://github.com/krakjoe/apcu.git   | apcu      | master  |
-      | https://github.com/krakjoe/apcu.git | apcu      | v4.0.6  |
+      | git://github.com/beberlei/env.git   | env       | master  |
+      | https://github.com/beberlei/env.git | env       | v0.2.1  |

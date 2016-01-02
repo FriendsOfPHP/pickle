@@ -24,6 +24,13 @@ Feature: validate package.xml
           <changelog></changelog>
       </package>
       """
+    And a file named "config.m4" with:
+      """
+      """
+    And a file named "dummy.h" with:
+      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """
 
   Scenario: Search package.xml in CWD
     When I run "pickle validate"
