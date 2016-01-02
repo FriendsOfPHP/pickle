@@ -28,3 +28,13 @@ script:
 
 after_script:
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+deploy:
+  provider: releases
+  api_key:
+    secure: S5zmtkDizyJpPIVpJeTuLpLC4/AM5SILXR37wbdIo5GY2yWIdDDZqZ19J5cy0SmqSuYjdYjg8XHQtv0CsZv8gxQX120o/ODwzAtUlPb0PyTvIU2fKaHw8Dcj4ZP/NC9DIItwUYP1JfxubP1sKWPl/GUiZr4HB2ufhUEShWbX0q0=
+  file: pickle.phar
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: FriendsOfPHP/pickle
