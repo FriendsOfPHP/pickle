@@ -46,6 +46,10 @@ class Engine
     public static function factory($phpcli = NULL)
     {
         if (null == self::$instance) {
+            if (!phpcli) {
+                $phpcli = PHP_BINARY;
+            }
+
             if (defined('HHVM_VERSION')) {
                 /* This needs to be checked first, PHP_VERSION is
                    defined in HHVM. */
