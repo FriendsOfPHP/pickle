@@ -158,11 +158,23 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
+
+        /* Record the produced DLL filenames. */
+        $files = (array)glob("*/*/php_*.dll");
+        $files = array_merge($files, glob("*/php_*.dll"));
+        $dlls = [];
+        foreach ($files as $file) {
+            $dlls[] = basename($file);
+        }
+
         $res = $this->runCommand('nmake install');
         chdir($backCwd);
         if (!$res) {
             throw new \Exception('nmake install failed');
         }
+
+        $ini = \Pickle\Engine\Ini::factory(Engine::factory());
+        $ini->updatePickleSection($dlls);
     }
 
     public function getInfo()
