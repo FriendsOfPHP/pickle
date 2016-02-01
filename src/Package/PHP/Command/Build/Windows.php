@@ -38,6 +38,7 @@ namespace Pickle\Package\PHP\Command\Build;
 
 use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Engine;
 
 class Windows extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
@@ -106,6 +107,9 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
                 $configureOptions .= ' --'.$decision.'-'.$name;
             }
         }
+
+        $php_prefix = dirname(Engine::factory()->getPath());
+        $configureOptions .= " --with-prefix=$php_prefix";
 
         $this->appendPkgConfigureOptions($configureOptions);
 
