@@ -108,7 +108,7 @@ class PackageXml
         }
 
         $dumper = new Dumper();
-        $dumper->dumpToFile($this->package, $this->jsonPath);
+        $dumper->dumpToFile($this->package, $this->jsonPath, false);
     }
 
     public function getPackage()

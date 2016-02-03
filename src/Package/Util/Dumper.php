@@ -45,16 +45,18 @@ class Dumper
      *
      * @return array
      */
-    public function dump(Interfaces\Package $package)
+    public function dump(Interfaces\Package $package, $with_version = true)
     {
         $data = [];
 
         $data['name'] = $package->getPrettyName();
 
-        $stability = $package->getStability();
-        /* not appending stable is ok */
-        $version_tail = $stability && 'stable' != $stability ? "-$stability" : '';
-        $data['version'] = $package->getPrettyVersion().$version_tail;
+        if ($with_version) {
+            $stability = $package->getStability();
+            /* not appending stable is ok */
+            $version_tail = $stability && 'stable' != $stability ? "-$stability" : '';
+            $data['version'] = $package->getPrettyVersion().$version_tail;
+        }
 
         $data['type'] = $package->getType();
 

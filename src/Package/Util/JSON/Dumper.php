@@ -46,18 +46,18 @@ class Dumper
      *
      * @return string
      */
-    public function dump(Interfaces\Package $package)
+    public function dump(Interfaces\Package $package, $with_version = true)
     {
-        return json_encode((new Util\Dumper())->dump($package), JSON_PRETTY_PRINT);
+        return json_encode((new Util\Dumper())->dump($package, $with_version), JSON_PRETTY_PRINT);
     }
 
     /**
      * @param \Pickle\Base\Interfaces\Package $package
      * @param string                          $path
      */
-    public function dumpToFile(Interfaces\Package $package, $path)
+    public function dumpToFile(Interfaces\Package $package, $path, $with_version = true)
     {
-        file_put_contents($path, $this->dump($package));
+        file_put_contents($path, $this->dump($package, $with_version));
     }
 }
 
