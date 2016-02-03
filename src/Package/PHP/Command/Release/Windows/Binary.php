@@ -112,6 +112,9 @@ class Binary implements Interfaces\Package\Release
 
         $package->setRootDir(realpath($path));
 
+        /* For the binary release, json badly need the version informatio
+           to show the meta info. If there's ever a binary release support
+           for other platforms, this will need to be done, probably. */
         (new Header\Version($package))->updateJSON();
 
         return $package;

@@ -40,6 +40,7 @@ use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
 use Pickle\Package\Util\Header;
+use Composer\Package\Version\VersionParser;
 
 class Release implements Interfaces\Package\Release
 {
@@ -107,7 +108,12 @@ class Release implements Interfaces\Package\Release
 
         $package->setRootDir(realpath($path));
 
-        (new Header\Version($package))->updateJSON();
+        /* We're not adding any versions into the composer.json for the source release.
+           Instead we just set the package version and that's it. The version is to be
+           contained in the extension sources, so no need to maintain it more than once.
+           */
+        $version = new Header\Version($package);
+        $package->replaceVersion((new VersionParser())->normalize($version), $version);
 
         return $package;
     }
