@@ -1,0 +1,14 @@
+some.stuff = hello
+
+;Pickle installed extension, do not edit this line and below
+extension=php_apcu.dll
+; some stuff
+;
+extension=php_rar.dll
+extension=php_deleteme.dll
+;Pickle installed extension, do not edit this line and above
+
+someother.stuff = 42
+; comment here
+
+
