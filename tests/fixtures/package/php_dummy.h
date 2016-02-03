@@ -1,0 +1,2 @@
+
+#define PHP_DUMMY_VERSION "3.1.15"
