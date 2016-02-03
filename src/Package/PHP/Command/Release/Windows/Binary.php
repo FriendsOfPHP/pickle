@@ -77,6 +77,31 @@ class Binary implements Interfaces\Package\Release
         $this->noConvert = $noConvert;
     }
 
+    public function __destruct()
+    {
+        $this->composerJsonBak($this->pkg, true);
+    }
+
+    protected function composerJsonBak(\Pickle\Base\Interfaces\Package $pkg, $restore = false)
+    {
+        $composer_json_orig = $pkg->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
+        $composer_json_bak = $pkg->getRootDir().DIRECTORY_SEPARATOR.'.composer.json.orig';
+
+        if ($restore) {
+            if (file_exists($composer_json_bak)) {
+                if (!copy($composer_json_bak, $composer_json_orig)) {
+                    throw new \Exception("Failed to restore composer.json");
+                }
+            }
+        } else {
+            if (file_exists($composer_json_orig)) {
+                if (!copy($composer_json_orig, $composer_json_bak)) {
+                    throw new \Exception("Failed to backup composer.json");
+                }
+            }
+        }
+    }
+
     protected function readPackage($path)
     {
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
@@ -111,6 +136,8 @@ class Binary implements Interfaces\Package\Release
         }
 
         $package->setRootDir(realpath($path));
+
+        $this->composerJsonBak($package);
 
         /* For the binary release, json badly need the version informatio
            to show the meta info. If there's ever a binary release support
