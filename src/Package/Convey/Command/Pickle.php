@@ -55,10 +55,15 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     {
         $extensionJson = @file_get_contents('http://localhost:8080/json/'.$this->name.'.json');
         if (!$extensionJson) {
-            if (strpos($http_response_header[0], '404') !== false) {
+            $status = isset($http_response_header[0]) ? $http_response_header[0] : "";
+            if (strpos($status, '404') !== false) {
                 throw new \Exception("cannot find $this->name");
             } else {
-                throw new \Exception("http error while loading informatio for $this->name: ".$http_response_header[0]);
+                if ($status) {
+                    throw new \Exception("http error while loading informatio for $this->name: ".$status);
+                } else {
+                    throw new \Exception("http error while loading informatio for $this->name: unknown error");
+                }
             }
         }
 
