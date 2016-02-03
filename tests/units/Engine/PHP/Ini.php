@@ -95,6 +95,13 @@ class Ini extends atoum
         $this->do_testupdatePickleSection($f);
     }
 
+    public function testupdatePickleSection_simple_delete()
+    {
+        /* simple file with correct pickle section */
+        $f = FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.simple.delete";
+        $this->do_testupdatePickleSection_delete($f);
+    }
+
     protected function do_testupdatePickleSection($orig)
     {
         $fl = "$orig.test";
@@ -113,12 +120,30 @@ class Ini extends atoum
         unlink($fl);
     }
 
+    protected function do_testupdatePickleSection_delete($orig)
+    {
+        $fl = "$orig.test";
+        $fl_exp = "$orig.exp";
+        copy($orig, $fl);
+
+        $php = $this->getEngineMock($fl);
+
+        $ini = new \Pickle\Engine\PHP\Ini($php);
+        $ini->updatePickleSection(array(), array("php_deleteme.dll", "php_deletemetoo.dll"));
+
+        $this
+            ->string(file_get_contents($fl))
+                ->isEqualToContentsOfFile($fl_exp);
+
+        unlink($fl);
+    }
+
     public function testrebuildPickleParts_0()
     {
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
         $in  = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
-        $exp = "extension=php_a.dll\nextension=php_b.dll";
+        $exp  = "extension=php_a.dll\nextension=php_b.dll\nextension=php_c.dll";
 
         $this
             ->if($ini = new \Pickle\Engine\PHP\Ini($php))
@@ -133,13 +158,43 @@ class Ini extends atoum
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
         $in  = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
-        $exp = "extension=php_a.dll\nextension=php_c.dll";
+        $exp = "extension=php_a.dll\nextension=php_b.dll\nextension=php_c.dll";
 
         $this
             ->if($ini = new \Pickle\Engine\PHP\Ini($php))
             ->then
                 ->string(
                     $this->invoke($ini)->rebuildPickleParts($in, array("php_b.dll"))
+                )->isEqualTo($exp);
+    }
+
+    public function testrebuildPickleParts_2()
+    {
+        $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
+
+        $in  = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
+        $exp = "extension=php_a.dll\nextension=php_b.dll";
+
+        $this
+            ->if($ini = new \Pickle\Engine\PHP\Ini($php))
+            ->then
+                ->string(
+                    $this->invoke($ini)->rebuildPickleParts($in, array(), array("php_c.dll"))
+                )->isEqualTo($exp);
+    }
+
+    public function testrebuildPickleParts_3()
+    {
+        $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
+
+        $in  = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
+        $exp = "extension=php_a.dll\nextension=php_c.dll";
+
+        $this
+            ->if($ini = new \Pickle\Engine\PHP\Ini($php))
+            ->then
+                ->string(
+                    $this->invoke($ini)->rebuildPickleParts($in, array(), array("php_b.dll"))
                 )->isEqualTo($exp);
     }
 }
