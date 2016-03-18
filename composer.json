@@ -25,7 +25,7 @@
         "ext-dom": "*",
         "ext-openssl": "*",
         "ext-zip": "*",
-        "symfony/console": "~2.5",
+        "symfony/console": "~2.5|~3.0",
         "justinrainbow/json-schema": "~1.5",
         "composer/composer": "~1.0-alpha8",
         "padraic/phar-updater": "~1.0@dev"
