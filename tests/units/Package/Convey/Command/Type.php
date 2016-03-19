@@ -119,7 +119,7 @@ class Type extends atoum
         $this
             ->string(Command\Type::determine("https://github.com/DomBlack/php-scrypt/archive/v1.2.tar.gz", true))
                 ->isIdenticalTo(Command\Type::TGZ)
-            ->string(Command\Type::determine("http://pecl.php.net/get/sync-1.0.1.tgz", true))
+            ->string(Command\Type::determine("https://pecl.php.net/get/sync-1.0.1.tgz", true))
                 ->isIdenticalTo(Command\Type::TGZ)
             ->string(Command\Type::determine("some_ext-1.2.3a.tgz", false))
                 ->isIdenticalTo(Command\Type::TGZ);

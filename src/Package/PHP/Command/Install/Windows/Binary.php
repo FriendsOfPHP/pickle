@@ -254,7 +254,7 @@ class Binary
      */
     private function getInfoFromPecl()
     {
-        $url = 'http://pecl.php.net/get/'.$this->extName;
+        $url = 'https://pecl.php.net/get/'.$this->extName;
         $headers = get_headers($url);
 
         if (strpos($headers[0], '404') !== false) {

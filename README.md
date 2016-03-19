@@ -20,6 +20,8 @@ Pickle fully supports existing extensions in http://pecl.php.net, running the fo
 $ bin/pickle install memcache
 ```
 
+Use the sudo command on Mac or Linux if you are having problems with the install.
+
 Windows is fully supported, to install binaries or from the sources (work in progress and given that you have a working build environment in place).
 
 The concept behind Pickle is to ease the life of both developers and end users.
