@@ -58,6 +58,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 
     /**
      * @param string $src
+     * @param string $dest
      */
     private function copySrcDir($src, $dest)
     {

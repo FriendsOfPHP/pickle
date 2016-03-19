@@ -41,6 +41,10 @@ use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
 use Pickle\Package\Util\Header;
 
+/**
+ * Class Binary
+ * @package Pickle\Package\PHP\Command\Release\Windows
+ */
 class Binary implements Interfaces\Package\Release
 {
     /**
@@ -48,17 +52,17 @@ class Binary implements Interfaces\Package\Release
      */
     protected $pkg = null;
 
-    /*
-     * @var Closure
+    /**
+     * @var null|\Closure
      */
     protected $cb = null;
 
-    /*
+    /**
      * @var bool
      */
     protected $noConvert = false;
 
-    /*
+    /**
      * @var Interfaces\Package\Build
      */
     protected $build;
@@ -67,7 +71,7 @@ class Binary implements Interfaces\Package\Release
      * Constructor.
      *
      * @param string  $path
-     * @param Closure $cb
+     * @param \Closure|null $cb
      * @param bool    $noConvert
      */
     public function __construct($path, $cb = null, $noConvert = false)
@@ -77,11 +81,19 @@ class Binary implements Interfaces\Package\Release
         $this->noConvert = $noConvert;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function __destruct()
     {
         $this->composerJsonBak($this->pkg, true);
     }
 
+    /**
+     * @param Interfaces\Package $pkg
+     * @param bool $restore
+     * @throws \Exception
+     */
     protected function composerJsonBak(\Pickle\Base\Interfaces\Package $pkg, $restore = false)
     {
         $composer_json_orig = $pkg->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
@@ -102,6 +114,11 @@ class Binary implements Interfaces\Package\Release
         }
     }
 
+    /**
+     * @param $path
+     * @return null|Package\Util\JSON\Pickle\Base\Interfaces\Package
+     * @throws \Exception
+     */
     protected function readPackage($path)
     {
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
@@ -125,7 +142,7 @@ class Binary implements Interfaces\Package\Release
                 $jsonPath = $pkgXml->getJsonPath();
 
                 $package = $jsonLoader->load($jsonPath);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 /* pass for now, be compatible */
             }
         }
@@ -147,6 +164,10 @@ class Binary implements Interfaces\Package\Release
         return $package;
     }
 
+    /**
+     * @param Interfaces\Package\Build $build
+     * @return string
+     */
     protected function getZipBaseName(Interfaces\Package\Build $build)
     {
         $info = $build->getInfo();
@@ -162,6 +183,7 @@ class Binary implements Interfaces\Package\Release
 
     /**
      * Create package.
+     * @param array $args
      */
     public function create(array $args = array())
     {
@@ -250,6 +272,10 @@ class Binary implements Interfaces\Package\Release
         $zip->close();
     }
 
+    /**
+     * @param Interfaces\Package\Build|null $build
+     * @return string
+     */
     public function packLog(Interfaces\Package\Build $build = null)
     {
         if (!$build) {
@@ -263,6 +289,9 @@ class Binary implements Interfaces\Package\Release
         return realpath($path);
     }
 
+    /**
+     * @return array
+     */
     public function getMultiExtensionNames()
     {
         $info = $this->build->getInfo();

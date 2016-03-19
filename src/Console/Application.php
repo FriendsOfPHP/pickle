@@ -5,11 +5,27 @@ namespace Pickle\Console;
 use Symfony\Component\Console\Application as BaseApplication;
 use Pickle\Console\Helper;
 
+/**
+ * Class Application
+ * @package Pickle\Console
+ */
 class Application extends BaseApplication
 {
+    /**
+     *
+     */
     const NAME = 'pickle';
+
+    /**
+     *
+     */
     const VERSION = '@pickle-version@';
 
+    /**
+     * Application constructor.
+     * @param null $name
+     * @param null $version
+     */
     public function __construct($name = null, $version = null)
     {
         self::checkExtensions();
@@ -17,6 +33,9 @@ class Application extends BaseApplication
         parent::__construct($name ?: static::NAME, $version ?: (static::VERSION === '@' . 'pickle-version@' ? 'source' : static::VERSION));
     }
 
+    /**
+     * @return \Symfony\Component\Console\Helper\HelperSet
+     */
     protected function getDefaultHelperSet()
     {
         $helperSet = parent::getDefaultHelperSet();
@@ -26,6 +45,9 @@ class Application extends BaseApplication
         return $helperSet;
     }
 
+    /**
+     * @return array|\Symfony\Component\Console\Command\Command[]
+     */
     protected function getDefaultCommands()
     {
         $commands = parent::getDefaultCommands();
@@ -43,6 +65,9 @@ class Application extends BaseApplication
         return $commands;
     }
 
+    /**
+     *
+     */
     private static function checkExtensions()
     {
         $required_exts = array(

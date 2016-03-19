@@ -58,6 +58,7 @@ abstract class Build
     /**
      * @param int    $level
      * @param string $msg
+     * @param string $hint
      */
     public function log($level, $msg, $hint = '')
     {

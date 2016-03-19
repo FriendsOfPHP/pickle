@@ -51,7 +51,7 @@ class Loader
 
     /**
      * @param string $path
-     *
+     * @throws \InvalidArgumentException|\RuntimeException|\Exception
      * @return Pickle\Base\Interfaces\Package
      */
     public function load($path)

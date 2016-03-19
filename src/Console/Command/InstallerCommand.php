@@ -113,6 +113,7 @@ class InstallerCommand extends BuildCommand
      * @param string          $path
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \Exception
      */
     protected function binaryInstallWindows($path, InputInterface $input, OutputInterface $output)
     {

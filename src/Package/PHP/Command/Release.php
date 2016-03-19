@@ -42,6 +42,10 @@ use Pickle\Package\PHP\Util\PackageXml;
 use Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
 
+/**
+ * Class Release
+ * @package Pickle\Package\PHP\Command
+ */
 class Release implements Interfaces\Package\Release
 {
     /**
@@ -49,8 +53,8 @@ class Release implements Interfaces\Package\Release
      */
     protected $pkg = null;
 
-    /*
-     * @var Closure
+    /**
+     * @var null|\Closure
      */
     protected $cb = null;
 
@@ -63,7 +67,7 @@ class Release implements Interfaces\Package\Release
      * Constructor.
      *
      * @param string  $path
-     * @param Closure $cb
+     * @param \Closure|null $cb
      * @param bool    $noConvert
      */
     public function __construct($path, $cb = null, $noConvert = false)
@@ -73,6 +77,11 @@ class Release implements Interfaces\Package\Release
         $this->noConvert = $noConvert;
     }
 
+    /**
+     * @param $path
+     * @return null|Package\Util\JSON\Pickle\Base\Interfaces\Package
+     * @throws \Exception
+     */
     protected function readPackage($path)
     {
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
@@ -120,6 +129,7 @@ class Release implements Interfaces\Package\Release
 
     /**
      * Create package.
+     * @param array $args
      */
     public function create(array $args = array())
     {
@@ -155,6 +165,9 @@ class Release implements Interfaces\Package\Release
         }
     }
 
+    /**
+     *
+     */
     public function packLog()
     {
         /* pass, no logging seems to be happening here yet */

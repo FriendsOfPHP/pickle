@@ -9,10 +9,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Humbug\SelfUpdate\Updater;
 use Humbug\SelfUpdate\Exception;
 
+/**
+ * Class SelfUpdateCommand
+ * @package Pickle\Console\Command
+ */
 class SelfUpdateCommand extends Command
 {
+    /**
+     *
+     */
     const PHAR_NAME = 'pickle.phar';
 
+    /**
+     *
+     */
     protected function configure()
     {
         $this
@@ -27,6 +37,10 @@ class SelfUpdateCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $updater = new Updater(null, false, Updater::STRATEGY_GITHUB);

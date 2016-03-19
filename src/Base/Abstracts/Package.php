@@ -40,8 +40,15 @@ use Composer\Package\CompletePackage;
 use Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
 
+/**
+ * Class Package
+ * @package Pickle\Base\Abstracts
+ */
 class Package extends CompletePackage
 {
+    /**
+     * @return string
+     */
     public function getSimpleName()
     {
         $full_name = $this->getName();
@@ -53,6 +60,9 @@ class Package extends CompletePackage
         return $m[2];
     }
 
+    /**
+     *
+     */
     public function getVendorName()
     {
         $full_name = $this->getName();
@@ -64,6 +74,9 @@ class Package extends CompletePackage
         return $m[1];
     }
 
+    /**
+     * @return string
+     */
     public function getUniqueNameForFs()
     {
         return sha1($this->getUniqueName());
@@ -73,6 +86,9 @@ class Package extends CompletePackage
         other engines. Lets see if this is needed to be
         moved into the Interface so each engines package
         is forced to implement it on its own. But so far ... */
+    /**
+     *
+     */
     public function updateVersion()
     {
         /* Be sure package root is set before! */

@@ -50,8 +50,8 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     /**
      * @param string $pickleSection
-     * @param array  $dlls
-     *
+     * @param array  $dlls_add
+     * @param array $dlls_del
      * @return string
      */
     protected function rebuildPickleParts($pickleSection, array $dlls_add, array $dlls_del = array())

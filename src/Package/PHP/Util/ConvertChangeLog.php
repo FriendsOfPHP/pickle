@@ -36,9 +36,19 @@
 
 namespace Pickle\Package\PHP\Util;
 
+/**
+ * Class ConvertChangeLog
+ * @package Pickle\Package\PHP\Util
+ */
 class ConvertChangeLog
 {
+    /**
+     * @var string
+     */
     private $path;
+    /**
+     * @var
+     */
     private $changelog;
 
     /**
@@ -53,6 +63,9 @@ class ConvertChangeLog
         $this->path = $path;
     }
 
+    /**
+     *
+     */
     public function parse()
     {
         $xml = @simplexml_load_file($this->path);
@@ -76,6 +89,9 @@ class ConvertChangeLog
         $this->changelog = $changelog;
     }
 
+    /**
+     *
+     */
     public function generateReleaseFile()
     {
         if (empty($this->changelog)) {

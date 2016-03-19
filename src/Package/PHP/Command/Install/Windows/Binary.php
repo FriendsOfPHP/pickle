@@ -95,6 +95,8 @@ class Binary
 
     /**
      * @param string $url
+     * @param string $toFind
+     * @return mixed
      */
     private function findInLinks($url, $toFind)
     {

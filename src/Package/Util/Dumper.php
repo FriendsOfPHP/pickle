@@ -42,6 +42,7 @@ class Dumper
 {
     /**
      * @param \Pickle\Base\Interfaces\Package $package
+     * @param bool $with_version
      *
      * @return array
      */

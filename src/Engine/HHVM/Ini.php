@@ -50,7 +50,8 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     /**
      * @param string $pickleSection
-     * @param array  $dsos
+     * @param array  $dsos_add
+     * @param array $dsos_del
      *
      * @return string
      */

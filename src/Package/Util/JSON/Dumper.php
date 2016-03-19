@@ -43,7 +43,7 @@ class Dumper
 {
     /**
      * @param \Pickle\Base\Interfaces\Package $package
-     *
+     * @param bool $with_version
      * @return string
      */
     public function dump(Interfaces\Package $package, $with_version = true)
@@ -53,6 +53,8 @@ class Dumper
 
     /**
      * @param \Pickle\Base\Interfaces\Package $package
+     * @param string $path
+     * @param bool $with_version
      * @param string                          $path
      */
     public function dumpToFile(Interfaces\Package $package, $path, $with_version = true)

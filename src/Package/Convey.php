@@ -41,10 +41,22 @@ use Pickle\Package\Convey\Command\Factory;
 use Pickle\Package\Convey\Command\Type;
 use Pickle\Base\Util;
 
+/**
+ * Class Convey
+ * @package Pickle\Package
+ */
 class Convey
 {
+    /**
+     * @var \Pickle\Base\Abstracts\Package\Convey\Command
+     */
     protected $command;
 
+    /**
+     * Convey constructor.
+     * @param $path
+     * @param ConsoleIO $io
+     */
     public function __construct($path, ConsoleIO $io)
     {
         if (!$path) {
@@ -55,6 +67,11 @@ class Convey
         $this->command = Factory::getCommand($type, $path, $io);
     }
 
+    /**
+     * @param string $target
+     * @param bool $no_convert
+     * @return mixed
+     */
     public function deliver($target = '', $no_convert = false)
     {
         $target = $target ? realpath($target) : Util\TmpDir::get().DIRECTORY_SEPARATOR.$this->command->getName();

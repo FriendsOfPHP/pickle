@@ -39,6 +39,10 @@ namespace Pickle\Package\PHP;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Util\GitIgnore;
 
+/**
+ * Class Package
+ * @package Pickle\Package\PHP
+ */
 class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
 {
     /**
@@ -58,7 +62,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
 
     /**
      * Get the package's root directory.
-     *
+     * @throws \Exception
      * @return string
      */
     public function getSourceDir()
@@ -92,12 +96,16 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         $this->path = $path;
     }
 
+    /**
+     * @param $stability
+     */
     public function setStability($stability)
     {
         $this->stability = $stability;
     }
 
     /**
+     * @throws \Exception
      * @return array
      */
     public function getConfigureOptions()
@@ -130,6 +138,10 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         return $options;
     }
 
+    /**
+     * @param $file
+     * @return array
+     */
     public function getConfigureOptionsFromFile($file)
     {
         $config = file_get_contents($file);
@@ -281,6 +293,10 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         );
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function getVersionFromHeader()
     {
         $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
@@ -306,6 +322,10 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         return [trim($version_define), $version];
     }
 
+    /**
+     * @param $path
+     * @return bool
+     */
     protected function extConfigIsIn($path)
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
@@ -317,6 +337,9 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         }
     }
 
+    /**
+     * @param $path
+     */
     protected function locateSourceDirByExtConfig($path)
     {
         $it = new \RecursiveIteratorIterator(

@@ -98,8 +98,8 @@ class PackageHelper extends Helper
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param $url
-     * @param $path
+     * @param string $path
+     * @param $target
      *
      * @return Pickle\Base\Interfaces\Package
      */
