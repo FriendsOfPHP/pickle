@@ -40,7 +40,7 @@ $ composer install
 
 A [phar is also available](https://github.com/FriendsOfPHP/pickle/releases/download/v0.2.0/pickle.phar).
 
-If you like to create your own phar from the pickle sources, you will need to install Box (http://box-project.org/). Then clone the repository and run the following commands:
+If you like to create your own phar from the pickle sources, you will need to install Box (http://box-project.github.io/box2/). Then clone the repository and run the following commands:
 
 ```sh
 $ cd pickle
