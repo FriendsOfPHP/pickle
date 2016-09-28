@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pickle
+ * Pickle.
  *
  *
  * @license
@@ -36,10 +36,15 @@
 
 namespace Pickle\Package\PHP;
 
-use Pickle\Base\Abstracts;
+use Pickle\Base\Abstracts\Package as AbstractPackage;
+use Pickle\Base\Interfaces\Package as PackageInterface;
 use Pickle\Base\Util\GitIgnore;
+use Exception;
+use CallbackFilterIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
-class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
+class Package extends AbstractPackage implements PackageInterface
 {
     /**
      * @var string Package's root directory
@@ -60,6 +65,8 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
      * Get the package's root directory.
      *
      * @return string
+     *
+     * @throws Exception
      */
     public function getSourceDir()
     {
@@ -70,12 +77,12 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $path = $release;
         }
 
-        /* Do subdir search */
+        /* Do sub directory search */
         if (!$this->extConfigIsIn($path)) {
             $path = $this->locateSourceDirByExtConfig($path);
 
             if (null === $path) {
-                throw new \Exception('config*.(m4|w32) not found');
+                throw new Exception('config*.(m4|w32) not found');
             }
         }
 
@@ -98,33 +105,39 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     }
 
     /**
+     * Get configure options.
+     *
      * @return array
+     *
+     * @throws Exception
      */
     public function getConfigureOptions()
     {
         $options = [];
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $config_file = $this->getSourceDir().'/config.w32';
+            $configFile = $this->getSourceDir().'/config.w32';
 
-            if (!file_exists($config_file)) {
-                throw new \Exception('cnofig.w32 not found');
+            if (!file_exists($configFile)) {
+                throw new Exception('config.w32 not found');
             }
 
-            $config = file_get_contents($config_file);
+            $config = file_get_contents($configFile);
 
-            $options = array_merge(
+            return array_merge(
                 $this->fetchArgWindows('ARG_WITH', $config),
                 $this->fetchArgWindows('ARG_ENABLE', $config)
             );
-        } else {
-            $configs = glob($this->getSourceDir().'/'.'config*.m4');
+        }
 
-            if (!empty($configs)) {
-                foreach ($configs as $config) {
-                    $options = array_merge($options, $this->getConfigureOptionsFromFile($config));
-                }
-            }
+        $configs = glob($this->getSourceDir().'/'.'config*.m4');
+
+        if (!$configs) {
+            return $options;
+        }
+
+        foreach ($configs as $config) {
+            $options = array_merge($options, $this->getConfigureOptionsFromFile($config));
         }
 
         return $options;
@@ -153,6 +166,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         $next = 0;
         $options = [];
         $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
+
         while (false !== ($s = strpos($config, $which, $next))) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
@@ -171,6 +185,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
                 'type' => $type,
                 'default' => $default,
             ];
+
             $next = $e + 1;
         }
 
@@ -194,9 +209,9 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-            if ('enable' == $type) {
+            if ('enable' === $type) {
                 $default = (false !== strpos($option, '-disable-')) ? true : false;
-            } elseif ('with' == $type) {
+            } elseif ('with' === $type) {
                 $default = (false !== strpos($option, '-without-')) ? true : false;
             }
 
@@ -249,9 +264,9 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
                 $desc = trim(substr($desc, $s_a));
             }
 
-            if ('enable' == $type) {
+            if ('enable' === $type) {
                 $default = (false !== strpos($option, '-disable-')) ? true : false;
-            } elseif ('with' == $type) {
+            } elseif ('with' === $type) {
                 $default = (false !== strpos($option, '-without-')) ? true : false;
             }
             $name = str_replace(['[', ']'], ['', ''], $name);
@@ -269,13 +284,13 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     /**
      * Get files, will not return gitignore files.
      *
-     * @return \CallbackFilterIterator
+     * @return CallbackFilterIterator
      */
     public function getFiles()
     {
-        return new \CallbackFilterIterator(
-            new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($this->getSourceDir())
+        return new CallbackFilterIterator(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($this->getSourceDir())
             ),
             new GitIgnore($this)
         );
@@ -284,53 +299,54 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     public function getVersionFromHeader()
     {
         $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
-        $version_define = 'PHP_'.strtoupper($this->getSimpleName()).'_VERSION';
+        $versionDefine = 'PHP_'.strtoupper($this->getSimpleName()).'_VERSION';
+
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);
             if (!$contents) {
-                throw new \Exception("Cannot read header <$header>");
+                throw new Exception("Cannot read header <$header>");
             }
-            $pos_version = strpos($contents, $version_define);
-            if ($pos_version !== false) {
-                $nl = strpos($contents, "\n", $pos_version);
-                $version_line = trim(substr($contents, $pos_version, $nl - $pos_version));
-                list($version_define, $version) = explode(' ', $version_line);
+
+            $posVersion = strpos($contents, $versionDefine);
+            if ($posVersion !== false) {
+                $nl = strpos($contents, "\n", $posVersion);
+                $versionLine = trim(substr($contents, $posVersion, $nl - $posVersion));
+                list($versionDefine, $version) = explode(' ', $versionLine);
                 $version = trim(str_replace('"', '', $version));
                 break;
             }
         }
+
         if (empty($version)) {
-            throw new \Exception('No '.$version_define.' can be found');
+            throw new Exception('No '.$versionDefine.' can be found');
         }
 
-        return [trim($version_define), $version];
+        return [trim($versionDefine), $version];
     }
 
     protected function extConfigIsIn($path)
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
             return file_exists(realpath($path).DIRECTORY_SEPARATOR.'config.w32');
-        } else {
-            $r = glob("$path/config*.m4");
-
-            return (is_array($r) && !empty($r));
         }
+
+        $r = glob("$path/config*.m4");
+
+        return is_array($r) && !empty($r);
     }
 
     protected function locateSourceDirByExtConfig($path)
     {
-        $it = new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($path),
-        \RecursiveIteratorIterator::SELF_FIRST
-    );
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
 
-        foreach ($it as $fl_obj) {
-            if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
-                return $fl_obj->getPath();
+        foreach ($iterator as $fileObj) {
+            if ($fileObj->isFile() && preg_match(',config*.(m4|w32),', $fileObj->getBasename())) {
+                return $fileObj->getPath();
             }
         }
-
-        return;
     }
 }
 
