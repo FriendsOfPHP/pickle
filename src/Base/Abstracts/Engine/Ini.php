@@ -36,6 +36,8 @@
 
 namespace Pickle\Base\Abstracts\Engine;
 
+use Pickle\Base\Interfaces\Engine;
+
 class Ini
 {
     protected $engine = null;
@@ -50,7 +52,7 @@ class Ini
     const PICKLE_HEADER = ';Pickle installed extension, do not edit this line and below';
     const PICKLE_FOOTER = ';Pickle installed extension, do not edit this line and above';
 
-    public function __construct(\Pickle\Base\Interfaces\Engine $php)
+    public function __construct(Engine $php)
     {
         $this->engine = $php;
         $this->path = $php->getIniPath();
@@ -61,7 +63,7 @@ class Ini
         }
     }
 
-    public function getengine()
+    public function getEngine()
     {
         return $this->engine;
     }
