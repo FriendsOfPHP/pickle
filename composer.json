@@ -36,7 +36,7 @@
         "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
         "symfony/process": "~2.5",
-        "fabpot/php-cs-fixer": "~1.7"
+        "friendsofphp/php-cs-fixer": "^1.12"
     },
     "autoload": {
         "psr-4": {
