@@ -40,7 +40,7 @@ use Composer\Package\CompletePackage;
 use Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
 
-class Package extends CompletePackage
+abstract class Package extends CompletePackage
 {
     public function getSimpleName()
     {
