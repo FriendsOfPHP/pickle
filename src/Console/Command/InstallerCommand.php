@@ -36,21 +36,19 @@
 
 namespace Pickle\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
-use Pickle\Base\Interfaces\Package;
 use Pickle\Base\Abstracts\Console\Command\BuildCommand;
 use Pickle\Engine;
 use Pickle\Package\Util\Windows;
 use Pickle\Package\Command\Install;
 use Pickle\Base\Util;
+use Exception;
+use Pickle\Package\Command\Build;
 
 class InstallerCommand extends BuildCommand
 {
@@ -110,9 +108,11 @@ class InstallerCommand extends BuildCommand
     }
 
     /**
-     * @param string          $path
-     * @param InputInterface  $input
+     * @param string $path
+     * @param InputInterface $input
      * @param OutputInterface $output
+     *
+     * @throws Exception
      */
     protected function binaryInstallWindows($path, InputInterface $input, OutputInterface $output)
     {
@@ -156,18 +156,17 @@ class InstallerCommand extends BuildCommand
 
         foreach ($inst->getExtDllPaths() as $dll) {
             if (!$deps_handler->resolveForBin($dll, $cb)) {
-                throw new \Exception('Failed to resolve dependencies');
+                throw new Exception('Failed to resolve dependencies');
             }
         }
     }
 
-    /*  The most of this needs to be incapsulated into an extra Build class*/
+    /*  The most of this needs to be incapsulated into an extra Build class */
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = '')
     {
-        $php = Engine::factory();
         $helper = $this->getHelperSet()->get('question');
 
-        $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
+        $build = Build::factory($package, $optionsValue);
 
         try {
             $build->prepare();
@@ -177,7 +176,7 @@ class InstallerCommand extends BuildCommand
             $build->install();
 
             $this->saveBuildLogs($input, $build);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->saveBuildLogs($input, $build);
 
             $output->writeln('The following error(s) happened: '.$e->getMessage());
@@ -186,6 +185,7 @@ class InstallerCommand extends BuildCommand
                 $output->write($build->getLog());
             }
         }
+
         $build->cleanup();
     }
 
