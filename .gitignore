@@ -2,3 +2,16 @@ composer.lock
 composer.phar
 pickle*.phar
 vendor/
+
+.php_cs.cache
+cs_fixer_tmp_*
+.phpintel/*
+
+# PHPStorm
+.idea
+
+# OS Specific
+.DS_Store
+
+#ignore git mergetool files
+*.orig

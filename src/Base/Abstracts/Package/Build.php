@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pickle
+ * Pickle.
  *
  *
  * @license
@@ -38,6 +38,8 @@ namespace Pickle\Base\Abstracts\Package;
 
 use Pickle\Base\Util\FileOps;
 use Pickle\Base\Interfaces\Package;
+use Exception;
+use ZipArchive;
 
 abstract class Build
 {
@@ -58,6 +60,7 @@ abstract class Build
     /**
      * @param int    $level
      * @param string $msg
+     * @param string $hint
      */
     public function log($level, $msg, $hint = '')
     {
@@ -72,10 +75,15 @@ abstract class Build
     {
         $ret = array();
 
+        if (!$this->log) {
+            return null;
+        }
+
         foreach ($this->log as $item) {
             if (isset($hint) && $hint !== $item['hint']) {
                 continue;
             }
+
             $tmp = explode("\n", $item['msg']);
             foreach ($tmp as $ln) {
                 $ret[] = $item['level'].': '.$ln;
@@ -85,29 +93,30 @@ abstract class Build
         return implode("\n", $ret);
     }
 
-    protected function prepareSaveLog($path, &$def_fl)
+    protected function prepareSaveLog($path, &$defFl)
     {
         if ($path && !is_dir($path)) {
             if (!mkdir($path)) {
-                throw new \EXception("Location '$path' could not be created, unable to save build logs");
+                throw new Exception("Location '$path' could not be created, unable to save build logs");
             }
         }
 
-        $def_fl = $path.DIRECTORY_SEPARATOR.'build.log';
-        if (file_exists($def_fl)) {
-            unlink($def_fl);
+        $defFl = $path.DIRECTORY_SEPARATOR.'build.log';
+        if (file_exists($defFl)) {
+            unlink($defFl);
         }
     }
 
-    protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
+    protected function getLogFilename($path, $logItem, $defFl, array &$logs)
     {
-        $is_hint = (isset($log_item['hint']) && !empty($log_item['hint']));
-        $fname = $is_hint ? $path.DIRECTORY_SEPARATOR."$log_item[hint].log" : $def_fl;
+        $isHint = (isset($logItem['hint']) && !empty($logItem['hint']));
+        $fname = $isHint ? $path.DIRECTORY_SEPARATOR."$logItem[hint].log" : $defFl;
 
         if (!in_array($fname, $logs)) {
             if (file_exists($fname)) {
                 unlink($fname);
             }
+
             $logs[] = $fname;
         }
 
@@ -117,50 +126,47 @@ abstract class Build
     public function saveLog($path)
     {
         $logs = array();
-        $def_fl = null;
+        $defFl = null;
 
-        $this->prepareSaveLog($path, $def_fl);
+        $this->prepareSaveLog($path, $defFl);
 
         foreach ($this->log as $item) {
-            $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
+            $fname = $this->getLogFilename($path, $item, $defFl, $logs);
 
             if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item['msg']) + 1) {
-                throw new \Exception("Couldn't write contents to '$fname'");
+                throw new Exception("Couldn't write contents to '$fname'");
             }
         }
     }
 
-    protected function fixEol($s)
+    protected function fixEol($string)
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $ret = preg_replace(",(?!\r)\n,", "\r\n", $s);
-        } else {
-            $ret = $s;
+            return preg_replace(",(?!\r)\n,", "\r\n", $string);
         }
 
-        return $ret;
+        return $string;
     }
 
     /* zip is default */
     public function packLog($path)
     {
-        $logs = array();
-
-        $zip = new \ZipArchive();
-        if (!$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
-            throw new \Exception("Failed to open '$path' for writing");
+        $zip = new ZipArchive();
+        if (!$zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
+            throw new Exception("Failed to open '$path' for writing");
         }
 
-        $no_hint_logs = '';
+        $noHintLogs = '';
         foreach ($this->log as $item) {
             $msg = $this->fixEol($item['msg']);
-            if ((isset($item['hint']) && !empty($item['hint']))) {
+            if (!empty($item['hint'])) {
                 $zip->addFromString("$item[hint].log", $msg);
             } else {
-                $no_hint_logs = "$no_hint_logs\n\n$msg";
+                $noHintLogs = "$noHintLogs\n\n$msg";
             }
         }
-        if ($no_hint_logs) {
+
+        if ($noHintLogs) {
             $zip->addFromString('build.log', $this->fixEol($item['msg']));
         }
 
@@ -172,7 +178,7 @@ abstract class Build
      *
      * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function runCommand($command)
     {
@@ -181,7 +187,7 @@ abstract class Build
         $this->log(1, $command, $hint);
         $pp = popen("$command 2>&1", 'r');
         if (!$pp) {
-            throw new \Exception(
+            throw new Exception(
                 'Failed to run the following command: '.$command
             );
         }
@@ -190,11 +196,12 @@ abstract class Build
         while ($line = fgets($pp, 1024)) {
             $out[] = rtrim($line);
         }
+
         $this->log(2, implode("\n", $out), $hint);
 
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
-        return (0 === $exitCode);
+        return 0 === $exitCode;
     }
 
     protected function appendPkgConfigureOptions(&$configureOptions)

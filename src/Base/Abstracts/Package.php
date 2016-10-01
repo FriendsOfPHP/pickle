@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pickle
+ * Pickle.
  *
  *
  * @license
@@ -40,14 +40,14 @@ use Composer\Package\CompletePackage;
 use Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
 
-class Package extends CompletePackage
+abstract class Package extends CompletePackage
 {
     public function getSimpleName()
     {
-        $full_name = $this->getName();
+        $fullName = $this->getName();
 
-        if (!preg_match(',(.+)/(.+),', $full_name, $m)) {
-            return $full_name;
+        if (!preg_match(',(.+)/(.+),', $fullName, $m)) {
+            return $fullName;
         }
 
         return $m[2];
@@ -55,9 +55,9 @@ class Package extends CompletePackage
 
     public function getVendorName()
     {
-        $full_name = $this->getName();
+        $fullName = $this->getName();
 
-        if (!preg_match(',(.+)/(.+),', $full_name, $m)) {
+        if (!preg_match(',(.+)/(.+),', $fullName, $m)) {
             return;
         }
 
