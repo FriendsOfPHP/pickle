@@ -83,7 +83,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         }
 
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
-        $this->zts = (boolean) $this->zts;
+        $this->zts = (bool) $this->zts;
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
@@ -214,7 +214,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         }
         $this->phpize = $res[0];
 
-        return ($this->hasSdk = false);
+        return $this->hasSdk = false;
     }
 
     public function getArchitecture()

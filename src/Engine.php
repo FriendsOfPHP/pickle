@@ -43,7 +43,7 @@ class Engine
 {
     protected static $instance = null;
 
-    public static function factory($phpcli = NULL)
+    public static function factory($phpcli = null)
     {
         if (null == self::$instance) {
             if (!$phpcli) {

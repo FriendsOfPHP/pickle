@@ -33,12 +33,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 namespace Pickle\tests\units\Package\PHP;
 
 use atoum;
 use mageekguy\atoum\mock\streams\fs;
-use mageekguy\atoum\test\adapter\call;
-use Pickle\tests;
 
 class Package extends atoum
 {
@@ -131,7 +130,7 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Enable foo-bar',
-                    'default' => false
+                    'default' => false,
                 ],
             ],
             [
@@ -140,8 +139,8 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Disable foo-bar',
-                    'default' => true
-                ]
+                    'default' => true,
+                ],
             ],
             [
                 'PHP_ARG_ENABLE(foo-bar,Enable foo-bar,[--enable-foo-bar ])',
@@ -149,8 +148,8 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Enable foo-bar',
-                    'default' => false
-                ]
+                    'default' => false,
+                ],
             ],
             [
                 'PHP_ARG_ENABLE(foo-bar,,[--enable-foo-bar Enable foo-bar])',
@@ -158,8 +157,8 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Enable foo-bar',
-                    'default' => false
-                ]
+                    'default' => false,
+                ],
             ],
             [
                 'PHP_ARG_ENABLE(foo-bar,Disable foo-bar,[--disable-foo-bar        ])',
@@ -167,8 +166,8 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Disable foo-bar',
-                    'default' => true
-                ]
+                    'default' => true,
+                ],
             ],
             [
                 'AC_ARG_WITH(foo-bar,[--with-foo-bar        With foo-bar],[ ])',
@@ -176,8 +175,8 @@ class Package extends atoum
                 [
                     'type' => 'with',
                     'prompt' => 'With foo-bar',
-                    'default' => false
-                ]
+                    'default' => false,
+                ],
             ],
             [
                 'AC_ARG_WITH(foo-bar,[--without-foo-bar        Without foo-bar],[ ])',
@@ -185,8 +184,8 @@ class Package extends atoum
                 [
                     'type' => 'with',
                     'prompt' => 'Without foo-bar',
-                    'default' => true
-                ]
+                    'default' => true,
+                ],
             ],
             [
                 'PHP_ARG_WITH(foo-bar,With foo-bar,[--with-foo-bar])',
@@ -194,8 +193,8 @@ class Package extends atoum
                 [
                     'type' => 'with',
                     'prompt' => 'With foo-bar',
-                    'default' => false
-                ]
+                    'default' => false,
+                ],
             ],
             [
                 'PHP_ARG_WITH(foo-bar,Without foo-bar,[--without-foo-bar        Description])',
@@ -203,9 +202,9 @@ class Package extends atoum
                 [
                     'type' => 'with',
                     'prompt' => 'Without foo-bar',
-                    'default' => true
-                ]
-            ]
+                    'default' => true,
+                ],
+            ],
         ];
     }
 
@@ -241,7 +240,7 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Enable foo-bar',
-                    'default' => 'no'
+                    'default' => 'no',
                 ],
             ],
             [
@@ -250,8 +249,8 @@ class Package extends atoum
                 [
                     'type' => 'enable',
                     'prompt' => 'Disable foo-bar',
-                    'default' => 'yes'
-                ]
+                    'default' => 'yes',
+                ],
             ],
             [
                 "ARG_WITH('foo-bar','With foo-bar','yes')",
@@ -259,8 +258,8 @@ class Package extends atoum
                 [
                     'type' => 'with',
                     'prompt' => 'With foo-bar',
-                    'default' => 'yes'
-                ]
+                    'default' => 'yes',
+                ],
             ],
             [
                 "ARG_WITH('foo-bar','Without foo-bar','no')",
@@ -268,9 +267,9 @@ class Package extends atoum
                 [
                     'type' => 'with',
                     'prompt' => 'Without foo-bar',
-                    'default' => 'no'
-                ]
-            ]
+                    'default' => 'no',
+                ],
+            ],
         ];
     }
 

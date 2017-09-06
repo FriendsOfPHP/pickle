@@ -57,7 +57,6 @@ class Version
 
     protected function findHeaders()
     {
-
         //$header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
 
         if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
@@ -91,7 +90,7 @@ class Version
     {
         $headers = glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
 
-        # Match versions surrounded by quotes and versions without quotes
+        // Match versions surrounded by quotes and versions without quotes
         $versionMatcher = '(".*"|.*\b)';
         $pat = ',define\s+'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
 
@@ -101,7 +100,7 @@ class Version
                 throw new \Exception("Could not read $header");
             }
             if (preg_match($pat, $headerContent, $result)) {
-                # Remove any quote characters we may have matched on
+                // Remove any quote characters we may have matched on
                 return trim($result[1], '"');
             }
         }

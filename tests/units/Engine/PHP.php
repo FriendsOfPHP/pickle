@@ -37,7 +37,6 @@
 namespace Pickle\tests\units\Engine;
 
 use atoum;
-use Pickle\tests;
 
 class PHP extends atoum
 {

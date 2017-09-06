@@ -37,7 +37,6 @@
 namespace Pickle\tests\units\Engine\PHP;
 
 use atoum;
-use Pickle\tests;
 
 class Ini extends atoum
 {
@@ -45,7 +44,7 @@ class Ini extends atoum
     {
         $this->mockGenerator->shuntParentClassCalls();
 
-        $php =  new \mock\Pickle\Engine\PHP();
+        $php = new \mock\Pickle\Engine\PHP();
 
         $this->calling($php)->__construct = function ($dummy) {};
         $this->calling($php)->getIniPath = function () use ($path) {
@@ -62,8 +61,8 @@ class Ini extends atoum
         $php = $this->getEngineMock("");
         $this->assert
                 ->exception(function () use ($php) {
-                        new \Pickle\Engine\PHP\Ini($php);
-                    });
+                    new \Pickle\Engine\PHP\Ini($php);
+                });
 
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
         $this
@@ -142,8 +141,8 @@ class Ini extends atoum
     {
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
-        $in  = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
-        $exp  = "extension=php_a.dll\nextension=php_b.dll\nextension=php_c.dll";
+        $in = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
+        $exp = "extension=php_a.dll\nextension=php_b.dll\nextension=php_c.dll";
 
         $this
             ->if($ini = new \Pickle\Engine\PHP\Ini($php))
@@ -157,7 +156,7 @@ class Ini extends atoum
     {
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
-        $in  = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
+        $in = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
         $exp = "extension=php_a.dll\nextension=php_b.dll\nextension=php_c.dll";
 
         $this
@@ -172,7 +171,7 @@ class Ini extends atoum
     {
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
-        $in  = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
+        $in = "extension=php_a.dll\n\nextension=php_b.dll\nextension=php_c.dll\n;";
         $exp = "extension=php_a.dll\nextension=php_b.dll";
 
         $this
@@ -187,7 +186,7 @@ class Ini extends atoum
     {
         $php = $this->getEngineMock(FIXTURES_DIR . DIRECTORY_SEPARATOR . "ini" . DIRECTORY_SEPARATOR . "php.ini.empty");
 
-        $in  = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
+        $in = "extension=php_a.dll\n;\n;\n\nextension=php_b.dll\nextension=php_c.dll";
         $exp = "extension=php_a.dll\nextension=php_c.dll";
 
         $this

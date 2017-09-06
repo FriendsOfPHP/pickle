@@ -160,7 +160,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         chdir($this->tempDir);
 
         /* Record the produced DLL filenames. */
-        $files = (array)glob("*/*/php_*.dll");
+        $files = (array) glob("*/*/php_*.dll");
         $files = array_merge($files, glob("*/php_*.dll"));
         $dlls = [];
         foreach ($files as $file) {

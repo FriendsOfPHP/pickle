@@ -33,7 +33,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -256,7 +255,7 @@ class FeatureContext implements SnippetAcceptingContext
             [
                 '\'\'\'' => '"""',
                 '%%TMP_DIR%%' => sys_get_temp_dir(),
-                '%%TEST_DIR%%' => realpath($this->dir)
+                '%%TEST_DIR%%' => realpath($this->dir),
             ]
         );
 

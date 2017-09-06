@@ -50,11 +50,11 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         $engine = Engine::factory();
 
         switch ($engine->getName()) {
-            case 'php';
+            case 'php':
 
             return new PHP\Convey\Command\DefaultExecutor($command);
 
-            case 'hhvm';
+            case 'hhvm':
 
             return new HHVM\Convey\Command\DefaultExecutor($command);
         }

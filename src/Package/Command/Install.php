@@ -57,6 +57,7 @@ class Install
                     );
                 }
 
+                // no break
             case 'hhvm':
                 throw new \Exception("Not implemented for engine '{$engine->getName()}'");
 
