@@ -74,10 +74,10 @@ class ValidateCommand extends Command
         Util\TmpDir::set($input->getOption('tmp-dir'));
 
         $cb = function (Interfaces\Package $package) use ($helper, $output) {
-        /* TODO Rework this to use the Info package command */
-        $helper->showInfo($output, $package);
-        $output->writeln(trim($package->getDescription()));
-    };
+            /* TODO Rework this to use the Info package command */
+            $helper->showInfo($output, $package);
+            $output->writeln(trim($package->getDescription()));
+        };
 
         $validate = Validate::factory($path, $cb);
         $validate->process();

@@ -61,7 +61,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
         /* First add the lines for exts that are requested to be added. */
         foreach ($dlls_add as $dll) {
-            $new[] =  $this->buildDllIniLine($dll);
+            $new[] = $this->buildDllIniLine($dll);
         }
 
         /* Then, go over the existing lines, restore those that are not
@@ -115,7 +115,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
                 $pos = strpos($this->raw, 'extension', $pos);
                 if (false !== $pos) {
                     $this->pickleFooterStartPos = $pos;
-                    $pos++;
+                    ++$pos;
                 }
             } while (false !== $pos);
 

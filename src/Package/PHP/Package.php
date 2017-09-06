@@ -152,7 +152,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     {
         $next = 0;
         $options = [];
-        $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
+        $type = false !== strpos($which, 'ENABLE') ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
@@ -187,7 +187,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     {
         $next = 0;
         $options = [];
-        $type = false !== strpos($which, 'ENABLE')  ? 'enable' : 'with';
+        $type = false !== strpos($which, 'ENABLE') ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
             $default = true;
             $s = strpos($config, '(', $s);
@@ -313,7 +313,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         } else {
             $r = glob("$path/config*.m4");
 
-            return (is_array($r) && !empty($r));
+            return is_array($r) && !empty($r);
         }
     }
 

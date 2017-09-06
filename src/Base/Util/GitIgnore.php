@@ -92,7 +92,7 @@ class GitIgnore
     public function isExcluded(\SplFileInfo $file)
     {
         foreach ($this->excluded as $path) {
-            if (!strncmp($file,  $path, strlen($path))) {
+            if (!strncmp($file, $path, strlen($path))) {
                 return true;
             }
         }

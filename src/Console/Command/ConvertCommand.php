@@ -64,7 +64,6 @@ class ConvertCommand extends Command
                 'path to a custom temp dir',
                 sys_get_temp_dir()
             );
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

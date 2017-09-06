@@ -48,15 +48,17 @@ class Release
 
         switch ($engine->getName()) {
             case 'php':
-        if ($binary) {
-            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-                return new PHP\Command\Release\Windows\Binary($path, $cb, $noConvert);
-            } else {
-                throw new \Exception('Binary packaging not implemented for this platform, use the build system of your favourite package manager');
-            }
-        } else {
-            return new PHP\Command\Release($path, $cb, $noConvert);
-        }
+                if ($binary) {
+                    if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+                        return new PHP\Command\Release\Windows\Binary($path, $cb, $noConvert);
+                    } else {
+                        throw new \Exception('Binary packaging not implemented for this platform, use the build system of your favourite package manager');
+                    }
+                } else {
+                    return new PHP\Command\Release($path, $cb, $noConvert);
+                }
+
+                // no break
 
             case 'hhvm':
                 throw new \Exception("Not implemented for engine '{$engine->getName()}'");

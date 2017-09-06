@@ -90,8 +90,8 @@ class ReleaseCommand extends BuildCommand
         Util\TmpDir::set($input->getOption('tmp-dir'));
         /* TODO Rework this to use the Info package command */
         $cb = function (Interfaces\Package $package) use ($helper, $output) {
-                $helper->showInfo($output, $package);
-            };
+            $helper->showInfo($output, $package);
+        };
         $path = rtrim($input->getArgument('path'), '/\\');
 
         /* Getting package unpacked first, then use the path*/

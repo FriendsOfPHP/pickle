@@ -3,7 +3,6 @@
 namespace Pickle\Console;
 
 use Symfony\Component\Console\Application as BaseApplication;
-use Pickle\Console\Helper;
 
 class Application extends BaseApplication
 {
@@ -30,14 +29,14 @@ class Application extends BaseApplication
     {
         $commands = parent::getDefaultCommands();
 
-        $commands[] = new Command\ValidateCommand;
-        $commands[] = new Command\ConvertCommand;
-        $commands[] = new Command\ReleaseCommand;
-        $commands[] = new Command\InstallerCommand;
-        $commands[] = new Command\InfoCommand;
+        $commands[] = new Command\ValidateCommand();
+        $commands[] = new Command\ConvertCommand();
+        $commands[] = new Command\ReleaseCommand();
+        $commands[] = new Command\InstallerCommand();
+        $commands[] = new Command\InfoCommand();
 
         if (\Phar::running() !== '') {
-            $commands[] = new Command\SelfUpdateCommand;
+            $commands[] = new Command\SelfUpdateCommand();
         }
 
         return $commands;

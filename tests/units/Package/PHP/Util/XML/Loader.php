@@ -33,10 +33,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 namespace Pickle\tests\units\Package\PHP\Util\XML;
 
 use atoum;
-use Pickle\tests;
 
 class Loader extends atoum
 {
@@ -50,8 +50,8 @@ class Loader extends atoum
             ->if($this->newTestedInstance($loader))
             ->then
                 ->exception(function () use ($path) {
-			$this->testedInstance->load($path);
-		})
+                    $this->testedInstance->load($path);
+                })
             ->given($path = uniqid())
             ->then
                 ->exception(function () use ($path) {

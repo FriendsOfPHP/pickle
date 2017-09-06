@@ -88,7 +88,7 @@ class Loader
 
         $authors = array();
         foreach (array($xml->lead, $xml->developer, $xml->contributor, $xml->helper) as $devs) {
-            foreach($devs as $dev) {
+            foreach ($devs as $dev) {
                 $authors[] = $dev;
             }
         }
@@ -131,9 +131,9 @@ class Loader
         $package['type'] = 'extension';
 
         $ret_pkg = $this->loader->load($package);
-	if (!$ret_pkg) {
-		throw new \Exception("Package from '$path' failed to load.");
-	}
+        if (!$ret_pkg) {
+            throw new \Exception("Package from '$path' failed to load.");
+        }
         $ret_pkg->setRootDir(dirname($path));
 
         $src_ver = new Header\Version($ret_pkg);

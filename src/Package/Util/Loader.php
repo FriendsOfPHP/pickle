@@ -147,10 +147,10 @@ class Loader implements LoaderInterface
     {
         switch ($type) {
             case 'string':
-                return (isset($config[$key]) && !empty($config[$key]) && is_string($config[$key]));
+                return isset($config[$key]) && !empty($config[$key]) && is_string($config[$key]);
 
             case 'array':
-                return (isset($config[$key]) && !empty($config[$key]) && is_array($config[$key]));
+                return isset($config[$key]) && !empty($config[$key]) && is_array($config[$key]);
         }
 
         return false;

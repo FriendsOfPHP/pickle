@@ -160,9 +160,9 @@ class DependencyLib
         } elseif (count($dep_zips) > 1) {
             foreach ($dep_zips as $dep_zip) {
                 /* The user has already picked one here, ignore it. */
-            if (in_array($dep_zip, $this->fetchedZips)) {
-                return true;
-            }
+                if (in_array($dep_zip, $this->fetchedZips)) {
+                    return true;
+                }
             }
             if (null != $resolve_multiple_cb) {
                 $dep_zip = $resolve_multiple_cb($dep_zips);
@@ -174,7 +174,7 @@ class DependencyLib
            corresponding dependency package. However it's fetched from
            the PECL build dependencies, no extension build should have
            been exist if there's no dependency package uploaded. */
-           return true;
+            return true;
         }
 
         return $this->resolveForZip($dep_zip, $resolve_multiple_cb);
@@ -210,7 +210,7 @@ class DependencyLib
         $ret = array();
         $DLLs = glob($this->tempDir.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'*.dll');
 
-    /* Copying ALL files from the zip, not just required. */
+        /* Copying ALL files from the zip, not just required. */
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
@@ -260,6 +260,7 @@ class DependencyLib
 
         return $path;
     }
+
     private function uncompress($zipFile)
     {
         $this->createTempDir();

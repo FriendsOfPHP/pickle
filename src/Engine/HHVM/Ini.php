@@ -111,7 +111,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
                 $pos = strpos($this->raw, 'hhvm.dynamic_extensions[', $pos);
                 if (false !== $pos) {
                     $this->pickleFooterStartPos = $pos;
-                    $pos++;
+                    ++$pos;
                 }
             } while (false !== $pos);
 

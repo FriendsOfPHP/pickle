@@ -194,7 +194,7 @@ abstract class Build
 
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
-        return (0 === $exitCode);
+        return 0 === $exitCode;
     }
 
     protected function appendPkgConfigureOptions(&$configureOptions)

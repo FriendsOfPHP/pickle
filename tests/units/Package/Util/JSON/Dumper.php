@@ -33,10 +33,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 namespace Pickle\tests\units\Package\Util\JSON;
 
 use atoum;
-use Pickle\tests;
 
 class Dumper extends atoum
 {
@@ -67,7 +67,7 @@ class Dumper extends atoum
                 ],
                 [
                     'name' => 'Sara Golemon',
-                    'email' => 'pollita@php.net'
+                    'email' => 'pollita@php.net',
                 ],
                 $description = uniqid(),
                 $support = [
