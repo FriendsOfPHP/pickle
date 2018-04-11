@@ -137,7 +137,7 @@ class Loader
         $ret_pkg->setRootDir(dirname($path));
 
         $src_ver = new Header\Version($ret_pkg);
-        if ($src_ver != $ret_pkg->getPrettyVersion()) {
+        if (strtolower($src_ver) !== strtolower($ret_pkg->getPrettyVersion())) {
             throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
         }
         $ret_pkg->setType('extension');

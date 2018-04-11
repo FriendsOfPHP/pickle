@@ -103,7 +103,7 @@ class PackageXml
         }
 
         $version = new Header\Version($this->package);
-        if ($version != $this->package->getPrettyVersion()) {
+        if (strtolower($version) !== strtolower($this->package->getPrettyVersion())) {
             throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
         }
 
