@@ -26,8 +26,8 @@
         "ext-openssl": "*",
         "ext-zip": "*",
         "symfony/console": "~2.5",
-        "justinrainbow/json-schema": "~1.5",
-        "composer/composer": "~1.0-alpha8",
+        "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
+        "composer/composer": "~1.6",
         "padraic/phar-updater": "~1.0@dev"
     },
     "require-dev": {
