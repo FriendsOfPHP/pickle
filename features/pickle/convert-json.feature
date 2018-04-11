@@ -48,7 +48,6 @@ Feature: convert package.xml to composer.json
       {
           "name": "dummy",
           "type": "extension",
-          "version": "3.1.15-beta",
           "description": "This is a dummy package"
       }
       """
@@ -70,7 +69,6 @@ Feature: convert package.xml to composer.json
       {
           "name": "dummy",
           "type": "extension",
-          "version": "3.1.15-beta",
           "description": "This is a dummy package"
       }
       """

@@ -62,7 +62,6 @@ Feature: convert package.xml to information files
       {
           "name": "dummy",
           "type": "extension",
-          "version": "3.1.15-beta",
           "description": "This is a dummy package",
           "license": [
               "PHP License"
