@@ -65,7 +65,9 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         $package->setSourceReference($this->version);
         $package->setRootDir($target);
 
-        $downloader = new GitDownloader($this->io, new Config());
+        $downloaderConfig = new Config();
+        $downloaderConfig->merge(['config' => ['secure-http' => false]]);
+        $downloader = new GitDownloader($this->io, $downloaderConfig);
         if (null !== $downloader) {
             $downloader->download($package, $target);
         }
