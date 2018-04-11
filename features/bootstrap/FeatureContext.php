@@ -74,7 +74,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function prepare()
     {
-        $this->dir = PICKLE_TEST_PATH . DIRECTORY_SEPARATOR . md5(microtime() * rand(0, 10000));
+        $this->dir = PICKLE_TEST_PATH . DIRECTORY_SEPARATOR . md5((int) microtime(TRUE) * mt_rand(0, 10000));
 
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
