@@ -12,7 +12,7 @@ Feature: download and install PECL extensions
       """
     And the output should contain:
       """
-      Downloading: 100%
+      Downloading (100%)
       """
     And the output should contain:
       """
@@ -36,7 +36,7 @@ Feature: download and install PECL extensions
       """
     And the output should contain:
       """
-      Downloading: 100%
+      Downloading (100%)
       """
     And the output should contain:
       """
@@ -65,7 +65,7 @@ Feature: download and install PECL extensions
       """
     And the output should contain:
       """
-      Downloading: 100%
+      Downloading (100%)
       """
     And the output should contain:
       """
