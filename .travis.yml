@@ -46,3 +46,7 @@ deploy:
   on:
     tags: true
     repo: FriendsOfPHP/pickle
+
+cache:
+  directories:
+  - $HOME/.composer/cache
