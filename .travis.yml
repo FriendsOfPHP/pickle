@@ -8,6 +8,8 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - 7.3
+  - 7.4snapshot
   - nightly
   - hhvm
   - hhvm-nightly
@@ -16,6 +18,7 @@ matrix:
   allow_failures:
     - php: hhvm
     - php: hhvm-nightly
+    - php: 7.4snapshot
     - php: nightly
 
 before_script:
