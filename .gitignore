@@ -1,4 +1,5 @@
 composer.lock
 composer.phar
 pickle*.phar
+box.phar
 vendor/
