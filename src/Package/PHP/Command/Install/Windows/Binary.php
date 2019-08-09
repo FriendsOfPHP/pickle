@@ -98,7 +98,13 @@ class Binary
      */
     private function findInLinks($url, $toFind)
     {
-        $page = @file_get_contents($url);
+        $opts = [
+            'http' => [
+                'header' => 'User-Agent: pickle'
+            ],
+        ];
+        $context = stream_context_create($opts);
+        $page = @file_get_contents($url, false, $context);
         if (!$page) {
             return false;
         }
@@ -182,7 +188,11 @@ class Binary
         $progress = $this->progress;
 
         $ctx = stream_context_create(
-            array(),
+            array(
+                'http' => [
+                    'header' => 'User-Agent: pickle'
+                ]
+            ),
             array(
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
                     switch ($notificationCode) {
