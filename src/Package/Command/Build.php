@@ -39,7 +39,6 @@ namespace Pickle\Package\Command;
 use Pickle\Base\Interfaces;
 use Pickle\Engine;
 use Pickle\Package\PHP;
-use Pickle\Package\HHVM;
 
 class Build
 {
@@ -53,14 +52,6 @@ class Build
                     return new PHP\Command\Build\Windows($package, $optionValue);
                 } else {
                     return new PHP\Command\Build\Unix($package, $optionValue);
-                }
-
-                // no break
-            case 'hhvm':
-                if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-                    throw new \Exception("Not implemented for engine '{$engine->getName()} on Windows'");
-                } else {
-                    return new HHVM\Command\Build\Unix($package, $optionValue);
                 }
 
                 // no break

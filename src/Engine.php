@@ -36,7 +36,6 @@
 
 namespace Pickle;
 
-use Pickle\Engine\HHVM;
 use Pickle\Engine\PHP;
 
 class Engine
@@ -50,16 +49,7 @@ class Engine
                 $phpcli = PHP_BINARY;
             }
 
-            if (defined('HHVM_VERSION')) {
-                /* This needs to be checked first, PHP_VERSION is
-                   defined in HHVM. */
-                self::$instance = new HHVM($phpcli);
-            } else {
-                /* We don't support anything else, so this has to
-                   be classic PHP right now. This could change
-                   if other PHP implementations are supported. */
-                self::$instance = new PHP($phpcli);
-            }
+            self::$instance = new PHP($phpcli);
         }
 
         return self::$instance;

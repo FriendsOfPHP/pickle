@@ -38,7 +38,6 @@ namespace Pickle\Package\Convey\Command;
 
 use Pickle\Base\Interfaces;
 use Pickle\Package\PHP;
-use Pickle\Package\HHVM;
 use Pickle\Engine;
 
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
@@ -53,10 +52,6 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
             case 'php':
 
             return new PHP\Convey\Command\DefaultExecutor($command);
-
-            case 'hhvm':
-
-            return new HHVM\Convey\Command\DefaultExecutor($command);
         }
 
         return new self($command);
