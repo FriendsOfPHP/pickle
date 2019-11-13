@@ -47,9 +47,9 @@ class Package extends atoum
 
     public function beforeTestMethod($method)
     {
-        $this->packageName = $this->realdom->regex('/\w+/');
-        $this->packageVersion = $this->realdom->regex('/\d+(\.\d+){3}/');
-        $this->packagePrettyVersion = $this->realdom->regex('/\d+(\.\d+){2}/');
+        $this->packageName = 'foo bar';
+        $this->packageVersion = '1.54.12.5';
+        $this->packagePrettyVersion = '1.54.12';
 
         $windows = defined('PHP_WINDOWS_VERSION_MAJOR');
 
@@ -66,9 +66,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion)
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion
             )
             ->if($this->newTestedInstance($name, $version, $prettyVersion))
             ->then
@@ -84,9 +84,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion,
                 $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package"
             )
             ->if(
@@ -102,9 +102,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion)
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
@@ -212,9 +212,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion)
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
@@ -277,9 +277,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion,
                 $packageRoot = fs\directory::get()
             )
             ->if(
@@ -302,9 +302,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion,
                 $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package"
             )
             ->if(
@@ -329,9 +329,9 @@ class Package extends atoum
     {
         $this
             ->given(
-                $name = $this->sample($this->packageName),
-                $version = $this->sample($this->packageVersion),
-                $prettyVersion = $this->sample($this->packagePrettyVersion),
+                $name = $this->packageName,
+                $version = $this->packageVersion,
+                $prettyVersion = $this->packagePrettyVersion,
                 $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package-subdir-src"
             )
             ->if(
