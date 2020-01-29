@@ -48,10 +48,10 @@ class PackageXml
 
     public function __construct($path)
     {
-        $names = array(
-                        'package2.xml',
-                        'package.xml',
-                );
+        static $names = [
+            'package2.xml',
+            'package.xml',
+        ];
 
         foreach ($names as $fl) {
             $xml = $path.DIRECTORY_SEPARATOR.$fl;
@@ -108,7 +108,7 @@ class PackageXml
         }
 
         $dumper = new Dumper();
-        $dumper->dumpToFile($this->package, $this->jsonPath, false);
+        $dumper->dumpToFile($this->package, $this->jsonPath, true);
     }
 
     public function getPackage()
