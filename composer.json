@@ -4,8 +4,7 @@
     "description": "Installer for PHP extension, supports pecl package or install from src tree directly",
     "homepage": "https://github.com/FriendsOfPHP/pickle",
     "license": "PHP-3.01",
-    "authors": [
-        {
+    "authors": [{
             "name": "Pierre Joye",
             "email": "pierre.php@gmail.com",
             "homepage": "http://pecl.php.net/user/pajoye",
@@ -45,7 +44,8 @@
     },
     "bin": ["bin/pickle"],
     "scripts": {
-        "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23"
+        "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23",
+        "test": "vendor/bin/atoum --force-terminal && vendor/bin/behat --suite pickle --colors"
     }
 
 }
