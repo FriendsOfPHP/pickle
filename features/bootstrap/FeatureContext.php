@@ -75,7 +75,6 @@ class FeatureContext implements SnippetAcceptingContext
     public function prepare()
     {
         $this->dir = PICKLE_TEST_PATH . DIRECTORY_SEPARATOR . uniqid('pickle', true);
-        var_dump($this->dir);
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
             throw new \RuntimeException('Unable to find the PHP executable.');
