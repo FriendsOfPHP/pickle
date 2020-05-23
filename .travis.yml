@@ -9,7 +9,7 @@ php:
 before_script:
   - git fetch --unshallow --tags
   - composer install --prefer-source
-  - composer global require 'kherge/box=~2.4' --prefer-source
+  - composer global require 'kherge/box=~2.7' --prefer-source
   - wget https://scrutinizer-ci.com/ocular.phar
 
 script:
