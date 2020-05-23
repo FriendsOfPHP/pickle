@@ -31,7 +31,7 @@
         "padraic/phar-updater": "~1.0@dev"
     },
     "require-dev": {
-        "atoum/atoum": "~2.1",
+        "atoum/atoum": "~3.4",
         "atoum/praspel-extension": "~0.1",
         "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
