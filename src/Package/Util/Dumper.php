@@ -53,6 +53,11 @@ class Dumper
 
         if ($with_version) {
             $data['version'] = $package->getPrettyVersion();
+            $stability = $package->getStability();
+
+            if ('stable' !== $stability) {
+                $data['version'] .= '-' . $stability;
+            }
         }
 
         $data['type'] = $package->getType();
