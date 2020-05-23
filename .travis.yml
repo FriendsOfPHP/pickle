@@ -6,11 +6,6 @@ php:
   - 7.3
   - 7.4
 
-matrix:
-  allow_failures:
-    - php: hhvm
-    - php: hhvm-nightly
-
 before_script:
   - git fetch --unshallow --tags
   - composer install --prefer-source
