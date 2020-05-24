@@ -61,11 +61,13 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         $package = Package::factory($this->name, $this->version, $this->prettyVersion);
 
         $package->setSourceType('git');
+
         $package->setSourceUrl($this->url);
         $package->setSourceReference($this->version);
         $package->setRootDir($target);
-
-        $downloader = new GitDownloader($this->io, new Config());
+        $config = new Config();
+        $config->merge(['config' => ['secure-http' => false]]);
+        $downloader = new GitDownloader($this->io, $config);
         if (null !== $downloader) {
             $downloader->download($package, $target);
         }
