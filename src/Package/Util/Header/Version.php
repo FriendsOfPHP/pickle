@@ -80,7 +80,7 @@ class Version
                 return trim($result[1], '"');
             }
         }
-        throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");
+        throw new \Exception("Couldn't parse or find the version defined in the {$this->macroName} macro");
     }
 
     public function updateJSON()
