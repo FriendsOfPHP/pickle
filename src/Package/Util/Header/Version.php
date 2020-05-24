@@ -55,30 +55,6 @@ class Version
         $this->version = $this->getVersionFromHeader();
     }
 
-    protected function findHeaders()
-    {
-        //$header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
-
-        if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
-            $headers = (array) glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
-            $found = false;
-            foreach ($headers as $h) {
-                if ($this->fileHasVersionMacro($h)) {
-                    $header = $h;
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found) {
-                throw new \Exception("No macro named {$this->macroName} was found in the headers. ".
-                    'This macro is recommended to be defined with the current extension version');
-            }
-        }
-
-        return $header;
-    }
-
     public function fileHasVersionMacro($fname)
     {
         $cont = file_get_contents($fname);
