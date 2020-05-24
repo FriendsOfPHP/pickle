@@ -26,14 +26,14 @@
         "ext-zip": "*",
         "symfony/console": "~2.5",
         "justinrainbow/json-schema": "~1.5",
-        "composer/composer": "~1.0-alpha8",
+        "composer/composer": ">=1.0 <2.0",
         "padraic/phar-updater": "~1.0@dev"
     },
     "require-dev": {
         "atoum/atoum": "~3.4",
-        "atoum/praspel-extension": "~0.1",
-        "atoum/visibility-extension": "~1.0",
-        "behat/behat": "~3.0",
+        "atoum/praspel-extension": "~0.17",
+        "atoum/visibility-extension": "~1.3",
+        "behat/behat": "~3.6",
         "symfony/process": "~2.5",
         "fabpot/php-cs-fixer": "~1.7"
     },
