@@ -12,10 +12,6 @@ Feature: download and install PECL extensions
       """
     And the output should contain:
       """
-      Downloading: 100%
-      """
-    And the output should contain:
-      """
       Package name                      | <pretty>
       """
     And the output should contain:
