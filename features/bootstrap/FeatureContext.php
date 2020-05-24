@@ -284,18 +284,17 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function extensionExists($name, $version)
     {
-        $url = 'http://pecl.php.net/get/' . $name . '/' . $version;
+        $url = 'https://pecl.php.net/get/' . $name . '/' . $version . '?uncompress=1';
         $file = $name . '-' . $version . '.tgz';
-        $dir = $this->workingDir . '/' . basename($file, '.tgz');
+        $dir = $this->workingDir . '/' . $name . '-' . $version;
 
         if (is_dir($dir) === false) {
             mkdir($dir, 0777, true);
         }
-
-        file_put_contents($dir . '/' . $file, file_get_contents($url));
-
-        $p = new PharData($dir . '/' . $file);
-        $phar = $p->decompress('.tgz');
+        $downloadFile = $dir . '/' . $file;
+        file_put_contents($downloadFile, file_get_contents($url));
+        $p = new PharData($downloadFile);
+        $phar = $p->decompress('.tar');
         $phar->extractTo($dir);
     }
 }
