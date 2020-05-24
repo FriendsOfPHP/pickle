@@ -62,9 +62,17 @@ class Version
         return false !== strstr($cont, $this->macroName);
     }
 
+    private function rglob($pattern, $flags = 0) {
+        $files = glob($pattern, $flags); 
+        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+            $files = array_merge($files, self::rglob($dir.'/'.basename($pattern), $flags));
+        }
+        return $files;
+    }
+
     public function getVersionFromHeader()
     {
-        $headers = glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
+        $headers = self::rglob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
 
         // Match versions surrounded by quotes and versions without quotes
         $versionMatcher = '(".*"|.*\b)';
