@@ -70,7 +70,13 @@ class DependencyLib
         $dllMap = null;
 
         if (is_null($this->dllMap)) {
-            $data = @file_get_contents(self::DLL_MAP_URL);
+            $opts = [
+                'http' => [
+                    'header' => 'User-Agent: pickle'
+                ]
+            ];
+            $context = stream_context_create($opts);
+            $data = @file_get_contents(self::DLL_MAP_URL, false, $context);
             if (!$data) {
                 throw new \RuntimeException('Cannot fetch the DLL mapping file');
             }
