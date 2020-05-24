@@ -45,9 +45,9 @@ class DependencyLib
 {
     use FileOps;
 
-    const DLL_MAP_URL = 'http://windows.php.net/downloads/pecl/deps/dllmapping.json';
-    const DEPLISTER_URL = 'http://windows.php.net/downloads/pecl/tools/deplister.exe';
-    const DEPS_URL = 'http://windows.php.net/downloads/pecl/deps';
+    const DLL_MAP_URL = 'https://windows.php.net/downloads/pecl/deps/dllmapping.json';
+    const DEPLISTER_URL = 'https://windows.php.net/downloads/pecl/tools/deplister.exe';
+    const DEPS_URL = 'https://windows.php.net/downloads/pecl/deps';
 
     private $dllMap = null;
     private $php;
