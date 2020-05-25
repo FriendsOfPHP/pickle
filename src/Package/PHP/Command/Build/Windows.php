@@ -136,7 +136,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
            bail out on error but silently disables an extension. In this
            case we won't see any bad exit status. */
         $opts = $this->pkg->getConfigureOptions();
-        list($ext) = each($opts);
+        $ext = key($opts);
         if (preg_match(',\|\s+'.preg_quote($ext).'\s+\|\s+shared\s+\|,Sm', $this->getlog('configure')) < 1) {
             throw new \Exception("failed to configure the '$ext' extension");
         }
