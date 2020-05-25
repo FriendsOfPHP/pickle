@@ -58,6 +58,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     public function __construct($phpCli = PHP_BINARY)
     {
+        $phpCli = escapeshellcmd($phpCli);
         if (!(is_file($phpCli) && is_executable($phpCli))) {
             throw new \Exception("Invalid php executable: $phpCli");
         }
