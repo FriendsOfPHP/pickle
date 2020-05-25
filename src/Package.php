@@ -37,7 +37,6 @@
 namespace Pickle;
 
 use Pickle\Package\PHP;
-use Pickle\Package\HHVM;
 
 class Package
 {
@@ -63,10 +62,6 @@ class Package
             switch ($engine->getName()) {
                 case 'php':
                     self::$instance = new PHP\Package($name, $version, $prettyVersion);
-                    break;
-
-                case 'hhvm':
-                    self::$instance = new HHVM\Package($name, $version, $prettyVersion);
                     break;
 
                 default:

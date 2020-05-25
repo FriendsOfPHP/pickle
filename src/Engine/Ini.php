@@ -52,10 +52,6 @@ class Ini
                     self::$instance = new PHP\Ini($engine);
                     break;
 
-                case 'hhvm':
-                    self::$instance = new HHVM\Ini($engine);
-                    break;
-
                 default:
                     throw new \Exception("Unsupported engine '{$engine->getName()}'");
             }
