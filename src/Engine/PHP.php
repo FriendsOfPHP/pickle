@@ -159,9 +159,18 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $compiler = '';
 
         foreach ($info as $s) {
-            if (false !== strpos($s, 'Compiler')) {
-                list(, $compiler) = explode('=>', $s);
-                break;
+            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+                if (false !== strpos($s, 'PHP Extension Build')) {
+                    list(, $build) = explode('=>', $s);
+                    list(, , $compiler) = explode(',', $build);
+                    $compiler = strtolower($compiler);
+                    break;
+                }
+            } else {
+                if (false !== strpos($s, 'Compiler')) {
+                    list(, $compiler) = explode('=>', $s);
+                    break;
+                }
             }
         }
 
