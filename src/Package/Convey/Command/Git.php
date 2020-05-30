@@ -56,6 +56,19 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         $this->url = preg_replace('/#.*$/', '', $this->path);
     }
 
+    protected function getComposerHome()
+    {
+        $composerHome = getenv('COMPOSER_HOME');
+        if (!$composerHome) {
+            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+                $composerHome = getenv('APP_DATA') . 'Local/Composer';
+            } else {
+                $composerHome = getenv('HOME') . '/.config/composer';
+            }
+        }
+        return $composerHome;
+    }
+
     protected function fetch($target)
     {
         $package = Package::factory($this->name, $this->version, $this->prettyVersion);
@@ -66,7 +79,12 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         $package->setSourceReference($this->version);
         $package->setRootDir($target);
         $config = new Config();
-        $config->merge(['config' => ['secure-http' => false]]);
+
+        $config->merge(['config' => [
+            'secure-http' => false,
+            'home' => $this->getComposerHome()
+            ]
+        ]);
         $downloader = new GitDownloader($this->io, $config);
         if (null !== $downloader) {
             $downloader->download($package, $target);
