@@ -123,12 +123,12 @@ class Binary implements Interfaces\Package\Release
                 $jsonPath = $pkgXml->getJsonPath();
 
                 $package = $jsonLoader->load($jsonPath);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 /* pass for now, be compatible */
             }
         }
 
-        if (null == $package) {
+        if (null === $package) {
             /* Just ensure it's correct, */
             throw new \Exception("Couldn't read package info at '$path'");
         }

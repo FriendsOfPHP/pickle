@@ -129,7 +129,7 @@ class ReleaseCommand extends BuildCommand
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
@@ -143,7 +143,7 @@ class ReleaseCommand extends BuildCommand
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }

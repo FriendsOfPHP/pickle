@@ -271,14 +271,14 @@ class Binary
         if (strpos($headers[0], '404') !== false) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
-        $headerPkg = false;
+        $headerPkg = null;
         foreach ($headers as $header) {
             if (strpos($header, 'tgz') !== false) {
                 $headerPkg = $header;
                 break;
             }
         }
-        if ($headerPkg == false) {
+        if ($headerPkg == null) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
 

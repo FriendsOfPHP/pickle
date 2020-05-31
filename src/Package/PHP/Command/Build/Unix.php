@@ -63,9 +63,9 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $configureOptions = '';
         foreach ($this->options as $name => $option) {
             if ('enable' === $option->type) {
-                true == $option->input ? 'enable' : 'disable';
+                true === $option->input ? 'enable' : 'disable';
             } elseif ('disable' == $option->type) {
-                false == $option->input ? 'enable' : 'disable';
+                false === $option->input ? 'enable' : 'disable';
             } elseif ('with' === $option->type) {
                 if ($option->input == 'yes' || $option->input == '1' || $option->type === true) {
                     $configureOptions .= ' --with-'.$name;

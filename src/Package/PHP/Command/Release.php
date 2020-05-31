@@ -99,7 +99,7 @@ class Release implements Interfaces\Package\Release
             }
         }
 
-        if (null == $package) {
+        if (null === $package) {
             /* Just ensure it's correct, */
             throw new \Exception("Couldn't read package info at '$path'");
         }

@@ -57,7 +57,7 @@ class Application extends BaseApplication
 
         foreach ($required_exts as $ext) {
             if (!extension_loaded($ext)) {
-                die("Extension '$ext' required but not loaded, full required list: " . implode(", ", $required_exts));
+                Throw new \Exception("Extension '$ext' required but not loaded, full required list: " . implode(", ", $required_exts));
             }
         }
     }

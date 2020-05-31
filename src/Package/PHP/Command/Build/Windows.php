@@ -98,9 +98,9 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         foreach ($this->options as $name => $option) {
             $decision = null;
             if ('enable' === $option->type) {
-                $decision = true == $option->input ? 'enable' : 'disable';
+                $decision = true === $option->input ? 'enable' : 'disable';
             } elseif ('disable' == $option->type) {
-                $decision = false == $option->input ? 'enable' : 'disable';
+                $decision = false === $option->input ? 'enable' : 'disable';
             }
 
             if (!is_null($decision)) {
