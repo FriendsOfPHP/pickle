@@ -88,8 +88,6 @@ class Release implements Interfaces\Package\Release
 
         if (null === $package) {
             try {
-                $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-
                 $pkgXml = new PackageXml($path);
                 $pkgXml->dump();
 

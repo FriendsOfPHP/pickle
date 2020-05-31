@@ -144,8 +144,6 @@ abstract class Build
     /* zip is default */
     public function packLog($path)
     {
-        $logs = array();
-
         $zip = new \ZipArchive();
         if (!$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
             throw new \Exception("Failed to open '$path' for writing");

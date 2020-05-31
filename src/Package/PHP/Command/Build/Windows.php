@@ -242,7 +242,6 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         if (!preg_match(",Build type\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
             throw new \Exception("Couldn't determine the build thread safety");
         }
-        $is_release = 'Release' == $m[1];
 
         if (!preg_match(",Thread Safety\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
             throw new \Exception("Couldn't determine the build thread safety");

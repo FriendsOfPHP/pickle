@@ -163,7 +163,6 @@ class InstallerCommand extends BuildCommand
     /*  The most of this needs to be incapsulated into an extra Build class*/
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = '')
     {
-        $php = Engine::factory();
         $helper = $this->getHelperSet()->get('question');
 
         $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
@@ -192,9 +191,6 @@ class InstallerCommand extends BuildCommand
     {
         $path = rtrim($input->getArgument('path'), '/\\');
         Util\TmpDir::set($input->getOption('tmp-dir'));
-
-        /* Respect the --php option. This will setup the engine instance. */
-        $php = Engine::factory($input->getOption('php'));
 
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
