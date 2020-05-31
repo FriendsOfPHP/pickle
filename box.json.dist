@@ -5,32 +5,30 @@
         "Herrera\\Box\\Compactor\\Json",
         "Herrera\\Box\\Compactor\\Php"
     ],
-    "directories": ["src", "vendor/composer/composer/res"],
-    "finder": [
-        {
-            "name": "*.php",
-            "exclude": [
-                "CHANGELOG",
-                "CONTRIBUTING",
-                "README",
-                "Tests",
-                "atoum",
-                "behat",
-                "bin",
-                "hoa",
-                "phpunit",
-                "symfony/class-loader",
-                "symfony/config",
-                "symfony/dependency-injection",
-                "symfony/event-dispatcher",
-                "symfony/filesystem",
-                "symfony/translation",
-                "symfony/yaml",
-                "tests"
-            ],
-            "in": "vendor"
-        }
-    ],
+    "directories": ["src", "vendor/composer/composer/res", "vendor/composer/ca-bundle"],
+    "finder": [{
+        "name": "*.php",
+        "exclude": [
+            "CHANGELOG",
+            "CONTRIBUTING",
+            "README",
+            "Tests",
+            "atoum",
+            "behat",
+            "bin",
+            "hoa",
+            "phpunit",
+            "symfony/class-loader",
+            "symfony/config",
+            "symfony/dependency-injection",
+            "symfony/event-dispatcher",
+            "symfony/filesystem",
+            "symfony/translation",
+            "symfony/yaml",
+            "tests"
+        ],
+        "in": "vendor"
+    }],
     "git-tag": "pickle-version",
     "main": "bin/pickle",
     "output": "pickle.phar",
