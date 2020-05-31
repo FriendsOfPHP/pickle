@@ -94,7 +94,7 @@ class Release implements Interfaces\Package\Release
                 $jsonPath = $pkgXml->getJsonPath();
 
                 $package = $jsonLoader->load($jsonPath);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 /* pass for now, be compatible */
             }
         }
