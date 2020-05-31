@@ -90,6 +90,7 @@ class InfoCommand extends Command
 
         $info = Info::factory($package, $cb);
         $info->show();
+        return 0;
     }
 }
 

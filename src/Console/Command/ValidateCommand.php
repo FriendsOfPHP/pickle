@@ -81,6 +81,7 @@ class ValidateCommand extends Command
 
         $validate = Validate::factory($path, $cb);
         $validate->process();
+        return 0;
     }
 }
 

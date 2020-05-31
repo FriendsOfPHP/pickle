@@ -76,6 +76,7 @@ class ConvertCommand extends Command
         };
         $convert = Convert::factory($input->getArgument('path'), $cb);
         $convert->process();
+        return 0;
     }
 }
 

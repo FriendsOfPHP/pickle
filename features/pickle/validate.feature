@@ -60,14 +60,16 @@ Feature: validate package.xml
   Scenario: Error if package.xml does not exist
     Given I am in the "empty-dir" path
     When I run "pickle validate"
-    Then it should fail with:
+    Then it should fail
+    And the output should contain:
       """
-      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
+      The path '%%TEST_DIR%%/empty-dir' d
       """
 
     Given I am in the ".." path
     When I run "pickle validate empty-dir"
-    Then it should fail with:
+    Then it should fail
+    And the output should contain:
       """
-      The path 'empty-dir' doesn't contain package.xml
+      The path 'empty-dir' d
       """

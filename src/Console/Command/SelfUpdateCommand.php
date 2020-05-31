@@ -42,6 +42,7 @@ class SelfUpdateCommand extends Command
         } else {
             $output->writeln('<info>' . $updater->getLocalPharFileBasename() . ' has been updated!</info>');
         }
+        return 0;
     }
 }
 

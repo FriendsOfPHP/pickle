@@ -150,6 +150,7 @@ class ReleaseCommand extends BuildCommand
                 throw new \Exception($e->getMessage());
             }
         }
+        return 0;
     }
 }
 

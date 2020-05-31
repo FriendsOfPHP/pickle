@@ -82,12 +82,6 @@ class FeatureContext implements SnippetAcceptingContext
 
         $this->moveToNewPath($this->dir);
         $this->php = $php;
-        $this->process = new Process(null);
-
-        $timeout = getenv('PICKLE_BEHAT_PROCESS_TIMEOUT');
-        if (false !== $timeout) {
-            $this->process->setTimeout($timeout);
-        }
     }
 
     private function moveToNewPath($path)
@@ -108,24 +102,35 @@ class FeatureContext implements SnippetAcceptingContext
     {
         $this->moveToNewPath($path);
     }
-
+/*     convert   Convert package.xml to new format
+    help      Displays help for a command
+    info      Display information about a PECL extension
+    install   Install a php extension
+    list      Lists commands
+    release   Package a PECL extension for release
+    validate  Validate a PECL extension */
     /**
      * @When /^I run "pickle(?: ((?:\"|[^"])*))?"$/
      */
     public function iRunPickle($argumentsString = '')
     {
         $argumentsString = strtr($argumentsString, array('\'' => '"'));
+        $arguments = explode(' ',$argumentsString);
+        $processArguments = [
+                $this->php,
+                __DIR__ . '/../../' . static::PICKLE_BIN,
+            ];
+
+        $processArguments = array_merge($processArguments, $arguments);
+        $processArguments[] = '--no-ansi';
+        $this->process = new Process($processArguments);
+
+        $timeout = getenv('PICKLE_BEHAT_PROCESS_TIMEOUT');
+        if (false !== $timeout) {
+            $this->process->setTimeout($timeout);
+        }
 
         $this->process->setWorkingDirectory($this->workingDir);
-        $this->process->setCommandLine(
-            sprintf(
-                '%s %s --no-ansi %s',
-                $this->php,
-                escapeshellarg(__DIR__ . '/../../' . static::PICKLE_BIN),
-                $argumentsString
-            )
-        );
-
         $this->process->start();
         $this->process->wait();
     }
