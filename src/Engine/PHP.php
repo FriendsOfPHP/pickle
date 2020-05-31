@@ -41,6 +41,7 @@ use Pickle\Base\Abstracts;
 
 class PHP extends Abstracts\Engine implements Interfaces\Engine
 {
+    private $phpCliEscaped;
     private $phpCli;
     private $phpize;
     private $version;
@@ -61,7 +62,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         if (!(is_file($phpCli) && is_executable($phpCli))) {
             throw new \Exception("Invalid php executable: $phpCli");
         }
-        $this->phpCli = escapeshellcmd($phpCli);
+        $this->phpCliEscaped = escapeshellcmd($phpCli);
+        $this->phpCli = $phpCli;
         $this->getFromConstants();
     }
 
@@ -75,7 +77,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
                 'echo PHP_ZTS . \"\n\"; '.
                 'echo PHP_DEBUG . \"\n\"; ';
 
-        $cmd = $this->phpCli.' -r '.'"'.str_replace("\n", '', $script).'"';
+        $cmd = $this->phpCliEscaped.' -r '.'"'.str_replace("\n", '', $script).'"';
 
         exec($cmd, $info);
         if (7 !== count($info)) {
@@ -89,6 +91,23 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
         } else {
             /* TODO till now we didn't need his on linux*/
+        }
+    }
+
+    protected function getFullPathExtDir($dir)
+    {
+        $realpathDir = realpath($dir);
+        $baseDir = dirname($realpathDir);
+        $baseDirPhp = dirname($this->phpCli);
+        if (empty($baseDir)) {
+            if (empty($dir)) {
+                return $baseDirPhp . 'ext';
+            }
+            return $baseDirPhp . '\\' .  $dir;
+        }
+        
+        if ($baseDir == $baseDirPhp) {
+            return $realpathDir;
         }
     }
 
@@ -108,8 +127,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         if ('' == $extensionDir) {
             throw new \Exception('Cannot detect PHP extension directory');
         }
-
-        return $extensionDir;
+        return $this->getFullPathExtDir($extensionDir);
     }
 
     protected function getArchFromPhpInfo($info)
@@ -184,7 +202,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     private function getFromPhpInfo()
     {
-        $cmd = $this->phpCli.' -i';
+        $cmd = $this->phpCliEscaped.' -i';
         exec($cmd, $info);
 
         if (!is_array($info)) {

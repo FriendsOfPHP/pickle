@@ -187,7 +187,7 @@ class Binary
     {
         $output = $this->output;
         $progress = $this->progress;
-
+        $progress->setOverwrite(true);
         $ctx = stream_context_create(
             array(
                 'http' => [
@@ -196,14 +196,32 @@ class Binary
             ),
             array(
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
+
                     switch ($notificationCode) {
+                        case STREAM_NOTIFY_RESOLVE:
+                        case STREAM_NOTIFY_AUTH_REQUIRED:
+                        case STREAM_NOTIFY_COMPLETED:
+                        case STREAM_NOTIFY_FAILURE:
+                        case STREAM_NOTIFY_AUTH_RESULT:
+                            break;
+                
+                        case STREAM_NOTIFY_REDIRECTED:
+                            break;
+                
+                        case STREAM_NOTIFY_CONNECT:
+                            break;
+                
                         case STREAM_NOTIFY_FILE_SIZE_IS:
-                            $progress->start($output, $bytesMax);
+                            $progress->start($bytesMax);
                             break;
+                
+                        case STREAM_NOTIFY_MIME_TYPE_IS:
+                            break;
+                
                         case STREAM_NOTIFY_PROGRESS:
-                            $progress->setCurrent($bytesTransferred);
+                            $progress->setProgress($bytesTransferred);
                             break;
-                    }
+                    };
                 },
             )
         );
@@ -236,12 +254,12 @@ class Binary
             if (substr($basename, 0, 4) == 'php_') {
                 $this->extDll[] = $basename;
                 $this->output->writeln("copying $dll to ".$dest."\n");
-                $success = @copy($dll, $this->php->getExtensionDir().'/'.$basename);
+                $success = copy($dll, $this->php->getExtensionDir().'/'.$basename);
                 if (!$success) {
                     throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
             } else {
-                $success = @copy($dll, dirname($this->php->getPath()).'/'.$basename);
+                $success = copy($dll, dirname($this->php->getPath()).'/'.$basename);
                 if (!$success) {
                     throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
