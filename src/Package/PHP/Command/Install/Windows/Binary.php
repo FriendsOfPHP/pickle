@@ -219,12 +219,7 @@ class Binary
                             break;
                 
                         case STREAM_NOTIFY_PROGRESS:
-<<<<<<< HEAD
-
                             $progress->setCurrent($bytesTransferred);
-=======
-                            $progress->setProgress($bytesTransferred);
->>>>>>> 201985b2a839a1109becf19097be3de3f69d5f3c
                             break;
                     };
                 },
