@@ -45,7 +45,6 @@ class Package
     protected static function deliverFresh($force)
     {
         if ($force && self::$instance || is_null(self::$instance)) {
-            /* XXX does this leak the previous instance? */
             self::$instance = null;
 
             return true;
