@@ -1,7 +1,0 @@
-
-
-;Pickle installed extension, do not edit this line and below
-extension=php_hello.dll
-extension=php_pumpkin.dll
-;Pickle installed extension, do not edit this line and above
-

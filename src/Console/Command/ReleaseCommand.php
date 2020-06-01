@@ -53,7 +53,6 @@ class ReleaseCommand extends BuildCommand
         $this
             ->setName('release')
             ->setDescription('Package a PECL extension for release')
-            /* TODO: make it to take value like zip, tgz, etc. should this functionality be expanded */
             ->addOption(
                 'binary',
                 null,
@@ -88,7 +87,7 @@ class ReleaseCommand extends BuildCommand
     {
         $helper = $this->getHelper('package');
         Util\TmpDir::set($input->getOption('tmp-dir'));
-        /* TODO Rework this to use the Info package command */
+
         $cb = function (Interfaces\Package $package) use ($helper, $output) {
             $helper->showInfo($output, $package);
         };
