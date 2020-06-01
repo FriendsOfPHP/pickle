@@ -201,6 +201,7 @@ class Binary
                             $progress->start($output, $bytesMax);
                             break;
                         case STREAM_NOTIFY_PROGRESS:
+
                             $progress->setCurrent($bytesTransferred);
                             break;
                     }

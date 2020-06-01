@@ -39,6 +39,7 @@ namespace Pickle\Package\PHP\Command\Release\Windows;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
+use Pickle\Package\PHP\Util\PackageJson;
 use Pickle\Package\Util\Header;
 
 class Binary implements Interfaces\Package\Release
@@ -104,37 +105,7 @@ class Binary implements Interfaces\Package\Release
 
     protected function readPackage($path)
     {
-        $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
-        $package = null;
-
-        if (file_exists($path.DIRECTORY_SEPARATOR.'composer.json')) {
-            $package = $jsonLoader->load($path.DIRECTORY_SEPARATOR.'composer.json');
-        }
-
-        if (null === $package && $this->noConvert) {
-            throw new \RuntimeException('XML package are not supported. Please convert it before install');
-        }
-
-        if (null === $package) {
-            try {
-                $pkgXml = new PackageXml($path);
-                $pkgXml->dump();
-
-                $jsonPath = $pkgXml->getJsonPath();
-
-                $package = $jsonLoader->load($jsonPath);
-            } catch (\Exception $e) {
-                /* pass for now, be compatible */
-            }
-        }
-
-        if (null === $package) {
-            /* Just ensure it's correct, */
-            throw new \Exception("Couldn't read package info at '$path'");
-        }
-
-        $package->setRootDir(realpath($path));
-
+        $package = PackageJson::readPackage($path, $noconvert);
         $this->composerJsonBak($package);
 
         /* For the binary release, json badly need the version informatio

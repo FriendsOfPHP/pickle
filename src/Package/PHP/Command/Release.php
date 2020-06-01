@@ -75,35 +75,7 @@ class Release implements Interfaces\Package\Release
 
     protected function readPackage($path)
     {
-        $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
-        $package = null;
-
-        if (file_exists($path.DIRECTORY_SEPARATOR.'composer.json')) {
-            $package = $jsonLoader->load($path.DIRECTORY_SEPARATOR.'composer.json');
-        }
-
-        if (null === $package && $this->noConvert) {
-            throw new \RuntimeException('XML package are not supported. Please convert it before install');
-        }
-
-        if (null === $package) {
-            try {
-                $pkgXml = new PackageXml($path);
-                $pkgXml->dump();
-
-                $jsonPath = $pkgXml->getJsonPath();
-
-                $package = $jsonLoader->load($jsonPath);
-            } catch (\Exception $e) {
-                /* pass for now, be compatible */
-            }
-        }
-
-        if (null === $package) {
-            /* Just ensure it's correct, */
-            throw new \Exception("Couldn't read package info at '$path'");
-        }
-
+        $package = PackageJson::readPackage($path, $noconvert);
         $package->setRootDir(realpath($path));
 
         /* We're not adding any versions into the composer.json for the source release.
