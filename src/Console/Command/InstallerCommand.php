@@ -44,6 +44,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Pickle\Base\Interfaces\Package;
 use Pickle\Base\Abstracts\Console\Command\BuildCommand;
 use Pickle\Engine;
@@ -130,7 +131,8 @@ class InstallerCommand extends BuildCommand
             ->render();
 
         $inst = Install::factory($path);
-        $progress = $this->getHelperSet()->get('progress');
+
+        $progress = new ProgressBar($output, 50);
         $inst->setProgress($progress);
         $inst->setInput($input);
         $inst->setOutput($output);
