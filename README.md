@@ -38,7 +38,7 @@ Clone this repository and install the dependencies with
 $ composer install
 ```
 
-A [phar is also available](https://github.com/FriendsOfPHP/pickle/releases/download/v0.4.0/pickle.phar), but it might be outdated.
+A [phar is also available](https://github.com/FriendsOfPHP/pickle/releases/download/v0.5.0/pickle.phar), but it might be outdated.
 
 If you like to create your own phar from the pickle sources, you will need to install Box (http://box-project.github.io/box2/). Then clone the repository and run the following commands:
 
@@ -130,6 +130,7 @@ $ vendor/bin/behat
 # To choose the test suite you want to run
 $ vendor/bin/behat -s pickle
 ```
+Behat tests also test the phar, generate it prior to run the full test as described here (composer install --no-dev mode).
 
 Pickle is covered using 4 Behat tests suites:
 
