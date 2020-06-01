@@ -88,7 +88,6 @@ class PackageXml
         $convertCl->generateReleaseFile();
     }
 
-    /* XXX maybe need a separate composer.json util */
     public function dump($fname = null)
     {
         if (!$this->package) {

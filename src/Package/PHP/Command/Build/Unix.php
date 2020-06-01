@@ -87,7 +87,6 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $backCwd = getcwd();
         chdir($this->tempDir);
 
-        /* XXX check sanity */
         $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
 
         $res = $this->runCommand($this->pkg->getSourceDir().'/configure '.$configureOptions);
@@ -122,7 +121,6 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 
     public function getInfo()
     {
-        /* XXX implementat it */
         return array();
     }
 }

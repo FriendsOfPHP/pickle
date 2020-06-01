@@ -96,7 +96,6 @@ class Type
         return self::match([$reg0, $reg1], $arg, $matches);
     }
 
-    /* XXX definitely needs a serious improvement */
     public static function determineGit($arg, &$matches)
     {
         $reg0 = '#^
