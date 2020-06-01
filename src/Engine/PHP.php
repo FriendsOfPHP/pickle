@@ -89,8 +89,6 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
-        } else {
-            /* TODO till now we didn't need his on linux*/
         }
     }
 
