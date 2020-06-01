@@ -39,6 +39,7 @@ namespace Pickle\Package\PHP\Command;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
+use Pickle\Package\PHP\Util\PackageJson;
 use Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
 
