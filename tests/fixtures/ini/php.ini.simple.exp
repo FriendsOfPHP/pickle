@@ -9,3 +9,5 @@ extension=php_rar.dll
 
 someother.stuff = 42
 ; comment here
+
+
