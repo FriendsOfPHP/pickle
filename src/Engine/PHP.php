@@ -211,7 +211,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $iniPath = $this->getIniPathFromPhpInfo($info);
         $extensionDir = $this->getExtensionDirFromPhpInfo($info);
 
-        $compiler = "vc15";
+        $compiler = strtolower($this->getCompilerFromPhpInfo($info));
         return [$compiler, $arch, $iniPath, $extensionDir];
     }
 
