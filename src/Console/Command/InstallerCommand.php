@@ -131,8 +131,8 @@ class InstallerCommand extends BuildCommand
             ->render();
 
         $inst = Install::factory($path);
+        $progress = new ProgressBar($output, 100);
 
-        $progress = new ProgressBar($output, 50);
         $inst->setProgress($progress);
         $inst->setInput($input);
         $inst->setOutput($output);

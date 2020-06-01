@@ -1,0 +1,1792 @@
+[1mFeature:[22m convert package.xml to information files
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to create information files from my package.xml
+
+  [1mBackground:[22m                              [30m# features/pickle/convert-info.feature:6[39m
+    [32mGiven a file named "[39m[32;1mpackage.xml[39;22m[32m" with:[39m [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <package packagerversion="1.4.7" version="2.0">
+          <name>dummy</name>
+          <providesextension>dummy</providesextension>
+          <summary>This is a dummy package</summary>
+          <description>This is a dummy package description</description>
+          <license uri="http://www.php.net/license">PHP License</license>
+          <version>
+              <release>3.1.15</release>
+              <api>3.1.0</api>
+          </version>
+          <stability>
+              <release>beta</release>
+              <api>stable</api>
+          </stability>
+          <date>2013-??-??</date>
+          <notes>This is a note</notes>
+          <changelog></changelog>
+          <lead>
+              <name>Rasmus Lerdorf</name>
+              <user>rasmus</user>
+              <email>rasmus@php.net</email>
+              <active>yes</active>
+          </lead>
+          <developer>
+              <name>Ilia Alshanetsky</name>
+              <user>iliaa</user>
+              <email>ilia@prohost.org</email>
+              <active>no</active>
+          </developer>
+      </package>
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m     [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m       [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """[39m
+
+  [1mScenario:[22m Create information files              [30m# features/pickle/convert-info.feature:49[39m
+    [32mWhen I run "pickle [39m[32;1mconvert[39;22m[32m"[39m                   [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m with:[39m                     [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      Successfully converted dummy
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      """[39m
+    [32mAnd "[39m[32;1mcomposer.json[39;22m[32m" JSON file should contain:[39m [30m# FeatureContext::JsonfileShouldContain()[39m
+[32m      """
+      {
+          "name": "dummy",
+          "type": "extension",
+          "version": "3.1.15-beta",
+          "description": "This is a dummy package",
+          "license": [
+              "PHP License"
+          ],
+          "authors": [
+              {
+                  "name": "Rasmus Lerdorf",
+                  "email": "rasmus@php.net"
+              },
+              {
+                  "name": "Ilia Alshanetsky",
+                  "email": "ilia@prohost.org"
+              }
+          ]
+      }
+      """[39m
+
+[1mFeature:[22m convert package.xml to composer.json
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to create composer.json from my package.xml
+
+  [1mBackground:[22m                              [30m# features/pickle/convert-json.feature:6[39m
+    [32mGiven a file named "[39m[32;1mpackage.xml[39;22m[32m" with:[39m [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <package packagerversion="1.4.7" version="2.0">
+          <name>dummy</name>
+          <providesextension>dummy</providesextension>
+          <summary>This is a dummy package</summary>
+          <version>
+              <release>3.1.15</release>
+              <api>3.1.0</api>
+          </version>
+          <stability>
+              <release>beta</release>
+              <api>stable</api>
+          </stability>
+          <date>2013-??-??</date>
+          <notes>This is a note</notes>
+          <changelog></changelog>
+      </package>
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m     [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m       [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """[39m
+
+  [1mScenario:[22m Search package.xml in CWD             [30m# features/pickle/convert-json.feature:35[39m
+    [32mWhen I run "pickle [39m[32;1mconvert[39;22m[32m"[39m                   [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m with:[39m                     [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      Successfully converted dummy
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      """[39m
+    [32mAnd "[39m[32;1mcomposer.json[39;22m[32m" JSON file should contain:[39m [30m# FeatureContext::JsonfileShouldContain()[39m
+[32m      """
+      {
+          "name": "dummy",
+          "type": "extension",
+          "version": "3.1.15-beta",
+          "description": "This is a dummy package"
+      }
+      """[39m
+
+  [1mScenario:[22m Search package.xml in the given path     [30m# features/pickle/convert-json.feature:56[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m               [30m# FeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mconvert ../[39;22m[32m"[39m                  [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m with:[39m                        [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      Successfully converted dummy
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      """[39m
+    [32mAnd "[39m[32;1m../composer.json[39;22m[32m" JSON file should contain:[39m [30m# FeatureContext::JsonfileShouldContain()[39m
+[32m      """
+      {
+          "name": "dummy",
+          "type": "extension",
+          "version": "3.1.15-beta",
+          "description": "This is a dummy package"
+      }
+      """[39m
+
+  [1mScenario:[22m Error if package.xml does not exist [30m# features/pickle/convert-json.feature:78[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m          [30m# FeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mconvert[39;22m[32m"[39m                 [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mfail[39;22m[32m with:[39m                   [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
+      """[39m
+    [32mGiven I am in the "[39m[32;1m..[39;22m[32m" path[39m                 [30m# FeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mconvert empty-dir[39;22m[32m"[39m       [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mfail[39;22m[32m with:[39m                   [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      The path 'empty-dir' doesn't contain package.xml
+      """[39m
+
+[1mFeature:[22m Install pickle package
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to install my extension from composer.json
+
+  [1mBackground:[22m                                [30m# features/pickle/install.feature:6[39m
+    [32mGiven a file named "[39m[32;1mcomposer.json[39;22m[32m" with:[39m [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      {
+          "name": "dummy",
+          "description": "This is a dummy package",
+          "version": "1.0.0",
+          "type": "extension",
+          "extra": {
+              "configure-options": {
+                  "enable-dummy": {
+                      "default": "no",
+                      "prompt": "Enable dummy support"
+                  }
+              }
+          }
+      }
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m       [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      PHP_ARG_ENABLE(dummy, whether to enable dummy support,
+      [  --enable-dummy           Enable dummy support])
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m         [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "1.0.0"
+      """[39m
+
+  [1mScenario:[22m Install from CWD              [30m# features/pickle/install.feature:34[39m
+    [32mWhen I run "pickle [39m[32;1minstall --dry-run[39;22m[32m"[39m [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m[39m                   [30m# FeatureContext::itShouldFail()[39m
+
+[1mFeature:[22m validate package.xml
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to validate my package.xml
+
+  [1mBackground:[22m                              [30m# features/pickle/validate.feature:6[39m
+    [32mGiven a file named "[39m[32;1mpackage.xml[39;22m[32m" with:[39m [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <package packagerversion="1.4.7" version="2.0">
+          <name>dummy</name>
+          <providesextension>dummy</providesextension>
+          <summary>This is a dummy package</summary>
+          <version>
+              <release>3.1.15</release>
+              <api>3.1.0</api>
+          </version>
+          <stability>
+              <release>beta</release>
+              <api>stable</api>
+          </stability>
+          <date>2013-??-??</date>
+          <notes>This is a note</notes>
+          <changelog></changelog>
+      </package>
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m     [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m       [30m# FeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """[39m
+
+  [1mScenario:[22m Search package.xml in CWD [30m# features/pickle/validate.feature:35[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate[39;22m[32m"[39m      [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m with:[39m         [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      This is a dummy package
+      """[39m
+
+  [1mScenario:[22m Search package.xml in the given path [30m# features/pickle/validate.feature:47[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m           [30m# FeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate ../[39;22m[32m"[39m             [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m with:[39m                    [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      This is a dummy package
+      """[39m
+
+  [1mScenario:[22m Error if package.xml does not exist [30m# features/pickle/validate.feature:60[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m          [30m# FeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate[39;22m[32m"[39m                [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mfail[39;22m[32m with:[39m                   [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
+      """[39m
+    [32mGiven I am in the "[39m[32;1m..[39;22m[32m" path[39m                 [30m# FeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate empty-dir[39;22m[32m"[39m      [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mfail[39;22m[32m with:[39m                   [30m# FeatureContext::itShouldPassWith()[39m
+[32m      """
+      The path 'empty-dir' doesn't contain package.xml
+      """[39m
+
+[1mFeature:[22m convert PECL extensions
+  In order to use pickle on PECL extensions
+  As a pickle user
+  I should be able to convert PECL extensions to pickle packages
+
+  [1mScenario Outline:[22m Convert downloaded extensions     [30m# features/pecl/convert-extensions.feature:6[39m
+    [36mGiven "[39m[36;1m<extension>[39;22m[36m" [39m[36;1m<version>[39;22m[36m extension exists[39m    [30m# FeatureContext::extensionExists()[39m
+    [36mWhen I run "pickle convert [39m[36;1m<extension>[39;22m[36m-[39m[36;1m<version>[39;22m[36m"[39m [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m with:[39m                         [30m# FeatureContext::itShouldPassWith()[39m
+[36m      """
+      Successfully converted <extension>
+      """[39m
+    [36mAnd the output should contain:[39m                    [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+    [36mAnd the output should contain:[39m                    [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package version (current release) | <version>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m version  [39;22m|
+      |[31m APC       [39m|[31m 3.1.13   [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da944cd890.13197296/APC-3.1.13/APC-3.1.13.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m apcu      [39m|[31m 4.0.6    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da95cfd678.80788895/apcu-4.0.6/apcu-4.0.6.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m mongo     [39m|[31m 1.5.4    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da97458b93.77188633/mongo-1.5.4/mongo-1.5.4.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m memcache  [39m|[31m 3.0.8    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da98986006.26149368/memcache-3.0.8/memcache-3.0.8.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m imagick   [39m|[31m 3.2.0RC1 [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da99aa2344.85696523/imagick-3.2.0RC1/imagick-3.2.0RC1.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m amqp      [39m|[31m 1.4.0    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da9b234387.22092784/amqp-1.4.0/amqp-1.4.0.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m redis     [39m|[31m 2.2.5    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8da9c330bc2.04586294/redis-2.2.5/redis-2.2.5.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+
+[1mFeature:[22m download and install extensions from git repository
+  In order to install extensions
+  As a pickle user
+  I should be able to download and install extensions from git repositories
+
+  [1mScenario Outline:[22m Install extensions from git  [30m# features/pecl/git-extension.feature:6[39m
+    [36mGiven I run "pickle install [39m[36;1m<url>[39;22m[36m --dry-run"[39m [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                          [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m               [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (master)
+      """[39m
+    [36mAnd the output should contain:[39m               [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning master
+      """[39m
+    [36mAnd the output should contain:[39m               [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|
+        │ Actual output:
+        │ 
+        │ - Installing env (master): PHP Notice:  Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+        │ Cloning master
+        │ 
+        │ 
+        │   [Composer\Downloader\TransportException]
+        │   Your configuration does not allow connections to git://github.com/beberlei/env.git. See https://getcomposer.org/doc/06-config.md#secure-http for details.
+        │ 
+        │ 
+        │ install [--no-convert] [--defaults] [--source] [--with-configure-options WITH-CONFIGURE-OPTIONS] [--save-logs SAVE-LOGS] [--dry-run] [--php PHP] [--ini INI] [--tmp-dir TMP-DIR] [--] [<path>]
+        │ 
+        │ 
+        │ Notice: Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|
+
+  [1mScenario Outline:[22m Install extensions from git with version constraint [30m# features/pecl/git-extension.feature:27[39m
+    [36mGiven I run "pickle install [39m[36;1m<url>[39;22m[36m#[39m[36;1m<version>[39;22m[36m --dry-run"[39m              [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                 [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                      [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                                      [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning <version>
+      """[39m
+    [36mAnd the output should contain:[39m                                      [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|[36;1m version [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|[32m master  [39m|
+        │ Actual output:
+        │ 
+        │ - Installing env (master): PHP Notice:  Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+        │ Cloning master
+        │ 
+        │ 
+        │   [Composer\Downloader\TransportException]
+        │   Your configuration does not allow connections to git://github.com/beberlei/env.git. See https://getcomposer.org/doc/06-config.md#secure-http for details.
+        │ 
+        │ 
+        │ install [--no-convert] [--defaults] [--source] [--with-configure-options WITH-CONFIGURE-OPTIONS] [--save-logs SAVE-LOGS] [--dry-run] [--php PHP] [--ini INI] [--tmp-dir TMP-DIR] [--] [<path>]
+        │ 
+        │ 
+        │ Notice: Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|[32m v0.2.1  [39m|
+
+  [1mScenario Outline:[22m Show info about downloaded extensions [30m# features/pecl/git-extension.feature:48[39m
+    [36mGiven I run "pickle info [39m[36;1m<url>[39;22m[36m"[39m                       [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                   [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (master)
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning master
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|
+        │ Actual output:
+        │ 
+        │ - Installing env (master): PHP Notice:  Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+        │ Cloning master
+        │ 
+        │ 
+        │   [Composer\Downloader\TransportException]
+        │   Your configuration does not allow connections to git://github.com/beberlei/env.git. See https://getcomposer.org/doc/06-config.md#secure-http for details.
+        │ 
+        │ 
+        │ info [--tmp-dir TMP-DIR] [--] [<path>]
+        │ 
+        │ 
+        │ Notice: Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|
+
+  [1mScenario Outline:[22m Show info about extensions with version constraint [30m# features/pecl/git-extension.feature:69[39m
+    [36mGiven I run "pickle info [39m[36;1m<url>[39;22m[36m#[39m[36;1m<version>[39;22m[36m"[39m                          [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                     [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                                     [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning <version>
+      """[39m
+    [36mAnd the output should contain:[39m                                     [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|[36;1m version [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|[32m master  [39m|
+        │ Actual output:
+        │ 
+        │ - Installing env (master): PHP Notice:  Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+        │ Cloning master
+        │ 
+        │ 
+        │   [Composer\Downloader\TransportException]
+        │   Your configuration does not allow connections to git://github.com/beberlei/env.git. See https://getcomposer.org/doc/06-config.md#secure-http for details.
+        │ 
+        │ 
+        │ info [--tmp-dir TMP-DIR] [--] [<path>]
+        │ 
+        │ 
+        │ Notice: Undefined index: home in /home/pierre/projects/php/pickle/pickle/vendor/composer/composer/src/Composer/Config.php on line 263
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|[32m v0.2.1  [39m|
+
+[1mFeature:[22m download and install PECL extensions
+  In order to install PECL extensions
+  As a pickle user
+  I should be able to download and install PECL extensions
+
+  [1mScenario Outline:[22m Show info about downloaded extensions [30m# features/pecl/info-extensions.feature:6[39m
+    [36mGiven I run "pickle info [39m[36;1m<extension>[39;22m[36m@[39m[36;1m<version>[39;22m[36m"[39m       [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                   [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package version (current release) | <version>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m pretty   [39;22m|[36;1m version [39;22m|
+      |[32m apc       [39m|[32m APC      [39m|[32m 3.1.13  [39m|
+[31m        string(1682) '- Installing apc (3.1.13): Downloading (connecting...)Downloading (0%)           Downloading (5%)Downloading (10%)Downloading (95%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | APC    |
+        | Package version (current release) | 3.1.13 |
+        | Package status                    | beta   |
+        +-----------------------------------+--------+
+        
+        Alternative PHP Cache
+        
+        Configure options
+        +--------+------------------------------------------+---------+
+        | Type   | Description                              | Default |
+        +--------+------------------------------------------+---------+
+        | enable | whether to enable APC support            | no      |
+        | enable | whether to include code coverage symbols | no      |
+        | enable | Enable APC debugging                     | no      |
+        | enable | Enable per request file info about files | no      |
+        |        | used from the APC cache (ie:             |         |
+        |        | apc_cache_info('filehits'                |         |
+        | enable | Disable mmap support and use IPC shm     | yes     |
+        |        | instead                                  |         |
+        | enable | Enable semaphore locks instead of fcntl  | no      |
+        | enable | Disable pthread mutex locking            | yes     |
+        | enable | Enable pthread read/write locking        | no      |
+        | enable | Enable spin locks EXPERIMENTAL           | no      |
+        | enable | Enable mmap/shm memory protection        | no      |
+        | enable | Disable valgrind based memory checks     | yes     |
+        +--------+------------------------------------------+---------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu      [39m|[32m apcu     [39m|[32m 4.0.6   [39m|
+[31m        string(1325) '- Installing apcu (4.0.6): Downloading (connecting...)Downloading (0%)           Downloading (55%)Downloading (75%)Downloading (100%)
+        +-----------------------------------+-------+
+        | Package name                      | apcu  |
+        | Package version (current release) | 4.0.6 |
+        | Package status                    | beta  |
+        +-----------------------------------+-------+
+        
+        APCu - APC User Cache
+        
+        Configure options
+        +--------+------------------------------------------+---------+
+        | Type   | Description                              | Default |
+        +--------+------------------------------------------+---------+
+        | enable | whether to enable APCu support           | no      |
+        | enable | whether to include code coverage symbols | no      |
+        | enable | Enable APC full compatibility support    | no      |
+        | enable | Disable rwlocks in APCu                  | yes     |
+        | enable | Enable APCu debugging                    | no      |
+        | enable | Enable SIGUSR1 clearing handler          | no      |
+        | enable | Disable mma                              | yes     |
+        | enable | Use spinlocks before flocks              | no      |
+        | enable | Disable valgrind based memory checks     | yes     |
+        +--------+------------------------------------------+---------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m mongo     [39m|[32m mongo    [39m|[32m 1.5.4   [39m|
+[31m        string(1047) '- Installing mongo (1.5.4): Downloading (connecting...)Downloading (0%)           Downloading (30%)Downloading (60%)Downloading (90%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | mongo  |
+        | Package version (current release) | 1.5.4  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+
+        
+        MongoDB database driver
+        
+        Configure options
+        +--------+------------------------------------------+---------+
+        | Type   | Description                              | Default |
+        +--------+------------------------------------------+---------+
+        | with   | Build with Cyrus SASL support            |         |
+        | enable | whether to enable Mongo extension        | no      |
+        | enable | whether to include code coverage symbols | no      |
+        | enable | Build with PHP streams support           | yes     |
+        +--------+------------------------------------------+---------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m memcache  [39m|[32m memcache [39m|[32m 3.0.8   [39m|
+[31m        string(1032) '- Installing memcache (3.0.8): Downloading (connecting...)Downloading (0%)           Downloading (35%)Downloading (70%)Downloading (100%)
+        +-----------------------------------+----------+
+        | Package name                      | memcache |
+        | Package version (current release) | 3.0.8    |
+        | Package status                    | beta     |
+        +-----------------------------------+----------+
+        
+        memcached extension
+        
+        Configure options
+        +--------+------------------------------------+---------+
+        | Type   | Description                        | Default |
+        +--------+------------------------------------+---------+
+        | with   | for the location of ZLIB           |         |
+        | enable | whether to enable memcache support | no      |
+        | enable | whether to enable memcache session | yes     |
+        |        | handler support                    |         |
+        | enable | compile with debugging symbols     | no      |
+        +--------+------------------------------------+---------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m amqp      [39m|[32m amqp     [39m|[32m 1.4.0   [39m|
+[31m        string(679) '- Installing amqp (1.4.0): Downloading (connecting...)Downloading (0%)           Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | amqp   |
+        | Package version (current release) | 1.4.0  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+
+        
+        Communicate with any AMQP compliant server
+        
+        Configure options
+        +------+------------------+---------+
+        | Type | Description      | Default |
+        +------+------------------+---------+
+        | with | for amqp support |         |
+        | with | for amqp         |         |
+        +------+------------------+---------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m redis     [39m|[32m redis    [39m|[32m 2.2.5   [39m|
+[31m        string(972) '- Installing redis (2.2.5): Downloading (connecting...)Downloading (0%)           Downloading (25%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | redis  |
+        | Package version (current release) | 2.2.5  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+
+        
+        PHP extension for interfacing with Redis
+        
+        Configure options
+        +--------+---------------------------------------+---------+
+        | Type   | Description                           | Default |
+        +--------+---------------------------------------+---------+
+        | enable | whether to enable redis support       | no      |
+        | enable | whether to enable sessions            | yes     |
+        | enable | whether to enable igbinary serializer | no      |
+        |        | support                               |         |
+        +--------+---------------------------------------+---------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario:[22m Show informations about a PECL extension's options [30m# features/pecl/info-extensions.feature:35[39m
+    [32mWhen I run "pickle [39m[32;1minfo apc@3.1.13[39;22m[32m"[39m                        [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m[39m                                        [30m# FeatureContext::itShouldFail()[39m
+    [32mAnd the output should contain:[39m                             [30m# FeatureContext::theOutputShouldContain()[39m
+[32m      """
+      | enable | whether to enable APC support            | no      |
+      """[39m
+    [32mAnd the output should contain:[39m                             [30m# FeatureContext::theOutputShouldContain()[39m
+[32m      """
+      | enable | Disable pthread mutex locking            | yes     |
+      """[39m
+    [32mWhen I run "pickle [39m[32;1minfo oci8@2.0.8[39;22m[32m"[39m                        [30m# FeatureContext::iRunPickle()[39m
+    [32mThen it should [39m[32;1mpass[39;22m[32m[39m                                        [30m# FeatureContext::itShouldFail()[39m
+    [32mAnd the output should contain:[39m                             [30m# FeatureContext::theOutputShouldContain()[39m
+[32m      """
+      | with | for Oracle Database OCI8 support |         |
+      """[39m
+
+[1mFeature:[22m download and install PECL extensions
+  In order to install PECL extensions
+  As a pickle user
+  I should be able to download and install PECL extensions
+
+  [1mScenario Outline:[22m Install extensions from PECL repository [30m# features/pecl/install-extensions.feature:6[39m
+    [36mGiven I run "pickle install [39m[36;1m<extension>[39;22m[36m --dry-run"[39m      [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                     [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                          [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (latest-stable)
+      """[39m
+    [36mAnd the output should contain:[39m                          [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                          [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m pretty   [39;22m|
+      |[32m apc       [39m|[32m APC      [39m|
+[31m        string(495) '- Installing apc (latest-stable): Downloading (connecting...)Downloading (0%)           Downloading (5%)Downloading (10%)Downloading (95%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | APC    |
+        | Package version (current release) | 3.1.13 |
+        | Package status                    | beta   |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu      [39m|[32m apcu     [39m|
+[31m        string(464) '- Installing apcu (latest-stable): Downloading (connecting...)Downloading (0%)           Downloading (35%)Downloading (95%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | apcu   |
+        | Package version (current release) | 5.1.18 |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m mongo     [39m|[32m mongo    [39m|
+[31m        string(533) '- Installing mongo (latest-stable): Downloading (connecting...)Downloading (0%)           Downloading (35%)Downloading (55%)Downloading (70%)Downloading (90%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | mongo  |
+        | Package version (current release) | 1.6.16 |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m memcache  [39m|[32m memcache [39m|
+        │ Actual output:
+        │ 
+        │ - Installing memcache (latest-stable): Downloading (connecting...)Downloading (0%)           Downloading (55%)Downloading (65%)Downloading (100%)
+        │ 
+        │ 
+        │   [Exception]
+        │   Couldn't parse the version defined in the PHP_MEMCACHE_VERSION macro
+        │ 
+        │ 
+        │ install [--no-convert] [--defaults] [--source] [--with-configure-options WITH-CONFIGURE-OPTIONS] [--save-logs SAVE-LOGS] [--dry-run] [--php PHP] [--ini INI] [--tmp-dir TMP-DIR] [--] [<path>]
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m redis     [39m|[32m redis    [39m|
+[31m        string(601) '- Installing redis (latest-stable): Downloading (connecting...)Downloading (0%)           Downloading (10%)Downloading (20%)Downloading (55%)Downloading (65%)Downloading (75%)Downloading (85%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | redis  |
+        | Package version (current release) | 5.2.2  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Install extensions from PECL repository with version constraint [30m# features/pecl/install-extensions.feature:30[39m
+    [36mGiven I run "pickle install [39m[36;1m<extension>[39;22m[36m@[39m[36;1m<version>[39;22m[36m --dry-run"[39m                    [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                             [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                                  [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                                                  [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                                                  [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+    [36mAnd the output should contain:[39m                                                  [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package version (current release) | <version>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m pretty   [39;22m|[36;1m version [39;22m|
+      |[32m apc       [39m|[32m APC      [39m|[32m 3.1.13  [39m|
+[31m        string(488) '- Installing apc (3.1.13): Downloading (connecting...)Downloading (0%)           Downloading (5%)Downloading (10%)Downloading (95%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | APC    |
+        | Package version (current release) | 3.1.13 |
+        | Package status                    | beta   |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu      [39m|[32m apcu     [39m|[32m 4.0.6   [39m|
+[31m        string(451) '- Installing apcu (4.0.6): Downloading (connecting...)Downloading (0%)           Downloading (55%)Downloading (75%)Downloading (100%)
+        +-----------------------------------+-------+
+        | Package name                      | apcu  |
+        | Package version (current release) | 4.0.6 |
+        | Package status                    | beta  |
+        +-----------------------------------+-------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m mongo     [39m|[32m mongo    [39m|[32m 1.5.4   [39m|
+[31m        string(491) '- Installing mongo (1.5.4): Downloading (connecting...)Downloading (0%)           Downloading (30%)Downloading (60%)Downloading (90%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | mongo  |
+        | Package version (current release) | 1.5.4  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m memcache  [39m|[32m memcache [39m|[32m 3.0.8   [39m|
+[31m        string(470) '- Installing memcache (3.0.8): Downloading (connecting...)Downloading (0%)           Downloading (35%)Downloading (70%)Downloading (100%)
+        +-----------------------------------+----------+
+        | Package name                      | memcache |
+        | Package version (current release) | 3.0.8    |
+        | Package status                    | beta     |
+        +-----------------------------------+----------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m amqp      [39m|[32m amqp     [39m|[32m 1.4.0   [39m|
+[31m        string(388) '- Installing amqp (1.4.0): Downloading (connecting...)Downloading (0%)           Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | amqp   |
+        | Package version (current release) | 1.4.0  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m redis     [39m|[32m redis    [39m|[32m 2.2.5   [39m|
+[31m        string(423) '- Installing redis (2.2.5): Downloading (connecting...)Downloading (0%)           Downloading (25%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | redis  |
+        | Package version (current release) | 2.2.5  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Install extensions from PECL names and stability flag [30m# features/pecl/install-extensions.feature:59[39m
+    [36mGiven I run "pickle install [39m[36;1m<extension>[39;22m[36m-[39m[36;1m<stability>[39;22m[36m --dry-run"[39m        [30m# FeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                   [30m# FeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <name> (latest-<stability>)
+      """[39m
+    [36mAnd the output should contain:[39m                                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+    [36mAnd the output should contain:[39m                                        [30m# FeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package status                    | <stability>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension     [39;22m|[36;1m name     [39;22m|[36;1m pretty   [39;22m|[36;1m stability [39;22m|
+      |[32m pecl/apc      [39m|[32m apc      [39m|[32m APC      [39m|[32m stable    [39m|
+[31m        string(495) '- Installing apc (latest-stable): Downloading (connecting...)Downloading (0%)           Downloading (5%)Downloading (90%)Downloading (95%)Downloading (100%)
+        +-----------------------------------+--------+
+        | Package name                      | APC    |
+        | Package version (current release) | 3.1.9  |
+        | Package status                    | stable |
+        +-----------------------------------+--------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu          [39m|[32m apcu     [39m|[32m apcu     [39m|[32m beta      [39m|
+[31m        string(593) '- Installing apcu (latest-beta): Downloading (connecting...)Downloading (0%)           Downloading (15%)Downloading (30%)Downloading (45%)Downloading (60%)Downloading (75%)Downloading (90%)Downloading (100%)
+        +-----------------------------------+-------+
+        | Package name                      | apcu  |
+        | Package version (current release) | 5.1.0 |
+        | Package status                    | beta  |
+        +-----------------------------------+-------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+      |[32m pecl/memcache [39m|[32m memcache [39m|[32m memcache [39m|[32m beta      [39m|
+[31m        string(476) '- Installing memcache (latest-beta): Downloading (connecting...)Downloading (0%)           Downloading (35%)Downloading (70%)Downloading (100%)
+        +-----------------------------------+----------+
+        | Package name                      | memcache |
+        | Package version (current release) | 3.0.8    |
+        | Package status                    | beta     |
+        +-----------------------------------+----------+' does not contain Downloading: 100% (mageekguy\atoum\asserter\exception)[39m
+
+[1mFeature:[22m convert package.xml to information files
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to create information files from my package.xml
+
+  [1mBackground:[22m                              [30m# features/pickle/convert-info.feature:6[39m
+    [32mGiven a file named "[39m[32;1mpackage.xml[39;22m[32m" with:[39m [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <package packagerversion="1.4.7" version="2.0">
+          <name>dummy</name>
+          <providesextension>dummy</providesextension>
+          <summary>This is a dummy package</summary>
+          <description>This is a dummy package description</description>
+          <license uri="http://www.php.net/license">PHP License</license>
+          <version>
+              <release>3.1.15</release>
+              <api>3.1.0</api>
+          </version>
+          <stability>
+              <release>beta</release>
+              <api>stable</api>
+          </stability>
+          <date>2013-??-??</date>
+          <notes>This is a note</notes>
+          <changelog></changelog>
+          <lead>
+              <name>Rasmus Lerdorf</name>
+              <user>rasmus</user>
+              <email>rasmus@php.net</email>
+              <active>yes</active>
+          </lead>
+          <developer>
+              <name>Ilia Alshanetsky</name>
+              <user>iliaa</user>
+              <email>ilia@prohost.org</email>
+              <active>no</active>
+          </developer>
+      </package>
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m     [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m       [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """[39m
+
+  [1mScenario:[22m Create information files              [30m# features/pickle/convert-info.feature:49[39m
+    [32mWhen I run "pickle [39m[32;1mconvert[39;22m[32m"[39m                   [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m with:[39m                     [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      Successfully converted dummy
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      """[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+    [36mAnd "[39m[36;1mcomposer.json[39;22m[36m" JSON file should contain:[39m [30m# PharFeatureContext::JsonfileShouldContain()[39m
+[36m      """
+      {
+          "name": "dummy",
+          "type": "extension",
+          "version": "3.1.15-beta",
+          "description": "This is a dummy package",
+          "license": [
+              "PHP License"
+          ],
+          "authors": [
+              {
+                  "name": "Rasmus Lerdorf",
+                  "email": "rasmus@php.net"
+              },
+              {
+                  "name": "Ilia Alshanetsky",
+                  "email": "ilia@prohost.org"
+              }
+          ]
+      }
+      """[39m
+
+[1mFeature:[22m convert package.xml to composer.json
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to create composer.json from my package.xml
+
+  [1mBackground:[22m                              [30m# features/pickle/convert-json.feature:6[39m
+    [32mGiven a file named "[39m[32;1mpackage.xml[39;22m[32m" with:[39m [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <package packagerversion="1.4.7" version="2.0">
+          <name>dummy</name>
+          <providesextension>dummy</providesextension>
+          <summary>This is a dummy package</summary>
+          <version>
+              <release>3.1.15</release>
+              <api>3.1.0</api>
+          </version>
+          <stability>
+              <release>beta</release>
+              <api>stable</api>
+          </stability>
+          <date>2013-??-??</date>
+          <notes>This is a note</notes>
+          <changelog></changelog>
+      </package>
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m     [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m       [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """[39m
+
+  [1mScenario:[22m Search package.xml in CWD             [30m# features/pickle/convert-json.feature:35[39m
+    [32mWhen I run "pickle [39m[32;1mconvert[39;22m[32m"[39m                   [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m with:[39m                     [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      Successfully converted dummy
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      """[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+    [36mAnd "[39m[36;1mcomposer.json[39;22m[36m" JSON file should contain:[39m [30m# PharFeatureContext::JsonfileShouldContain()[39m
+[36m      """
+      {
+          "name": "dummy",
+          "type": "extension",
+          "version": "3.1.15-beta",
+          "description": "This is a dummy package"
+      }
+      """[39m
+
+  [1mScenario:[22m Search package.xml in the given path     [30m# features/pickle/convert-json.feature:56[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m               [30m# PharFeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mconvert ../[39;22m[32m"[39m                  [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m with:[39m                        [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      Successfully converted dummy
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      """[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+    [36mAnd "[39m[36;1m../composer.json[39;22m[36m" JSON file should contain:[39m [30m# PharFeatureContext::JsonfileShouldContain()[39m
+[36m      """
+      {
+          "name": "dummy",
+          "type": "extension",
+          "version": "3.1.15-beta",
+          "description": "This is a dummy package"
+      }
+      """[39m
+
+  [1mScenario:[22m Error if package.xml does not exist [30m# features/pickle/convert-json.feature:78[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m          [30m# PharFeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mconvert[39;22m[32m"[39m                 [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mfail[39;22m[31m with:[39m                   [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
+      """[39m
+[31m      string(103) 'Could not open input file: features/bootstrap/../../pickle.phar' does not contain The path '/tmp/pickle/pickle5ec8dad5e7ef86.55466795/empty-dir' doesn't contain package.xml (mageekguy\atoum\asserter\exception)[39m
+    [36mGiven I am in the "[39m[36;1m..[39;22m[36m" path[39m                 [30m# PharFeatureContext::iAmInThePath()[39m
+    [36mWhen I run "pickle [39m[36;1mconvert empty-dir[39;22m[36m"[39m       [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mfail[39;22m[36m with:[39m                   [30m# PharFeatureContext::itShouldPassWith()[39m
+[36m      """
+      The path 'empty-dir' doesn't contain package.xml
+      """[39m
+
+[1mFeature:[22m Install pickle package
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to install my extension from composer.json
+
+  [1mBackground:[22m                                [30m# features/pickle/install.feature:6[39m
+    [32mGiven a file named "[39m[32;1mcomposer.json[39;22m[32m" with:[39m [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      {
+          "name": "dummy",
+          "description": "This is a dummy package",
+          "version": "1.0.0",
+          "type": "extension",
+          "extra": {
+              "configure-options": {
+                  "enable-dummy": {
+                      "default": "no",
+                      "prompt": "Enable dummy support"
+                  }
+              }
+          }
+      }
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m       [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      PHP_ARG_ENABLE(dummy, whether to enable dummy support,
+      [  --enable-dummy           Enable dummy support])
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m         [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "1.0.0"
+      """[39m
+
+  [1mScenario:[22m Install from CWD              [30m# features/pickle/install.feature:34[39m
+    [32mWhen I run "pickle [39m[32;1minstall --dry-run[39;22m[32m"[39m [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m[39m                   [30m# PharFeatureContext::itShouldFail()[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+[1mFeature:[22m validate package.xml
+  In order to use pickle on my package
+  As an extension developer
+  I should be able to validate my package.xml
+
+  [1mBackground:[22m                              [30m# features/pickle/validate.feature:6[39m
+    [32mGiven a file named "[39m[32;1mpackage.xml[39;22m[32m" with:[39m [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <package packagerversion="1.4.7" version="2.0">
+          <name>dummy</name>
+          <providesextension>dummy</providesextension>
+          <summary>This is a dummy package</summary>
+          <version>
+              <release>3.1.15</release>
+              <api>3.1.0</api>
+          </version>
+          <stability>
+              <release>beta</release>
+              <api>stable</api>
+          </stability>
+          <date>2013-??-??</date>
+          <notes>This is a note</notes>
+          <changelog></changelog>
+      </package>
+      """[39m
+    [32mAnd a file named "[39m[32;1mconfig.m4[39;22m[32m" with:[39m     [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      
+      """[39m
+    [32mAnd a file named "[39m[32;1mdummy.h[39;22m[32m" with:[39m       [30m# PharFeatureContext::aFileNamedWith()[39m
+[32m      """
+      #define PHP_DUMMY_VERSION "3.1.15"
+      """[39m
+
+  [1mScenario:[22m Search package.xml in CWD [30m# features/pickle/validate.feature:35[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate[39;22m[32m"[39m      [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m with:[39m         [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      This is a dummy package
+      """[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario:[22m Search package.xml in the given path [30m# features/pickle/validate.feature:47[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m           [30m# PharFeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate ../[39;22m[32m"[39m             [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m with:[39m                    [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      +-----------------------------------+--------+
+      | Package name                      | dummy  |
+      | Package version (current release) | 3.1.15 |
+      | Package status                    | beta   |
+      +-----------------------------------+--------+
+      This is a dummy package
+      """[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario:[22m Error if package.xml does not exist [30m# features/pickle/validate.feature:60[39m
+    [32mGiven I am in the "[39m[32;1mempty-dir[39;22m[32m" path[39m          [30m# PharFeatureContext::iAmInThePath()[39m
+    [32mWhen I run "pickle [39m[32;1mvalidate[39;22m[32m"[39m                [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mfail[39;22m[31m with:[39m                   [30m# PharFeatureContext::itShouldPassWith()[39m
+[31m      """
+      The path '%%TEST_DIR%%/empty-dir' doesn't contain package.xml
+      """[39m
+[31m      string(103) 'Could not open input file: features/bootstrap/../../pickle.phar' does not contain The path '/tmp/pickle/pickle5ec8dad60d0271.30712888/empty-dir' doesn't contain package.xml (mageekguy\atoum\asserter\exception)[39m
+    [36mGiven I am in the "[39m[36;1m..[39;22m[36m" path[39m                 [30m# PharFeatureContext::iAmInThePath()[39m
+    [36mWhen I run "pickle [39m[36;1mvalidate empty-dir[39;22m[36m"[39m      [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mfail[39;22m[36m with:[39m                   [30m# PharFeatureContext::itShouldPassWith()[39m
+[36m      """
+      The path 'empty-dir' doesn't contain package.xml
+      """[39m
+
+[1mFeature:[22m convert PECL extensions
+  In order to use pickle on PECL extensions
+  As a pickle user
+  I should be able to convert PECL extensions to pickle packages
+
+  [1mScenario Outline:[22m Convert downloaded extensions     [30m# features/pecl/convert-extensions.feature:6[39m
+    [36mGiven "[39m[36;1m<extension>[39;22m[36m" [39m[36;1m<version>[39;22m[36m extension exists[39m    [30m# PharFeatureContext::extensionExists()[39m
+    [36mWhen I run "pickle convert [39m[36;1m<extension>[39;22m[36m-[39m[36;1m<version>[39;22m[36m"[39m [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m with:[39m                         [30m# PharFeatureContext::itShouldPassWith()[39m
+[36m      """
+      Successfully converted <extension>
+      """[39m
+    [36mAnd the output should contain:[39m                    [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+    [36mAnd the output should contain:[39m                    [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package version (current release) | <version>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m version  [39;22m|
+      |[31m APC       [39m|[31m 3.1.13   [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8dad613f606.55753004/APC-3.1.13/APC-3.1.13.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m apcu      [39m|[31m 4.0.6    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8dad766d3e7.15663671/apcu-4.0.6/apcu-4.0.6.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m mongo     [39m|[31m 1.5.4    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8dad8bb1976.88117420/mongo-1.5.4/mongo-1.5.4.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m memcache  [39m|[31m 3.0.8    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8dada39a599.51380495/memcache-3.0.8/memcache-3.0.8.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m imagick   [39m|[31m 3.2.0RC1 [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8dadb4c5e89.47267971/imagick-3.2.0RC1/imagick-3.2.0RC1.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m amqp      [39m|[31m 1.4.0    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8dadca11dc2.30894795/amqp-1.4.0/amqp-1.4.0.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+      |[31m redis     [39m|[31m 2.2.5    [39m|
+[31m        Unable to add newly converted phar "/tmp/pickle/pickle5ec8daddb21af5.79086848/redis-2.2.5/redis-2.2.5.tgz" to the list of phars, a phar with that name already exists (BadMethodCallException)[39m
+
+[1mFeature:[22m download and install extensions from git repository
+  In order to install extensions
+  As a pickle user
+  I should be able to download and install extensions from git repositories
+
+  [1mScenario Outline:[22m Install extensions from git  [30m# features/pecl/git-extension.feature:6[39m
+    [36mGiven I run "pickle install [39m[36;1m<url>[39;22m[36m --dry-run"[39m [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                          [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m               [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (master)
+      """[39m
+    [36mAnd the output should contain:[39m               [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning master
+      """[39m
+    [36mAnd the output should contain:[39m               [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Install extensions from git with version constraint [30m# features/pecl/git-extension.feature:27[39m
+    [36mGiven I run "pickle install [39m[36;1m<url>[39;22m[36m#[39m[36;1m<version>[39;22m[36m --dry-run"[39m              [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                 [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                      [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                                      [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning <version>
+      """[39m
+    [36mAnd the output should contain:[39m                                      [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|[36;1m version [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|[32m master  [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|[32m v0.2.1  [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Show info about downloaded extensions [30m# features/pecl/git-extension.feature:48[39m
+    [36mGiven I run "pickle info [39m[36;1m<url>[39;22m[36m"[39m                       [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                   [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (master)
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning master
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Show info about extensions with version constraint [30m# features/pecl/git-extension.feature:69[39m
+    [36mGiven I run "pickle info [39m[36;1m<url>[39;22m[36m#[39m[36;1m<version>[39;22m[36m"[39m                          [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                     [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                                     [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Cloning <version>
+      """[39m
+    [36mAnd the output should contain:[39m                                     [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <extension>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m url                                 [39;22m|[36;1m extension [39;22m|[36;1m version [39;22m|
+      |[32m git://github.com/beberlei/env.git   [39m|[32m env       [39m|[32m master  [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m https://github.com/beberlei/env.git [39m|[32m env       [39m|[32m v0.2.1  [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+[1mFeature:[22m download and install PECL extensions
+  In order to install PECL extensions
+  As a pickle user
+  I should be able to download and install PECL extensions
+
+  [1mScenario Outline:[22m Show info about downloaded extensions [30m# features/pecl/info-extensions.feature:6[39m
+    [36mGiven I run "pickle info [39m[36;1m<extension>[39;22m[36m@[39m[36;1m<version>[39;22m[36m"[39m       [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                   [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+    [36mAnd the output should contain:[39m                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package version (current release) | <version>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m pretty   [39;22m|[36;1m version [39;22m|
+      |[32m apc       [39m|[32m APC      [39m|[32m 3.1.13  [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu      [39m|[32m apcu     [39m|[32m 4.0.6   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m mongo     [39m|[32m mongo    [39m|[32m 1.5.4   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m memcache  [39m|[32m memcache [39m|[32m 3.0.8   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m amqp      [39m|[32m amqp     [39m|[32m 1.4.0   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m redis     [39m|[32m redis    [39m|[32m 2.2.5   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario:[22m Show informations about a PECL extension's options [30m# features/pecl/info-extensions.feature:35[39m
+    [32mWhen I run "pickle [39m[32;1minfo apc@3.1.13[39;22m[32m"[39m                        [30m# PharFeatureContext::iRunPickle()[39m
+    [31mThen it should [39m[31;1mpass[39;22m[31m[39m                                        [30m# PharFeatureContext::itShouldFail()[39m
+      │ Actual output:
+      │ 
+      │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m      integer(1) is not equal to integer(0)
+      -Expected
+      +Actual
+      @@ -1 +1 @@
+      -int(0)
+      +int(1) (mageekguy\atoum\asserter\exception)[39m
+    [36mAnd the output should contain:[39m                             [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      | enable | whether to enable APC support            | no      |
+      """[39m
+    [36mAnd the output should contain:[39m                             [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      | enable | Disable pthread mutex locking            | yes     |
+      """[39m
+    [36mWhen I run "pickle [39m[36;1minfo oci8@2.0.8[39;22m[36m"[39m                        [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                        [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                             [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      | with | for Oracle Database OCI8 support |         |
+      """[39m
+
+[1mFeature:[22m download and install PECL extensions
+  In order to install PECL extensions
+  As a pickle user
+  I should be able to download and install PECL extensions
+
+  [1mScenario Outline:[22m Install extensions from PECL repository [30m# features/pecl/install-extensions.feature:6[39m
+    [36mGiven I run "pickle install [39m[36;1m<extension>[39;22m[36m --dry-run"[39m      [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                     [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                          [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (latest-stable)
+      """[39m
+    [36mAnd the output should contain:[39m                          [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                          [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m pretty   [39;22m|
+      |[32m apc       [39m|[32m APC      [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu      [39m|[32m apcu     [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m mongo     [39m|[32m mongo    [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m memcache  [39m|[32m memcache [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m redis     [39m|[32m redis    [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Install extensions from PECL repository with version constraint [30m# features/pecl/install-extensions.feature:30[39m
+    [36mGiven I run "pickle install [39m[36;1m<extension>[39;22m[36m@[39m[36;1m<version>[39;22m[36m --dry-run"[39m                    [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                             [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                                  [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <extension> (<version>)
+      """[39m
+    [36mAnd the output should contain:[39m                                                  [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                                                  [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+    [36mAnd the output should contain:[39m                                                  [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package version (current release) | <version>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension [39;22m|[36;1m pretty   [39;22m|[36;1m version [39;22m|
+      |[32m apc       [39m|[32m APC      [39m|[32m 3.1.13  [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu      [39m|[32m apcu     [39m|[32m 4.0.6   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m mongo     [39m|[32m mongo    [39m|[32m 1.5.4   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m memcache  [39m|[32m memcache [39m|[32m 3.0.8   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m amqp      [39m|[32m amqp     [39m|[32m 1.4.0   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m redis     [39m|[32m redis    [39m|[32m 2.2.5   [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+  [1mScenario Outline:[22m Install extensions from PECL names and stability flag [30m# features/pecl/install-extensions.feature:59[39m
+    [36mGiven I run "pickle install [39m[36;1m<extension>[39;22m[36m-[39m[36;1m<stability>[39;22m[36m --dry-run"[39m        [30m# PharFeatureContext::iRunPickle()[39m
+    [36mThen it should [39m[36;1mpass[39;22m[36m[39m                                                   [30m# PharFeatureContext::itShouldFail()[39m
+    [36mAnd the output should contain:[39m                                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      - Installing <name> (latest-<stability>)
+      """[39m
+    [36mAnd the output should contain:[39m                                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Downloading: 100%
+      """[39m
+    [36mAnd the output should contain:[39m                                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package name                      | <pretty>
+      """[39m
+    [36mAnd the output should contain:[39m                                        [30m# PharFeatureContext::theOutputShouldContain()[39m
+[36m      """
+      Package status                    | <stability>
+      """[39m
+
+    [1mExamples:[22m
+      |[36;1m extension     [39;22m|[36;1m name     [39;22m|[36;1m pretty   [39;22m|[36;1m stability [39;22m|
+      |[32m pecl/apc      [39m|[32m apc      [39m|[32m APC      [39m|[32m stable    [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m apcu          [39m|[32m apcu     [39m|[32m apcu     [39m|[32m beta      [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+      |[32m pecl/memcache [39m|[32m memcache [39m|[32m memcache [39m|[32m beta      [39m|
+        │ Actual output:
+        │ 
+        │ Could not open input file: /home/pierre/projects/php/pickle/pickle/features/bootstrap/../../pickle.phar
+[31m        integer(1) is not equal to integer(0)
+        -Expected
+        +Actual
+        @@ -1 +1 @@
+        -int(0)
+        +int(1) (mageekguy\atoum\asserter\exception)[39m
+
+--- [31mFailed scenarios:[39m
+
+    [31mfeatures/pecl/convert-extensions.feature:24[39m
+    [31mfeatures/pecl/convert-extensions.feature:25[39m
+    [31mfeatures/pecl/convert-extensions.feature:26[39m
+    [31mfeatures/pecl/convert-extensions.feature:27[39m
+    [31mfeatures/pecl/convert-extensions.feature:28[39m
+    [31mfeatures/pecl/convert-extensions.feature:29[39m
+    [31mfeatures/pecl/convert-extensions.feature:30[39m
+    [31mfeatures/pecl/git-extension.feature:24[39m
+    [31mfeatures/pecl/git-extension.feature:45[39m
+    [31mfeatures/pecl/git-extension.feature:66[39m
+    [31mfeatures/pecl/git-extension.feature:87[39m
+    [31mfeatures/pecl/info-extensions.feature:28[39m
+    [31mfeatures/pecl/info-extensions.feature:29[39m
+    [31mfeatures/pecl/info-extensions.feature:30[39m
+    [31mfeatures/pecl/info-extensions.feature:31[39m
+    [31mfeatures/pecl/info-extensions.feature:32[39m
+    [31mfeatures/pecl/info-extensions.feature:33[39m
+    [31mfeatures/pecl/install-extensions.feature:24[39m
+    [31mfeatures/pecl/install-extensions.feature:25[39m
+    [31mfeatures/pecl/install-extensions.feature:26[39m
+    [31mfeatures/pecl/install-extensions.feature:27[39m
+    [31mfeatures/pecl/install-extensions.feature:28[39m
+    [31mfeatures/pecl/install-extensions.feature:52[39m
+    [31mfeatures/pecl/install-extensions.feature:53[39m
+    [31mfeatures/pecl/install-extensions.feature:54[39m
+    [31mfeatures/pecl/install-extensions.feature:55[39m
+    [31mfeatures/pecl/install-extensions.feature:56[39m
+    [31mfeatures/pecl/install-extensions.feature:57[39m
+    [31mfeatures/pecl/install-extensions.feature:81[39m
+    [31mfeatures/pecl/install-extensions.feature:82[39m
+    [31mfeatures/pecl/install-extensions.feature:83[39m
+    [31mfeatures/pickle/convert-info.feature:49[39m
+    [31mfeatures/pickle/convert-json.feature:35[39m
+    [31mfeatures/pickle/convert-json.feature:56[39m
+    [31mfeatures/pickle/convert-json.feature:78[39m
+    [31mfeatures/pickle/install.feature:34[39m
+    [31mfeatures/pickle/validate.feature:35[39m
+    [31mfeatures/pickle/validate.feature:47[39m
+    [31mfeatures/pickle/validate.feature:60[39m
+    [31mfeatures/pecl/convert-extensions.feature:24[39m
+    [31mfeatures/pecl/convert-extensions.feature:25[39m
+    [31mfeatures/pecl/convert-extensions.feature:26[39m
+    [31mfeatures/pecl/convert-extensions.feature:27[39m
+    [31mfeatures/pecl/convert-extensions.feature:28[39m
+    [31mfeatures/pecl/convert-extensions.feature:29[39m
+    [31mfeatures/pecl/convert-extensions.feature:30[39m
+    [31mfeatures/pecl/git-extension.feature:24[39m
+    [31mfeatures/pecl/git-extension.feature:25[39m
+    [31mfeatures/pecl/git-extension.feature:45[39m
+    [31mfeatures/pecl/git-extension.feature:46[39m
+    [31mfeatures/pecl/git-extension.feature:66[39m
+    [31mfeatures/pecl/git-extension.feature:67[39m
+    [31mfeatures/pecl/git-extension.feature:87[39m
+    [31mfeatures/pecl/git-extension.feature:88[39m
+    [31mfeatures/pecl/info-extensions.feature:28[39m
+    [31mfeatures/pecl/info-extensions.feature:29[39m
+    [31mfeatures/pecl/info-extensions.feature:30[39m
+    [31mfeatures/pecl/info-extensions.feature:31[39m
+    [31mfeatures/pecl/info-extensions.feature:32[39m
+    [31mfeatures/pecl/info-extensions.feature:33[39m
+    [31mfeatures/pecl/info-extensions.feature:35[39m
+    [31mfeatures/pecl/install-extensions.feature:24[39m
+    [31mfeatures/pecl/install-extensions.feature:25[39m
+    [31mfeatures/pecl/install-extensions.feature:26[39m
+    [31mfeatures/pecl/install-extensions.feature:27[39m
+    [31mfeatures/pecl/install-extensions.feature:28[39m
+    [31mfeatures/pecl/install-extensions.feature:52[39m
+    [31mfeatures/pecl/install-extensions.feature:53[39m
+    [31mfeatures/pecl/install-extensions.feature:54[39m
+    [31mfeatures/pecl/install-extensions.feature:55[39m
+    [31mfeatures/pecl/install-extensions.feature:56[39m
+    [31mfeatures/pecl/install-extensions.feature:57[39m
+    [31mfeatures/pecl/install-extensions.feature:81[39m
+    [31mfeatures/pecl/install-extensions.feature:82[39m
+    [31mfeatures/pecl/install-extensions.feature:83[39m
+
+88 scenarios ([32m13 passed[39m, [31m75 failed[39m)
+500 steps ([32m207 passed[39m, [31m75 failed[39m, [36m218 skipped[39m)
+1m16.20s (10.71Mb)
