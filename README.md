@@ -8,6 +8,41 @@ Pickle installs PHP extensions easily on all platforms.
 [![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/?branch=master)
 [![Build Status](https://travis-ci.org/FriendsOfPHP/pickle.svg?branch=master)](https://travis-ci.org/FriendsOfPHP/pickle)
 
+Installation
+------------
+Grab the latest phar at https://github.com/FriendsOfPHP/pickle/releases/latest and runs using
+```sh
+$ php pickle.phar
+```
+or add the execute flag
+```sh
+$ chmod +x pickle.phar
+```
+then run as:
+```sh
+$ pickle.phar info apcu
+```
+You can also rename the phar to "pickle"
+```sh
+$ mv pickle.phar pickle
+```
+so it can be called using pickle only.
+
+And finally you can add it to your path or copy it in /usr/local/bin or your favorite binary directory.
+
+On windows, use
+```sh
+$ php pickle.phar
+```
+or create a .bat containing:
+```sh
+@echo OFF
+:: in case DelayedExpansion is on and a path contains ! 
+setlocal DISABLEDELAYEDEXPANSION
+c:\path\to\php.exe "%~dp0composer.phar" %*
+```
+
+If someone would be kind enough to write an installer script, we would be eternally thankful :)
 
 Introduction
 ------------
@@ -17,7 +52,7 @@ Pickle is a new PHP extension installer. It is based on Composer and the plan is
 Pickle fully supports existing extensions in http://pecl.php.net, running the following will install the latest available version of the memcache extension:
 
 ```sh
-$ bin/pickle install memcache
+$ pickle install memcache
 ```
 
 Windows is fully supported, to install binaries or from the sources (work in progress and given that you have a working build environment in place).
@@ -28,8 +63,10 @@ For end users, nothing changes much except that Pickle is based on modern concep
 
 For developers, it drastically reduces the release work. Extension meta information is not duplicated anymore. Configuration options, files to package etc. are automatically fetched from the sources and the respective files are updated during the release process. There is no risk anymore of forgetting to update the version here or there, or to neglect to include a file.
 
-Installation
-------------
+Installation From Sources
+-------------------------
+
+While the phar usage is recommended, one is indeed able to use it from git.
 
 Clone this repository and install the dependencies with
 [Composer](http://getcomposer.org/):
@@ -37,9 +74,6 @@ Clone this repository and install the dependencies with
 ```sh
 $ composer install
 ```
-
-A [phar is also available](https://github.com/FriendsOfPHP/pickle/releases/download/v0.5.0/pickle.phar), but it might be outdated.
-
 If you like to create your own phar from the pickle sources, you will need to install Box (http://box-project.github.io/box2/). Then clone the repository and run the following commands:
 
 ```sh
