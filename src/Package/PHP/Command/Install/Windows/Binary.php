@@ -196,7 +196,6 @@ class Binary
             ),
             array(
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
-
                     switch ($notificationCode) {
                         case STREAM_NOTIFY_RESOLVE:
                         case STREAM_NOTIFY_AUTH_REQUIRED:
@@ -219,7 +218,7 @@ class Binary
                             break;
                 
                         case STREAM_NOTIFY_PROGRESS:
-                            $progress->setCurrent($bytesTransferred);
+                            $progress->setProgress($bytesTransferred);
                             break;
                     };
                 },
