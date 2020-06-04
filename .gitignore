@@ -1,3 +1,4 @@
 composer.phar
 pickle*.phar
 vendor/
+*.test

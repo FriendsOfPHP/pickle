@@ -44,8 +44,8 @@ class Ini
 
     public static function factory(Interfaces\Engine $engine = null)
     {
-        if (null == self::$instance) {
-            $engine = null == $engine ? \Pickle\Engine::factory() : $engine;
+        if (null === self::$instance) {
+            $engine = null === $engine ? \Pickle\Engine::factory() : $engine;
 
             switch ($engine->getName()) {
                 case 'php':

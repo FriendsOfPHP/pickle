@@ -295,7 +295,7 @@ class Binary
                 break;
             }
         }
-        if ($headerPkg == null) {
+        if ($headerPkg === null) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
 
