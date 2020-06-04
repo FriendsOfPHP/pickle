@@ -35,11 +35,10 @@ On windows, use
 $ php pickle.phar
 ```
 or create a .bat containing:
-```sh
+```
 @echo OFF
-:: in case DelayedExpansion is on and a path contains ! 
 setlocal DISABLEDELAYEDEXPANSION
-c:\path\to\php.exe "%~dp0composer.phar" %*
+c:\path\to\php.exe "c:\path\to\pickle.phar" %*
 ```
 
 If someone would be kind enough to write an installer script, we would be eternally thankful :)
