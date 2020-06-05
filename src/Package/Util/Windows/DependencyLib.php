@@ -36,7 +36,6 @@
 
 namespace Pickle\Package\Util\Windows;
 
-use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 use Pickle\Base\Util\FileOps;
 use Pickle\Base\Util;
@@ -53,7 +52,6 @@ class DependencyLib
     private $php;
 
     private $progress = null;
-    private $input = null;
     private $output = null;
 
     private $fetchedZips = array();
@@ -281,11 +279,6 @@ class DependencyLib
     public function setProgress($progress)
     {
         $this->progress = $progress;
-    }
-
-    public function setInput(InputInterface $input)
-    {
-        $this->input = $input;
     }
 
     public function setOutput(OutputInterface $output)

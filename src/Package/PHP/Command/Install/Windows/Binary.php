@@ -36,7 +36,6 @@
 
 namespace Pickle\Package\PHP\Command\Install\Windows;
 
-use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
@@ -50,7 +49,6 @@ class Binary
     private $extName;
     private $extVersion;
     private $progress = null;
-    private $input = null;
     private $output = null;
     private $extDll = null;
 
@@ -71,11 +69,6 @@ class Binary
     public function setProgress($progress)
     {
         $this->progress = $progress;
-    }
-
-    public function setInput(InputInterface $input)
-    {
-        $this->input = $input;
     }
 
     public function setOutput(OutputInterface $output)
@@ -185,7 +178,6 @@ class Binary
      */
     private function download($url)
     {
-        $output = $this->output;
         $progress = $this->progress;
         $progress->setOverwrite(true);
         $ctx = stream_context_create(
@@ -195,7 +187,7 @@ class Binary
                 ]
             ),
             array(
-                'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
+                'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($progress) {
                     switch ($notificationCode) {
                         case STREAM_NOTIFY_RESOLVE:
                         case STREAM_NOTIFY_AUTH_REQUIRED:
