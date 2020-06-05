@@ -177,6 +177,15 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         return $options;
     }
 
+    protected function isWithOrEnable($option, $type) {
+        if ('enable' == $type) {
+            $default = (false !== strpos($option, '-disable-')) ? true : false;
+        } elseif ('with' == $type) {
+            $default = (false !== strpos($option, '-without-')) ? true : false;
+        }
+        return $default;
+    }
+
     /**
      * @param string $which
      * @param string $config
@@ -194,12 +203,8 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-            if ('enable' == $type) {
-                $default = (false !== strpos($option, '-disable-')) ? true : false;
-            } elseif ('with' == $type) {
-                $default = (false !== strpos($option, '-without-')) ? true : false;
-            }
 
+            $default = $this->isWithOrEnable($option, $type);
             list($name, $desc) = explode(',', $option);
 
             $desc = preg_replace('/\s+/', ' ', trim($desc));
@@ -249,11 +254,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
                 $desc = trim(substr($desc, $s_a));
             }
 
-            if ('enable' == $type) {
-                $default = (false !== strpos($option, '-disable-')) ? true : false;
-            } elseif ('with' == $type) {
-                $default = (false !== strpos($option, '-without-')) ? true : false;
-            }
+            $default = $this->isWithOrEnable($option, $type);
             $name = str_replace(['[', ']'], ['', ''], $name);
             $options[$name] = (object) [
                 'prompt' => trim($desc),
