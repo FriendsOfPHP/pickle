@@ -45,7 +45,7 @@ class Engine
 
     public static function factory($phpcli = null)
     {
-        if (null == self::$instance) {
+        if (null === self::$instance) {
             if (!$phpcli) {
                 $phpcli = PHP_BINARY;
             }

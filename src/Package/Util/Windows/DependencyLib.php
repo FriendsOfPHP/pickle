@@ -167,7 +167,7 @@ class DependencyLib
                     return true;
                 }
             }
-            if (null != $resolve_multiple_cb) {
+            if (null !== $resolve_multiple_cb) {
                 $dep_zip = $resolve_multiple_cb($dep_zips);
             } else {
                 throw new \Extension("Multiple choice for dependencies, couldn't resolve");
