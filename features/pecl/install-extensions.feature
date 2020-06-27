@@ -21,7 +21,6 @@ Feature: download and install PECL extensions
       | apcu      | apcu      |
       | mongo     | mongo     |
       | memcache  | memcache  |
-      | redis     | redis     |
 
   Scenario Outline: Install extensions from PECL repository with version constraint
     Given I run "pickle install <extension>@<version> --dry-run"
@@ -46,7 +45,6 @@ Feature: download and install PECL extensions
       | mongo     | mongo     | 1.5.4    |
       | memcache  | memcache  | 3.0.8    |
       | amqp      | amqp      | 1.4.0    |
-      | redis     | redis     | 2.2.5    |
 
   Scenario Outline: Install extensions from PECL names and stability flag
     Given I run "pickle install <extension>-<stability> --dry-run"

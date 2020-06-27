@@ -27,4 +27,4 @@ Feature: convert PECL extensions
       | memcache  | 3.0.8    |
       | imagick   | 3.2.0RC1 |
       | amqp      | 1.4.0    |
-      | redis     | 2.2.5    |
+

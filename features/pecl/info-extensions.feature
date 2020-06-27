@@ -26,7 +26,6 @@ Feature: download and install PECL extensions
       | mongo     | mongo     | 1.5.4    |
       | memcache  | memcache  | 3.0.8    |
       | amqp      | amqp      | 1.4.0    |
-      | redis     | redis     | 2.2.5    |
 
   Scenario: Show informations about a PECL extension's options
     When I run "pickle info apc@3.1.13"
