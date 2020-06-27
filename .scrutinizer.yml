@@ -2,8 +2,15 @@ filter:
     excluded_paths:
         - "tests/*"
         - "features/*"
+    dependency_paths:
         - "vendor/*"
 
+build:
+    nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
 tools:
     external_code_coverage:
         timeout: 600
@@ -37,15 +44,6 @@ tools:
                 - "tests/*"
                 - "features/*"
                 - "vendor/*"
-
-    php_analyzer:
-        enabled: true
-        filter:
-            excluded_paths:
-                - "tests/*"
-                - "features/*"
-                - "vendor/*"
-
 
     php_cpd:
         enabled: true
