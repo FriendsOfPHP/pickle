@@ -36,7 +36,6 @@
 
 namespace Pickle;
 
-use Pickle\Engine\HHVM;
 use Pickle\Engine\PHP;
 
 class Engine
