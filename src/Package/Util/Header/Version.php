@@ -50,7 +50,7 @@ class Version
     public function __construct(Interfaces\Package $package)
     {
         $this->package = $package;
-        $this->macroName = 'PHP_'.strtoupper($this->package->getSimpleName()).'_VERSION';
+        $this->macroName = strtoupper($this->package->getSimpleName()).'_VERSION';
 
         $this->version = $this->getVersionFromHeader();
     }
@@ -63,7 +63,7 @@ class Version
     }
 
     private function rglob($pattern, $flags = 0) {
-        $files = glob($pattern, $flags); 
+        $files = glob($pattern, $flags);
         foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
             $files = array_merge($files, self::rglob($dir.'/'.basename($pattern), $flags));
         }
@@ -76,7 +76,7 @@ class Version
 
         // Match versions surrounded by quotes and versions without quotes
         $versionMatcher = '(".*"|.*\b)';
-        $pat = ',define\s+'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
+        $pat = ',define\s+(?:PHP_)?'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
 
         foreach ($headers as $header) {
             $headerContent = file_get_contents($header);
