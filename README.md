@@ -10,7 +10,12 @@ Pickle installs PHP extensions easily on all platforms.
 
 Installation
 ------------
-Grab the latest phar at https://github.com/FriendsOfPHP/pickle/releases/latest and runs using
+Grab the latest phar at https://github.com/FriendsOfPHP/pickle/releases/latest 
+```sh
+wget https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar
+```
+
+and run using
 ```sh
 $ php pickle.phar
 ```
