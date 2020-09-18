@@ -55,11 +55,11 @@ class Convey
         $this->command = Factory::getCommand($type, $path, $io);
     }
 
-    public function deliver($target = '', $no_convert = false)
+    public function deliver($target = '', $no_convert = false, $versionOverride = null)
     {
         $target = $target ? realpath($target) : Util\TmpDir::get().DIRECTORY_SEPARATOR.$this->command->getName();
 
-        return $this->command->execute($target, $no_convert);
+        return $this->command->execute($target, $no_convert, $versionOverride);
     }
 }
 

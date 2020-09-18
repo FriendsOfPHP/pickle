@@ -54,7 +54,7 @@ class Loader
      *
      * @return Pickle\Base\Interfaces\Package
      */
-    public function load($path)
+    public function load($path, $versionOverride = null)
     {
         if (false === is_file($path)) {
             throw new \InvalidArgumentException('File not found: '.$path);
@@ -77,7 +77,7 @@ class Loader
 
         $package = [
             'name' => (string) $xml->name,
-            'version' => (string) $xml->version->release,
+            'version' => $versionOverride ?? (string) $xml->version->release,
             'stability' => (string) $xml->stability->release,
             'description' => (string) $xml->summary,
         ];
@@ -136,7 +136,7 @@ class Loader
         }
         $ret_pkg->setRootDir(dirname($path));
 
-        $src_ver = new Header\Version($ret_pkg);
+        $src_ver = $versionOverride ?? new Header\Version($ret_pkg);
         if ($src_ver != $ret_pkg->getPrettyVersion()) {
             throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
         }

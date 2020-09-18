@@ -109,8 +109,9 @@ class PackageHelper extends Helper
         $io = new ConsoleIO($input, $output, ($helperSet ? $helperSet : new HelperSet()));
 
         $no_convert = $input->hasOption('no-convert') ? $input->getOption('no-convert') : false;
+        $versionOverride = $input->hasOption('version-override') ? $input->getOption('version-override') : null;
 
-        return (new Convey($path, $io))->deliver($target, $no_convert);
+        return (new Convey($path, $io))->deliver($target, $no_convert, $versionOverride);
     }
 }
 

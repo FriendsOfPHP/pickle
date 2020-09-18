@@ -58,7 +58,7 @@ abstract class Command
 
     abstract protected function prepare();
 
-    abstract public function execute($target, $no_convert);
+    abstract public function execute($target, $no_convert, $versionOverride);
 
     public function getPath()
     {

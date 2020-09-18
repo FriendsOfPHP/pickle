@@ -93,13 +93,13 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         unset($package, $downloader);
     }
 
-    public function execute($target, $no_convert)
+    public function execute($target, $no_convert, $versionOverrideOverride)
     {
         $this->fetch($target);
 
         $exe = new DefaultExecutor($this);
 
-        return $exe->execute($target, $no_convert);
+        return $exe->execute($target, $no_convert, $versionOverrideOverride);
     }
 
     public function getType()

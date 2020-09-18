@@ -46,7 +46,7 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
     {
     }
 
-    public function execute($target, $no_convert)
+    public function execute($target, $no_convert, $versionOverride)
     {
         $jsonLoader = new \Pickle\Package\Util\JSON\Loader(new \Pickle\Package\Util\Loader());
         $pickle_json = $target.DIRECTORY_SEPARATOR.'composer.json';
@@ -61,7 +61,7 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         }
 
         if (null === $package) {
-            $pkgXml = new PackageXml($target);
+            $pkgXml = new PackageXml($target, $versionOverride);
             $pkgXml->dump();
 
             $jsonPath = $pkgXml->getJsonPath();
@@ -71,7 +71,7 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         }
 
         $package->setRootDir($target);
-        $package->updateVersion();
+        $package->updateVersion($versionOverride);
 
         return $package;
     }

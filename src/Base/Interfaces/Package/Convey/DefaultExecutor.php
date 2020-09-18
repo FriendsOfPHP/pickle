@@ -42,7 +42,7 @@ interface DefaultExecutor
 {
     public function __construct(Interfaces\Package\Convey\Command $command);
 
-    public function execute($target, $no_convert);
+    public function execute($target, $no_convert, $versionOverride);
 }
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

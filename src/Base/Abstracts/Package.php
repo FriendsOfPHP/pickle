@@ -73,10 +73,12 @@ class Package extends CompletePackage
         other engines. Lets see if this is needed to be
         moved into the Interface so each engines package
         is forced to implement it on its own. But so far ... */
-    public function updateVersion()
+    public function updateVersion($version = null)
     {
         /* Be sure package root is set before! */
-        $version = new Header\Version($this);
+        if ($version === null) {
+            $version = new Header\Version($this);
+        }
         $parser = new VersionParser();
 
         $this->version = $parser->normalize($version);

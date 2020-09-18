@@ -45,8 +45,9 @@ class PackageXml
     protected $xmlPath = null;
     protected $jsonPath = null;
     protected $package = null;
+    protected $versionOverride = null;
 
-    public function __construct($path)
+    public function __construct($path, $versionOverride = null)
     {
         $names = ['package2.xml', 'package.xml' ];
 
@@ -63,12 +64,13 @@ class PackageXml
         }
 
         $this->jsonPath = $path.DIRECTORY_SEPARATOR.'composer.json';
+        $this->versionOverride = $versionOverride;
     }
 
     public function load()
     {
         $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-        $this->package = $loader->load($this->xmlPath);
+        $this->package = $loader->load($this->xmlPath, $this->versionOverride);
 
         if (!$this->package) {
             throw new \Exception("Failed to load '{$this->xmlPath}'");
@@ -98,7 +100,7 @@ class PackageXml
             $this->jsonPath = $fname;
         }
 
-        $version = new Header\Version($this->package);
+        $version = $this->versionOverride ?? new Header\Version($this->package);
         if ($version != $this->package->getPrettyVersion()) {
             throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
         }

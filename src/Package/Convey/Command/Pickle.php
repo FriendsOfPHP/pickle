@@ -127,13 +127,13 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         }
     }
 
-    public function execute($target, $no_convert)
+    public function execute($target, $no_convert, $versionOverrideOverride)
     {
         $this->fetch($target);
 
         $exe = DefaultExecutor::factory($this);
 
-        return $exe->execute($target, $no_convert);
+        return $exe->execute($target, $no_convert, $versionOverrideOverride);
     }
 
     public function getType()
