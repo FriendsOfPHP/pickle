@@ -45,3 +45,17 @@ Feature: download and install PECL extensions
       """
       | with | for Oracle Database OCI8 support |         |
       """
+
+  Scenario Outline: Override an extensions version
+    When I run "pickle info --version-override=1.0.0 <extension>"
+    Then it should pass
+    And the output should contain:
+      """
+      Package version (current release) | 1.0.0
+      """
+    Examples:
+      | extension |
+      | apcu      |
+      | sqlsrv    |
+      | swoole    |
+      | yaml      |
