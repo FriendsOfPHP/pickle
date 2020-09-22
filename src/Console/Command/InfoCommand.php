@@ -64,6 +64,12 @@ class InfoCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'path to a custom temp dir',
                 sys_get_temp_dir()
+            )
+            ->addOption(
+                'version-override',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Override detected version'
             );
     }
 

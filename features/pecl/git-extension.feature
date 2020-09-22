@@ -86,3 +86,28 @@ Feature: download and install extensions from git repository
       | url                                 | extension | version |
       | git://github.com/beberlei/env.git   | env       | master  |
       | https://github.com/beberlei/env.git | env       | v0.2.1  |
+
+  Scenario Outline: Show info about extensions with version override
+    Given I run "pickle info --version-override=1.0.0 <url>#<version>"
+    Then it should pass
+    And the output should contain:
+      """
+      - Installing <extension> (<version>)
+      """
+    And the output should contain:
+      """
+      Cloning <version>
+      """
+    And the output should contain:
+      """
+      Package name                      | <extension>
+      """
+    And the output should contain:
+      """
+      Package version (current release) | 1.0.0
+      """
+
+    Examples:
+      | url                                 | extension | version |
+      | git://github.com/beberlei/env.git   | env       | master  |
+      | https://github.com/beberlei/env.git | env       | v0.2.1  |

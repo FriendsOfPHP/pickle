@@ -46,14 +46,14 @@ class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         $this->url = $this->path;
     }
 
-    public function execute($target, $no_convert)
+    public function execute($target, $no_convert, $versionOverrideOverride)
     {
         /* Override target, otherwise we'd need to copy ext root each time */
         $target = realpath($this->path);
 
         $exe = DefaultExecutor::factory($this);
 
-        return $exe->execute($target, $no_convert);
+        return $exe->execute($target, $no_convert, $versionOverrideOverride);
     }
 
     public function getType()

@@ -62,7 +62,7 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         $this->command = $command;
     }
 
-    public function execute($target, $no_convert)
+    public function execute($target, $no_convert, $versionOverride)
     {
         throw new \Exception('Default executor cannot be used without concrete implementation');
     }
