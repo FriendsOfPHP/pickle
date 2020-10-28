@@ -95,6 +95,11 @@ Usage is pretty straightforward. For example, to install the memcache extension 
 $ bin/pickle install memcache
 ```
 
+If you need to install a specific version of an extension, you may do so:
+```sh
+$ bin/pickle install redis@5.3.2
+```
+
 You can also use pickle from your extension directory, the following command:
 
 ```sh
