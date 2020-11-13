@@ -42,7 +42,7 @@ use Pickle\Package\Util\Header;
 
 class PackageJson
 {
-    protected function readPackage($path, $noconvert)
+    public static function readPackage($path, $noconvert)
     {
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
         $package = null;
@@ -74,6 +74,8 @@ class PackageJson
         }
 
         $package->setRootDir(realpath($path));
+
+        return $package;
     }
 }
 

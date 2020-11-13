@@ -106,7 +106,7 @@ class Binary implements Interfaces\Package\Release
 
     protected function readPackage($path)
     {
-        $package = PackageJson::readPackage($path, $noconvert);
+        $package = PackageJson::readPackage($path, $this->noConvert);
         $this->composerJsonBak($package);
 
         /* For the binary release, json badly need the version informatio
