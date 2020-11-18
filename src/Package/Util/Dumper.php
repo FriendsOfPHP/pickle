@@ -36,6 +36,7 @@
 
 namespace Pickle\Package\Util;
 
+use Composer\Semver\VersionParser;
 use Pickle\Base\Interfaces;
 
 class Dumper
@@ -53,9 +54,10 @@ class Dumper
 
         if ($with_version) {
             $data['version'] = $package->getPrettyVersion();
+            $version_stability = VersionParser::parseStability($data['version']);
             $stability = $package->getStability();
 
-            if ('stable' !== $stability) {
+            if ('stable' !== $stability && 'RC' !== $version_stability) {
                 $data['version'] .= '-' . $stability;
             }
         }
