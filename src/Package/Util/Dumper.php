@@ -53,13 +53,7 @@ class Dumper
         $data['name'] = $package->getPrettyName();
 
         if ($with_version) {
-            $data['version'] = $package->getPrettyVersion();
-            $version_stability = VersionParser::parseStability($data['version']);
-            $stability = $package->getStability();
-
-            if ('stable' !== $stability && 'RC' !== $version_stability) {
-                $data['version'] .= '-' . $stability;
-            }
+            $data['version'] = $this->getVersion($package);
         }
 
         $data['type'] = $package->getType();
@@ -85,6 +79,23 @@ class Dumper
         }
 
         return $data;
+    }
+
+    /**
+     * @param Interfaces\Package $package
+     *
+     * @return string
+     */
+    private function getVersion(Interfaces\Package $package): string
+    {
+        $version = $package->getPrettyVersion();
+        $version_stability = VersionParser::parseStability($version);
+        $stability = $package->getStability();
+
+        if ('beta' === $stability && 'stable' === $version_stability) {
+            return $version . '-' . $stability;
+        }
+        return $version;
     }
 }
 
