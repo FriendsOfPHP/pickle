@@ -1,0 +1,107 @@
+name: Create draft release
+
+on:
+  create:
+    tags:
+      - "*"
+
+jobs:
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_NAME: ""
+      PATHS_FOR_RELEASE_NOTES: "box.json composer.json src/"
+    steps:
+      - name: Check tag format
+        if: github.event_name == 'create' && github.event.ref_type == 'tag'
+        run: |
+          VERSION="$(printf '%s' "$GITHUB_REF" | sed -E 's/^refs\/tags\/v?([0-9]+\.[0-9]+\.[0-9]+.*)$/\1/')"
+          if printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+'; then
+            printf 'The tag %s is for version %s\n' "${GITHUB_REF#refs/tags/}" "$VERSION"
+            printf 'RELEASE_NAME=%s\n' "$VERSION" >> "$GITHUB_ENV"
+          else
+            printf 'The ref %s is not for a version\n' "$GITHUB_REF"
+          fi
+      - name: Checkout
+        if: env.RELEASE_NAME != ''
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup PHP
+        if: env.RELEASE_NAME != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.2"
+          tools: composer:v2
+          coverage: none
+          ini-values: phar.readonly=0
+      - name: Install Box
+        if: env.RELEASE_NAME != ''
+        run: composer global require 'kherge/box=~2.7' --prefer-source
+      - name: Install Composer dependencies
+        if: env.RELEASE_NAME != ''
+        run: composer install --no-dev --no-progress --optimize-autoloader --ansi --no-interaction --no-cache
+      - name: Create PHAR file
+        if: env.RELEASE_NAME != ''
+        run: '"$(composer global config bin-dir --absolute --quiet)/box" --ansi --no-interaction build'
+      - name: Build release notes
+        if: env.RELEASE_NAME != ''
+        run: |
+          CURRENT_TAG_FOUND=n
+          PREVIUOS_TAG=
+          RELEASE_NOTES=
+          for TAG in $(git tag --list --sort=-version:refname); do
+            if printf '%s' "$TAG" | grep -Eq '^v?[0-9]+\.[0-9]+\.[0-9]+'; then
+              if test $CURRENT_TAG_FOUND = n; then
+                if test "$TAG" = "${GITHUB_REF#refs/tags/}"; then
+                  CURRENT_TAG_FOUND=y
+                fi
+              else
+                PREVIUOS_TAG="$TAG"
+                break
+              fi
+            fi
+          done
+          if test $CURRENT_TAG_FOUND = n; then
+            echo 'Unable to build the release notes (current tag not found)'
+          elif test -z "$PREVIUOS_TAG"; then
+            echo 'Unable to build the release notes (previous release tag not found)'
+          else
+            RELEASE_NOTES="$(git log --format='- %s' --no-merges --reverse "refs/tags/$PREVIUOS_TAG...$GITHUB_REF" -- $PATHS_FOR_RELEASE_NOTES)"
+            if test -z "$RELEASE_NOTES"; then
+              printf 'Unable to build the release notes (empty commit list since %s)\n' "$PREVIUOS_TAG"
+            else
+              printf 'Detected release notes since %s:\n%s\n' "$PREVIUOS_TAG" "$RELEASE_NOTES"
+            fi
+          fi
+          if test -z "$RELEASE_NOTES"; then
+            RELEASE_NOTES='n/a'
+          fi
+          printf '%s' "$RELEASE_NOTES" >new-release-notes.txt
+      - name: Create draft release
+        if: env.RELEASE_NAME != ''
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.ref }}
+          release_name: ${{ env.RELEASE_NAME }}
+          body_path: ./new-release-notes.txt
+          draft: true
+          prerelease: false
+      - name: Attach release assets
+        if: env.RELEASE_NAME != ''
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./pickle.phar
+          asset_name: pickle.phar
+          asset_content_type: application/octet-stream
+      - name: Hint
+        if: env.RELEASE_NAME != ''
+        run: |
+          printf "\n\n#####\n\nWe created the %s DRAFT release.\nIt's NOT YET PUBLISHED though: in order to do that, maintainers have to manually publish by visiting\nhttps://github.com/FriendsOfPHP/pickle/releases\n\n#####\n\n" "$RELEASE_NAME"
