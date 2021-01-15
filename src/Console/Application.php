@@ -2,6 +2,7 @@
 
 namespace Pickle\Console;
 
+use Pickle\Base\Archive;
 use Symfony\Component\Console\Application as BaseApplication;
 
 class Application extends BaseApplication
@@ -52,7 +53,6 @@ class Application extends BaseApplication
             "dom",
             "openssl",
             "phar",
-            "zip",
         );
 
         foreach ($required_exts as $ext) {
@@ -60,5 +60,8 @@ class Application extends BaseApplication
                 Throw new \Exception("Extension '$ext' required but not loaded, full required list: " . implode(", ", $required_exts));
             }
         }
+
+        Archive\Factory::getUnzipperClassName();
+        Archive\Factory::getZipperClassName();
     }
 }
