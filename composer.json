@@ -43,6 +43,11 @@
         }
     },
     "bin": ["bin/pickle"],
+    "config": {
+        "platform": {
+            "php": "7.2.5"
+        }
+    },
     "scripts": {
         "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23",
         "test": "vendor/bin/atoum --force-terminal && vendor/bin/behat --suite pickle --colors"
