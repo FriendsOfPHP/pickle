@@ -1,0 +1,49 @@
+name: Tests
+
+on: pull_request
+
+jobs:
+  run-tests:
+    name: Run tests
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        php-version:
+          - "7.2"
+          - "7.3"
+          - "7.4"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer
+          ini-values: phar.readonly=0
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install Composer dependencies (including dev, preferring source)
+        run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction
+      - name: Run Atoum
+        run: php ./vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
+      - name: Install Composer dependencies (excluding dev)
+        run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction --no-dev
+      - name: Install Box
+        run: composer global require 'kherge/box=~2.7' --prefer-source
+      - name: Build pickle.phar
+        run: ~/.composer/vendor/bin/box build
+      - name: Install Composer dependencies (including dev, preferring dist)
+        run: composer install --optimize-autoloader --ansi --no-interaction
+      - name: Run Behat
+        run: PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+      - name: Download Ocular
+        run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
+      - name: Upload code coverage
+        if: ${{ always() }}
+        run: |
+          if test -f ocular.phar && test -f clover.xml; then
+            php ocular.phar code-coverage:upload --format=php-clover clover.xml
+          fi
