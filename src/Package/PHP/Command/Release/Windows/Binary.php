@@ -36,6 +36,7 @@
 
 namespace Pickle\Package\PHP\Command\Release\Windows;
 
+use Pickle\Base\Archive;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
@@ -183,27 +184,24 @@ class Binary implements Interfaces\Package\Release
         /* pack the outcome */
         $zip_name = $this->getZipBaseName($build).'.zip';
 
-        $zip = new \ZipArchive();
-        if (!$zip->open($zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
-            throw new \Exception("Failed to open '$zip_name' for writing");
-        }
+        $zipClass = Archive\Factory::getZipperClassName();
+        $zip = new $zipClass($zip_name, Interfaces\Archive\Zipper::FLAG_CREATE_OVERWRITE);
+        /** @var \Pickle\Base\Interfaces\Archive\Zipper $zip */
 
         $ext_dll_found = false;
         $ext_names = $this->getMultiExtensionNames();
         foreach ($ext_names as $ext_name) {
-            $dll_name = 'php_'.$ext_name.'.dll';
-            $dll_file = $build_dir.DIRECTORY_SEPARATOR.$dll_name;
+            $dll_file = $build_dir.DIRECTORY_SEPARATOR.'php_'.$ext_name.'.dll';
 
             if (!file_exists($dll_file)) {
                 continue;
             }
             $ext_dll_found = true;
-            $zip->addFile($dll_file, $dll_name);
+            $zip->addFileWithoutPath($dll_file);
 
-            $pdb_name = 'php_'.$ext_name.'.pdb';
-            $pdb_file = $build_dir.DIRECTORY_SEPARATOR.$pdb_name;
+            $pdb_file = $build_dir.DIRECTORY_SEPARATOR.'php_'.$ext_name.'.pdb';
             if (file_exists($pdb_file)) {
-                $zip->addFile($pdb_file, $pdb_name);
+                $zip->addFileWithoutPath($pdb_file);
             }
         }
 
@@ -211,12 +209,11 @@ class Binary implements Interfaces\Package\Release
             throw new \Exception("Couldn't find extension DLL");
         }
 
-        $zip->addFile($composer_json, basename($composer_json));
-        $zip->addFile($license, basename($license));
+        $zip->addFileWithoutPath($composer_json);
+        $zip->addFileWithoutPath($license);
         if ($readme) {
-            $zip->addFile($readme, basename($readme));
+            $zip->addFileWithoutPath($readme);
         }
-        $zip->close();
     }
 
     public function packLog(Interfaces\Package\Build $build = null)

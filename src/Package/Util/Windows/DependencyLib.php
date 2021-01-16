@@ -37,6 +37,7 @@
 namespace Pickle\Package\Util\Windows;
 
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
+use Pickle\Base\Archive;
 use Pickle\Base\Util\FileOps;
 use Pickle\Base\Util;
 
@@ -268,10 +269,9 @@ class DependencyLib
     {
         $this->createTempDir();
         $this->cleanup();
-        $zipArchive = new \ZipArchive();
-        if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
-            throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
-        }
+        $zipArchiveClass = Archive\Factory::getUnzipperClassName();
+        $zipArchive = new $zipArchiveClass($zipFile);
+        /** @var \Pickle\Base\Interfaces\Archive\Unzipper $zipArchive */
         $this->output->writeln('Extracting archives...');
         $zipArchive->extractTo($this->tempDir);
     }

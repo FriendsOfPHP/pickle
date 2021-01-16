@@ -36,7 +36,9 @@
 
 namespace Pickle\Base\Abstracts\Package;
 
+use Pickle\Base\Archive;
 use Pickle\Base\Util\FileOps;
+use Pickle\Base\Interfaces;
 use Pickle\Base\Interfaces\Package;
 
 abstract class Build
@@ -144,11 +146,9 @@ abstract class Build
     /* zip is default */
     public function packLog($path)
     {
-        $zip = new \ZipArchive();
-        if (!$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
-            throw new \Exception("Failed to open '$path' for writing");
-        }
-
+        $zipperClass = Archive\Factory::getZipperClassName();
+        $zip = new $zipperClass($path, Interfaces\Archive\Zipper::FLAG_CREATE_OVERWRITE);
+        /** @var $zip \Pickle\Base\Interfaces\Archive\Zipper */
         $no_hint_logs = '';
         foreach ($this->log as $item) {
             $msg = $this->fixEol($item['msg']);
@@ -161,8 +161,6 @@ abstract class Build
         if ($no_hint_logs) {
             $zip->addFromString('build.log', $this->fixEol($item['msg']));
         }
-
-        $zip->close();
     }
 
     /**

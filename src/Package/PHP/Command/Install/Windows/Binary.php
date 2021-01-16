@@ -39,6 +39,7 @@ namespace Pickle\Package\PHP\Command\Install\Windows;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
+use Pickle\Base\Archive;
 use Pickle\Base\Util;
 
 class Binary
@@ -161,10 +162,9 @@ class Binary
     {
         $this->createTempDir($this->extName);
         $this->cleanup();
-        $zipArchive = new \ZipArchive();
-        if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
-            throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
-        }
+        $zipClass = Archive\Factory::getUnzipperClassName();
+        $zipArchive = $zipClass($zipFile);
+        /** @var \Pickle\Base\Interfaces\Archive\Unzipper $zipArchive */
         $this->output->writeln('Extracting archives...');
         $zipArchive->extractTo($this->tempDir);
     }
