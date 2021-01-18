@@ -4,3 +4,4 @@ vendor/
 *.test
 /clover.xml
 /ocular.phar
+/.php_cs.cache
