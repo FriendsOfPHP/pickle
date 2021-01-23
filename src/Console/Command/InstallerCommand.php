@@ -102,7 +102,7 @@ class InstallerCommand extends BuildCommand
                 'version-override',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Override detected version'
+                'Override detected version (no value - or empty value - to use the version from package.xml)'
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {

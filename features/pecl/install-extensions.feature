@@ -20,7 +20,34 @@ Feature: download and install PECL extensions
       | apc       | APC       |
       | apcu      | apcu      |
       | mongo     | mongo     |
-      | memcache  | memcache  |
+
+  Scenario Outline: Does NOT install extensions from PECL repository having wrong version in source code
+    Given I run "pickle install <extension>-<version> --dry-run"
+    Then it should fail
+    And the output should contain:
+      """
+      Version mismatch - '4.0.5.2' != '8.0' in source vs. XML
+      """
+
+    Examples:
+      | extension | version |
+      | memcache  | 8.0     |
+
+  Scenario Outline: Install extensions from PECL repository having wrong version in source code
+    Given I run "pickle install <extension>-<version> --dry-run --version-override"
+    Then it should pass
+    And the output should contain:
+      """
+      - Installing <extension> (<version>)
+      """
+    And the output should contain:
+      """
+      Package name                      | <pretty>
+      """
+
+    Examples:
+      | extension | version | pretty    |
+      | memcache  | 8.0     | memcache  |
 
   Scenario Outline: Install extensions from PECL repository with version constraint
     Given I run "pickle install <extension>@<version> --dry-run"
