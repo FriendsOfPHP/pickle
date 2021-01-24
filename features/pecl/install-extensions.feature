@@ -20,6 +20,7 @@ Feature: download and install PECL extensions
       | apc       | APC       |
       | apcu      | apcu      |
       | mongo     | mongo     |
+      | zstd      | zstd      |
 
   Scenario Outline: Does NOT install extensions from PECL repository having wrong version in source code
     Given I run "pickle install <extension>-<version> --dry-run"
