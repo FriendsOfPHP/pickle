@@ -86,7 +86,11 @@ class FeatureContext implements SnippetAcceptingContext
 
     private function moveToNewPath($path)
     {
-        $newWorkingDir = $this->workingDir .'/' . $path;
+        if ((string) $this->workingDir === '') {
+            $newWorkingDir = $path;
+        } else {
+            $newWorkingDir = $this->workingDir .'/' . $path;
+        }
 
         if (!file_exists($newWorkingDir)) {
             mkdir($newWorkingDir, 0777, true);

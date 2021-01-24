@@ -36,7 +36,8 @@
 
 namespace Pickle\Package\PHP\Command\Install\Windows;
 
-use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
 use Pickle\Base\Archive;
@@ -50,6 +51,7 @@ class Binary
     private $extName;
     private $extVersion;
     private $progress = null;
+    private $input = null;
     private $output = null;
     private $extDll = null;
 
@@ -70,6 +72,11 @@ class Binary
     public function setProgress($progress)
     {
         $this->progress = $progress;
+    }
+
+    public function setInput(InputInterface $input)
+    {
+        $this->input = $input;
     }
 
     public function setOutput(OutputInterface $output)

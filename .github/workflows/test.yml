@@ -9,6 +9,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+          - windows-latest
         php-version:
           - "7.2"
           - "7.3"
@@ -33,12 +34,20 @@ jobs:
         run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction --no-dev
       - name: Install Box
         run: composer global require 'kherge/box=~2.7' --prefer-source
-      - name: Build pickle.phar
-        run: ~/.composer/vendor/bin/box build
+      - name: Build pickle.phar on Ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          "$(composer global config bin-dir --absolute)/box" build
+      - name: Build pickle.phar on Windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          & "$(composer global config bin-dir --absolute)/box.bat" build
       - name: Install Composer dependencies (including dev, preferring dist)
         run: composer install --optimize-autoloader --ansi --no-interaction
       - name: Run Behat
-        run: PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+        env:
+          PICKLE_BEHAT_PROCESS_TIMEOUT: 0
+        run: vendor/bin/behat --format=progress
       - name: Download Ocular
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
       - name: Upload code coverage

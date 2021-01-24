@@ -80,7 +80,7 @@ Feature: convert package.xml to composer.json
     When I run "pickle convert"
     Then it should fail with:
       """
-      The path '%%TEST_DIR%%/empty-dir' d
+      empty-dir' doesn't contain package.xml
       """
 
     Given I am in the ".." path
