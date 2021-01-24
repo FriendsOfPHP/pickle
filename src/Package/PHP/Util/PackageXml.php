@@ -100,9 +100,11 @@ class PackageXml
             $this->jsonPath = $fname;
         }
 
-        $version = $this->versionOverride ?? new Header\Version($this->package);
-        if ($version != $this->package->getPrettyVersion()) {
-            throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
+        if ($this->versionOverride !== '') {
+            $version = $this->versionOverride ?? (string) new Header\Version($this->package);
+            if ($version !== $this->package->getPrettyVersion()) {
+                throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
+            }
         }
 
         $dumper = new Dumper();

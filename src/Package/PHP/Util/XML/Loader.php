@@ -77,7 +77,7 @@ class Loader
 
         $package = [
             'name' => (string) $xml->name,
-            'version' => $versionOverride ?? (string) $xml->version->release,
+            'version' => (string) $versionOverride === '' ? (string) $xml->version->release : $versionOverride,
             'stability' => (string) $xml->stability->release,
             'description' => (string) $xml->summary,
         ];
@@ -136,9 +136,11 @@ class Loader
         }
         $ret_pkg->setRootDir(dirname($path));
 
-        $src_ver = $versionOverride ?? new Header\Version($ret_pkg);
-        if ($src_ver != $ret_pkg->getPrettyVersion()) {
-            throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
+        if ($versionOverride !== '') {
+            $src_ver = $versionOverride ?? (string) new Header\Version($ret_pkg);
+            if ($src_ver !== $ret_pkg->getPrettyVersion()) {
+                throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
+            }
         }
         $ret_pkg->setType('extension');
 

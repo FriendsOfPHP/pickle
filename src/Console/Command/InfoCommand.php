@@ -69,7 +69,7 @@ class InfoCommand extends Command
                 'version-override',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Override detected version'
+                'Override detected version (no value - or empty value - to use the version from package.xml)'
             );
     }
 

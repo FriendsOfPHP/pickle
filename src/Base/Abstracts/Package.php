@@ -75,6 +75,9 @@ class Package extends CompletePackage
         is forced to implement it on its own. But so far ... */
     public function updateVersion($version = null)
     {
+        if ($version === '') {
+            return;
+        }
         /* Be sure package root is set before! */
         if ($version === null) {
             $version = new Header\Version($this);
