@@ -2,3 +2,4 @@ composer.phar
 pickle*.phar
 vendor/
 *.test
+/clover.xml
