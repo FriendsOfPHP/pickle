@@ -50,7 +50,7 @@ interface Unzipper
     /**
      * Close the archive.
      */
-    public function __destruct(): void;
+    public function __destruct();
 
     /**
      * Extract the archive contents to a specific directory.

@@ -56,7 +56,7 @@ class PHPUnzipper extends PHP implements Interfaces\Archive\Unzipper
      *
      * @see \Pickle\Base\Interfaces\Archive\Unzipper::__destruct()
      */
-    public function __destruct(): void
+    public function __destruct()
     {
         parent::__destruct();
     }
