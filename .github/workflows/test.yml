@@ -1,6 +1,14 @@
 name: Tests
 
-on: pull_request
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - "**"
+  pull_request:
+    branches:
+      - master
 
 jobs:
   run-tests:
