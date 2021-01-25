@@ -60,9 +60,9 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
                 throw new \Exception("cannot find $this->name");
             } else {
                 if ($status) {
-                    throw new \Exception("http error while loading informatio for $this->name: ".$status);
+                    throw new \Exception("http error while loading information for $this->name: ".$status);
                 } else {
-                    throw new \Exception("http error while loading informatio for $this->name: unknown error");
+                    throw new \Exception("http error while loading information for $this->name: unknown error");
                 }
             }
         }
