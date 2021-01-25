@@ -17,24 +17,25 @@
     ],
     "require": {
         "php": ">=7.2",
-        "ext-zlib": "*",
-        "ext-mbstring": "*",
-        "ext-simplexml": "*",
-        "ext-json": "*",
         "ext-dom": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-openssl": "*",
-        "symfony/console": "^5.0",
-        "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
+        "ext-simplexml": "*",
+        "ext-zlib": "*",
         "composer/composer": "<2.0",
-        "padraic/phar-updater": "~1.0@dev"
+        "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
+        "padraic/phar-updater": "~1.0@dev",
+        "symfony/console": "^5.0"
     },
     "require-dev": {
         "atoum/atoum": "~3.4",
         "atoum/praspel-extension": "~0.17",
         "atoum/visibility-extension": "~1.3",
         "behat/behat": "~3.6",
-        "symfony/process": "^5.0",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "mlocati/composer-patcher": "^1.2.2",
+        "symfony/process": "^5.0"
     },
     "autoload": {
         "psr-4": {
@@ -43,13 +44,28 @@
     },
     "bin": ["bin/pickle"],
     "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
         "platform": {
             "php": "7.2.5"
-        }
+        },
+        "discard-changes": true
     },
     "scripts": {
         "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23",
         "test": "vendor/bin/atoum --force-terminal && vendor/bin/behat --suite pickle --colors"
+    },
+    "extra": {
+        "patches": {
+            "atoum/atoum:3.4.2": {
+                "PHP 8 fixes": "patches/atoum/atoum/0001-PHP-8-fixes.patch"
+            },
+            "hoa/realdom:1.17.01.13": {
+                "PHP 8 fixes": "patches/hoa/realdom/0001-Remove-use-of-deprecated-each-function.patch"
+            },
+            "hoa/stream:1.17.02.21": {
+                "PHP 8 fixes": "patches/hoa/stream/0001-Fix-PHP-8-compatibility.patch"
+            }
+        }
     }
-
 }

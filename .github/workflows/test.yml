@@ -46,5 +46,5 @@ jobs:
         if: ${{ always() }}
         run: |
           if test -f ocular.phar && test -f clover.xml; then
-            php ocular.phar code-coverage:upload --format=php-clover clover.xml
+            php ocular.phar code-coverage:upload --format=php-clover --ansi --no-interaction -vvv clover.xml
           fi

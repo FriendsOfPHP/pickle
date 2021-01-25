@@ -1,0 +1,49 @@
+From: Nick Pfundstein <nickpfundstein@gmail.com>
+Date: Fri, 4 Jan 2019 12:56:33 -0500
+Subject: [PATCH] Remove use of deprecated each() function
+
+--- a/Realdom.php
++++ b/Realdom.php
+@@ -166,10 +166,11 @@ abstract class Realdom
+                 $this->arguments = [];
+                 $i               = 0;
+ 
+-                reset($this->_arguments);
++                $providedArgumentCount = count($arguments);
++                $provided = array_slice($this->_arguments, 0, $providedArgumentCount, true);
+ 
+                 foreach ($arguments as $argument) {
+-                    $name = key($this->_arguments);
++                    $name = key($provided);
+                     $hint = null;
+ 
+                     if (… === $argument) {
+@@ -182,11 +183,11 @@ abstract class Realdom
+                             );
+                         }
+ 
+-                        $argument = current($this->_arguments);
++                        $argument = current($provided);
+                     }
+ 
+                     if (is_int($name)) {
+-                        $name = current($this->_arguments);
++                        $name = current($provided);
+                         ++$i;
+                     }
+ 
+@@ -197,10 +198,12 @@ abstract class Realdom
+ 
+                     $this->arguments[$name] = $argument;
+                     $hints[]                = $hint;
+-                    next($this->_arguments);
++                    next($provided);
+                 }
+ 
+-                while (list($name, $default) = each($this->_arguments)) {
++                $remainder = array_slice($this->_arguments, $providedArgumentCount, null, true);
++
++                foreach ($remainder as list($name, $default)) {
+                     if (is_int($name)) {
+                         $j = 0;
+                         array_walk(
