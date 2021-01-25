@@ -39,7 +39,9 @@ jobs:
       - name: Install Composer dependencies (including dev, preferring dist)
         run: composer install --optimize-autoloader --ansi --no-interaction
       - name: Run Behat
-        run: PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+        env:
+          PICKLE_BEHAT_PROCESS_TIMEOUT: 0
+        run: vendor/bin/behat --format=progress
       - name: Download Ocular
         if: always()
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
