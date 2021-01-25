@@ -13,6 +13,7 @@ jobs:
           - "7.2"
           - "7.3"
           - "7.4"
+          - "8.0"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup PHP
@@ -38,12 +39,16 @@ jobs:
       - name: Install Composer dependencies (including dev, preferring dist)
         run: composer install --optimize-autoloader --ansi --no-interaction
       - name: Run Behat
-        run: PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+        env:
+          PICKLE_BEHAT_PROCESS_TIMEOUT: 0
+        run: vendor/bin/behat --format=progress
+      # We need a new release of Ocular that supports PHP 8 - see https://github.com/scrutinizer-ci/ocular/pull/52
       - name: Download Ocular
+        if: always() && !startsWith(matrix.php-version, '8.')
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
       - name: Upload code coverage
-        if: ${{ always() }}
+        if: always()
         run: |
           if test -f ocular.phar && test -f clover.xml; then
-            php ocular.phar code-coverage:upload --format=php-clover clover.xml
+            php ocular.phar code-coverage:upload --format=php-clover --ansi --no-interaction -vvv clover.xml
           fi

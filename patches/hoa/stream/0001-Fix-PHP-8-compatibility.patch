@@ -1,0 +1,15 @@
+From: Michele Locati <michele@locati.it>
+Date: Mon, 25 Jan 2021 09:57:56 +0100
+Subject: [PATCH] Fix PHP 8 compatibility
+
+--- a/Stream.php
++++ b/Stream.php
+@@ -192,7 +192,7 @@ abstract class Stream implements IStream\Stream, Event\Listenable
+      * @return  array
+      * @throws  \Hoa\Stream\Exception
+      */
+-    final private static function &_getStream(
++    private static function &_getStream(
+         $streamName,
+         Stream $handler,
+         $context = null

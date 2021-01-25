@@ -1,0 +1,81 @@
+From: Michele Locati <michele@locati.it>
+Date: Mon, 25 Jan 2021 09:49:46 +0100
+Subject: [PATCH] PHP 8 fixes
+
+--- a/classes/autoloader.php
++++ b/classes/autoloader.php
+@@ -40,7 +40,8 @@ class autoloader
+ 
+         $defaultAliases = [
+             'atoum' => __NAMESPACE__ . '\test',
+-            __NAMESPACE__ => __NAMESPACE__ . '\test'
++            __NAMESPACE__ => __NAMESPACE__ . '\test',
++            __NAMESPACE__ . '\iterators\recursives\directory\factory' => __NAMESPACE__ . '\iterators\recursives\directory\\' . (PHP_VERSION_ID < 80000 ? 'factory7' : 'factory8'),
+         ];
+ 
+         foreach ($classAliases ?: $defaultAliases as $alias => $target) {
+--- a/classes/includer.php
++++ b/classes/includer.php
+@@ -84,7 +84,7 @@ class includer
+         return $firstError;
+     }
+ 
+-    public function errorHandler($error, $message, $file, $line, $context)
++    public function errorHandler($error, $message, $file, $line, $context = null)
+     {
+         $errorReporting = $this->adapter->error_reporting();
+ 
+new file mode 100644
+--- /dev/null
++++ b/classes/iterators/recursives/directory/factory7.php
+@@ -0,0 +1,11 @@
++<?php
++
++namespace mageekguy\atoum\iterators\recursives\directory;
++
++class factory7 extends factoryBase
++{
++    public function getIterator($path)
++    {
++        return $this->getIteratorBase($path);
++    }
++}
+new file mode 100644
+--- /dev/null
++++ b/classes/iterators/recursives/directory/factory8.php
+@@ -0,0 +1,11 @@
++<?php
++
++namespace mageekguy\atoum\iterators\recursives\directory;
++
++class factory8 extends factoryBase
++{
++    public function getIterator()
++    {
++        return $this->getIteratorBase(func_get_arg(0));
++    }
++}
+diff --git a/classes/iterators/recursives/directory/factory.php b/classes/iterators/recursives/directory/factoryBase.phpsimilarity index 97%
+similarity index 97%
+rename from classes/iterators/recursives/directory/factory.php
+rename to classes/iterators/recursives/directory/factoryBase.php
+--- a/classes/iterators/recursives/directory/factory.php
++++ b/classes/iterators/recursives/directory/factoryBase.php
+@@ -4,7 +4,7 @@ namespace mageekguy\atoum\iterators\recursives\directory;
+ 
+ use mageekguy\atoum\iterators\filters;
+ 
+-class factory implements \iteratorAggregate
++abstract class factoryBase implements \iteratorAggregate
+ {
+     protected $dotFilterFactory = null;
+     protected $iteratorFactory = null;
+@@ -63,7 +63,7 @@ class factory implements \iteratorAggregate
+         return $this->extensionFilterFactory;
+     }
+ 
+-    public function getIterator($path)
++    public function getIteratorBase($path)
+     {
+         $iterator = call_user_func($this->iteratorFactory, $path);
+ 
