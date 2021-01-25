@@ -6,7 +6,7 @@ Pickle installs PHP extensions easily on all platforms.
 [![Code Climate](https://codeclimate.com/github/FriendsOfPHP/pickle.svg)](https://codeclimate.com/github/FriendsOfPHP/pickle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfPHP/pickle/?branch=master)
-[![Build Status](https://travis-ci.org/FriendsOfPHP/pickle.svg?branch=master)](https://travis-ci.org/FriendsOfPHP/pickle)
+[![Build Status](https://github.com/FriendsOfPHP/pickle/workflows/Tests/badge.svg?branch=master)](https://github.com/FriendsOfPHP/pickle/actions?query=workflow%3ATests)
 
 Installation
 ------------
