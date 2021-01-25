@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,6 +36,7 @@
 
 namespace Pickle\Package\Command;
 
+use Exception;
 use Pickle\Engine;
 use Pickle\Package\PHP;
 
@@ -50,7 +51,7 @@ class Convert
                 return new PHP\Command\Convert($path, $cb);
 
             default:
-                throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
+                throw new Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,13 +36,14 @@
 
 namespace Pickle\Console\Command;
 
+use Exception;
+use Pickle\Base\Abstracts\Console\Command\BuildCommand;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Util;
+use Pickle\Package\Command\Release;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Pickle\Base\Interfaces;
-use Pickle\Base\Abstracts\Console\Command\BuildCommand;
-use Pickle\Package\Command\Release;
-use Pickle\Base\Util;
 
 class ReleaseCommand extends BuildCommand
 {
@@ -71,7 +72,8 @@ class ReleaseCommand extends BuildCommand
                 InputOption::VALUE_REQUIRED,
                 'path to a custom temp dir',
                 sys_get_temp_dir()
-            );
+            )
+        ;
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->addOption(
@@ -99,7 +101,7 @@ class ReleaseCommand extends BuildCommand
         $release = Release::factory($package->getRootDir(), $cb, $input->getOption('no-convert'), $input->getOption('binary'));
 
         if ($input->getOption('binary')) {
-            list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
+            [$optionsValue, $force_opts] = $this->buildOptions($package, $input, $output);
 
             $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
 
@@ -109,31 +111,31 @@ class ReleaseCommand extends BuildCommand
                 $build->configure($force_opts);
                 $build->make();
                 $this->saveBuildLogs($input, $build);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($input->getOption('pack-logs')) {
                     $release->packLog($build);
                 } else {
                     $this->saveBuildLogs($input, $build);
                 }
 
-                $output->writeln('The following error(s) happened: '.$e->getMessage());
+                $output->writeln('The following error(s) happened: ' . $e->getMessage());
             }
 
-            $args = array(
+            $args = [
                 'build' => $build,
-            );
+            ];
 
             try {
                 $release->create($args);
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
                 $build->cleanup();
-                throw new \Exception($e->getMessage());
+                throw new Exception($e->getMessage());
             }
         } else {
             /* imply --source */
@@ -142,11 +144,11 @@ class ReleaseCommand extends BuildCommand
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($input->getOption('pack-logs')) {
                     $release->packLog();
                 }
-                throw new \Exception($e->getMessage());
+                throw new Exception($e->getMessage());
             }
         }
         return 0;

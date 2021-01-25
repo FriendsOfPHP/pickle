@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,22 +36,12 @@
 
 namespace Pickle;
 
+use Exception;
 use Pickle\Package\PHP;
 
 class Package
 {
     protected static $instance = null;
-
-    protected static function deliverFresh($force)
-    {
-        if ($force && self::$instance || is_null(self::$instance)) {
-            self::$instance = null;
-
-            return true;
-        }
-
-        return false;
-    }
 
     public static function factory($name, $version, $prettyVersion, $force = false)
     {
@@ -64,11 +54,22 @@ class Package
                     break;
 
                 default:
-                    throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
+                    throw new Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
             }
         }
 
         return self::$instance;
+    }
+
+    protected static function deliverFresh($force)
+    {
+        if ($force && self::$instance || self::$instance === null) {
+            self::$instance = null;
+
+            return true;
+        }
+
+        return false;
     }
 }
 

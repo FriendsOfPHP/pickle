@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -41,6 +41,7 @@ use Pickle\Package\PHP\Util\PackageXml;
 class Convert
 {
     protected $path;
+
     protected $cb;
 
     public function __construct($path, $cb = null)

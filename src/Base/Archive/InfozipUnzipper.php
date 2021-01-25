@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -42,7 +42,7 @@ use RuntimeException;
 class InfozipUnzipper extends Infozip implements Interfaces\Archive\Unzipper
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Unzipper::__construct()
      */
@@ -53,16 +53,16 @@ class InfozipUnzipper extends Infozip implements Interfaces\Archive\Unzipper
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Unzipper::__destruct()
      */
-    public function __destruct(): void
+    public function __destruct()
     {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Unzipper::extractTo()
      */
@@ -70,7 +70,7 @@ class InfozipUnzipper extends Infozip implements Interfaces\Archive\Unzipper
     {
         if (!is_dir($path)) {
             if (mkdir($path, 0777, true) !== true) {
-                throw new RuntimeException("Failed to create directory $path");
+                throw new RuntimeException("Failed to create directory {$path}");
             }
         }
         $originalCWD = getcwd();

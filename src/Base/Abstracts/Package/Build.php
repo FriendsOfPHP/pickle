@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,18 +36,22 @@
 
 namespace Pickle\Base\Abstracts\Package;
 
+use Exception;
 use Pickle\Base\Archive;
-use Pickle\Base\Util\FileOps;
 use Pickle\Base\Interfaces;
 use Pickle\Base\Interfaces\Package;
+use Pickle\Base\Util\FileOps;
 
 abstract class Build
 {
     use FileOps;
 
     protected $pkg;
+
     protected $options;
-    protected $log = array();
+
+    protected $log = [];
+
     protected $cwdBack;
 
     public function __construct(Package $pkg, $options = null)
@@ -58,7 +62,7 @@ abstract class Build
     }
 
     /**
-     * @param int    $level
+     * @param int $level
      * @param string $msg
      */
     public function log($level, $msg, $hint = '')
@@ -72,7 +76,7 @@ abstract class Build
 
     public function getLog($hint = null)
     {
-        $ret = array();
+        $ret = [];
 
         foreach ($this->log as $item) {
             if (isset($hint) && $hint !== $item['hint']) {
@@ -80,22 +84,63 @@ abstract class Build
             }
             $tmp = explode("\n", $item['msg']);
             foreach ($tmp as $ln) {
-                $ret[] = $item['level'].': '.$ln;
+                $ret[] = $item['level'] . ': ' . $ln;
             }
         }
 
         return implode("\n", $ret);
     }
 
+    public function saveLog($path)
+    {
+        $logs = [];
+        $def_fl = null;
+
+        $this->prepareSaveLog($path, $def_fl);
+
+        foreach ($this->log as $item) {
+            $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
+
+            if (file_put_contents($fname, "{$item['msg']}\n", FILE_APPEND) != strlen($item['msg']) + 1) {
+                throw new Exception("Couldn't write contents to '{$fname}'");
+            }
+        }
+    }
+
+    /* zip is default */
+    public function packLog($path)
+    {
+        $zipperClass = Archive\Factory::getZipperClassName();
+        $zip = new $zipperClass($path, Interfaces\Archive\Zipper::FLAG_CREATE_OVERWRITE);
+        /** @var \Pickle\Base\Interfaces\Archive\Zipper $zip */
+        $no_hint_logs = '';
+        foreach ($this->log as $item) {
+            $msg = $this->fixEol($item['msg']);
+            if ((isset($item['hint']) && !empty($item['hint']))) {
+                $zip->addFromString("{$item['hint']}.log", $msg);
+            } else {
+                $no_hint_logs = "{$no_hint_logs}\n\n{$msg}";
+            }
+        }
+        if ($no_hint_logs) {
+            $zip->addFromString('build.log', $this->fixEol($item['msg']));
+        }
+    }
+
+    public function getPackage()
+    {
+        return $this->pkg;
+    }
+
     protected function prepareSaveLog($path, &$def_fl)
     {
         if ($path && !is_dir($path)) {
             if (!mkdir($path)) {
-                throw new \EXception("Location '$path' could not be created, unable to save build logs");
+                throw new EXception("Location '{$path}' could not be created, unable to save build logs");
             }
         }
 
-        $def_fl = $path.DIRECTORY_SEPARATOR.'build.log';
+        $def_fl = $path . DIRECTORY_SEPARATOR . 'build.log';
         if (file_exists($def_fl)) {
             unlink($def_fl);
         }
@@ -104,7 +149,7 @@ abstract class Build
     protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
     {
         $is_hint = (isset($log_item['hint']) && !empty($log_item['hint']));
-        $fname = $is_hint ? $path.DIRECTORY_SEPARATOR."$log_item[hint].log" : $def_fl;
+        $fname = $is_hint ? $path . DIRECTORY_SEPARATOR . "{$log_item['hint']}.log" : $def_fl;
 
         if (!in_array($fname, $logs)) {
             if (file_exists($fname)) {
@@ -114,22 +159,6 @@ abstract class Build
         }
 
         return $fname;
-    }
-
-    public function saveLog($path)
-    {
-        $logs = array();
-        $def_fl = null;
-
-        $this->prepareSaveLog($path, $def_fl);
-
-        foreach ($this->log as $item) {
-            $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
-
-            if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item['msg']) + 1) {
-                throw new \Exception("Couldn't write contents to '$fname'");
-            }
-        }
     }
 
     protected function fixEol($s)
@@ -143,46 +172,26 @@ abstract class Build
         return $ret;
     }
 
-    /* zip is default */
-    public function packLog($path)
-    {
-        $zipperClass = Archive\Factory::getZipperClassName();
-        $zip = new $zipperClass($path, Interfaces\Archive\Zipper::FLAG_CREATE_OVERWRITE);
-        /** @var $zip \Pickle\Base\Interfaces\Archive\Zipper */
-        $no_hint_logs = '';
-        foreach ($this->log as $item) {
-            $msg = $this->fixEol($item['msg']);
-            if ((isset($item['hint']) && !empty($item['hint']))) {
-                $zip->addFromString("$item[hint].log", $msg);
-            } else {
-                $no_hint_logs = "$no_hint_logs\n\n$msg";
-            }
-        }
-        if ($no_hint_logs) {
-            $zip->addFromString('build.log', $this->fixEol($item['msg']));
-        }
-    }
-
     /**
      * @param string $command
      *
-     * @return bool
+     * @throws Exception
      *
-     * @throws \Exception
+     * @return bool
      */
     protected function runCommand($command)
     {
         $hint = basename(strtok($command, " \n"));
 
         $this->log(1, $command, $hint);
-        $pp = popen("$command 2>&1", 'r');
+        $pp = popen("{$command} 2>&1", 'r');
         if (!$pp) {
-            throw new \Exception(
-                'Failed to run the following command: '.$command
+            throw new Exception(
+                'Failed to run the following command: ' . $command
             );
         }
 
-        $out = array();
+        $out = [];
         while ($line = fgets($pp, 1024)) {
             $out[] = rtrim($line);
         }
@@ -190,7 +199,7 @@ abstract class Build
 
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
-        return 0 === $exitCode;
+        return $exitCode === 0;
     }
 
     protected function appendPkgConfigureOptions(&$configureOptions)
@@ -198,29 +207,24 @@ abstract class Build
         $opt = $this->pkg->getConfigureOptions();
         if (isset($opt[$this->pkg->getName()])) {
             $extEnableOption = $opt[$this->pkg->getName()];
-            if ('enable' == $extEnableOption->type) {
-                $confOption = '--enable-'.$this->pkg->getName().'=shared';
+            if ($extEnableOption->type == 'enable') {
+                $confOption = '--enable-' . $this->pkg->getName() . '=shared';
             } else {
-                $confOption = '--with-'.$this->pkg->getName().'=shared';
+                $confOption = '--with-' . $this->pkg->getName() . '=shared';
             }
-            $configureOptions = $confOption.' '.$configureOptions;
+            $configureOptions = $confOption . ' ' . $configureOptions;
         } else {
             $name = str_replace('_', '-', $this->pkg->getName());
             if (isset($opt[$name])) {
                 $extEnableOption = $opt[$name];
-                if ('enable' == $extEnableOption->type) {
-                    $confOption = '--enable-'.$name.'=shared';
+                if ($extEnableOption->type == 'enable') {
+                    $confOption = '--enable-' . $name . '=shared';
                 } else {
-                    $confOption = '--with-'.$name.'=shared';
+                    $confOption = '--with-' . $name . '=shared';
                 }
-                $configureOptions = $confOption.' '.$configureOptions;
+                $configureOptions = $confOption . ' ' . $configureOptions;
             }
         }
-    }
-
-    public function getPackage()
-    {
-        return $this->pkg;
     }
 }
 

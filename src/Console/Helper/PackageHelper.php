@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -66,10 +66,11 @@ class PackageHelper extends Helper
         $table
             ->setRows([
                 ['<info>Package name</info>', $package->getPrettyName()],
-                ['<info>Package version (current release)</info>', str_replace("-$stability", '', $package->getPrettyVersion())],
+                ['<info>Package version (current release)</info>', str_replace("-{$stability}", '', $package->getPrettyVersion())],
                 ['<info>Package status</info>', $stability],
             ])
-            ->render();
+            ->render()
+        ;
     }
 
     public function showOptions(OutputInterface $output, Interfaces\Package $package)
@@ -81,7 +82,7 @@ class PackageHelper extends Helper
             $default = $option->default;
 
             if ($option->type === 'enable') {
-                $option->type = '<fg=yellow>'.$option->type.'</fg=yellow>';
+                $option->type = '<fg=yellow>' . $option->type . '</fg=yellow>';
                 $default = $default ? '<fg=green>yes</fg=green>' : '<fg=red>no</fg=red>';
             }
 
@@ -96,9 +97,6 @@ class PackageHelper extends Helper
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param $url
      * @param $path
      *
      * @return Pickle\Base\Interfaces\Package
@@ -106,7 +104,7 @@ class PackageHelper extends Helper
     public function convey(InputInterface $input, OutputInterface $output, $path, $target = null)
     {
         $helperSet = $this->getHelperSet();
-        $io = new ConsoleIO($input, $output, ($helperSet ? $helperSet : new HelperSet()));
+        $io = new ConsoleIO($input, $output, ($helperSet ?: new HelperSet()));
 
         $no_convert = $input->hasOption('no-convert') ? $input->getOption('no-convert') : false;
         if ($input->hasOption('version-override')) {

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,6 +37,9 @@
 namespace Pickle\Package\Util\JSON;
 
 use Composer\Package\Loader\LoaderInterface;
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 
 class Loader
 {
@@ -54,21 +57,21 @@ class Loader
      */
     public function load($path)
     {
-        if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: '.$path);
+        if (is_file($path) === false) {
+            throw new InvalidArgumentException('File not found: ' . $path);
         }
 
         $json = @json_decode(file_get_contents($path));
 
-        if (false === $json) {
+        if ($json === false) {
             $error = error_get_last();
             $exception = null;
 
-            if (null !== $error) {
-                $exception = new \Exception($error['message'], $error['type']);
+            if ($error !== null) {
+                $exception = new Exception($error['message'], $error['type']);
             }
 
-            throw new \RuntimeException('Failed to read '.$path, 0, $exception);
+            throw new RuntimeException('Failed to read ' . $path, 0, $exception);
         }
 
         $this->validate($json);
@@ -78,18 +81,18 @@ class Loader
 
     protected function validate($json)
     {
-        $schema = json_decode(file_get_contents(__DIR__.'/../../../../vendor/composer/composer/res/composer-schema.json'));
+        $schema = json_decode(file_get_contents(__DIR__ . '/../../../../vendor/composer/composer/res/composer-schema.json'));
         $validator = new \JsonSchema\Validator();
         $validator->check($json, $schema);
 
-        if (false === $validator->isValid()) {
+        if ($validator->isValid() === false) {
             $message = '';
 
             foreach ($validator->getErrors() as $error) {
-                $message .= sprintf('[%s] %s', $error['property'], $error['message']).PHP_EOL;
+                $message .= sprintf('[%s] %s', $error['property'], $error['message']) . PHP_EOL;
             }
 
-            throw new \RuntimeException($message);
+            throw new RuntimeException($message);
         }
     }
 }

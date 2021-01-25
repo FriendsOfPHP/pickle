@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,6 +36,7 @@
 
 namespace Pickle\Package\PHP\Command\Build;
 
+use Exception;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
 
@@ -54,32 +55,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $res = $this->runCommand('phpize');
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('phpize failed');
+            throw new Exception('phpize failed');
         }
-    }
-
-    protected function prepareConfigOpts()
-    {
-        $configureOptions = '';
-        foreach ($this->options as $name => $option) {
-            if ('enable' === $option->type) {
-                true === $option->input ? 'enable' : 'disable';
-            } elseif ('disable' == $option->type) {
-                false === $option->input ? 'enable' : 'disable';
-            } elseif ('with' === $option->type) {
-                if ($option->input == 'yes' || $option->input == '1' || $option->type === true) {
-                    $configureOptions .= ' --with-'.$name;
-                } elseif ($option->input == 'no' || $option->input == '0' || $option->type === false) {
-                    $configureOptions .= ' --without-'.$name;
-                } else {
-                    $configureOptions .= ' --with-'.$name.'='.$option->input;
-                }
-            }
-        }
-
-        $this->appendPkgConfigureOptions($configureOptions);
-
-        return $configureOptions;
     }
 
     public function configure($opts = null)
@@ -87,12 +64,12 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $backCwd = getcwd();
         chdir($this->tempDir);
 
-        $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
+        $configureOptions = $opts ?: $this->prepareConfigOpts();
 
-        $res = $this->runCommand($this->pkg->getSourceDir().'/configure '.$configureOptions);
+        $res = $this->runCommand($this->pkg->getSourceDir() . '/configure ' . $configureOptions);
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('configure failed, see log at '.$this->tempDir.'\config.log');
+            throw new Exception('configure failed, see log at ' . $this->tempDir . '\config.log');
         }
     }
 
@@ -104,7 +81,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         chdir($backCwd);
 
         if (!$res) {
-            throw new \Exception('make failed');
+            throw new Exception('make failed');
         }
     }
 
@@ -115,13 +92,37 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $res = $this->runCommand('make install');
         chdir($backCwd);
         if (!$res) {
-            throw new \Exception('make install failed');
+            throw new Exception('make install failed');
         }
     }
 
     public function getInfo()
     {
-        return array();
+        return [];
+    }
+
+    protected function prepareConfigOpts()
+    {
+        $configureOptions = '';
+        foreach ($this->options as $name => $option) {
+            if ($option->type === 'enable') {
+                $option->input === true ? 'enable' : 'disable';
+            } elseif ($option->type == 'disable') {
+                $option->input === false ? 'enable' : 'disable';
+            } elseif ($option->type === 'with') {
+                if ($option->input == 'yes' || $option->input == '1' || $option->type === true) {
+                    $configureOptions .= ' --with-' . $name;
+                } elseif ($option->input == 'no' || $option->input == '0' || $option->type === false) {
+                    $configureOptions .= ' --without-' . $name;
+                } else {
+                    $configureOptions .= ' --with-' . $name . '=' . $option->input;
+                }
+            }
+        }
+
+        $this->appendPkgConfigureOptions($configureOptions);
+
+        return $configureOptions;
     }
 }
 

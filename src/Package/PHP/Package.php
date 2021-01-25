@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,8 +36,12 @@
 
 namespace Pickle\Package\PHP;
 
+use CallbackFilterIterator;
+use Exception;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Util\GitIgnore;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Package
 {
@@ -64,7 +68,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     public function getSourceDir()
     {
         $path = $this->getRootDir();
-        $release = $path.DIRECTORY_SEPARATOR.$this->getPrettyName().'-'.$this->getPrettyVersion();
+        $release = $path . DIRECTORY_SEPARATOR . $this->getPrettyName() . '-' . $this->getPrettyVersion();
 
         if (is_dir($release)) {
             $path = $release;
@@ -74,8 +78,8 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         if (!$this->extConfigIsIn($path)) {
             $path = $this->locateSourceDirByExtConfig($path);
 
-            if (null === $path) {
-                throw new \Exception('config*.(m4|w32) not found');
+            if ($path === null) {
+                throw new Exception('config*.(m4|w32) not found');
             }
         }
 
@@ -105,10 +109,10 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         $options = [];
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $config_file = $this->getSourceDir().'/config.w32';
+            $config_file = $this->getSourceDir() . '/config.w32';
 
             if (!file_exists($config_file)) {
-                throw new \Exception('cnofig.w32 not found');
+                throw new Exception('cnofig.w32 not found');
             }
 
             $config = file_get_contents($config_file);
@@ -118,7 +122,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
                 $this->fetchArgWindows('ARG_ENABLE', $config)
             );
         } else {
-            $configs = glob($this->getSourceDir().'/'.'config*.m4');
+            $configs = glob($this->getSourceDir() . '/' . 'config*.m4');
 
             if (!empty($configs)) {
                 foreach ($configs as $config) {
@@ -143,6 +147,46 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     }
 
     /**
+     * Get files, will not return gitignore files.
+     *
+     * @return CallbackFilterIterator
+     */
+    public function getFiles()
+    {
+        return new CallbackFilterIterator(
+            new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($this->getSourceDir())
+            ),
+            new GitIgnore($this)
+        );
+    }
+
+    public function getVersionFromHeader()
+    {
+        $headers = glob($this->path . DIRECTORY_SEPARATOR . '*.h');
+        $version_define = 'PHP_' . strtoupper($this->getSimpleName()) . '_VERSION';
+        foreach ($headers as $header) {
+            $contents = @file_get_contents($header);
+            if (!$contents) {
+                throw new Exception("Cannot read header <{$header}>");
+            }
+            $pos_version = strpos($contents, $version_define);
+            if ($pos_version !== false) {
+                $nl = strpos($contents, "\n", $pos_version);
+                $version_line = trim(substr($contents, $pos_version, $nl - $pos_version));
+                [$version_define, $version] = explode(' ', $version_line);
+                $version = trim(str_replace('"', '', $version));
+                break;
+            }
+        }
+        if (empty($version)) {
+            throw new Exception('No ' . $version_define . ' can be found');
+        }
+
+        return [trim($version_define), $version];
+    }
+
+    /**
      * @param string $which
      * @param string $config
      *
@@ -152,7 +196,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     {
         $next = 0;
         $options = [];
-        $type = false !== strpos($which, 'ENABLE') ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
@@ -164,7 +208,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
                 $a = trim($a);
             });
 
-            @list($name, $prompt, $default) = $elems;
+            @[$name, $prompt, $default] = $elems;
             $name = str_replace('"', '', $name);
             $options[$name] = (object) [
                 'prompt' => $prompt,
@@ -177,11 +221,12 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         return $options;
     }
 
-    protected function isWithOrEnable($option, $type) {
-        if ('enable' == $type) {
-            $default = (false !== strpos($option, '-disable-')) ? true : false;
-        } elseif ('with' == $type) {
-            $default = (false !== strpos($option, '-without-')) ? true : false;
+    protected function isWithOrEnable($option, $type)
+    {
+        if ($type == 'enable') {
+            $default = (strpos($option, '-disable-') !== false) ? true : false;
+        } elseif ($type == 'with') {
+            $default = (strpos($option, '-without-') !== false) ? true : false;
         }
         return $default;
     }
@@ -196,16 +241,15 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     {
         $next = 0;
         $options = [];
-        $type = false !== strpos($which, 'ENABLE') ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
             $default = true;
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-
             $default = $this->isWithOrEnable($option, $type);
-            list($name, $desc) = explode(',', $option);
+            [$name, $desc] = explode(',', $option);
 
             $desc = preg_replace('/\s+/', ' ', trim($desc));
             $desc = trim(substr($desc, 1, strlen($desc) - 2));
@@ -235,18 +279,18 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         $next = 0;
         $options = [];
 
-        $type = false !== strpos($which, 'ENABLE') ? 'enable' : 'with';
+        $type = strpos($which, 'ENABLE') !== false ? 'enable' : 'with';
         while (false !== ($s = strpos($config, $which, $next))) {
             $default = 'y';
             $s = strpos($config, '(', $s);
             $e = strpos($config, ')', $s + 1);
             $option = substr($config, $s + 1, $e - $s);
 
-            list($name, $desc) = explode(',', $option);
+            [$name, $desc] = explode(',', $option);
 
             /* Description can be part of the 3rd argument */
             if (empty($desc) || $desc === '[]') {
-                list($name, , $desc) = explode(',', $option);
+                [$name, , $desc] = explode(',', $option);
                 $desc = preg_replace('/\s+/', ' ', trim($desc));
                 $desc = trim(substr($desc, 1, strlen($desc) - 2));
                 $desc = trim(str_replace(['[', ']'], ['', ''], $desc));
@@ -267,71 +311,28 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
         return $options;
     }
 
-    /**
-     * Get files, will not return gitignore files.
-     *
-     * @return \CallbackFilterIterator
-     */
-    public function getFiles()
-    {
-        return new \CallbackFilterIterator(
-            new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($this->getSourceDir())
-            ),
-            new GitIgnore($this)
-        );
-    }
-
-    public function getVersionFromHeader()
-    {
-        $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
-        $version_define = 'PHP_'.strtoupper($this->getSimpleName()).'_VERSION';
-        foreach ($headers as $header) {
-            $contents = @file_get_contents($header);
-            if (!$contents) {
-                throw new \Exception("Cannot read header <$header>");
-            }
-            $pos_version = strpos($contents, $version_define);
-            if ($pos_version !== false) {
-                $nl = strpos($contents, "\n", $pos_version);
-                $version_line = trim(substr($contents, $pos_version, $nl - $pos_version));
-                list($version_define, $version) = explode(' ', $version_line);
-                $version = trim(str_replace('"', '', $version));
-                break;
-            }
-        }
-        if (empty($version)) {
-            throw new \Exception('No '.$version_define.' can be found');
-        }
-
-        return [trim($version_define), $version];
-    }
-
     protected function extConfigIsIn($path)
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
-            return file_exists(realpath($path).DIRECTORY_SEPARATOR.'config.w32');
-        } else {
-            $r = glob("$path/config*.m4");
-
-            return is_array($r) && !empty($r);
+            return file_exists(realpath($path) . DIRECTORY_SEPARATOR . 'config.w32');
         }
+        $r = glob("{$path}/config*.m4");
+
+        return is_array($r) && !empty($r);
     }
 
     protected function locateSourceDirByExtConfig($path)
     {
-        $it = new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($path),
-        \RecursiveIteratorIterator::SELF_FIRST
-    );
+        $it = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
 
         foreach ($it as $fl_obj) {
             if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {
                 return $fl_obj->getPath();
             }
         }
-
-        return;
     }
 }
 

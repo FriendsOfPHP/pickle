@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,8 +37,11 @@
 namespace Pickle\Package\PHP\Util\XML;
 
 use Composer\Package\Loader\LoaderInterface;
-use Pickle\Package\PHP;
+use Exception;
+use InvalidArgumentException;
 use Pickle\Package\Util\Header;
+use RuntimeException;
+use SimpleXMLElement;
 
 class Loader
 {
@@ -56,21 +59,21 @@ class Loader
      */
     public function load($path, $versionOverride = null)
     {
-        if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: '.$path);
+        if (is_file($path) === false) {
+            throw new InvalidArgumentException('File not found: ' . $path);
         }
 
         $xml = @simplexml_load_file($path);
 
-        if (false === $xml) {
+        if ($xml === false) {
             $error = error_get_last();
             $exception = null;
 
-            if (null !== $error) {
-                $exception = new \Exception($error['message'], $error['type']);
+            if ($error !== null) {
+                $exception = new Exception($error['message'], $error['type']);
             }
 
-            throw new \RuntimeException('Failed to read '.$path, 0, $exception);
+            throw new RuntimeException('Failed to read ' . $path, 0, $exception);
         }
 
         $this->validate($xml);
@@ -83,17 +86,17 @@ class Loader
         ];
 
         if (!isset($xml->providesextension)) {
-            throw new \Exception('not a PHP extension package.xml, providesextension tag missing');
+            throw new Exception('not a PHP extension package.xml, providesextension tag missing');
         }
 
-        $authors = array();
-        foreach (array($xml->lead, $xml->developer, $xml->contributor, $xml->helper) as $devs) {
+        $authors = [];
+        foreach ([$xml->lead, $xml->developer, $xml->contributor, $xml->helper] as $devs) {
             foreach ($devs as $dev) {
                 $authors[] = $dev;
             }
         }
 
-        if (false === empty($authors)) {
+        if (empty($authors) === false) {
             $package['authors'] = [];
 
             foreach ($authors as $author) {
@@ -121,7 +124,7 @@ class Loader
             ];
         }
 
-        if (false === empty($configureOptions)) {
+        if (empty($configureOptions) === false) {
             $package['extra'] = ['configure-options' => $configureOptions];
         }
 
@@ -132,14 +135,14 @@ class Loader
 
         $ret_pkg = $this->loader->load($package);
         if (!$ret_pkg) {
-            throw new \Exception("Package from '$path' failed to load.");
+            throw new Exception("Package from '{$path}' failed to load.");
         }
         $ret_pkg->setRootDir(dirname($path));
 
         if ($versionOverride !== '') {
             $src_ver = $versionOverride ?? (string) new Header\Version($ret_pkg);
             if ($src_ver !== $ret_pkg->getPrettyVersion()) {
-                throw new \Exception("Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML");
+                throw new Exception("Version mismatch - '" . $src_ver . "' != '" . $ret_pkg->getPrettyVersion() . "' in source vs. XML");
             }
         }
         $ret_pkg->setType('extension');
@@ -147,14 +150,14 @@ class Loader
         return $ret_pkg;
     }
 
-    protected function validate(\SimpleXMLElement $xml)
+    protected function validate(SimpleXMLElement $xml)
     {
-        if (-1 === version_compare($xml['version'], '2.0')) {
-            throw new \RuntimeException('Unsupported package.xml version, 2.0 or later only is supported');
+        if (version_compare($xml['version'], '2.0') === -1) {
+            throw new RuntimeException('Unsupported package.xml version, 2.0 or later only is supported');
         }
 
         if (!isset($xml->providesextension)) {
-            throw new \RuntimeException('Only extension packages are supported');
+            throw new RuntimeException('Only extension packages are supported');
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,8 +37,8 @@
 namespace Pickle\Base\Abstracts;
 
 use Composer\Package\CompletePackage;
-use Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
+use Pickle\Package\Util\Header;
 
 class Package extends CompletePackage
 {

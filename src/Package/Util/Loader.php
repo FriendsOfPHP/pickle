@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -38,22 +38,26 @@ namespace Pickle\Package\Util;
 
 use Composer\Package\Loader\LoaderInterface;
 use Composer\Package\Version\VersionParser;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
+use UnexpectedValueException;
 
 class Loader implements LoaderInterface
 {
     protected $versionParser;
+
     protected $loadOptions;
 
-    public function __construct(VersionParser $parser = null, $loadOptions = false)
+    public function __construct(?VersionParser $parser = null, $loadOptions = false)
     {
         $this->versionParser = $parser ?: new VersionParser();
         $this->loadOptions = $loadOptions;
     }
 
     /**
-     * @param array  $config
      * @param string $package
      *
      * @return \Pickle\Base\Interfaces\Package $package
@@ -68,7 +72,7 @@ class Loader implements LoaderInterface
         }
 
         if (isset($config['type']) && $config['type'] != 'extension') {
-            throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
+            throw new UnexpectedValueException($package->getName() . ' is not a extension(s) package');
         }
         $package->setType('extension');
 
@@ -125,7 +129,7 @@ class Loader implements LoaderInterface
     protected function setPackageLicense(Interfaces\Package $package, array $config)
     {
         if (!empty($config['license'])) {
-            $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
+            $package->setLicense(is_array($config['license']) ? $config['license'] : [$config['license']]);
         }
     }
 
@@ -163,7 +167,7 @@ class Loader implements LoaderInterface
         }
 
         if (!isset($config['source']['type']) || !isset($config['source']['url']) || !isset($config['source']['reference'])) {
-            throw new \UnexpectedValueException(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 "Package %s's source key should be specified as {\"type\": ..., \"url\": ..., \"reference\": ...},\n%s given.",
                 $config['name'],
                 json_encode($config['source'])
@@ -185,9 +189,9 @@ class Loader implements LoaderInterface
 
         if (!isset($config['dist']['type'])
             || !isset($config['dist']['url'])) {
-            throw new \UnexpectedValueException(sprintf(
-                "Package %s's dist key should be specified as ".
-                "{\"type\": ..., \"url\": ..., \"reference\": ..., \"shasum\": ...},\n%s given.",
+            throw new UnexpectedValueException(sprintf(
+                "Package %s's dist key should be specified as "
+                . "{\"type\": ..., \"url\": ..., \"reference\": ..., \"shasum\": ...},\n%s given.",
                 $config['name'],
                 json_encode($config['dist'])
             ));
@@ -195,8 +199,8 @@ class Loader implements LoaderInterface
 
         $package->setDistType($config['dist']['type']);
         $package->setDistUrl($config['dist']['url']);
-        $package->setDistReference(isset($config['dist']['reference']) ? $config['dist']['reference'] : null);
-        $package->setDistSha1Checksum(isset($config['dist']['shasum']) ? $config['dist']['shasum'] : null);
+        $package->setDistReference($config['dist']['reference'] ?? null);
+        $package->setDistSha1Checksum($config['dist']['shasum'] ?? null);
         if (isset($config['dist']['mirrors'])) {
             $package->setDistMirrors($config['dist']['mirrors']);
         }
@@ -208,12 +212,12 @@ class Loader implements LoaderInterface
             return;
         }
 
-        $time = ctype_digit($config['time']) ? '@'.$config['time'] : $config['time'];
+        $time = ctype_digit($config['time']) ? '@' . $config['time'] : $config['time'];
 
         try {
-            $date = new \DateTime($time, new \DateTimeZone('UTC'));
+            $date = new DateTime($time, new DateTimeZone('UTC'));
             $package->setReleaseDate($date);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // don't crash if time is incorrect
         }
     }

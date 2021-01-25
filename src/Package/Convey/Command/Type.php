@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -40,12 +40,17 @@ use Composer\Package\Version\VersionParser;
 
 class Type
 {
-    const PICKLE = 'pickle';
-    const PECL = 'pecl';
-    const GIT = 'git';
-    const TGZ = 'tgz';
-    const SRC_DIR = 'srcdir';
-    const ANY = 'any';
+    public const PICKLE = 'pickle';
+
+    public const PECL = 'pecl';
+
+    public const GIT = 'git';
+
+    public const TGZ = 'tgz';
+
+    public const SRC_DIR = 'srcdir';
+
+    public const ANY = 'any';
 
     public static function match($regs, $arg, &$matches)
     {
@@ -68,9 +73,9 @@ class Type
             return 0;
         }
         $matches = [
-                'package' => $res[0]['name'],
-                'version' => isset($res[0]['version']) ? $res[0]['version'] : '',
-            ];
+            'package' => $res[0]['name'],
+            'version' => $res[0]['version'] ?? '',
+        ];
 
         return 1;
     }
@@ -112,15 +117,19 @@ class Type
 
     public static function determine($path, $remote)
     {
-        if ('.tgz' == substr($path, -4) || '.tar.gz' == substr($path, -7)) {
+        if (substr($path, -4) == '.tgz' || substr($path, -7) == '.tar.gz') {
             return self::TGZ;
-        } elseif ($remote && self::determinePecl($path, $matches) > 0) {
+        }
+        if ($remote && self::determinePecl($path, $matches) > 0) {
             return self::PECL;
-        } elseif ($remote && self::determineGit($path, $matches) > 0) {
+        }
+        if ($remote && self::determineGit($path, $matches) > 0) {
             return self::GIT;
-        } elseif (!$remote && is_dir($path)) {
+        }
+        if (!$remote && is_dir($path)) {
             return self::SRC_DIR;
-        } elseif (self::determinePickle($path, $matches) > 0) {
+        }
+        if (self::determinePickle($path, $matches) > 0) {
             return self::PICKLE;
         }
 

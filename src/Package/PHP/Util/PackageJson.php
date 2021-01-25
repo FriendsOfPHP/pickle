@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,9 +36,9 @@
 
 namespace Pickle\Package\PHP\Util;
 
+use Exception;
 use Pickle\Package;
-use Pickle\Package\Util\JSON\Dumper;
-use Pickle\Package\Util\Header;
+use RuntimeException;
 
 class PackageJson
 {
@@ -47,15 +47,15 @@ class PackageJson
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
         $package = null;
 
-        if (file_exists($path.DIRECTORY_SEPARATOR.'composer.json')) {
-            $package = $jsonLoader->load($path.DIRECTORY_SEPARATOR.'composer.json');
+        if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {
+            $package = $jsonLoader->load($path . DIRECTORY_SEPARATOR . 'composer.json');
         }
 
-        if (null === $package && $noconvert) {
-            throw new \RuntimeException('XML package are not supported. Please convert it before install');
+        if ($package === null && $noconvert) {
+            throw new RuntimeException('XML package are not supported. Please convert it before install');
         }
 
-        if (null === $package) {
+        if ($package === null) {
             try {
                 $pkgXml = new PackageXml($path);
                 $pkgXml->dump();
@@ -63,14 +63,14 @@ class PackageJson
                 $jsonPath = $pkgXml->getJsonPath();
 
                 $package = $jsonLoader->load($jsonPath);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 /* pass for now, be compatible */
             }
         }
 
-        if (null === $package) {
+        if ($package === null) {
             /* Just ensure it's correct, */
-            throw new \Exception("Couldn't read package info at '$path'");
+            throw new Exception("Couldn't read package info at '{$path}'");
         }
 
         $package->setRootDir(realpath($path));

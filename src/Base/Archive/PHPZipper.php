@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -43,7 +43,7 @@ use ZipArchive;
 class PHPZipper extends PHP implements Interfaces\Archive\Zipper
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Zipper::__construct()
      */
@@ -66,7 +66,17 @@ class PHPZipper extends PHP implements Interfaces\Archive\Zipper
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @see \Pickle\Base\Interfaces\Archive\Zipper::__destruct()
+     */
+    public function __destruct()
+    {
+        parent::__destruct();
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Zipper::addFromString($localname, $contents)
      */
@@ -74,7 +84,7 @@ class PHPZipper extends PHP implements Interfaces\Archive\Zipper
     {
         $localname = ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $localname), '/');
         if ($this->zipArchive->addFromString($localname, $contents) !== true) {
-            $error = "Failed to add a file to the ZIP archive starting from its contents";
+            $error = 'Failed to add a file to the ZIP archive starting from its contents';
             $details = (string) $this->zipArchive->getStatusString();
             if ($details !== '') {
                 $error .= ": {$details}";
@@ -84,7 +94,7 @@ class PHPZipper extends PHP implements Interfaces\Archive\Zipper
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Zipper::addFileWithoutPath()
      */
@@ -107,17 +117,7 @@ class PHPZipper extends PHP implements Interfaces\Archive\Zipper
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Pickle\Base\Interfaces\Archive\Zipper::__destruct()
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-
-    /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     private function create(string $path, bool $overwrite): void
     {

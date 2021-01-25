@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,6 +36,7 @@
 
 namespace Pickle\Package\Command;
 
+use Exception;
 use Pickle\Engine;
 use Pickle\Package\PHP;
 
@@ -50,16 +51,15 @@ class Release
                 if ($binary) {
                     if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
                         return new PHP\Command\Release\Windows\Binary($path, $cb, $noConvert);
-                    } else {
-                        throw new \Exception('Binary packaging not implemented for this platform, use the build system of your favourite package manager');
                     }
+                    throw new Exception('Binary packaging not implemented for this platform, use the build system of your favourite package manager');
                 } else {
                     return new PHP\Command\Release($path, $cb, $noConvert);
                 }
 
                 // no break
             default:
-                throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
+                throw new Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,13 +36,13 @@
 
 namespace Pickle\Console\Command;
 
+use Pickle\Base\Util;
+use Pickle\Package\Command\Convert;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Pickle\Package\Command\Convert;
-use Pickle\Base\Util;
 
 class ConvertCommand extends Command
 {
@@ -63,7 +63,8 @@ class ConvertCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'path to a custom temp dir',
                 sys_get_temp_dir()
-            );
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -71,7 +72,7 @@ class ConvertCommand extends Command
         Util\TmpDir::set($input->getOption('tmp-dir'));
         $helper = $this->getHelper('package');
         $cb = function (\Pickle\Base\Interfaces\Package $package) use ($helper, $output) {
-            $output->writeln('<info>Successfully converted '.$package->getPrettyName().'</info>');
+            $output->writeln('<info>Successfully converted ' . $package->getPrettyName() . '</info>');
             $helper->showInfo($output, $package);
         };
         $convert = Convert::factory($input->getArgument('path'), $cb);

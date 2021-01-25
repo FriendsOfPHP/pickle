@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,21 +36,19 @@
 
 namespace Pickle\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Exception;
+use Pickle\Base\Abstracts\Console\Command\BuildCommand;
+use Pickle\Base\Util;
+use Pickle\Engine;
+use Pickle\Package\Command\Install;
+use Pickle\Package\Util\Windows;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Pickle\Base\Interfaces\Package;
-use Pickle\Base\Abstracts\Console\Command\BuildCommand;
-use Pickle\Engine;
-use Pickle\Package\Util\Windows;
-use Pickle\Package\Command\Install;
-use Pickle\Base\Util;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class InstallerCommand extends BuildCommand
 {
@@ -103,7 +101,8 @@ class InstallerCommand extends BuildCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Override detected version (no value - or empty value - to use the version from package.xml)'
-            );
+            )
+        ;
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->addOption(
@@ -116,9 +115,7 @@ class InstallerCommand extends BuildCommand
     }
 
     /**
-     * @param string          $path
-     * @param InputInterface  $input
-     * @param OutputInterface $output
+     * @param string $path
      */
     protected function binaryInstallWindows($path, InputInterface $input, OutputInterface $output)
     {
@@ -126,15 +123,16 @@ class InstallerCommand extends BuildCommand
         $table = new Table($output);
         $table
             ->setRows([
-               ['<info>'.$php->getName().' Path</info>', $php->getPath()],
-               ['<info>'.$php->getName().' Version</info>', $php->getVersion()],
-               ['<info>Compiler</info>', $php->getCompiler()],
-               ['<info>Architecture</info>', $php->getArchitecture()],
-               ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
-               ['<info>Extension dir</info>', $php->getExtensionDir()],
-               ['<info>php.ini</info>', $php->getIniPath()],
+                ['<info>' . $php->getName() . ' Path</info>', $php->getPath()],
+                ['<info>' . $php->getName() . ' Version</info>', $php->getVersion()],
+                ['<info>Compiler</info>', $php->getCompiler()],
+                ['<info>Architecture</info>', $php->getArchitecture()],
+                ['<info>Thread safety</info>', $php->getZts() ? 'yes' : 'no'],
+                ['<info>Extension dir</info>', $php->getExtensionDir()],
+                ['<info>php.ini</info>', $php->getIniPath()],
             ])
-            ->render();
+            ->render()
+        ;
 
         $inst = Install::factory($path);
         $progress = new ProgressBar($output, 100);
@@ -163,7 +161,7 @@ class InstallerCommand extends BuildCommand
 
         foreach ($inst->getExtDllPaths() as $dll) {
             if (!$deps_handler->resolveForBin($dll, $cb)) {
-                throw new \Exception('Failed to resolve dependencies');
+                throw new Exception('Failed to resolve dependencies');
             }
         }
     }
@@ -183,10 +181,10 @@ class InstallerCommand extends BuildCommand
             $build->install();
 
             $this->saveBuildLogs($input, $build);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->saveBuildLogs($input, $build);
 
-            $output->writeln('The following error(s) happened: '.$e->getMessage());
+            $output->writeln('The following error(s) happened: ' . $e->getMessage());
             $prompt = new ConfirmationQuestion('Would you like to read the log?', true);
             if ($helper->ask($input, $output, $prompt)) {
                 $output->write($build->getLog());
@@ -213,7 +211,7 @@ class InstallerCommand extends BuildCommand
         $package = $this->getHelper('package')->convey($input, $output, $path);
         $this->getHelper('package')->showInfo($output, $package);
 
-        list($optionsValue, $force_opts) = $this->buildOptions($package, $input, $output);
+        [$optionsValue, $force_opts] = $this->buildOptions($package, $input, $output);
 
         if ($input->getOption('dry-run')) {
             return 0;

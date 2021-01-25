@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -47,16 +47,13 @@ abstract class Engine
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             if ($is_64_bit) {
                 return 'x64';
-            } else {
-                return 'x86';
             }
-        } else {
-            if ($is_64_bit) {
-                return 'x86_64';
-            } else {
-                return 'i386';
-            }
+            return 'x86';
         }
+        if ($is_64_bit) {
+            return 'x86_64';
+        }
+        return 'i386';
     }
 }
 

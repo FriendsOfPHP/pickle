@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -39,7 +39,8 @@ use mageekguy\atoum\visibility;
 if (getenv('TRAVIS_PHP_VERSION') === '7.0') {
     $script
         ->php('php -n -ddate.timezone=Europe/Paris')
-        ->noCodeCoverage();
+        ->noCodeCoverage()
+    ;
 } else {
     $script->noCodeCoverageForNamespaces('Composer');
 }
@@ -47,4 +48,5 @@ if (getenv('TRAVIS_PHP_VERSION') === '7.0') {
 $script->addTestsFromDirectory(__DIR__ . '/tests/units');
 $runner
     ->addExtension(new \Atoum\PraspelExtension\Manifest())
-    ->addExtension(new visibility\extension($script));
+    ->addExtension(new visibility\extension($script))
+;

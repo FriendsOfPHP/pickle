@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,16 +36,17 @@
 
 namespace Pickle\Engine;
 
+use Exception;
 use Pickle\Base\Interfaces;
 
 class Ini
 {
     protected static $instance = null;
 
-    public static function factory(Interfaces\Engine $engine = null)
+    public static function factory(?Interfaces\Engine $engine = null)
     {
-        if (null === self::$instance) {
-            $engine = null === $engine ? \Pickle\Engine::factory() : $engine;
+        if (self::$instance === null) {
+            $engine = $engine === null ? \Pickle\Engine::factory() : $engine;
 
             switch ($engine->getName()) {
                 case 'php':
@@ -53,7 +54,7 @@ class Ini
                     break;
 
                 default:
-                    throw new \Exception("Unsupported engine '{$engine->getName()}'");
+                    throw new Exception("Unsupported engine '{$engine->getName()}'");
             }
         }
 

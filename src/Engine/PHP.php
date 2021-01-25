@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,183 +36,50 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Base\Interfaces;
+use Exception;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class PHP extends Abstracts\Engine implements Interfaces\Engine
 {
     private $phpCliEscaped;
+
     private $phpCli;
+
     private $phpize;
+
     private $version;
+
     private $major;
+
     private $minor;
+
     private $release;
+
     private $extra;
+
     private $compiler;
+
     private $architecture;
+
     private $zts;
+
     private $debug;
+
     private $iniPath;
+
     private $extensionDir;
+
     private $hasSdk;
 
     public function __construct($phpCli = PHP_BINARY)
     {
         if (!(is_file($phpCli) && is_executable($phpCli))) {
-            throw new \Exception("Invalid php executable: $phpCli");
+            throw new Exception("Invalid php executable: {$phpCli}");
         }
         $this->phpCliEscaped = escapeshellcmd($phpCli);
         $this->phpCli = $phpCli;
         $this->getFromConstants();
-    }
-
-    private function getFromConstants()
-    {
-        $script = 'echo PHP_VERSION . \"\n\"; '.
-                'echo PHP_MAJOR_VERSION . \"\n\"; '.
-                'echo PHP_MINOR_VERSION . \"\n\"; '.
-                'echo PHP_RELEASE_VERSION . \"\n\"; '.
-                'echo PHP_EXTRA_VERSION . \"\n\"; '.
-                'echo PHP_ZTS . \"\n\"; '.
-                'echo PHP_DEBUG . \"\n\"; ';
-
-        $cmd = $this->phpCliEscaped.' -r '.'"'.str_replace("\n", '', $script).'"';
-
-        exec($cmd, $info);
-        if (7 !== count($info)) {
-            throw new \Exception('Could not determine info from the PHP binary');
-        }
-
-        list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
-        $this->zts = (bool) $this->zts;
-
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
-        }
-    }
-
-    protected function getFullPathExtDir($dir)
-    {
-        $realpathDir = realpath($dir);
-        $baseDir = dirname($realpathDir);
-        $baseDirPhp = dirname($this->phpCli);
-        if (empty($baseDir)) {
-            if (empty($dir)) {
-                return $baseDirPhp . 'ext';
-            }
-            return $baseDirPhp . '\\' .  $dir;
-        }
-        
-        if ($baseDir == $baseDirPhp) {
-            return $realpathDir;
-        }
-    }
-
-    protected function getExtensionDirFromPhpInfo($info)
-    {
-        $extensionDir = '';
-
-        foreach ($info as $s) {
-            $pos_ext_dir = strpos($s, 'extension_dir');
-            if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
-                list(, $extensionDir) = explode('=>', $s);
-                break;
-            }
-        }
-
-        $extensionDir = trim($extensionDir);
-        if ('' == $extensionDir) {
-            throw new \Exception('Cannot detect PHP extension directory');
-        }
-        return $this->getFullPathExtDir($extensionDir);
-    }
-
-    protected function getArchFromPhpInfo($info)
-    {
-        $arch = '';
-
-        foreach ($info as $s) {
-            if (false !== strpos($s, 'Architecture')) {
-                list(, $arch) = explode('=>', $s);
-                break;
-            }
-        }
-
-        $arch = trim($arch);
-        if ('' == $arch) {
-            throw new \Exception('Cannot detect PHP build architecture');
-        }
-
-        return $arch;
-    }
-
-    protected function getIniPathFromPhpInfo($info)
-    {
-        $iniPath = '';
-
-        foreach ($info as $s) {
-            if (false !== strpos($s, 'Loaded Configuration File')) {
-                list(, $iniPath) = explode('=>', $s);
-                if ('(None)' === $iniPath) {
-                    $iniPath = '';
-                }
-
-                break;
-            }
-        }
-
-        $iniPath = trim($iniPath);
-        if ('' == $iniPath) {
-            throw new \Exception('Cannot detect php.ini directory');
-        }
-
-        return $iniPath;
-    }
-
-    protected function getCompilerFromPhpInfo($info)
-    {
-        $compiler = '';
-
-        foreach ($info as $s) {
-            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-                if (false !== strpos($s, 'PHP Extension Build')) {
-                    list(, $build) = explode('=>', $s);
-                    list(, , $compiler) = explode(',', $build);
-                    $compiler = strtolower($compiler);
-                    break;
-                }
-            } else {
-                if (false !== strpos($s, 'Compiler')) {
-                    list(, $compiler) = explode('=>', $s);
-                    break;
-                }
-            }
-        }
-
-        $compiler = trim($compiler);
-        if ('' == $compiler) {
-            throw new \Exception('Cannot detect PHP build compiler version');
-        }
-
-        return $compiler;
-    }
-
-    private function getFromPhpInfo()
-    {
-        $cmd = $this->phpCliEscaped.' -i';
-        exec($cmd, $info);
-
-        if (!is_array($info)) {
-            throw new \Exception('Cannot parse phpinfo output');
-        }
-
-        $arch = $this->getArchFromPhpInfo($info);
-        $iniPath = $this->getIniPathFromPhpInfo($info);
-        $extensionDir = $this->getExtensionDirFromPhpInfo($info);
-
-        $compiler = strtolower($this->getCompilerFromPhpInfo($info));
-        return [$compiler, $arch, $iniPath, $extensionDir];
     }
 
     public function getName()
@@ -226,7 +93,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             return $this->hasSdk;
         }
         $cliDir = dirname($this->phpCli);
-        $res = glob($cliDir.DIRECTORY_SEPARATOR.'phpize*');
+        $res = glob($cliDir . DIRECTORY_SEPARATOR . 'phpize*');
         if (!$res) {
             $this->hasSdk = false;
         }
@@ -283,6 +150,154 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     public function getIniPath()
     {
         return $this->iniPath;
+    }
+
+    protected function getFullPathExtDir($dir)
+    {
+        $realpathDir = realpath($dir);
+        $baseDir = dirname($realpathDir);
+        $baseDirPhp = dirname($this->phpCli);
+        if (empty($baseDir)) {
+            if (empty($dir)) {
+                return $baseDirPhp . 'ext';
+            }
+            return $baseDirPhp . '\\' . $dir;
+        }
+
+        if ($baseDir == $baseDirPhp) {
+            return $realpathDir;
+        }
+    }
+
+    protected function getExtensionDirFromPhpInfo($info)
+    {
+        $extensionDir = '';
+
+        foreach ($info as $s) {
+            $pos_ext_dir = strpos($s, 'extension_dir');
+            if ($pos_ext_dir !== false && substr($s, $pos_ext_dir - 1, 1) != '.') {
+                [, $extensionDir] = explode('=>', $s);
+                break;
+            }
+        }
+
+        $extensionDir = trim($extensionDir);
+        if ($extensionDir == '') {
+            throw new Exception('Cannot detect PHP extension directory');
+        }
+        return $this->getFullPathExtDir($extensionDir);
+    }
+
+    protected function getArchFromPhpInfo($info)
+    {
+        $arch = '';
+
+        foreach ($info as $s) {
+            if (strpos($s, 'Architecture') !== false) {
+                [, $arch] = explode('=>', $s);
+                break;
+            }
+        }
+
+        $arch = trim($arch);
+        if ($arch == '') {
+            throw new Exception('Cannot detect PHP build architecture');
+        }
+
+        return $arch;
+    }
+
+    protected function getIniPathFromPhpInfo($info)
+    {
+        $iniPath = '';
+
+        foreach ($info as $s) {
+            if (strpos($s, 'Loaded Configuration File') !== false) {
+                [, $iniPath] = explode('=>', $s);
+                if ($iniPath === '(None)') {
+                    $iniPath = '';
+                }
+
+                break;
+            }
+        }
+
+        $iniPath = trim($iniPath);
+        if ($iniPath == '') {
+            throw new Exception('Cannot detect php.ini directory');
+        }
+
+        return $iniPath;
+    }
+
+    protected function getCompilerFromPhpInfo($info)
+    {
+        $compiler = '';
+
+        foreach ($info as $s) {
+            if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+                if (strpos($s, 'PHP Extension Build') !== false) {
+                    [, $build] = explode('=>', $s);
+                    [, , $compiler] = explode(',', $build);
+                    $compiler = strtolower($compiler);
+                    break;
+                }
+            } else {
+                if (strpos($s, 'Compiler') !== false) {
+                    [, $compiler] = explode('=>', $s);
+                    break;
+                }
+            }
+        }
+
+        $compiler = trim($compiler);
+        if ($compiler == '') {
+            throw new Exception('Cannot detect PHP build compiler version');
+        }
+
+        return $compiler;
+    }
+
+    private function getFromConstants()
+    {
+        $script = 'echo PHP_VERSION . \"\n\"; '
+                . 'echo PHP_MAJOR_VERSION . \"\n\"; '
+                . 'echo PHP_MINOR_VERSION . \"\n\"; '
+                . 'echo PHP_RELEASE_VERSION . \"\n\"; '
+                . 'echo PHP_EXTRA_VERSION . \"\n\"; '
+                . 'echo PHP_ZTS . \"\n\"; '
+                . 'echo PHP_DEBUG . \"\n\"; ';
+
+        $cmd = $this->phpCliEscaped . ' -r ' . '"' . str_replace("\n", '', $script) . '"';
+
+        exec($cmd, $info);
+        if (count($info) !== 7) {
+            throw new Exception('Could not determine info from the PHP binary');
+        }
+
+        [$this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug] = $info;
+        $this->zts = (bool) $this->zts;
+
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            [$this->compiler, $this->architecture, $this->iniPath, $this->extensionDir] = $this->getFromPhpInfo();
+        }
+    }
+
+    private function getFromPhpInfo()
+    {
+        $cmd = $this->phpCliEscaped . ' -i';
+        exec($cmd, $info);
+
+        if (!is_array($info)) {
+            throw new Exception('Cannot parse phpinfo output');
+        }
+
+        $arch = $this->getArchFromPhpInfo($info);
+        $iniPath = $this->getIniPathFromPhpInfo($info);
+        $extensionDir = $this->getExtensionDirFromPhpInfo($info);
+
+        $compiler = strtolower($this->getCompilerFromPhpInfo($info));
+        return [$compiler, $arch, $iniPath, $extensionDir];
     }
 }
 

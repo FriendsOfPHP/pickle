@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,6 +36,8 @@
 
 namespace Pickle\Base\Interfaces\Archive;
 
+use RuntimeException;
+
 interface Zipper
 {
     /**
@@ -63,11 +65,15 @@ interface Zipper
      * Open an existing archive, or create a new one.
      *
      * @param string $path the path of the archive to be open/created
-     * @param int $flag FLAG_OPEN to open an existing archive, FLAG_CREATE/FLAG_CREATE_OVERWRITE to create a new archive
      *
-     * @throws \RuntimeException in case of errors
+     * @throws RuntimeException in case of errors
      */
     public function __construct(string $path, int $flags);
+
+    /**
+     * Close the archive.
+     */
+    public function __destruct();
 
     /**
      * Add a file the archive, without saving the directory names, only the file name.
@@ -79,14 +85,9 @@ interface Zipper
     /**
      * Add a file the archive using its contents.
      *
-     * @throws \RuntimeException in case of errors
+     * @throws RuntimeException in case of errors
      */
     public function addFromString(string $localname, string $contents): void;
-
-    /**
-     * Close the archive.
-     */
-    public function __destruct();
 }
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

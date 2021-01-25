@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,22 +36,37 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Config;
+use Composer\Downloader\GitDownloader;
+use Exception;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
+use Pickle\Config;
 use Pickle\Package;
-use Composer\Downloader\GitDownloader;
 
 class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
+    public function execute($target, $no_convert, $versionOverrideOverride)
+    {
+        $this->fetch($target);
+
+        $exe = DefaultExecutor::factory($this);
+
+        return $exe->execute($target, $no_convert, $versionOverrideOverride);
+    }
+
+    public function getType()
+    {
+        return Type::GIT;
+    }
+
     protected function prepare()
     {
         if (Type::determineGit($this->path, $matches) < 1) {
-            throw new \Exception('Not valid git URI');
+            throw new Exception('Not valid git URI');
         }
 
         $this->name = $matches['package'];
-        $this->version = isset($matches['reference']) ? $matches['reference'] : 'master';
+        $this->version = $matches['reference'] ?? 'master';
         $this->prettyVersion = $this->version;
         $this->url = preg_replace('/#.*$/', '', $this->path);
     }
@@ -82,27 +97,13 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
 
         $config->merge(['config' => [
             'secure-http' => false,
-            'home' => $this->getComposerHome()
-            ]
+            'home' => $this->getComposerHome(),
+        ],
         ]);
         $downloader = new GitDownloader($this->io, $config);
-        if (null !== $downloader) {
+        if ($downloader !== null) {
             $downloader->download($package, $target);
         }
-    }
-
-    public function execute($target, $no_convert, $versionOverrideOverride)
-    {
-        $this->fetch($target);
-
-        $exe = DefaultExecutor::factory($this);
-
-        return $exe->execute($target, $no_convert, $versionOverrideOverride);
-    }
-
-    public function getType()
-    {
-        return Type::GIT;
     }
 }
 

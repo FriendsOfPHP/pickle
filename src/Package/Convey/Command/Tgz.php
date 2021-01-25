@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,14 +36,28 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Config;
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
-use Pickle\Package;
+use Pickle\Base\Interfaces;
+use Pickle\Config;
 use Pickle\Downloader\TGZDownloader;
+use Pickle\Package;
 
 class Tgz extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
+    public function execute($target, $no_convert, $versionOverrideOverride)
+    {
+        $this->fetch($target);
+
+        $exe = DefaultExecutor::factory($this);
+
+        return $exe->execute($target, $no_convert, $versionOverrideOverride);
+    }
+
+    public function getType()
+    {
+        return Type::TGZ;
+    }
+
     protected function prepare()
     {
         $this->name = basename($this->path);
@@ -60,23 +74,9 @@ class Tgz extends Abstracts\Package\Convey\Command implements Interfaces\Package
         $package->setRootDir($target);
 
         $downloader = new TGZDownloader($this->io, new Config());
-        if (null !== $downloader) {
+        if ($downloader !== null) {
             $downloader->download($package, $target);
         }
-    }
-
-    public function execute($target, $no_convert, $versionOverrideOverride)
-    {
-        $this->fetch($target);
-
-        $exe = DefaultExecutor::factory($this);
-
-        return $exe->execute($target, $no_convert, $versionOverrideOverride);
-    }
-
-    public function getType()
-    {
-        return Type::TGZ;
     }
 }
 

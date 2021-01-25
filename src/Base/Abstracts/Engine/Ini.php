@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,19 +36,27 @@
 
 namespace Pickle\Base\Abstracts\Engine;
 
+use Exception;
+
 class Ini
 {
-    protected $engine = null;
+    public const PICKLE_HEADER = ';Pickle installed extension, do not edit this line and below';
+
+    public const PICKLE_FOOTER = ';Pickle installed extension, do not edit this line and above';
+
+    protected $engine;
+
     protected $path;
+
     protected $raw;
 
     protected $pickleHeaderStartPos = -1;
-    protected $pickleHeaderEndPos = -1;
-    protected $pickleFooterStartPos = -1;
-    protected $pickleFooterEndPos = -1;
 
-    const PICKLE_HEADER = ';Pickle installed extension, do not edit this line and below';
-    const PICKLE_FOOTER = ';Pickle installed extension, do not edit this line and above';
+    protected $pickleHeaderEndPos = -1;
+
+    protected $pickleFooterStartPos = -1;
+
+    protected $pickleFooterEndPos = -1;
 
     public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {
@@ -56,8 +64,8 @@ class Ini
         $this->path = $php->getIniPath();
 
         $this->raw = @file_get_contents($this->path);
-        if (false === $this->raw) {
-            throw new \Exception('Cannot read php.ini');
+        if ($this->raw === false) {
+            throw new Exception('Cannot read php.ini');
         }
     }
 

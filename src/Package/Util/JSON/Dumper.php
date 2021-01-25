@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -53,7 +53,7 @@ class Dumper
 
     /**
      * @param \Pickle\Base\Interfaces\Package $package
-     * @param string                          $path
+     * @param string $path
      */
     public function dumpToFile(Interfaces\Package $package, $path, $with_version = true)
     {

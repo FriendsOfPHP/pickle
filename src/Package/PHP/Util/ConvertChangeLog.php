@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,9 +36,14 @@
 
 namespace Pickle\Package\PHP\Util;
 
+use InvalidArgumentException;
+use RuntimeException;
+use StdClass;
+
 class ConvertChangeLog
 {
     private $path;
+
     private $changelog;
 
     /**
@@ -46,8 +51,8 @@ class ConvertChangeLog
      */
     public function __construct($path)
     {
-        if (false === is_file($path)) {
-            throw new \InvalidArgumentException('File not found: '.$path);
+        if (is_file($path) === false) {
+            throw new InvalidArgumentException('File not found: ' . $path);
         }
 
         $this->path = $path;
@@ -58,12 +63,12 @@ class ConvertChangeLog
         $xml = @simplexml_load_file($this->path);
 
         $changelog = [];
-        $current = new \StdClass();
+        $current = new StdClass();
         $current->date = $xml->date;
         $current->time = $xml->time;
-        $current->version = new \StdClass();
+        $current->version = new StdClass();
         $current->version->release = $xml->version->release;
-        $current->stability = new \StdClass();
+        $current->stability = new StdClass();
         $current->stability->release = $xml->stability->release;
         $current->notes = $xml->notes;
 
@@ -84,18 +89,18 @@ class ConvertChangeLog
 
         $contents = '';
         foreach ($this->changelog as $cl) {
-            $contents .= 'Version: '.$cl->version->release."\n".
-                     'Date: '.$cl->date.' '.$cl->time."\n".
-                     'Stability: '.$cl->stability->release."\n".
-                     "\n".
-                     'notes: '.$cl->notes."\n".
-                     "\n".
-                     "\n".
-                     "\n";
+            $contents .= 'Version: ' . $cl->version->release . "\n"
+                     . 'Date: ' . $cl->date . ' ' . $cl->time . "\n"
+                     . 'Stability: ' . $cl->stability->release . "\n"
+                     . "\n"
+                     . 'notes: ' . $cl->notes . "\n"
+                     . "\n"
+                     . "\n"
+                     . "\n";
         }
 
-        if (file_put_contents(dirname($this->path).DIRECTORY_SEPARATOR.'RELEASES', $contents) === false) {
-            throw new \RuntimeException('cannot save RELEASE file in <'.dirname($this->path).DIRECTORY_SEPARATOR.'RELEASES>');
+        if (file_put_contents(dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES', $contents) === false) {
+            throw new RuntimeException('cannot save RELEASE file in <' . dirname($this->path) . DIRECTORY_SEPARATOR . 'RELEASES>');
         }
     }
 }

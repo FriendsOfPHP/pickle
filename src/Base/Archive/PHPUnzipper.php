@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -41,7 +41,7 @@ use Pickle\Base\Interfaces;
 class PHPUnzipper extends PHP implements Interfaces\Archive\Unzipper
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Unzipper::__construct()
      */
@@ -52,22 +52,22 @@ class PHPUnzipper extends PHP implements Interfaces\Archive\Unzipper
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @see \Pickle\Base\Interfaces\Archive\Unzipper::__destruct()
+     */
+    public function __destruct()
+    {
+        parent::__destruct();
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Unzipper::extractTo()
      */
     public function extractTo(string $path): void
     {
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Pickle\Base\Interfaces\Archive\Unzipper::__destruct()
-     */
-    public function __destruct(): void
-    {
-        parent::__destruct();
     }
 }
 
