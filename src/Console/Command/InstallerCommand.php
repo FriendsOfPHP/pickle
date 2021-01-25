@@ -167,7 +167,7 @@ class InstallerCommand extends BuildCommand
     }
 
     /*  The most of this needs to be incapsulated into an extra Build class*/
-    protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = '')
+    protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = ''): bool
     {
         $helper = $this->getHelperSet()->get('question');
 
@@ -181,6 +181,7 @@ class InstallerCommand extends BuildCommand
             $build->install();
 
             $this->saveBuildLogs($input, $build);
+            $result = true;
         } catch (Exception $e) {
             $this->saveBuildLogs($input, $build);
 
@@ -189,8 +190,11 @@ class InstallerCommand extends BuildCommand
             if ($helper->ask($input, $output, $prompt)) {
                 $output->write($build->getLog());
             }
+            $result = false;
         }
         $build->cleanup();
+
+        return $result;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -217,9 +221,7 @@ class InstallerCommand extends BuildCommand
             return 0;
         }
 
-        $this->sourceInstall($package, $input, $output, $optionsValue, $force_opts);
-
-        return 0;
+        return $this->sourceInstall($package, $input, $output, $optionsValue, $force_opts) ? 0 : 1;
     }
 }
 
