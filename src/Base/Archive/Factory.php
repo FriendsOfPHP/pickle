@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -41,9 +41,9 @@ use RuntimeException;
 class Factory
 {
     /**
-     * Get the fully-qualified name of a class implementing the Zipper interface
+     * Get the fully-qualified name of a class implementing the Zipper interface.
      *
-     * @throws \RuntimeException if no zipper is available.
+     * @throws RuntimeException if no zipper is available
      */
     public static function getZipperClassName(): string
     {
@@ -57,9 +57,9 @@ class Factory
     }
 
     /**
-     * Get the fully-qualified name of a class implementing the Unzipper interface
+     * Get the fully-qualified name of a class implementing the Unzipper interface.
      *
-     * @throws \RuntimeException if no zipper is available.
+     * @throws RuntimeException if no zipper is available
      */
     public static function getUnzipperClassName(): string
     {

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,9 +36,13 @@
 
 namespace Pickle\Base\Util;
 
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 trait FileOps
 {
-    protected $tempDir = null;
+    protected $tempDir;
 
     public function createTempDir($name = '')
     {
@@ -46,7 +50,7 @@ trait FileOps
         if (!$name) {
             $name = md5(uniqid());
         }
-        $tempDir = $tmp.'/pickle-'.$name;
+        $tempDir = $tmp . '/pickle-' . $name;
 
         if (is_dir($tempDir)) {
             $this->cleanup();
@@ -60,12 +64,12 @@ trait FileOps
     public function cleanup()
     {
         if (is_dir($this->tempDir)) {
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator(
                     $this->tempDir,
-                    \FilesystemIterator::SKIP_DOTS
+                    FilesystemIterator::SKIP_DOTS
                 ),
-                \RecursiveIteratorIterator::CHILD_FIRST
+                RecursiveIteratorIterator::CHILD_FIRST
             );
             foreach ($iterator as $path) {
                 if ($path->isDir()) {

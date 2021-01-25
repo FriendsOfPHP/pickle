@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,13 +36,14 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Config;
+use Composer\Downloader\GitDownloader;
+use Composer\Package\LinkConstraint\VersionConstraint;
+use Composer\Package\Version\VersionParser;
+use Exception;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
+use Pickle\Config;
 use Pickle\Package;
-use Composer\Downloader\GitDownloader;
-use Composer\Package\Version\VersionParser;
-use Composer\Package\LinkConstraint\VersionConstraint;
 
 class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
@@ -51,20 +52,32 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
      */
     protected $type;
 
+    public function execute($target, $no_convert, $versionOverrideOverride)
+    {
+        $this->fetch($target);
+
+        $exe = DefaultExecutor::factory($this);
+
+        return $exe->execute($target, $no_convert, $versionOverrideOverride);
+    }
+
+    public function getType()
+    {
+        return Type::GIT;
+    }
+
     protected function fetchPackageJson()
     {
-        $extensionJson = @file_get_contents('http://localhost:8080/json/'.$this->name.'.json');
+        $extensionJson = @file_get_contents('http://localhost:8080/json/' . $this->name . '.json');
         if (!$extensionJson) {
-            $status = isset($http_response_header[0]) ? $http_response_header[0] : "";
+            $status = $http_response_header[0] ?? '';
             if (strpos($status, '404') !== false) {
-                throw new \Exception("cannot find $this->name");
-            } else {
-                if ($status) {
-                    throw new \Exception("http error while loading information for $this->name: ".$status);
-                } else {
-                    throw new \Exception("http error while loading information for $this->name: unknown error");
-                }
+                throw new Exception("cannot find {$this->name}");
             }
+            if ($status) {
+                throw new Exception("http error while loading information for {$this->name}: " . $status);
+            }
+            throw new Exception("http error while loading information for {$this->name}: unknown error");
         }
 
         return json_decode($extensionJson, true);
@@ -73,7 +86,7 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     protected function prepare()
     {
         if (Type::determinePickle($this->path, $matches) < 1) {
-            throw new \Exception('Not a pickle git URI');
+            throw new Exception('Not a pickle git URI');
         }
 
         $this->name = $matches['package'];
@@ -122,23 +135,9 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         $package->setRootDir($target);
 
         $downloader = new GitDownloader($this->io, new Config());
-        if (null !== $downloader) {
+        if ($downloader !== null) {
             $downloader->download($package, $target);
         }
-    }
-
-    public function execute($target, $no_convert, $versionOverrideOverride)
-    {
-        $this->fetch($target);
-
-        $exe = DefaultExecutor::factory($this);
-
-        return $exe->execute($target, $no_convert, $versionOverrideOverride);
-    }
-
-    public function getType()
-    {
-        return Type::GIT;
     }
 }
 

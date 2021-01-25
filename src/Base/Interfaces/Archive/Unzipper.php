@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,30 +36,30 @@
 
 namespace Pickle\Base\Interfaces\Archive;
 
+use RuntimeException;
+
 interface Unzipper
 {
     /**
-     * Initialize the instance, with the path of an existing zip file
+     * Initialize the instance, with the path of an existing zip file.
      *
-     * @param string $path
-     *
-     * @throws \RuntimeException in case of errors
+     * @throws RuntimeException in case of errors
      */
     public function __construct(string $path);
+
+    /**
+     * Close the archive.
+     */
+    public function __destruct(): void;
 
     /**
      * Extract the archive contents to a specific directory.
      *
      * @param string $path it will created if it does not exist
      *
-     * @throws \RuntimeException in case of errors
+     * @throws RuntimeException in case of errors
      */
     public function extractTo(string $path): void;
-
-    /**
-     * Close the archive.
-     */
-    public function __destruct(): void;
 }
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

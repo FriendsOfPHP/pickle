@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -42,7 +42,8 @@ use Pickle\Package\PHP\Util\PackageXml;
 class Validate implements Interfaces\Package\Validate
 {
     protected $path;
-    protected $cb = null;
+
+    protected $cb;
 
     public function __construct($path, $cb = null)
     {

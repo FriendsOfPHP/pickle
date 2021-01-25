@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -46,7 +46,7 @@ class InfozipZipper extends Infozip implements Interfaces\Archive\Zipper
     use FileOps;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Zipper::__construct()
      */
@@ -69,7 +69,17 @@ class InfozipZipper extends Infozip implements Interfaces\Archive\Zipper
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @see \Pickle\Base\Interfaces\Archive\Zipper::__destruct()
+     */
+    public function __destruct()
+    {
+        $this->cleanup();
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Zipper::addFromString($localname, $contents)
      */
@@ -102,7 +112,7 @@ class InfozipZipper extends Infozip implements Interfaces\Archive\Zipper
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Pickle\Base\Interfaces\Archive\Zipper::addFileWithoutPath()
      */
@@ -118,18 +128,8 @@ class InfozipZipper extends Infozip implements Interfaces\Archive\Zipper
         $this->run('zip', [
             '-j',
             escapeshellarg($this->path),
-            escapeshellarg($path)
+            escapeshellarg($path),
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Pickle\Base\Interfaces\Archive\Zipper::__destruct()
-     */
-    public function __destruct()
-    {
-        $this->cleanup();
     }
 
     private function create(bool $overwrite): void
@@ -145,13 +145,13 @@ class InfozipZipper extends Infozip implements Interfaces\Archive\Zipper
         $this->run([
             '-j1',
             escapeshellarg($this->path),
-            escapeshellarg(__FILE__)
+            escapeshellarg(__FILE__),
         ]);
         try {
             $this->run([
                 '-d',
                 escapeshellarg($this->path),
-                escapeshellarg(basename(__FILE__))
+                escapeshellarg(basename(__FILE__)),
             ]);
         } catch (Throwable $x) {
             unlink($this->path);

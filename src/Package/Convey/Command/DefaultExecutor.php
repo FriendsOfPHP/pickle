@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,13 +36,19 @@
 
 namespace Pickle\Package\Convey\Command;
 
+use Exception;
 use Pickle\Base\Interfaces;
-use Pickle\Package\PHP;
 use Pickle\Engine;
+use Pickle\Package\PHP;
 
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 {
     protected $command;
+
+    public function __construct(Interfaces\Package\Convey\Command $command)
+    {
+        $this->command = $command;
+    }
 
     public static function factory(Interfaces\Package\Convey\Command $command)
     {
@@ -57,14 +63,9 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         return new self($command);
     }
 
-    public function __construct(Interfaces\Package\Convey\Command $command)
-    {
-        $this->command = $command;
-    }
-
     public function execute($target, $no_convert, $versionOverride)
     {
-        throw new \Exception('Default executor cannot be used without concrete implementation');
+        throw new Exception('Default executor cannot be used without concrete implementation');
     }
 }
 

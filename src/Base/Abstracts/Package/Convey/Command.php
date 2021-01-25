@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -41,11 +41,17 @@ use Composer\IO\ConsoleIO;
 abstract class Command
 {
     protected $path;
+
     protected $version;
+
     protected $prettyVersion;
+
     protected $name;
+
     protected $stability;
+
     protected $url;
+
     protected $io;
 
     public function __construct($path, ConsoleIO $io)
@@ -55,8 +61,6 @@ abstract class Command
 
         $this->prepare();
     }
-
-    abstract protected function prepare();
 
     abstract public function execute($target, $no_convert, $versionOverride);
 
@@ -89,6 +93,8 @@ abstract class Command
     {
         return $this->url;
     }
+
+    abstract protected function prepare();
 }
 
 /* vim: set tabstop=4 shiftwidth=4 expandtab: fdm=marker */

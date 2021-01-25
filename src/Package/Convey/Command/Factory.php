@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,15 +36,14 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Package\PHP\Convey\Command\Pecl;
 use Composer\IO\ConsoleIO;
+use Pickle\Package\PHP\Convey\Command\Pecl;
 
 class Factory
 {
     /**
      * @param $type
      * @param $path
-     * @param ConsoleIO $io
      *
      * @return \Pickle\Base\Abstracts\Package\Convey\Command
      */

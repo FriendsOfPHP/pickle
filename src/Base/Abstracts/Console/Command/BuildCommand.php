@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,6 +36,8 @@
 
 namespace Pickle\Base\Abstracts\Console\Command;
 
+use Exception;
+use Pickle\Base\Interfaces\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,7 +45,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Pickle\Base\Interfaces\Package;
 
 abstract class BuildCommand extends Command
 {
@@ -101,10 +102,10 @@ abstract class BuildCommand extends Command
 
         if ($force_opts) {
             if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
-                throw new \Exception("File '$force_opts' is unusable");
+                throw new Exception("File '{$force_opts}' is unusable");
             }
 
-            $force_opts = preg_replace(",\s+,", ' ', file_get_contents($force_opts));
+            $force_opts = preg_replace(',\\s+,', ' ', file_get_contents($force_opts));
 
             return [null, $force_opts];
         }
@@ -116,8 +117,8 @@ abstract class BuildCommand extends Command
             /* enable/with-<extname> */
             if ($name == $package->getName() || str_replace('-', '_', $name) == $package->getName()) {
                 $optionsValue[$name] = (object) [
-                'type' => $opt->type,
-                'input' => true,
+                    'type' => $opt->type,
+                    'input' => true,
                 ];
 
                 continue;
@@ -127,9 +128,9 @@ abstract class BuildCommand extends Command
                 $value = $opt->default;
             } else {
                 if ($opt->type == 'enable') {
-                    $prompt = new ConfirmationQuestion($opt->prompt.' (default: '.($opt->default ? 'yes' : 'no').'): ', $opt->default);
+                    $prompt = new ConfirmationQuestion($opt->prompt . ' (default: ' . ($opt->default ? 'yes' : 'no') . '): ', $opt->default);
                 } else {
-                    $prompt = new Question($opt->prompt.' (default: '.($opt->default ? $opt->default : '').'): ', $opt->default);
+                    $prompt = new Question($opt->prompt . ' (default: ' . ($opt->default ?: '') . '): ', $opt->default);
                 }
 
                 $value = $helper->ask($input, $output, $prompt);

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -81,18 +81,13 @@ class Dumper
         return $data;
     }
 
-    /**
-     * @param Interfaces\Package $package
-     *
-     * @return string
-     */
     private function getVersion(Interfaces\Package $package): string
     {
         $version = $package->getPrettyVersion();
         $version_stability = VersionParser::parseStability($version);
         $stability = $package->getStability();
 
-        if ('beta' === $stability && 'stable' === $version_stability) {
+        if ($stability === 'beta' && $version_stability === 'stable') {
             return $version . '-' . $stability;
         }
         return $version;

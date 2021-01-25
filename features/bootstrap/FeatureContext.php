@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -33,6 +33,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -45,12 +46,16 @@ define('PICKLE_TEST_PATH', sys_get_temp_dir() . '/pickle');
  */
 class FeatureContext implements SnippetAcceptingContext
 {
-    const PICKLE_BIN = 'bin/pickle';
+    protected const PICKLE_BIN = 'bin/pickle';
 
     private $assert;
+
     private $php;
+
     private $dir;
+
     private $workingDir;
+
     private $process;
 
     public function __construct()
@@ -84,17 +89,6 @@ class FeatureContext implements SnippetAcceptingContext
         $this->php = $php;
     }
 
-    private function moveToNewPath($path)
-    {
-        $newWorkingDir = $this->workingDir .'/' . $path;
-
-        if (!file_exists($newWorkingDir)) {
-            mkdir($newWorkingDir, 0777, true);
-        }
-
-        $this->workingDir = $newWorkingDir;
-    }
-
     /**
      * @Given /^I am in the "([^"]*)" path$/
      */
@@ -102,31 +96,33 @@ class FeatureContext implements SnippetAcceptingContext
     {
         $this->moveToNewPath($path);
     }
-/*     convert   Convert package.xml to new format
-    help      Displays help for a command
-    info      Display information about a PECL extension
-    install   Install a php extension
-    list      Lists commands
-    release   Package a PECL extension for release
-    validate  Validate a PECL extension */
+
+    /*     convert   Convert package.xml to new format
+        help      Displays help for a command
+        info      Display information about a PECL extension
+        install   Install a php extension
+        list      Lists commands
+        release   Package a PECL extension for release
+        validate  Validate a PECL extension */
+
     /**
      * @When /^I run "pickle(?: ((?:\"|[^"])*))?"$/
      */
     public function iRunPickle($argumentsString = '')
     {
-        $argumentsString = strtr($argumentsString, array('\'' => '"'));
-        $arguments = explode(' ',$argumentsString);
+        $argumentsString = strtr($argumentsString, ['\'' => '"']);
+        $arguments = explode(' ', $argumentsString);
         $processArguments = [
-                $this->php,
-                __DIR__ . '/../../' . static::PICKLE_BIN,
-            ];
+            $this->php,
+            __DIR__ . '/../../' . static::PICKLE_BIN,
+        ];
 
         $processArguments = array_merge($processArguments, $arguments);
         $processArguments[] = '--no-ansi';
         $this->process = new Process($processArguments);
 
         $timeout = getenv('PICKLE_BEHAT_PROCESS_TIMEOUT');
-        if (false !== $timeout) {
+        if ($timeout !== false) {
             $this->process->setTimeout($timeout);
         }
 
@@ -148,14 +144,14 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function itShouldFail($success)
     {
-        if ('fail' === $success) {
-            if (0 === $this->getExitCode()) {
+        if ($success === 'fail') {
+            if ($this->getExitCode() === 0) {
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
             $this->assert->integer($this->getExitCode())->isGreaterThan(0);
         } else {
-            if (0 !== $this->getExitCode()) {
+            if ($this->getExitCode() !== 0) {
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
@@ -177,7 +173,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function aFileNamedWith($filename, PyStringNode $content)
     {
-        $content = strtr((string) $content, array("'''" => '"""'));
+        $content = strtr((string) $content, ["'''" => '"""']);
         $this->createFile($this->workingDir . '/' . $filename, $content);
     }
 
@@ -221,6 +217,36 @@ class FeatureContext implements SnippetAcceptingContext
         $this->assert->object($fileContent)->isEqualTo(json_decode($text));
     }
 
+    /**
+     * @Then /^"([^"]*)" ((?:\d+\.?)+(?:RC\d*|beta\d*|alpha\d*)?) extension exists$/
+     */
+    public function extensionExists($name, $version)
+    {
+        $url = 'https://pecl.php.net/get/' . $name . '/' . $version . '?uncompress=1';
+        $file = $name . '-' . $version . '.tgz';
+        $dir = $this->workingDir . '/' . $name . '-' . $version;
+
+        if (is_dir($dir) === false) {
+            mkdir($dir, 0777, true);
+        }
+        $downloadFile = $dir . '/' . $file;
+        file_put_contents($downloadFile, file_get_contents($url));
+        $p = new PharData($downloadFile);
+        $phar = $p->decompress('.tar');
+        $phar->extractTo($dir);
+    }
+
+    private function moveToNewPath($path)
+    {
+        $newWorkingDir = $this->workingDir . '/' . $path;
+
+        if (!file_exists($newWorkingDir)) {
+            mkdir($newWorkingDir, 0777, true);
+        }
+
+        $this->workingDir = $newWorkingDir;
+    }
+
     private function getExitCode()
     {
         return $this->process->getExitCode();
@@ -249,12 +275,12 @@ class FeatureContext implements SnippetAcceptingContext
             $output = str_replace(PHP_EOL, "\n", $output);
         }
 
-        return trim(preg_replace("/ +$/m", '', $output));
+        return trim(preg_replace('/ +$/m', '', $output));
     }
 
     private function getExpectedOutput(PyStringNode $expectedText)
     {
-        $text = strtr(
+        return strtr(
             $expectedText,
             [
                 '\'\'\'' => '"""',
@@ -262,8 +288,6 @@ class FeatureContext implements SnippetAcceptingContext
                 '%%TEST_DIR%%' => realpath($this->dir),
             ]
         );
-
-        return $text;
     }
 
     private static function clearDirectory($path)
@@ -282,24 +306,5 @@ class FeatureContext implements SnippetAcceptingContext
         }
 
         rmdir($path);
-    }
-
-    /**
-     * @Then /^"([^"]*)" ((?:\d+\.?)+(?:RC\d*|beta\d*|alpha\d*)?) extension exists$/
-     */
-    public function extensionExists($name, $version)
-    {
-        $url = 'https://pecl.php.net/get/' . $name . '/' . $version . '?uncompress=1';
-        $file = $name . '-' . $version . '.tgz';
-        $dir = $this->workingDir . '/' . $name . '-' . $version;
-
-        if (is_dir($dir) === false) {
-            mkdir($dir, 0777, true);
-        }
-        $downloadFile = $dir . '/' . $file;
-        file_put_contents($downloadFile, file_get_contents($url));
-        $p = new PharData($downloadFile);
-        $phar = $p->decompress('.tar');
-        $phar->extractTo($dir);
     }
 }

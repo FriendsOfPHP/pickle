@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,100 +36,39 @@
 
 namespace Pickle\Package\Util\Windows;
 
-use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
+use Exception;
+use Extension;
 use Pickle\Base\Archive;
-use Pickle\Base\Util\FileOps;
 use Pickle\Base\Util;
+use Pickle\Base\Util\FileOps;
+use RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
 class DependencyLib
 {
     use FileOps;
 
-    const DLL_MAP_URL = 'https://windows.php.net/downloads/pecl/deps/dllmapping.json';
-    const DEPLISTER_URL = 'https://windows.php.net/downloads/pecl/tools/deplister.exe';
-    const DEPS_URL = 'https://windows.php.net/downloads/pecl/deps';
+    public const DLL_MAP_URL = 'https://windows.php.net/downloads/pecl/deps/dllmapping.json';
 
-    private $dllMap = null;
+    public const DEPLISTER_URL = 'https://windows.php.net/downloads/pecl/tools/deplister.exe';
+
+    public const DEPS_URL = 'https://windows.php.net/downloads/pecl/deps';
+
+    private $dllMap;
+
     private $php;
 
-    private $progress = null;
-    private $output = null;
+    private $progress;
 
-    private $fetchedZips = array();
+    private $output;
+
+    private $fetchedZips = [];
 
     public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {
         $this->php = $php;
         $this->checkDepListerExe();
         $this->fetchDllMap();
-    }
-
-    private function fetchDllMap()
-    {
-        $dllMap = null;
-
-        if (is_null($this->dllMap)) {
-            $opts = [
-                'http' => [
-                    'header' => 'User-Agent: pickle'
-                ]
-            ];
-            $context = stream_context_create($opts);
-            $data = @file_get_contents(self::DLL_MAP_URL, false, $context);
-            if (!$data) {
-                throw new \RuntimeException('Cannot fetch the DLL mapping file');
-            }
-            $dllMap = json_decode($data);
-            if (!$dllMap) {
-                throw new \RuntimeException('Cannot parse the DLL mapping file');
-            }
-        }
-        $compiler = $this->php->getCompiler();
-        $architecture = $this->php->getArchitecture();
-        if (!isset($dllMap->{$compiler}->{$architecture})) {
-            /* Just for the case the given compiler/arch set isn't defined in the dllmap,
-           or we've got a corrupted file, or ...
-           The dllMap property should be ensured an array. */
-            $this->dllMap = array();
-        } else {
-            $this->dllMap = $dllMap->{$compiler}->{$architecture};
-        }
-
-        return true;
-    }
-
-    private function checkDepListerExe()
-    {
-        $ret = exec('deplister.exe '.$this->php->getPath().' .');
-        if (empty($ret)) {
-            $depexe = @file_get_contents(self::DEPLISTER_URL);
-            if (!$depexe) {
-                throw new \RuntimeException('Cannot fetch deplister.exe');
-            }
-            $dir = dirname($this->php->getPath());
-            $path = $dir.DIRECTORY_SEPARATOR.'deplister.exe';
-            if (!@file_put_contents($path, $depexe)) {
-                throw new \RuntimeException('Cannot copy deplister.exe to '.$dir);
-            }
-        }
-    }
-
-    private function getDllsForBinary($binary)
-    {
-        $out = [];
-        $ret = exec('deplister.exe '.escapeshellarg($binary).' .', $out);
-        if (empty($ret) || !$ret) {
-            throw new \RuntimeException('Error while running deplister.exe');
-        }
-        $dlls = [];
-        foreach ((array) $out as $l) {
-            list($dllname, $found) = explode(',', $l);
-            $found = trim($found);
-            $dllname = trim($dllname);
-            $dlls[$dllname] = $found == 'OK' ? true : false;
-        }
-
-        return $dlls;
     }
 
     public function getZipUrlsForDll($binary, $ignore_installed = false)
@@ -168,10 +107,10 @@ class DependencyLib
                     return true;
                 }
             }
-            if (null !== $resolve_multiple_cb) {
+            if ($resolve_multiple_cb !== null) {
                 $dep_zip = $resolve_multiple_cb($dep_zips);
             } else {
-                throw new \Extension("Multiple choice for dependencies, couldn't resolve");
+                throw new Extension("Multiple choice for dependencies, couldn't resolve");
             }
         } else {
             /* That might be not quite true, as we might just not have the
@@ -190,14 +129,14 @@ class DependencyLib
             return true;
         }
 
-        $url = self::DEPS_URL."/$zip_name";
+        $url = self::DEPS_URL . "/{$zip_name}";
         $path = $this->download($url);
         try {
             $this->uncompress($path);
             $lst = $this->copyFiles();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->cleanup();
-            throw new \Exception($e->getMessage());
+            throw new Exception($e->getMessage());
         }
         $this->cleanup();
         $this->fetchedZips[] = $zip_name;
@@ -209,19 +148,97 @@ class DependencyLib
         return true;
     }
 
+    public function setProgress($progress)
+    {
+        $this->progress = $progress;
+    }
+
+    public function setOutput(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
+    private function fetchDllMap()
+    {
+        $dllMap = null;
+
+        if ($this->dllMap === null) {
+            $opts = [
+                'http' => [
+                    'header' => 'User-Agent: pickle',
+                ],
+            ];
+            $context = stream_context_create($opts);
+            $data = @file_get_contents(self::DLL_MAP_URL, false, $context);
+            if (!$data) {
+                throw new RuntimeException('Cannot fetch the DLL mapping file');
+            }
+            $dllMap = json_decode($data);
+            if (!$dllMap) {
+                throw new RuntimeException('Cannot parse the DLL mapping file');
+            }
+        }
+        $compiler = $this->php->getCompiler();
+        $architecture = $this->php->getArchitecture();
+        if (!isset($dllMap->{$compiler}->{$architecture})) {
+            /* Just for the case the given compiler/arch set isn't defined in the dllmap,
+           or we've got a corrupted file, or ...
+           The dllMap property should be ensured an array. */
+            $this->dllMap = [];
+        } else {
+            $this->dllMap = $dllMap->{$compiler}->{$architecture};
+        }
+
+        return true;
+    }
+
+    private function checkDepListerExe()
+    {
+        $ret = exec('deplister.exe ' . $this->php->getPath() . ' .');
+        if (empty($ret)) {
+            $depexe = @file_get_contents(self::DEPLISTER_URL);
+            if (!$depexe) {
+                throw new RuntimeException('Cannot fetch deplister.exe');
+            }
+            $dir = dirname($this->php->getPath());
+            $path = $dir . DIRECTORY_SEPARATOR . 'deplister.exe';
+            if (!@file_put_contents($path, $depexe)) {
+                throw new RuntimeException('Cannot copy deplister.exe to ' . $dir);
+            }
+        }
+    }
+
+    private function getDllsForBinary($binary)
+    {
+        $out = [];
+        $ret = exec('deplister.exe ' . escapeshellarg($binary) . ' .', $out);
+        if (empty($ret) || !$ret) {
+            throw new RuntimeException('Error while running deplister.exe');
+        }
+        $dlls = [];
+        foreach ((array) $out as $l) {
+            [$dllname, $found] = explode(',', $l);
+            $found = trim($found);
+            $dllname = trim($dllname);
+            $dlls[$dllname] = $found == 'OK' ? true : false;
+        }
+
+        return $dlls;
+    }
+
     private function copyFiles()
     {
-        $ret = array();
-        $DLLs = glob($this->tempDir.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'*.dll');
+        $ret = [];
+        $DLLs = glob($this->tempDir . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . '*.dll');
 
         /* Copying ALL files from the zip, not just required. */
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
-            $dest = dirname($this->php->getPath()).DIRECTORY_SEPARATOR.$basename;
-            $success = @copy($dll, dirname($this->php->getPath()).'/'.$basename);
+            $dest = dirname($this->php->getPath()) . DIRECTORY_SEPARATOR . $basename;
+            $success = @copy($dll, dirname($this->php->getPath()) . '/' . $basename);
             if (!$success) {
-                throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
+                throw new Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
             }
 
             $ret[] = $dest;
@@ -236,8 +253,8 @@ class DependencyLib
         $progress = $this->progress;
 
         $ctx = stream_context_create(
-            array(),
-            array(
+            [],
+            [
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
                     switch ($notificationCode) {
                         case STREAM_NOTIFY_FILE_SIZE_IS:
@@ -248,18 +265,18 @@ class DependencyLib
                             break;
                     }
                 },
-            )
+            ]
         );
-        $output->writeln("downloading $url ");
+        $output->writeln("downloading {$url} ");
         $fileContents = file_get_contents($url, false, $ctx);
         $progress->finish();
         if (!$fileContents) {
-            throw new \Exception('Cannot fetch <'.$url.'>');
+            throw new Exception('Cannot fetch <' . $url . '>');
         }
         $tmpdir = Util\TmpDir::get();
-        $path = $tmpdir.DIRECTORY_SEPARATOR.basename($url);
+        $path = $tmpdir . DIRECTORY_SEPARATOR . basename($url);
         if (!file_put_contents($path, $fileContents)) {
-            throw new \Exception('Cannot save temporary file <'.$path.'>');
+            throw new Exception('Cannot save temporary file <' . $path . '>');
         }
 
         return $path;
@@ -274,16 +291,6 @@ class DependencyLib
         /** @var \Pickle\Base\Interfaces\Archive\Unzipper $zipArchive */
         $this->output->writeln('Extracting archives...');
         $zipArchive->extractTo($this->tempDir);
-    }
-
-    public function setProgress($progress)
-    {
-        $this->progress = $progress;
-    }
-
-    public function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
     }
 }
 

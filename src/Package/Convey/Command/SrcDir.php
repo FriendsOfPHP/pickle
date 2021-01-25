@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,16 +36,11 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
-    protected function prepare()
-    {
-        $this->url = $this->path;
-    }
-
     public function execute($target, $no_convert, $versionOverrideOverride)
     {
         /* Override target, otherwise we'd need to copy ext root each time */
@@ -59,6 +54,11 @@ class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     public function getType()
     {
         return Type::SRC_DIR;
+    }
+
+    protected function prepare()
+    {
+        $this->url = $this->path;
     }
 }
 

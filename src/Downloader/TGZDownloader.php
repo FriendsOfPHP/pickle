@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,12 +37,13 @@
 namespace Pickle\Downloader;
 
 use Composer\Downloader\ArchiveDownloader;
+use PharData;
 
 class TGZDownloader extends ArchiveDownloader
 {
     protected function extract($file, $path)
     {
-        $archive = new \PharData($file);
+        $archive = new PharData($file);
         $archive->decompress()->extractTo($path, null, true);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -42,7 +42,7 @@ use ZipArchive;
 abstract class PHP
 {
     /**
-     * @var \ZipArchive
+     * @var ZipArchive
      */
     protected $zipArchive;
 
@@ -51,8 +51,16 @@ abstract class PHP
         $this->zipArchive = new ZipArchive();
     }
 
+    public function __destruct()
+    {
+        set_error_handler(static function () {
+        }, -1);
+        $this->zipArchive->close();
+        restore_error_handler();
+    }
+
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function open(string $path): void
     {
@@ -70,13 +78,6 @@ abstract class PHP
             }
             throw new RuntimeException($error);
         }
-    }
-
-    public function __destruct()
-    {
-        set_error_handler(static function() {}, -1);
-        $this->zipArchive->close();
-        restore_error_handler();
     }
 }
 

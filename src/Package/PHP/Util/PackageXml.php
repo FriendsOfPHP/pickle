@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -36,34 +36,39 @@
 
 namespace Pickle\Package\PHP\Util;
 
+use Exception;
+use InvalidArgumentException;
 use Pickle\Package;
-use Pickle\Package\Util\JSON\Dumper;
 use Pickle\Package\Util\Header;
+use Pickle\Package\Util\JSON\Dumper;
 
 class PackageXml
 {
-    protected $xmlPath = null;
-    protected $jsonPath = null;
-    protected $package = null;
-    protected $versionOverride = null;
+    protected $xmlPath;
+
+    protected $jsonPath;
+
+    protected $package;
+
+    protected $versionOverride;
 
     public function __construct($path, $versionOverride = null)
     {
-        $names = ['package2.xml', 'package.xml' ];
+        $names = ['package2.xml', 'package.xml'];
 
         foreach ($names as $fl) {
-            $xml = $path.DIRECTORY_SEPARATOR.$fl;
-            if (true === is_file($xml)) {
+            $xml = $path . DIRECTORY_SEPARATOR . $fl;
+            if (is_file($xml) === true) {
                 $this->xmlPath = $xml;
                 break;
             }
         }
 
         if (!$this->xmlPath) {
-            throw new \InvalidArgumentException("The path '$path' doesn't contain package.xml");
+            throw new InvalidArgumentException("The path '{$path}' doesn't contain package.xml");
         }
 
-        $this->jsonPath = $path.DIRECTORY_SEPARATOR.'composer.json';
+        $this->jsonPath = $path . DIRECTORY_SEPARATOR . 'composer.json';
         $this->versionOverride = $versionOverride;
     }
 
@@ -73,7 +78,7 @@ class PackageXml
         $this->package = $loader->load($this->xmlPath, $this->versionOverride);
 
         if (!$this->package) {
-            throw new \Exception("Failed to load '{$this->xmlPath}'");
+            throw new Exception("Failed to load '{$this->xmlPath}'");
         }
 
         return $this->package;
@@ -103,7 +108,7 @@ class PackageXml
         if ($this->versionOverride !== '') {
             $version = $this->versionOverride ?? (string) new Header\Version($this->package);
             if ($version !== $this->package->getPrettyVersion()) {
-                throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
+                throw new Exception("Version mismatch - '" . $version . "' != '" . $this->package->getVersion() . '. in source vs JSON');
             }
         }
 

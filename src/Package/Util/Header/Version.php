@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,22 +37,31 @@
 namespace Pickle\Package\Util\Header;
 
 use Composer\Package\Version\VersionParser;
+use Exception;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Util;
 
 class Version
 {
     protected $package;
+
     protected $header;
+
     protected $version;
+
     protected $macroNameRegex;
 
     public function __construct(Interfaces\Package $package)
     {
         $this->package = $package;
-        $this->macroNameRegex = '(?:PHP_)?' . strtoupper($this->package->getSimpleName()).'_(?:EXT_)?VERSION';
+        $this->macroNameRegex = '(?:PHP_)?' . strtoupper($this->package->getSimpleName()) . '_(?:EXT_)?VERSION';
 
         $this->version = $this->getVersionFromHeader();
+    }
+
+    public function __toString()
+    {
+        return $this->version;
     }
 
     public function fileHasVersionMacro($fname)
@@ -60,30 +69,41 @@ class Version
         return $this->getVersionFromHeaderFile($fname) !== null;
     }
 
-    private function rglob($pattern, $flags = 0) {
-        $files = glob($pattern, $flags);
-        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
-            $files = array_merge($files, self::rglob($dir.'/'.basename($pattern), $flags));
-        }
-        return $files;
-    }
-
     public function getVersionFromHeader()
     {
-        $headers = self::rglob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
+        $headers = self::rglob($this->package->getSourceDir() . DIRECTORY_SEPARATOR . '*.h');
         foreach ($headers as $header) {
             $macroValue = $this->getVersionFromHeaderFile($header);
             if ($macroValue !== null) {
                 return $macroValue;
             }
         }
-        throw new \Exception("Couldn't parse or find the version defined in the {$this->macroNameRegex} macro");
+        throw new Exception("Couldn't parse or find the version defined in the {$this->macroNameRegex} macro");
+    }
+
+    public function updateJSON()
+    {
+        if ($this->package->getPrettyVersion() == $this->version) {
+            /* Don't touch, it's the same. */
+            return;
+        }
+
+        $dumper = new Util\Dumper();
+        $composer_json = $this->package->getRootDir() . DIRECTORY_SEPARATOR . 'composer.json';
+
+        $this->package->replaceVersion((new VersionParser())->normalize($this->version), $this->version);
+
+        $len = file_put_contents($composer_json, json_encode($dumper->dump($this->package), JSON_PRETTY_PRINT));
+
+        if (!$len) {
+            throw new Exception("Failed to update '{$package_json}'");
+        }
     }
 
     /**
      * Extract the macro value from a header file.
      *
-     * @throws \Exception if we couldn't read the file
+     * @throws Exception if we couldn't read the file
      *
      * @return string|null return NULL if the macro couldn't be found, the macro value otherwise
      */
@@ -91,7 +111,7 @@ class Version
     {
         $headerFileContents = file_get_contents($headerFilePath);
         if ($headerFileContents === false) {
-            throw new \Exception("Could not read header file {$headerFilePath}");
+            throw new Exception("Could not read header file {$headerFilePath}");
         }
 
         return $this->getVersionFromHeaderFileContents($headerFileContents);
@@ -111,28 +131,13 @@ class Version
         return preg_match($pat, $headerFileContents, $result) ? trim($result[1], '"') : null;
     }
 
-    public function updateJSON()
+    private function rglob($pattern, $flags = 0)
     {
-        if ($this->package->getPrettyVersion() == $this->version) {
-            /* Don't touch, it's the same. */
-            return;
+        $files = glob($pattern, $flags);
+        foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
+            $files = array_merge($files, self::rglob($dir . '/' . basename($pattern), $flags));
         }
-
-        $dumper = new Util\Dumper();
-        $composer_json = $this->package->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
-
-        $this->package->replaceVersion((new VersionParser())->normalize($this->version), $this->version);
-
-        $len = file_put_contents($composer_json, json_encode($dumper->dump($this->package), JSON_PRETTY_PRINT));
-
-        if (!$len) {
-            throw new \Exception("Failed to update '$package_json'");
-        }
-    }
-
-    public function __tostring()
-    {
-        return $this->version;
+        return $files;
     }
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,9 +37,10 @@
 namespace Pickle\Package;
 
 use Composer\IO\ConsoleIO;
+use Exception;
+use Pickle\Base\Util;
 use Pickle\Package\Convey\Command\Factory;
 use Pickle\Package\Convey\Command\Type;
-use Pickle\Base\Util;
 
 class Convey
 {
@@ -48,16 +49,16 @@ class Convey
     public function __construct($path, ConsoleIO $io)
     {
         if (!$path) {
-            throw new \Exception('Path cannot be empty');
+            throw new Exception('Path cannot be empty');
         }
 
-        $type = Type::determine($path, (false === realpath($path)));
+        $type = Type::determine($path, (realpath($path) === false));
         $this->command = Factory::getCommand($type, $path, $io);
     }
 
     public function deliver($target = '', $no_convert = false, $versionOverride = null)
     {
-        $target = $target ? realpath($target) : Util\TmpDir::get().DIRECTORY_SEPARATOR.$this->command->getName();
+        $target = $target ? realpath($target) : Util\TmpDir::get() . DIRECTORY_SEPARATOR . $this->command->getName();
 
         return $this->command->execute($target, $no_convert, $versionOverride);
     }

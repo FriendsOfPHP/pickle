@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -37,26 +37,27 @@
 namespace Pickle\Package\PHP\Command;
 
 use Closure;
+use Composer\Package\Version\VersionParser;
+use Phar;
+use PharData;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
-use Pickle\Package\PHP\Util\PackageXml;
 use Pickle\Package\PHP\Util\PackageJson;
 use Pickle\Package\Util\Header;
-use Composer\Package\Version\VersionParser;
 
 class Release implements Interfaces\Package\Release
 {
     /**
      * @var \Pickle\Base\Interfaces\Package
      */
-    protected $pkg = null;
+    protected $pkg;
 
-    /*
+    /**
      * @var Closure
      */
-    protected $cb = null;
+    protected $cb;
 
-    /*
+    /**
      * @var bool
      */
     protected $noConvert = false;
@@ -64,15 +65,57 @@ class Release implements Interfaces\Package\Release
     /**
      * Constructor.
      *
-     * @param string  $path
+     * @param string $path
      * @param Closure $cb
-     * @param bool    $noConvert
+     * @param bool $noConvert
      */
     public function __construct($path, $cb = null, $noConvert = false)
     {
         $this->pkg = $this->readPackage($path);
         $this->cb = $cb;
         $this->noConvert = $noConvert;
+    }
+
+    /**
+     * Create package.
+     */
+    public function create(array $args = [])
+    {
+        $archBasename = $this->pkg->getSimpleName() . '-' . $this->pkg->getPrettyVersion();
+
+        /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
+        creates temp file and rename it */
+        $tempName = getcwd() . '/pkl-tmp.tar';
+        if (file_exists($tempName)) {
+            unlink($tempName);
+        }
+        $arch = new PharData($tempName);
+        $pkgDir = $this->pkg->getRootDir();
+
+        foreach ($this->pkg->getFiles() as $file) {
+            if (is_file($file)) {
+                $name = str_replace($pkgDir, '', $file);
+                $arch->addFile($file, $name);
+            }
+        }
+        if (file_exists($tempName)) {
+            @unlink($tempName . '.gz');
+        }
+        $arch->compress(Phar::GZ);
+        unset($arch);
+
+        rename($tempName . '.gz', $archBasename . '.tgz');
+        unlink($tempName);
+
+        if ($this->cb) {
+            $cb = $this->cb;
+            $cb($this->pkg);
+        }
+    }
+
+    public function packLog()
+    {
+        /* pass, no logging seems to be happening here yet */
     }
 
     protected function readPackage($path)
@@ -88,48 +131,6 @@ class Release implements Interfaces\Package\Release
         $package->replaceVersion((new VersionParser())->normalize($version), $version);
 
         return $package;
-    }
-
-    /**
-     * Create package.
-     */
-    public function create(array $args = array())
-    {
-        $archBasename = $this->pkg->getSimpleName().'-'.$this->pkg->getPrettyVersion();
-
-        /* Work around bug  #67417 [NEW]: ::compress modifies archive basename
-        creates temp file and rename it */
-        $tempName = getcwd().'/pkl-tmp.tar';
-        if (file_exists($tempName)) {
-            unlink($tempName);
-        }
-        $arch = new \PharData($tempName);
-        $pkgDir = $this->pkg->getRootDir();
-
-        foreach ($this->pkg->getFiles() as $file) {
-            if (is_file($file)) {
-                $name = str_replace($pkgDir, '', $file);
-                $arch->addFile($file, $name);
-            }
-        }
-        if (file_exists($tempName)) {
-            @unlink($tempName.'.gz');
-        }
-        $arch->compress(\Phar::GZ);
-        unset($arch);
-
-        rename($tempName.'.gz', $archBasename.'.tgz');
-        unlink($tempName);
-
-        if ($this->cb) {
-            $cb = $this->cb;
-            $cb($this->pkg);
-        }
-    }
-
-    public function packLog()
-    {
-        /* pass, no logging seems to be happening here yet */
     }
 }
 

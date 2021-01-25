@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -44,7 +44,7 @@ class Engine
 
     public static function factory($phpcli = null)
     {
-        if (null === self::$instance) {
+        if (self::$instance === null) {
             if (!$phpcli) {
                 $phpcli = PHP_BINARY;
             }

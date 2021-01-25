@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Pickle
  *
  *
@@ -33,7 +33,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 class PharFeatureContext extends FeatureContext
 {
-    const PICKLE_BIN = 'pickle.phar';
+    protected const PICKLE_BIN = 'pickle.phar';
 }
