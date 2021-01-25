@@ -38,6 +38,7 @@ namespace Pickle\Console\Command;
 
 use Exception;
 use Pickle\Base\Abstracts\Console\Command\BuildCommand;
+use Pickle\Base\Archive\Factory;
 use Pickle\Base\Interfaces;
 use Pickle\Base\Util;
 use Pickle\Package\Command\Release;
@@ -87,6 +88,9 @@ class ReleaseCommand extends BuildCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (DIRECTORY_SEPARATOR === '\\' || $input->getOption('pack-logs')) {
+            Factory::getZipperClassName(); // Be sure we have a way to zip files
+        }
         $helper = $this->getHelper('package');
         Util\TmpDir::set($input->getOption('tmp-dir'));
 
