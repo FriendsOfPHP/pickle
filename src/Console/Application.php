@@ -38,7 +38,6 @@ namespace Pickle\Console;
 
 use Exception;
 use Phar;
-use Pickle\Base\Archive;
 use Symfony\Component\Console\Application as BaseApplication;
 
 class Application extends BaseApplication
@@ -97,8 +96,5 @@ class Application extends BaseApplication
                 throw new Exception("Extension '{$ext}' required but not loaded, full required list: " . implode(', ', $required_exts));
             }
         }
-
-        Archive\Factory::getUnzipperClassName();
-        Archive\Factory::getZipperClassName();
     }
 }

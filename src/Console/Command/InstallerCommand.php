@@ -38,6 +38,7 @@ namespace Pickle\Console\Command;
 
 use Exception;
 use Pickle\Base\Abstracts\Console\Command\BuildCommand;
+use Pickle\Base\Archive\Factory;
 use Pickle\Base\Util;
 use Pickle\Engine;
 use Pickle\Package\Command\Install;
@@ -119,6 +120,7 @@ class InstallerCommand extends BuildCommand
      */
     protected function binaryInstallWindows($path, InputInterface $input, OutputInterface $output)
     {
+        Factory::getUnzipperClassName(); // Be sure we have a way to unzip files
         $php = Engine::factory();
         $table = new Table($output);
         $table
