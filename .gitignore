@@ -3,3 +3,4 @@ pickle*.phar
 vendor/
 *.test
 /clover.xml
+/ocular.phar
