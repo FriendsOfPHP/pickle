@@ -42,8 +42,9 @@ jobs:
         env:
           PICKLE_BEHAT_PROCESS_TIMEOUT: 0
         run: vendor/bin/behat --format=progress
+      # We need a new release of Ocular that supports PHP 8 - see https://github.com/scrutinizer-ci/ocular/pull/52
       - name: Download Ocular
-        if: always()
+        if: always() && !startsWith(matrix.php-version, '8.')
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
       - name: Upload code coverage
         if: always()
