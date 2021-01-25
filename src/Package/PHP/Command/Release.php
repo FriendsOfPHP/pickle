@@ -36,6 +36,7 @@
 
 namespace Pickle\Package\PHP\Command;
 
+use Closure;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
@@ -76,7 +77,7 @@ class Release implements Interfaces\Package\Release
 
     protected function readPackage($path)
     {
-        $package = PackageJson::readPackage($path, $noconvert);
+        $package = PackageJson::readPackage($path, $this->noConvert);
         $package->setRootDir(realpath($path));
 
         /* We're not adding any versions into the composer.json for the source release.
