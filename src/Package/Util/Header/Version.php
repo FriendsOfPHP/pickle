@@ -45,21 +45,19 @@ class Version
     protected $package;
     protected $header;
     protected $version;
-    protected $macroName;
+    protected $macroNameRegex;
 
     public function __construct(Interfaces\Package $package)
     {
         $this->package = $package;
-        $this->macroName = strtoupper($this->package->getSimpleName()).'_VERSION';
+        $this->macroNameRegex = '(?:PHP_)?' . strtoupper($this->package->getSimpleName()).'_(?:EXT_)?VERSION';
 
         $this->version = $this->getVersionFromHeader();
     }
 
     public function fileHasVersionMacro($fname)
     {
-        $cont = file_get_contents($fname);
-
-        return false !== strstr($cont, $this->macroName);
+        return $this->getVersionFromHeaderFile($fname) !== null;
     }
 
     private function rglob($pattern, $flags = 0) {
@@ -73,22 +71,44 @@ class Version
     public function getVersionFromHeader()
     {
         $headers = self::rglob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
-
-        // Match versions surrounded by quotes and versions without quotes
-        $versionMatcher = '(".*"|.*\b)';
-        $pat = ',define\s+(?:PHP_)?'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
-
         foreach ($headers as $header) {
-            $headerContent = file_get_contents($header);
-            if (!$headerContent) {
-                throw new \Exception("Could not read $header");
-            }
-            if (preg_match($pat, $headerContent, $result)) {
-                // Remove any quote characters we may have matched on
-                return trim($result[1], '"');
+            $macroValue = $this->getVersionFromHeaderFile($header);
+            if ($macroValue !== null) {
+                return $macroValue;
             }
         }
-        throw new \Exception("Couldn't parse or find the version defined in the {$this->macroName} macro");
+        throw new \Exception("Couldn't parse or find the version defined in the {$this->macroNameRegex} macro");
+    }
+
+    /**
+     * Extract the macro value from a header file.
+     *
+     * @throws \Exception if we couldn't read the file
+     *
+     * @return string|null return NULL if the macro couldn't be found, the macro value otherwise
+     */
+    protected function getVersionFromHeaderFile(string $headerFilePath): ?string
+    {
+        $headerFileContents = file_get_contents($headerFilePath);
+        if ($headerFileContents === false) {
+            throw new \Exception("Could not read header file {$headerFilePath}");
+        }
+
+        return $this->getVersionFromHeaderFileContents($headerFileContents);
+    }
+
+    /**
+     * Extract the macro value from the contents of a header file.
+     *
+     * @return string|null return NULL if the macro couldn't be found, the macro value otherwise
+     */
+    protected function getVersionFromHeaderFileContents(string $headerFileContents): ?string
+    {
+        // Match versions surrounded by quotes and versions without quotes
+        $versionMatcher = '(".*"|.*\b)';
+        $pat = ',define\s+' . $this->macroNameRegex . '\s+' . $versionMatcher . ',i';
+
+        return preg_match($pat, $headerFileContents, $result) ? trim($result[1], '"') : null;
     }
 
     public function updateJSON()
