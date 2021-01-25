@@ -33,7 +33,7 @@
         "atoum/praspel-extension": "~0.17",
         "atoum/visibility-extension": "~1.3",
         "behat/behat": "~3.6",
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "^2.18.1",
         "mlocati/composer-patcher": "^1.2.2",
         "symfony/process": "^5.0"
     },
