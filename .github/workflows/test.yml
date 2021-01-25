@@ -41,9 +41,10 @@ jobs:
       - name: Run Behat
         run: PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
       - name: Download Ocular
+        if: always()
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
       - name: Upload code coverage
-        if: ${{ always() }}
+        if: always()
         run: |
           if test -f ocular.phar && test -f clover.xml; then
             php ocular.phar code-coverage:upload --format=php-clover --ansi --no-interaction -vvv clover.xml
