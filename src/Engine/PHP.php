@@ -268,7 +268,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
                 . 'echo PHP_ZTS . \"\n\"; '
                 . 'echo PHP_DEBUG . \"\n\"; ';
 
-        $cmd = $this->phpCliEscaped . ' -r ' . '"' . str_replace("\n", '', $script) . '"';
+        $cmd = $this->phpCliEscaped . ' -n -r ' . '"' . str_replace("\n", '', $script) . '"';
 
         $info = null;
         exec($cmd, $info);

@@ -102,9 +102,7 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
         ],
         ]);
         $downloader = new GitDownloader($this->io, $config);
-        if ($downloader !== null) {
-            $downloader->download($package, $target);
-        }
+        $downloader->download($package, $target);
     }
 }
 
