@@ -158,6 +158,16 @@ or via [IRC, EFNet, channel `#pickle`](http://chat.efnet.org/).
 Running tests
 -------------
 
+You should run the tests by setting the `PICKLE_PECL_TESTSERVER` environment variable to `yes` (or `true` or `1`).
+This implies that test are executed using a well-defined environment instead of using a live web server.
+
+```sh
+# On Unix-like systems
+export PICKLE_PECL_TESTSERVER=yes
+# On Windows systems
+set PICKLE_PECL_TESTSERVER=yes
+```
+
 Unit tests are written using [atoum](https://github.com/atoum/atoum).
 You will get atoum, among other dependencies, when running `composer install`.
 To run tests, you will need to run the following command:

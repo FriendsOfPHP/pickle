@@ -39,6 +39,7 @@ namespace Pickle\Package\PHP\Convey\Command;
 use Exception;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
+use Pickle\Base\Pecl\WebsiteFactory;
 use Pickle\Config;
 use Pickle\Downloader\PECLDownloader;
 use Pickle\Engine;
@@ -73,7 +74,7 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         }
 
         $this->name = $matches['package'];
-        $this->url = 'https://pecl.php.net/get/' . $matches['package'];
+        $this->url = WebsiteFactory::getWebsite()->getBaseUrl() . '/get/' . $matches['package'];
 
         if (isset($matches['stability']) && $matches['stability'] !== '') {
             $this->stability = $matches['stability'];
@@ -99,7 +100,13 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
 
         $package->setRootDir($target);
 
-        $downloader = new PECLDownloader($this->io, new Config());
+        $config = new Config();
+        $config->merge([
+            'config' => [
+                'secure-http' => WebsiteFactory::isTestServer() ? false : true,
+            ],
+        ]);
+        $downloader = new PECLDownloader($this->io, $config);
         if ($downloader !== null) {
             $downloader->download($package, $target);
         }

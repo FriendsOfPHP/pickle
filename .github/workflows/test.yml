@@ -23,6 +23,8 @@ jobs:
           - "7.4"
           - "8.0"
     runs-on: ${{ matrix.os }}
+    env:
+      PICKLE_PECL_TESTSERVER: yes
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
