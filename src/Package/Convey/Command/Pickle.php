@@ -70,6 +70,7 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     {
         $extensionJson = @file_get_contents('http://localhost:8080/json/' . $this->name . '.json');
         if (!$extensionJson) {
+            /** @var array $http_response_header */
             $status = $http_response_header[0] ?? '';
             if (strpos($status, '404') !== false) {
                 throw new Exception("cannot find {$this->name}");
@@ -85,6 +86,7 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
 
     protected function prepare()
     {
+        $matches = null;
         if (Type::determinePickle($this->path, $matches) < 1) {
             throw new Exception('Not a pickle git URI');
         }
@@ -105,7 +107,7 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
             $versionConstraints = $versionParser->parseConstraints($matches['version']);
 
             /* versions are sorted decreasing */
-            foreach ($extension['packages'][$this->name] as $version => $release) {
+            foreach (array_keys($extension['packages'][$this->name]) as $version) {
                 $constraint = new VersionConstraint('=', $versionParser->normalize($version));
                 if ($versionConstraints->matches($constraint)) {
                     $versionToUse = $version;

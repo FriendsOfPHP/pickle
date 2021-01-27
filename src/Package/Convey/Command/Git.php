@@ -61,6 +61,7 @@ class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package
 
     protected function prepare()
     {
+        $matches = null;
         if (Type::determineGit($this->path, $matches) < 1) {
             throw new Exception('Not valid git URI');
         }

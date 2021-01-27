@@ -251,7 +251,9 @@ class Binary
                 },
             ]
         );
-        $output->writeln("downloading {$url} ");
+        if ($this->output) {
+            $this->output->writeln("downloading {$url} ");
+        }
         $fileContents = file_get_contents($url, false, $ctx);
         $progress->finish();
         if (!$fileContents) {
@@ -325,7 +327,7 @@ class Binary
         if ($headerPkg === null) {
             throw new Exception('Cannot find extension <' . $this->extName . '>');
         }
-
+        $m = null;
         if (!preg_match('|=(.*)\\.[a-z0-9]{2,3}$|', $headerPkg, $m)) {
             throw new Exception('Invalid response from pecl.php.net');
         }

@@ -120,6 +120,7 @@ class Type
         if (substr($path, -4) == '.tgz' || substr($path, -7) == '.tar.gz') {
             return self::TGZ;
         }
+        $matches = null;
         if ($remote && self::determinePecl($path, $matches) > 0) {
             return self::PECL;
         }

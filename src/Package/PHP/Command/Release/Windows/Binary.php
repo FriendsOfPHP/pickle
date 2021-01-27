@@ -36,10 +36,10 @@
 
 namespace Pickle\Package\PHP\Command\Release\Windows;
 
+use Closure;
 use Exception;
 use Pickle\Base\Archive;
 use Pickle\Base\Interfaces;
-use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageJson;
 use Pickle\Package\Util\Header;
 
@@ -51,7 +51,7 @@ class Binary implements Interfaces\Package\Release
     protected $pkg;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $cb;
 
@@ -69,7 +69,7 @@ class Binary implements Interfaces\Package\Release
      * Constructor.
      *
      * @param string $path
-     * @param \Closure $cb
+     * @param Closure $cb
      * @param bool $noConvert
      */
     public function __construct($path, $cb = null, $noConvert = false)
@@ -99,6 +99,7 @@ class Binary implements Interfaces\Package\Release
         $tmp_dir = $build->getTempDir();
 
         $tmp = $build->getLog('configure');
+        $m = null;
         if (preg_match(',Build dir:\\s+([\\:\\-\\.0-9a-zA-Z\\\\_]+),', $tmp, $m)) {
             if (preg_match(',^[a-z]\\:\\\\,i', $m[1]) && is_dir($m[1])) {
                 /* Parsed the fully qualified path */
@@ -109,7 +110,7 @@ class Binary implements Interfaces\Package\Release
             }
         } else {
             $build_dir = $info['arch'] == 'x86' ? $tmp_dir : $tmp_dir . DIRECTORY_SEPARATOR . 'x64';
-            $build_dir .= DIRECTORY_SEPARATOR . ($is_release ? 'Release' : 'Debug');
+            $build_dir .= DIRECTORY_SEPARATOR . (($info['is_release'] ?? true) ? 'Release' : 'Debug');
             $build_dir .= ($info['thread_safe'] ? '_TS' : '');
         }
 
@@ -191,6 +192,7 @@ class Binary implements Interfaces\Package\Release
          multiple DLLs be built. */
         $config_w32_path = $this->build->getPackage()->getSourceDir() . DIRECTORY_SEPARATOR . 'config.w32';
         $config_w32 = file_get_contents($config_w32_path);
+        $m = null;
         if (preg_match_all("/EXTENSION\\s*\\(\\s*('|\")([a-z0-9_]+)('|\")\\s*,/Sm", $config_w32, $m, PREG_SET_ORDER)) {
             foreach ($m as $r) {
                 if (!in_array($r[2], $ext_names)) {
