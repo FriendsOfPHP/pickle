@@ -52,8 +52,9 @@
         "discard-changes": true
     },
     "scripts": {
-        "cs": "vendor/bin/php-cs-fixer --ansi fix --config=sf23",
-        "test": "vendor/bin/atoum --force-terminal && vendor/bin/behat --suite pickle --colors"
+        "cs-fix": "php-cs-fixer fix --path-mode=intersection --config=./.php_cs.dist --ansi .",
+		"cs-check": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist --ansi --dry-run --diff --diff-format=udiff .",
+        "test": "atoum --force-terminal && ./vendor/bin/behat --suite pickle --colors"
     },
     "extra": {
         "patches": {
