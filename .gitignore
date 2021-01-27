@@ -1,7 +1,6 @@
-composer.phar
-pickle*.phar
-vendor/
-*.test
-/clover.xml
-/ocular.phar
+/vendor/
+/*.phar
+/.php_cs
 /.php_cs.cache
+/box.json
+/clover.xml

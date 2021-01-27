@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RELEASE_NAME: ""
-      PATHS_FOR_RELEASE_NOTES: "box.json composer.json src/"
+      PATHS_FOR_RELEASE_NOTES: "box.json.dist composer.json src/"
     steps:
       - name: Check tag format
         if: github.event_name == 'create' && github.event.ref_type == 'tag'
