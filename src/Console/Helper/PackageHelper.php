@@ -99,7 +99,7 @@ class PackageHelper extends Helper
     /**
      * @param $path
      *
-     * @return Pickle\Base\Interfaces\Package
+     * @return \Pickle\Base\Interfaces\Package
      */
     public function convey(InputInterface $input, OutputInterface $output, $path, $target = null)
     {

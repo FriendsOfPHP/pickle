@@ -55,7 +55,7 @@ class Loader
     /**
      * @param string $path
      *
-     * @return Pickle\Base\Interfaces\Package
+     * @return \Pickle\Base\Interfaces\Package
      */
     public function load($path, $versionOverride = null)
     {

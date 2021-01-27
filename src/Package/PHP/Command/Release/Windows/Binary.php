@@ -51,7 +51,7 @@ class Binary implements Interfaces\Package\Release
     protected $pkg;
 
     /**
-     * @var Closure
+     * @var \Closure
      */
     protected $cb;
 
@@ -69,7 +69,7 @@ class Binary implements Interfaces\Package\Release
      * Constructor.
      *
      * @param string $path
-     * @param Closure $cb
+     * @param \Closure $cb
      * @param bool $noConvert
      */
     public function __construct($path, $cb = null, $noConvert = false)
