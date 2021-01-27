@@ -34,6 +34,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Check validity of composer files
+        run: composer valid --strict --ansi --no-interaction
       - name: Install Composer dependencies (including dev, preferring source)
         run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction
       - name: Check coding style
