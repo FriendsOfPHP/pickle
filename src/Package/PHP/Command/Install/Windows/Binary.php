@@ -39,6 +39,7 @@ namespace Pickle\Package\PHP\Command\Install\Windows;
 use DOMDocument;
 use Exception;
 use Pickle\Base\Archive;
+use Pickle\Base\Pecl\WebsiteFactory;
 use Pickle\Base\Util;
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
@@ -116,7 +117,7 @@ class Binary
 
     private function extensionPeclExists()
     {
-        $url = 'https://pecl.php.net/get/' . $this->extName;
+        $url = WebsiteFactory::getWebsite()->getBaseUrl() . '/get/' . $this->extName;
         $headers = get_headers($url, 1);
         $status = $headers[0];
         if (strpos($status, '404')) {
@@ -311,7 +312,8 @@ class Binary
      */
     private function getInfoFromPecl()
     {
-        $url = 'https://pecl.php.net/get/' . $this->extName;
+        $baseUrl = WebsiteFactory::getWebsite()->getBaseUrl();
+        $url = $baseUrl . '/get/' . $this->extName;
         $headers = get_headers($url);
 
         if (strpos($headers[0], '404') !== false) {
@@ -329,13 +331,13 @@ class Binary
         }
         $m = null;
         if (!preg_match('|=(.*)\\.[a-z0-9]{2,3}$|', $headerPkg, $m)) {
-            throw new Exception('Invalid response from pecl.php.net');
+            throw new Exception("Invalid response from {$baseUrl}");
         }
         $packageFullname = $m[1];
 
         [$name, $version] = explode('-', $packageFullname);
         if ($name == '' || $version == '') {
-            throw new Exception('Invalid response from pecl.php.net');
+            throw new Exception("Invalid response from {$baseUrl}");
         }
 
         return [$name, $version];

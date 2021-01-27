@@ -23,6 +23,8 @@ jobs:
           - "7.4"
           - "8.0"
     runs-on: ${{ matrix.os }}
+    env:
+      PICKLE_PECL_TESTSERVER: yes
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -55,6 +57,25 @@ jobs:
         env:
           PICKLE_BEHAT_PROCESS_TIMEOUT: 0
         run: vendor/bin/behat --format=progress
+      - name: Dump PECL dev server logs
+        if: always() && startsWith(matrix.os, 'ubuntu')
+        run: |
+            rc=0
+            echo '# 404 errors'
+            if test -f tests/pecl-website/404.log; then
+                cat tests/pecl-website/404.log
+                rc=1
+            else
+                echo 'None.'
+            fi
+            echo '# 500 errors'
+            if test -f tests/pecl-website/500.log; then
+                cat tests/pecl-website/500.log
+                rc=1
+            else
+                echo 'None.'
+            fi
+            exit $rc
       # We need a new release of Ocular that supports PHP 8 - see https://github.com/scrutinizer-ci/ocular/pull/52
       - name: Download Ocular
         if: always() && !startsWith(matrix.php-version, '8.')

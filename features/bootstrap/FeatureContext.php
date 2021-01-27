@@ -36,6 +36,8 @@
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Pickle\Base\Pecl\Website;
+use Pickle\Base\Pecl\WebsiteFactory;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -58,6 +60,11 @@ class FeatureContext implements SnippetAcceptingContext
 
     private $process;
 
+    /**
+     * @var Process|null
+     */
+    private static $webserverProcess = null;
+
     public function __construct()
     {
         $this->assert = new \mageekguy\atoum\asserter\generator();
@@ -65,8 +72,25 @@ class FeatureContext implements SnippetAcceptingContext
 
     /**
      * @BeforeSuite
+     */
+    public static function beforeSuite(): void
+    {
+        self::stopTestWebserver();
+        if (WebsiteFactory::isTestServer()) {
+            self::startTestWebserver();
+        }
+        self::clean();
+    }
+
+    /**
      * @AfterSuite
      */
+    public static function afterSuite(): void
+    {
+        self::stopTestWebserver();
+        self::clean();
+    }
+
     public static function clean()
     {
         if (is_dir(PICKLE_TEST_PATH)) {
@@ -222,7 +246,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function extensionExists($name, $version)
     {
-        $url = 'https://pecl.php.net/get/' . $name . '/' . $version . '?uncompress=1';
+        $url = WebsiteFactory::getWebsite()->getBaseUrl() . '/get/' . $name . '/' . $version . '?uncompress=1';
         $file = $name . '-' . $version . '.tgz';
         $dir = $this->workingDir . '/' . $name . '-' . $version;
 
@@ -306,5 +330,41 @@ class FeatureContext implements SnippetAcceptingContext
         }
 
         rmdir($path);
+    }
+
+    private static function startTestWebserver(): void
+    {
+        self::stopTestWebserver();
+        $process = new Process(
+            // $command
+            [
+                PHP_BINARY ?: 'php',
+                '-n',
+                '-dextension=phar',
+                '-S', '127.0.0.1:' . Website::TEST_PORT,
+            ],
+            // $cwd
+            dirname(__DIR__, 2) . '/tests/pecl-website/web',
+            // $env
+            [],
+            // $input
+            null,
+            // $timeout
+            null
+        );
+        $process->start();
+        usleep((int) (0.5 * 1E6));
+        if (!$process->isRunning()) {
+            throw new RuntimeException("Failed to start the test PECL website.\n" . implode("\n", array_filter([$process->getOutput(), $process->getErrorOutput()])));
+        }
+        self::$webserverProcess = $process;
+    }
+
+    private static function stopTestWebserver(): void
+    {
+        if (self::$webserverProcess !== null) {
+            self::$webserverProcess->stop(0);
+            self::$webserverProcess = null;
+        }
     }
 }
