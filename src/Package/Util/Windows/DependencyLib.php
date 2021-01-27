@@ -37,7 +37,6 @@
 namespace Pickle\Package\Util\Windows;
 
 use Exception;
-use Extension;
 use Pickle\Base\Archive;
 use Pickle\Base\Util;
 use Pickle\Base\Util\FileOps;
@@ -110,7 +109,7 @@ class DependencyLib
             if ($resolve_multiple_cb !== null) {
                 $dep_zip = $resolve_multiple_cb($dep_zips);
             } else {
-                throw new Extension("Multiple choice for dependencies, couldn't resolve");
+                throw new Exception("Multiple choice for dependencies, couldn't resolve");
             }
         } else {
             /* That might be not quite true, as we might just not have the

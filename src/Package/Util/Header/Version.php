@@ -96,7 +96,7 @@ class Version
         $len = file_put_contents($composer_json, json_encode($dumper->dump($this->package), JSON_PRETTY_PRINT));
 
         if (!$len) {
-            throw new Exception("Failed to update '{$package_json}'");
+            throw new Exception("Failed to update '{$composer_json}'");
         }
     }
 
@@ -127,6 +127,7 @@ class Version
         // Match versions surrounded by quotes and versions without quotes
         $versionMatcher = '(".*"|.*\b)';
         $pat = ',define\s+' . $this->macroNameRegex . '\s+' . $versionMatcher . ',i';
+        $result = null;
 
         return preg_match($pat, $headerFileContents, $result) ? trim($result[1], '"') : null;
     }

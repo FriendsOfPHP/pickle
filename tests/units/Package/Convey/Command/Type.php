@@ -38,7 +38,6 @@ namespace Pickle\tests\units\Package\Convey\Command;
 
 use atoum;
 use Pickle\Package\Convey\Command;
-use Pickle\tests;
 
 class Type extends atoum
 {

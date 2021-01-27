@@ -270,6 +270,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         $cmd = $this->phpCliEscaped . ' -r ' . '"' . str_replace("\n", '', $script) . '"';
 
+        $info = null;
         exec($cmd, $info);
         if (count($info) !== 7) {
             throw new Exception('Could not determine info from the PHP binary');
@@ -286,6 +287,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     private function getFromPhpInfo()
     {
         $cmd = $this->phpCliEscaped . ' -i';
+        $info = null;
         exec($cmd, $info);
 
         if (!is_array($info)) {

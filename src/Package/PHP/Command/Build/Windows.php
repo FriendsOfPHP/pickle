@@ -134,7 +134,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         $info = [];
         $info = array_merge($info, $this->getInfoFromPhpizeLog());
         $info = array_merge($info, $this->getInfoFromConfigureLog());
-
+        $m = null;
         if (!preg_match(',(.+)/(.+),', $info['name'], $m)) {
             $info['vendor'] = null;
         } else {
@@ -178,6 +178,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         ];
 
         $tmp = $this->getLog('phpize');
+        $m = null;
         if (!preg_match(",Rebuilding configure.js[\n\r\\d:]+\\s+(.+)[\n\r]+,", $tmp, $m)) {
             throw new Exception("Couldn't determine PHP development SDK path");
         }
@@ -211,13 +212,15 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
             'arch' => null,
             'version' => null,
             'name' => null,
+            'is_release' => null,
         ];
 
         $tmp = $this->getLog('configure');
-
+        $m = null;
         if (!preg_match(',Build type\\s+\\|\\s+([a-zA-Z]+),', $tmp, $m)) {
             throw new Exception("Couldn't determine the build thread safety");
         }
+        $info['is_release'] = $m[1] === 'Release';
 
         if (!preg_match(',Thread Safety\\s+\\|\\s+([a-zA-Z]+),', $tmp, $m)) {
             throw new Exception("Couldn't determine the build thread safety");

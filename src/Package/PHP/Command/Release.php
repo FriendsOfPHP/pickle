@@ -41,7 +41,6 @@ use Composer\Package\Version\VersionParser;
 use Phar;
 use PharData;
 use Pickle\Base\Interfaces;
-use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageJson;
 use Pickle\Package\Util\Header;
 

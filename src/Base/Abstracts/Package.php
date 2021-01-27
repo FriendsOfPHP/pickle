@@ -45,7 +45,7 @@ class Package extends CompletePackage
     public function getSimpleName()
     {
         $full_name = $this->getName();
-
+        $m = null;
         if (!preg_match(',(.+)/(.+),', $full_name, $m)) {
             return $full_name;
         }
@@ -56,7 +56,7 @@ class Package extends CompletePackage
     public function getVendorName()
     {
         $full_name = $this->getName();
-
+        $m = null;
         if (!preg_match(',(.+)/(.+),', $full_name, $m)) {
             return;
         }

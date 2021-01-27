@@ -63,7 +63,7 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
     protected function prepare()
     {
         $engine = Engine::factory();
-
+        $matches = null;
         if (Type::determinePecl($this->path, $matches) < 1) {
             throw new Exception('Not valid PECL URI');
         }

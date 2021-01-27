@@ -43,6 +43,8 @@ class Config extends atoum
 {
     public function test__construct()
     {
+        $baseDir = null;
+        $homeDir = null;
         $this
             ->given(
                 $this->function->getenv = false,
