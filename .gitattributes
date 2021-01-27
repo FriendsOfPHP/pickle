@@ -1,0 +1,6 @@
+/features/ export-ignore
+/tests/ export-ignore
+/.* export-ignore
+/behat.yml export-ignore
+/box.json.dist export-ignore
+/MAINTAINERS.md export-ignore

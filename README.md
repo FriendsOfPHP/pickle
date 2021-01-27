@@ -136,10 +136,16 @@ To ensure a consistent code base, you should make sure the code follows
 the [PSR-1](http://www.php-fig.org/psr/psr-1/) and
 [PSR-2](http://www.php-fig.org/psr/psr-2/) coding standards.
 
-To avoid CS issues, you should use [php-cs-fixer](http://cs.sensiolabs.org/):
+To check CS issues, you can use the `cs-check` composer command:
 
 ```sh
-$ php-cs-fixer fix src/
+$ composer run cs-check
+```
+
+To automatically fix CS issues, you can use the `cs-fix` composer command:
+
+```sh
+$ composer run cs-fix
 ```
 
 Support

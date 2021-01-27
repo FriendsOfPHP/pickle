@@ -34,11 +34,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Check validity of composer files
+        run: composer valid --strict --ansi --no-interaction
       - name: Install Composer dependencies (including dev, preferring source)
         run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction
       - name: Check coding style
         if: matrix.os == 'ubuntu-latest' && matrix.php-version == '7.2'
-        run: ./vendor/bin/php-cs-fixer fix --path-mode=intersection --config=./.php_cs.dist --dry-run --using-cache=no --diff --diff-format=udiff --ansi --no-interaction .
+        run: composer run cs-check -- --using-cache=no --no-interaction
       - name: Run Atoum
         run: php ./vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
       - name: Install Composer dependencies (excluding dev)
