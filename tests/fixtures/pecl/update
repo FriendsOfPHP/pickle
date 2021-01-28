@@ -86,7 +86,10 @@ try {
 
 class Lister
 {
-    private ?DOMDocument $packages = null;
+    /**
+     * @var DOMDocument|null
+     */
+    private $packages;
 
     /**
      * @return string[]
