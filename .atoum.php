@@ -34,19 +34,45 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+use Atoum\PraspelExtension\Manifest;
+use mageekguy\atoum\observable;
+use mageekguy\atoum\observer;
+use mageekguy\atoum\runner;
+use mageekguy\atoum\test;
 use mageekguy\atoum\visibility;
 
-if (getenv('TRAVIS_PHP_VERSION') === '7.0') {
-    $script
-        ->php('php -n -ddate.timezone=Europe/Paris')
-        ->noCodeCoverage()
-    ;
-} else {
-    $script->noCodeCoverageForNamespaces('Composer');
+class WorkaroundForNonZeroExitCodeOnFailure implements observer
+{
+    private $isLastObserver = false;
+
+    private $failed = false;
+
+    public function handleEvent($event, observable $observable)
+    {
+        if ($this->isLastObserver === false && $observable instanceof runner && $event === runner::runStart) {
+            $observable->removeObserver($this)->addObserver($this);
+            $this->isLastObserver = true;
+        }
+        if (class_exists(test::class, false) && in_array($event, [test::fail, test::error, test::exception, test::runtimeException], true)) {
+            $this->failed = true;
+        }
+        if ($observable instanceof runner && $event === runner::runStop) {
+            if ($this->failed) {
+                throw new RuntimeException('Atoum failed!', 1);
+            }
+        }
+    }
 }
+
+/**
+ * @var mageekguy\atoum\configurator $script
+ * @var mageekguy\atoum\runner $runner
+ */
+$script->noCodeCoverageForNamespaces('Composer');
 
 $script->addTestsFromDirectory(__DIR__ . '/tests/units');
 $runner
-    ->addExtension(new \Atoum\PraspelExtension\Manifest())
+    ->addExtension(new Manifest())
     ->addExtension(new visibility\extension($script))
+    ->addObserver(new WorkaroundForNonZeroExitCodeOnFailure())
 ;

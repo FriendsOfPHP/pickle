@@ -44,7 +44,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.php-version == '7.2'
         run: composer run cs-check -- --using-cache=no --no-interaction
       - name: Run Atoum
-        run: php ./vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
+        run: php ./vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml --force-terminal
       - name: Install Composer dependencies (excluding dev)
         run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction --no-dev
       - name: Install Box
