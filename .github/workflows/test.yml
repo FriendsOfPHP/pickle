@@ -48,7 +48,7 @@ jobs:
       - name: Install Composer dependencies (excluding dev)
         run: composer install --prefer-source --optimize-autoloader --ansi --no-interaction --no-dev
       - name: Install Box
-        run: composer global require 'kherge/box=~2.7' --prefer-source
+        run: composer global require 'kherge/box=~2.7' --prefer-source --ansi --no-interaction
       - name: Build pickle.phar
         run: ~/.composer/vendor/bin/box build
       - name: Install Composer dependencies (including dev, preferring dist)
