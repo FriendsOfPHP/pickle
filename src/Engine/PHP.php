@@ -269,6 +269,11 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
                 . 'echo PHP_DEBUG . \"\n\"; ';
 
         $cmd = $this->phpCliEscaped . ' -n -r ' . '"' . str_replace("\n", '', $script) . '"';
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $cmd .= ' 2>NUL';
+        } else {
+            $cmd .= ' 2>/dev/null';
+        }
 
         $info = null;
         exec($cmd, $info);
