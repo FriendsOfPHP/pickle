@@ -100,10 +100,19 @@ class Loader
             $package['authors'] = [];
 
             foreach ($authors as $author) {
-                $package['authors'][] = [
-                    'name' => (string) $author->name,
-                    'email' => (string) $author->email,
+                $tmp = [
+                    'name' => trim((string) $author->name),
+                    'email' => trim((string) $author->email),
                 ];
+                if ($tmp['name'] === '') {
+                    unset($tmp['name']);
+                }
+                if ($tmp['email'] === '') {
+                    unset($tmp['email']);
+                }
+                if ($tmp !== []) {
+                    $package['authors'][] = $tmp;
+                }
             }
         }
 
