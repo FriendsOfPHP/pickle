@@ -67,6 +67,7 @@ $filesMap = [
     '/get/oci8/2.0.8' => "{$assetsDir}/oci8-2.0.8.tgz",
     '/get/sqlsrv' => "{$assetsDir}/sqlsrv-5.9.0beta2.tgz",
     '/get/swoole' => "{$assetsDir}/swoole-4.6.2.tgz",
+    '/get/tensor' => "{$assetsDir}/tensor-2.1.4.tgz",
     '/get/yaml' => "{$assetsDir}/yaml-2.2.1.tgz",
     '/get/zstd' => "{$assetsDir}/zstd-0.10.0.tgz",
 ];
