@@ -1,0 +1,20 @@
+From: Michele Locati <michele@locati.it>
+Date: Tue, 29 Jun 2021 18:08:46 +0200
+Subject: [PATCH] PHP 8.1 patched
+
+---
+ src/JsonSchema/Constraints/Constraint.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/JsonSchema/Constraints/Constraint.php b/src/JsonSchema/Constraints/Constraint.php
+--- a/src/JsonSchema/Constraints/Constraint.php
++++ b/src/JsonSchema/Constraints/Constraint.php
+@@ -45,7 +45,7 @@ abstract class Constraint extends BaseConstraint implements ConstraintInterface
+         $path = $path->withPropertyPaths(
+             array_merge(
+                 $path->getPropertyPaths(),
+-                array_filter(array($i), 'strlen')
++                array_filter(array((string) $i), 'strlen')
+             )
+         );
+ 

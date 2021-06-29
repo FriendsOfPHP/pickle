@@ -53,7 +53,7 @@
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix --path-mode=intersection --config=./.php_cs.dist --ansi .",
-		"cs-check": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist --ansi --dry-run --diff --diff-format=udiff .",
+        "cs-check": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist --ansi --dry-run --diff --diff-format=udiff .",
         "test": "atoum --force-terminal && ./vendor/bin/behat --suite pickle --colors"
     },
     "extra": {
@@ -66,6 +66,9 @@
             },
             "hoa/stream:1.17.02.21": {
                 "PHP 8 fixes": "patches/hoa/stream/0001-Fix-PHP-8-compatibility.patch"
+            },
+            "justinrainbow/json-schema:5.2.10": {
+                "PHP 8.1 fixes": "patches/justinrainbow/json-schema/0001-PHP-8.1-fixes.patch"
             }
         }
     }
