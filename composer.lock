@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2317f60486f9c09a0ee7258d7a2cf81",
+    "content-hash": "31fe2e7b0a66deb5911b5f5642728cb1",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -482,6 +482,77 @@
                 "source": "https://github.com/justinrainbow/json-schema/tree/5.2.10"
             },
             "time": "2020-05-27T16:41:55+00:00"
+        },
+        {
+            "name": "mlocati/composer-patcher",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/composer-patcher.git",
+                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
+                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1 || ^2",
+                "php": ">= 5.3.2"
+            },
+            "conflict": {
+                "cweagans/composer-patches": "*"
+            },
+            "require-dev": {
+                "composer/composer": "^1.1 || ^2",
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4 || ^9.4"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "ComposerPatcher\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "ComposerPatcher\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
+                }
+            ],
+            "description": "A Composer plugin to patch Composer packages.",
+            "homepage": "https://github.com/mlocati/composer-patcher",
+            "keywords": [
+                "composer",
+                "patch",
+                "patcher",
+                "patches",
+                "plugin"
+            ],
+            "support": {
+                "issues": "https://github.com/mlocati/composer-patcher/issues",
+                "source": "https://github.com/mlocati/composer-patcher/tree/1.2.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/mlocati",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/mlocati",
+                    "type": "other"
+                }
+            ],
+            "time": "2020-10-30T11:26:06+00:00"
         },
         {
             "name": "padraic/humbug_get_contents",
@@ -3708,77 +3779,6 @@
                 "source": "https://central.hoa-project.net/Resource/Library/Zformat"
             },
             "time": "2017-01-10T10:39:54+00:00"
-        },
-        {
-            "name": "mlocati/composer-patcher",
-            "version": "1.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mlocati/composer-patcher.git",
-                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
-                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1 || ^2",
-                "php": ">= 5.3.2"
-            },
-            "conflict": {
-                "cweagans/composer-patches": "*"
-            },
-            "require-dev": {
-                "composer/composer": "^1.1 || ^2",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4 || ^9.4"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "ComposerPatcher\\Plugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "ComposerPatcher\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michele Locati",
-                    "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io",
-                    "role": "author"
-                }
-            ],
-            "description": "A Composer plugin to patch Composer packages.",
-            "homepage": "https://github.com/mlocati/composer-patcher",
-            "keywords": [
-                "composer",
-                "patch",
-                "patcher",
-                "patches",
-                "plugin"
-            ],
-            "support": {
-                "issues": "https://github.com/mlocati/composer-patcher/issues",
-                "source": "https://github.com/mlocati/composer-patcher/tree/1.2.2"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/mlocati",
-                    "type": "github"
-                },
-                {
-                    "url": "https://paypal.me/mlocati",
-                    "type": "other"
-                }
-            ],
-            "time": "2020-10-30T11:26:06+00:00"
         },
         {
             "name": "php-cs-fixer/diff",
