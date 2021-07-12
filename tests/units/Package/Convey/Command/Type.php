@@ -52,6 +52,27 @@ class Type extends atoum
 
     public function test_determine_pecl()
     {
+        $packages = json_decode(file_get_contents(FIXTURES_DIR . '/pecl/packages.json'), true);
+        foreach ($packages as $packageName => $packageData) {
+            $this
+                ->string(Command\Type::determine($packageName, true))
+                    ->isIdenticalTo(Command\Type::PECL, "Failed to detect {$packageName} as PECL type")
+            ;
+            foreach ($packageData['versions'] as $version) {
+                $this
+                    ->string(Command\Type::determine("{$packageName}-{$version}", true))
+                        ->isIdenticalTo(Command\Type::PECL, "Failed to detect {$packageName}-{$version} as PECL type")
+                    ->string(Command\Type::determine("{$packageName}@{$version}", true))
+                        ->isIdenticalTo(Command\Type::PECL, "Failed to detect {$packageName}@{$version} as PECL type")
+                ;
+            }
+            foreach ($packageData['stabilities'] as $stability) {
+                $this
+                    ->string(Command\Type::determine("{$packageName}-{$stability}", true))
+                        ->isIdenticalTo(Command\Type::PECL, "Failed to detect {$packageName}-{$stability} as PECL type")
+                ;
+            }
+        }
         $this
             ->string(Command\Type::determine('hello', true))
                 ->isIdenticalTo(Command\Type::PECL)
@@ -86,9 +107,7 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::PECL)
             ->string(Command\Type::determine('pecl/hello@1.2', true))
                 ->isIdenticalTo(Command\Type::PECL)
-                ;
-
-        /* XXX fix version tests */
+        ;
     }
 
     public function test_determine_git()
