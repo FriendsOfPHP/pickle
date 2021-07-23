@@ -12,7 +12,7 @@ Installation
 ------------
 Grab the latest phar at https://github.com/FriendsOfPHP/pickle/releases/latest 
 ```sh
-curl -O https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar
+curl -L -O https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar
 ```
 
 and run using
