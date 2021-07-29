@@ -101,7 +101,7 @@ abstract class BuildCommand extends Command
         $force_opts = $input->getOption('with-configure-options');
 
         if ($force_opts) {
-            if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
+            if (!file_exists($force_opts) || !is_readable($force_opts)) {
                 throw new Exception("File '{$force_opts}' is unusable");
             }
 
