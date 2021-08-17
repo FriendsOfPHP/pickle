@@ -105,6 +105,10 @@ abstract class BuildCommand extends Command
                 throw new Exception("File '{$force_opts}' is unusable");
             }
 
+            if (DIRECTORY_SEPARATOR !== '\\' && preg_match('_^/dev/fd/\d+$_', $force_opts)) {
+                // https://bugs.php.net/bug.php?id=53465
+                $force_opts = str_replace('/dev/', 'php://', $force_opts);
+            }
             $force_opts = preg_replace(',\\s+,', ' ', file_get_contents($force_opts));
 
             return [null, $force_opts];
