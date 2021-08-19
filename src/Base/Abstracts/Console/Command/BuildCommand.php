@@ -98,20 +98,20 @@ abstract class BuildCommand extends Command
     {
         $helper = $this->getHelperSet()->get('question');
 
-        $force_opts = $input->getOption('with-configure-options');
+        $configureOptions = $input->getOption('with-configure-options');
 
-        if ($force_opts) {
-            if (!file_exists($force_opts) || is_dir($force_opts) || !is_readable($force_opts)) {
-                throw new Exception("File '{$force_opts}' is unusable");
+        if ($configureOptions) {
+            if (!file_exists($configureOptions) || is_dir($configureOptions) || !is_readable($configureOptions)) {
+                throw new Exception("File '{$configureOptions}' is unusable");
             }
 
-            if (DIRECTORY_SEPARATOR !== '\\' && preg_match('_^/dev/fd/\d+$_', $force_opts)) {
+            if (DIRECTORY_SEPARATOR !== '\\' && preg_match('_^/dev/fd/\d+$_', $configureOptions)) {
                 // https://bugs.php.net/bug.php?id=53465
-                $force_opts = str_replace('/dev/', 'php://', $force_opts);
+                $configureOptions = str_replace('/dev/', 'php://', $configureOptions);
             }
-            $force_opts = preg_replace(',\\s+,', ' ', file_get_contents($force_opts));
+            $configureOptions = preg_replace(',\\s+,', ' ', file_get_contents($configureOptions));
 
-            return [null, $force_opts];
+            return [null, $configureOptions];
         }
 
         $options = $package->getConfigureOptions();
