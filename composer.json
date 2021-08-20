@@ -66,9 +66,6 @@
             },
             "hoa/stream:1.17.02.21": {
                 "PHP 8 fixes": "patches/hoa/stream/0001-Fix-PHP-8-compatibility.patch"
-            },
-            "justinrainbow/json-schema:5.2.10": {
-                "PHP 8.1 fixes": "patches/justinrainbow/json-schema/0001-PHP-8.1-fixes.patch"
             }
         }
     }
