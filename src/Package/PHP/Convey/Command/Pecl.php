@@ -78,10 +78,10 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
 
         if (isset($matches['stability']) && $matches['stability'] !== '') {
             $this->stability = $matches['stability'];
-            $this->url .= '-' . $matches['stability'];
         } else {
             $this->stability = 'stable';
         }
+        $this->url .= '-' . $this->stability;
 
         if (isset($matches['version']) && $matches['version'] !== '') {
             $this->url .= '/' . $matches['version'];
