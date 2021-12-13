@@ -49,7 +49,10 @@
         "platform": {
             "php": "7.2.5"
         },
-        "discard-changes": true
+        "discard-changes": true,
+        "allow-plugins": {
+            "mlocati/composer-patcher": true
+        }
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix --path-mode=intersection --config=./.php_cs.dist --ansi .",
