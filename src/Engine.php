@@ -40,7 +40,7 @@ use Pickle\Engine\PHP;
 
 class Engine
 {
-    protected static $instance = null;
+    protected static $instance;
 
     public static function factory($phpcli = null)
     {
