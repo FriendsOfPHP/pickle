@@ -63,7 +63,7 @@ class FeatureContext implements SnippetAcceptingContext
     /**
      * @var Process|null
      */
-    private static $webserverProcess = null;
+    private static $webserverProcess;
 
     public function __construct()
     {

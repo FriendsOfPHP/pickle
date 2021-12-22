@@ -41,7 +41,7 @@ use Pickle\Base\Interfaces;
 
 class Ini
 {
-    protected static $instance = null;
+    protected static $instance;
 
     public static function factory(?Interfaces\Engine $engine = null)
     {

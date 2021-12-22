@@ -43,7 +43,7 @@ class WebsiteFactory
     /**
      * @var Website|null
      */
-    private static $website = null;
+    private static $website;
 
     /**
      * Get the PECL website configuration.

@@ -41,7 +41,7 @@ use Pickle\Package\PHP;
 
 class Package
 {
-    protected static $instance = null;
+    protected static $instance;
 
     public static function factory($name, $version, $prettyVersion, $force = false)
     {
