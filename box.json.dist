@@ -2,8 +2,7 @@
     "alias": "pickle.phar",
     "chmod": "0755",
     "compactors": [
-        "Herrera\\Box\\Compactor\\Json",
-        "Herrera\\Box\\Compactor\\Php"
+        "Herrera\\Box\\Compactor\\Json"
     ],
     "directories": ["src", "vendor/composer/composer/res", "vendor/composer/ca-bundle"],
     "finder": [{
