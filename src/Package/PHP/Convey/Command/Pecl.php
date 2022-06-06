@@ -103,13 +103,11 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         $config = new Config();
         $config->merge([
             'config' => [
-                'secure-http' => WebsiteFactory::isTestServer() ? false : true,
+                'secure-http' => !WebsiteFactory::getWebsite()->isUnsafe(),
             ],
         ]);
         $downloader = new PECLDownloader($this->io, $config);
-        if ($downloader !== null) {
-            $downloader->download($package, $target);
-        }
+        $downloader->download($package, $target);
 
         unset($package, $downloader);
     }
