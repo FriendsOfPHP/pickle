@@ -69,6 +69,9 @@
             },
             "hoa/stream:1.17.02.21": {
                 "PHP 8 fixes": "patches/hoa/stream/0001-Fix-PHP-8-compatibility.patch"
+            },
+            "symfony/console:5.4.1": {
+                "PHP 8.2 fixes": "patches/symfony/console/0001-Fix-PHP-8.2-compatibility.patch"
             }
         }
     }
