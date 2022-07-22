@@ -46,6 +46,11 @@ setlocal DISABLEDELAYEDEXPANSION
 c:\path\to\php.exe "c:\path\to\pickle.phar" %*
 ```
 
+On linux systems, you can create shortcut, so command will be available globally:
+```sh
+$ sudo cp pickle /usr/bin
+```
+
 If someone would be kind enough to write an installer script, we would be eternally thankful :)
 
 Introduction
