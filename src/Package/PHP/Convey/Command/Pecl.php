@@ -76,20 +76,14 @@ class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Packag
         $this->name = $matches['package'];
         $this->url = WebsiteFactory::getWebsite()->getBaseUrl() . '/get/' . $matches['package'];
 
-        if (isset($matches['stability']) && $matches['stability'] !== '') {
-            $this->stability = $matches['stability'];
-            $this->url .= '-' . $matches['stability'];
-        } else {
-            $this->stability = 'stable';
-        }
+        $this->stability = isset($matches['stability']) && $matches['stability'] !== '' ? $matches['stability'] : 'stable';
+        $this->version = isset($matches['version']) && $matches['version'] !== '' ? $matches['version'] : 'latest';
+        $this->prettyVersion = $this->version === 'latest' ? 'latest-' . $this->stability : $this->version;
 
-        if (isset($matches['version']) && $matches['version'] !== '') {
-            $this->url .= '/' . $matches['version'];
-            $this->prettyVersion = $matches['version'];
-            $this->version = $matches['version'];
+        if ($this->version === 'latest') {
+            $this->url .= '-' . $this->stability;
         } else {
-            $this->version = 'latest';
-            $this->prettyVersion = 'latest-' . $this->stability;
+            $this->url .= '/' . $this->version;
         }
     }
 
