@@ -1,0 +1,147 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Pickle
+ *
+ *
+ * @license
+ *
+ * New BSD License
+ *
+ * Copyright © 2015-2015, Pickle community. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Hoa nor the names of its contributors may be
+ *       used to endorse or promote products derived from this software without
+ *       specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+set_error_handler(
+    static function ($errno, $errstr, $errfile, $errline) {
+        $msg = "Error {$errno}: {$errstr}\n";
+        if ($errfile) {
+            $msg .= "File: {$errfile}\n";
+            if ($errline) {
+                $msg .= "Line: {$errline}\n";
+            }
+        }
+
+        throw new RuntimeException($msg);
+    },
+    -1
+);
+
+try {
+    $packages = [];
+    $numPackages = 0;
+    $numVersions = 0;
+    $lister = new Lister();
+    echo "Listing package names\n";
+    foreach ($lister->listPackageNames() as $packageName) {
+        echo "Listing versions of package {$packageName}\n";
+        foreach ($lister->listPackageVersions($packageName) as $version => $stability) {
+            if (isset($packages[$packageName])) {
+                $packages[$packageName]['versions'][] = $version;
+                if (!in_array($stability, $packages[$packageName]['stabilities'], true)) {
+                    $packages[$packageName]['stabilities'][] = $stability;
+                }
+            } else {
+                $packages[$packageName] = ['versions' => [$version], 'stabilities' => [$stability]];
+            }
+            $numVersions++;
+        }
+        if (isset($packages[$packageName])) {
+            usort($packages[$packageName]['versions'], 'version_compare');
+            sort($packages[$packageName]['stabilities'], SORT_STRING);
+        }
+        $numPackages++;
+    }
+    echo "Saving versions\n";
+    file_put_contents(__DIR__ . '/packages.json', json_encode($packages, JSON_PRETTY_PRINT));
+    echo "{$numPackages} packages and {$numVersions} versions fetched\n";
+    exit(0);
+} catch (RuntimeException $x) {
+    fwrite(STDERR, trim($x->getMessage()) . "\n");
+    exit(1);
+}
+
+class Lister
+{
+    /**
+     * @var DOMDocument|null
+     */
+    private $packages;
+
+    /**
+     * @return string[]
+     */
+    public function listPackageNames(): Generator
+    {
+        $packages = $this->getPackages();
+        $xpath = new DOMXPath($packages);
+        $xpath->registerNamespace('n', 'http://pear.php.net/dtd/rest.allpackages');
+        foreach ($xpath->query('/n:a/n:p') as $node) {
+            yield $node->nodeValue;
+        }
+    }
+
+    public function listPackageVersions(string $packageName): Generator
+    {
+        $packageVersions = $this->getPackageVersionsDocument($packageName);
+        if ($packageVersions !== null) {
+            $xpath = new DOMXPath($packageVersions);
+            $xpath->registerNamespace('n', 'http://pear.php.net/dtd/rest.allreleases');
+            foreach ($xpath->query('/n:a/n:r') as $node) {
+                yield $xpath->query('./n:v', $node)[0]->nodeValue => $xpath->query('./n:s', $node)[0]->nodeValue;
+            }
+        }
+    }
+
+    private function getPackages(): DOMDocument
+    {
+        if ($this->packages === null) {
+            $packages = new DOMDocument();
+            if (!$packages->loadXML(file_get_contents('https://pecl.php.net/rest/p/packages.xml'))) {
+                throw new RuntimeException('Failed to parse the XML document with list of packages.');
+            }
+            $this->packages = $packages;
+        }
+        return $this->packages;
+    }
+
+    private function getPackageVersionsDocument(string $packageName): ?DOMDocument
+    {
+        try {
+            $xml = file_get_contents(sprintf('https://pecl.php.net/rest/r/%1$s/allreleases.xml', strtolower($packageName)));
+        } catch (RuntimeException $x) {
+            if (stripos($x->getMessage(), '404 Not Found') !== false) {
+                return null;
+            }
+            throw $x;
+        }
+        $packageVersions = new DOMDocument();
+        if (!$packageVersions->loadXML($xml)) {
+            throw new RuntimeException("Failed to parse the XML document with list of versions of package {$packageName}.");
+        }
+        return $packageVersions;
+    }
+}

@@ -86,7 +86,7 @@ class Type
             (?:pecl/)?
             (?<package>\w+)
             (?:
-                \-(?<stability>beta|stable|alpha)
+                \-(?<stability>beta|stable|alpha|snapshot|devel)
             )?
         $#x';
 
@@ -94,7 +94,15 @@ class Type
             (?:pecl/)?
             (?<package>\w+)
             (?:
-                (\-|@)(?<version>(?:\d+(?:\.\d+){1,2})|(?:[1-2]\d{3}[0-1]\d[0-3]\d{1}))
+                (\-|@)
+                (?<version>
+                    (?:
+                        (?:\d+(?:\.\d+){1,3})
+                        |
+                        (?:[1-2]\d{3}[0-1]\d[0-3]\d{1}(?:[0-2]\d[0-5]\d(?:[0-5\d])?)?)
+                    )
+                    (?:[A-Za-z]+[0-9]*)?
+                )
             )?
         $#x';
 

@@ -392,6 +392,7 @@ EOT
             ->append([
                 __FILE__,
                 __DIR__ . '/bin/pickle',
+                __DIR__ . '/tests/fixtures/pecl/update',
                 __DIR__ . '/.atoum.php',
                 __DIR__ . '/.bootstrap.atoum.php',
             ])
