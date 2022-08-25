@@ -102,7 +102,8 @@ class InstallerCommand extends BuildCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Override detected version (no value - or empty value - to use the version from package.xml)'
-            );
+            )
+        ;
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->addOption(
@@ -132,7 +133,8 @@ class InstallerCommand extends BuildCommand
                 ['<info>Extension dir</info>', $php->getExtensionDir()],
                 ['<info>php.ini</info>', $php->getIniPath()],
             ])
-            ->render();
+            ->render()
+        ;
 
         $inst = Install::factory($path);
         $progress = new ProgressBar($output, 100);

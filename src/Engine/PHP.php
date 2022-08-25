@@ -213,8 +213,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         foreach ($info as $s) {
             if (
-                strpos($s, 'Loaded Configuration File') !== false ||
-                strpos($s, 'Additional .ini files parsed') !== false
+                strpos($s, 'Loaded Configuration File') !== false
+                || strpos($s, 'Additional .ini files parsed') !== false
             ) {
                 [, $iniPath] = explode('=>', $s);
                 if (strtolower(trim($iniPath)) === '(none)') {
