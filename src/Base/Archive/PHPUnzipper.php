@@ -68,6 +68,7 @@ class PHPUnzipper extends PHP implements Interfaces\Archive\Unzipper
      */
     public function extractTo(string $path): void
     {
+        $this->zipArchive->extractTo($path);
     }
 }
 
