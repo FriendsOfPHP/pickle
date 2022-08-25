@@ -193,7 +193,8 @@ class DependencyLib
 
     private function checkDepListerExe()
     {
-        $ret = exec('deplister.exe ' . $this->php->getPath() . ' .');
+        $deplister = dirname($this->php->getPath()) . DIRECTORY_SEPARATOR . 'deplister.exe ';
+        $ret = exec($deplister . $this->php->getPath() . ' .');
         if (empty($ret)) {
             $depexe = @file_get_contents(self::DEPLISTER_URL);
             if (!$depexe) {
@@ -210,7 +211,8 @@ class DependencyLib
     private function getDllsForBinary($binary)
     {
         $out = [];
-        $ret = exec('deplister.exe ' . escapeshellarg($binary) . ' .', $out);
+        $deplister = dirname($this->php->getPath()) . DIRECTORY_SEPARATOR . 'deplister.exe ';
+        $ret = exec($deplister . escapeshellarg($binary) . ' .', $out);
         if (empty($ret) || !$ret) {
             throw new RuntimeException('Error while running deplister.exe');
         }

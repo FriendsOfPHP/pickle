@@ -199,7 +199,7 @@ class Binary
         $this->createTempDir($this->extName);
         $this->cleanup();
         $zipClass = Archive\Factory::getUnzipperClassName();
-        $zipArchive = $zipClass($zipFile);
+        $zipArchive = new $zipClass($zipFile);
         /** @var \Pickle\Base\Interfaces\Archive\Unzipper $zipArchive */
         $this->output->writeln('Extracting archives...');
         $zipArchive->extractTo($this->tempDir);
@@ -283,7 +283,7 @@ class Binary
             if (substr($basename, 0, 4) == 'php_') {
                 $this->extDll[] = $basename;
                 $this->output->writeln("copying {$dll} to " . $dest . "\n");
-                $success = copy($dll, $this->php->getExtensionDir() . '/' . $basename);
+                $success = copy($dll, $dest);
                 if (!$success) {
                     throw new Exception('Cannot copy DLL <' . $dll . '> to <' . $dest . '>');
                 }

@@ -140,13 +140,11 @@ class InstallerCommand extends BuildCommand
         $progress = new ProgressBar($output, 100);
 
         $inst->setProgress($progress);
-        $inst->setInput($input);
         $inst->setOutput($output);
         $inst->install();
 
         $deps_handler = new Windows\DependencyLib($php);
         $deps_handler->setProgress($progress);
-        $deps_handler->setInput($input);
         $deps_handler->setOutput($output);
 
         $helper = $this->getHelperSet()->get('question');

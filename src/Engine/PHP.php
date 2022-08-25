@@ -212,16 +212,18 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $iniPath = '';
 
         foreach ($info as $s) {
-            if (strpos($s, 'Loaded Configuration File') !== false) {
+            if (
+                strpos($s, 'Loaded Configuration File') !== false
+                || strpos($s, 'Additional .ini files parsed') !== false
+            ) {
                 [, $iniPath] = explode('=>', $s);
-                if ($iniPath === '(None)') {
+                if (strtolower(trim($iniPath)) === '(none)') {
                     $iniPath = '';
+                    continue;
                 }
-
                 break;
             }
         }
-
         $iniPath = trim($iniPath);
         if ($iniPath == '') {
             throw new Exception('Cannot detect php.ini directory');
