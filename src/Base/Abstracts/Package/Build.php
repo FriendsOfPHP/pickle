@@ -41,6 +41,7 @@ use Pickle\Base\Archive;
 use Pickle\Base\Interfaces;
 use Pickle\Base\Interfaces\Package;
 use Pickle\Base\Util\FileOps;
+use function rtrim;
 
 abstract class Build
 {
@@ -191,11 +192,13 @@ abstract class Build
             );
         }
 
-        $out = [];
+        $out = '';
         while ($line = fgets($pp, 1024)) {
-            $out[] = rtrim($line);
+            $out .= rtrim($line) . "\n";
         }
-        $this->log(2, implode("\n", $out), $hint);
+
+        $this->log(2, rtrim($out), $hint);
+        unset($out);
 
         $exitCode = is_resource($pp) ? pclose($pp) : -1;
 
